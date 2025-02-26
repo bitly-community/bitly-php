@@ -4,7 +4,7 @@
 [![build](https://github.com/bitly-community/bitly-php/actions/workflows/build.yml/badge.svg)](https://github.com/bitly-community/bitly-php/actions/workflows/build.yml)
 [![test](https://github.com/bitly-community/bitly-php/actions/workflows/test.yml/badge.svg)](https://github.com/bitly-community/bitly-php/actions/workflows/test.yml)
 
-PHP library for [Bitly](https://dev.bitly.com/docs/sdks/openapi-30/). Code is generated using the [OpenAPI spec](https://dev.bitly.com/v4/v4.json).
+PHP library for [Bitly](https://bitly.com/). Code is generated using the [OpenAPI spec](https://dev.bitly.com/docs/sdks/openapi-30/). See the [API reference](https://dev.bitly.com/api-reference).
 
 ## Requirements
 
@@ -37,29 +37,12 @@ Instantiate the client:
 ```php
 use Bitly\Bitly;
 
-$bitly = new Bitly('YOUR_API_KEY', 'YOUR_API_URL');
+$bitly = new Bitly('YOUR_API_KEY');
 
 $client = $bitly->client;
 ```
 
-Or create a custom client:
-
-```php
-use Bitly\Client;
-
-$httpClient = \Http\Discovery\Psr18ClientDiscovery::find();
-$uri = \Http\Discovery\Psr17FactoryDiscovery::findUriFactory()->createUri('YOUR_API_URL');
-$bearer = new \Http\Message\Authentication\Bearer('YOUR_API_KEY');
-$plugins = [
-    new \Http\Client\Common\Plugin\AddHostPlugin($uri),
-    new \Http\Client\Common\Plugin\AuthenticationPlugin($bearer),
-];
-$httpClient = new \Http\Client\Common\PluginClient($httpClient, $plugins);
-
-$client = Client::create($httpClient);
-```
-
-Add a pet:
+Convert a long URL to a Bitlink:
 
 ```php
 use Bitly\Bitly;
@@ -67,10 +50,9 @@ use Bitly\Model\Pet;
 
 $bitly = new Bitly('YOUR_API_KEY');
 
-$pet = new Pet();
-$pet->setName('Neo');
-$pet->setPhotoUrls(['https://placecats.com/neo/300/200']);
-$response = $bitly->client->addPet($pet);
+$shorten = new Shorten();
+$shorten->setLongUrl('https://example.com/my-long-url');
+$response = $bitly->client->createBitLink($shorten);
 ```
 
 Handle an API error:
@@ -81,7 +63,7 @@ use Bitly\Bitly;
 $bitly = new Bitly('YOUR_API_KEY');
 
 try {
-    $bitly->client->getPetById(0);
+    $bitly->client->getBitlink('http://bit.ly/2OUJim0');
 } catch (Throwable $exception) {
     echo $exception->getMessage();
     echo $exception->getCode();

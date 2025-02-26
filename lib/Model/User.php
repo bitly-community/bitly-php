@@ -22,146 +22,161 @@ class User extends \ArrayObject
         return array_key_exists($property, $this->initialized);
     }
     /**
-     * @var int
+     * @var string
      */
-    protected $id;
+    protected $login;
     /**
      * @var string
      */
-    protected $username;
+    protected $name;
+    /**
+     * @var bool
+     */
+    protected $isActive;
     /**
      * @var string
      */
-    protected $firstName;
+    protected $created;
     /**
      * @var string
      */
-    protected $lastName;
+    protected $modified;
+    /**
+     * @var bool
+     */
+    protected $isSsoUser;
+    /**
+     * @var list<Email>
+     */
+    protected $emails;
+    /**
+     * @var bool
+     */
+    protected $is2faEnabled;
     /**
      * @var string
      */
-    protected $email;
-    /**
-     * @var string
-     */
-    protected $password;
-    /**
-     * @var string
-     */
-    protected $phone;
-    /**
-     * User Status.
-     *
-     * @var int
-     */
-    protected $userStatus;
+    protected $defaultGroupGuid;
 
-    public function getId(): int
+    public function getLogin(): string
     {
-        return $this->id;
+        return $this->login;
     }
 
-    public function setId(int $id): self
+    public function setLogin(string $login): self
     {
-        $this->initialized['id'] = true;
-        $this->id = $id;
+        $this->initialized['login'] = true;
+        $this->login = $login;
 
         return $this;
     }
 
-    public function getUsername(): string
+    public function getName(): string
     {
-        return $this->username;
+        return $this->name;
     }
 
-    public function setUsername(string $username): self
+    public function setName(string $name): self
     {
-        $this->initialized['username'] = true;
-        $this->username = $username;
+        $this->initialized['name'] = true;
+        $this->name = $name;
 
         return $this;
     }
 
-    public function getFirstName(): string
+    public function getIsActive(): bool
     {
-        return $this->firstName;
+        return $this->isActive;
     }
 
-    public function setFirstName(string $firstName): self
+    public function setIsActive(bool $isActive): self
     {
-        $this->initialized['firstName'] = true;
-        $this->firstName = $firstName;
+        $this->initialized['isActive'] = true;
+        $this->isActive = $isActive;
 
         return $this;
     }
 
-    public function getLastName(): string
+    public function getCreated(): string
     {
-        return $this->lastName;
+        return $this->created;
     }
 
-    public function setLastName(string $lastName): self
+    public function setCreated(string $created): self
     {
-        $this->initialized['lastName'] = true;
-        $this->lastName = $lastName;
+        $this->initialized['created'] = true;
+        $this->created = $created;
 
         return $this;
     }
 
-    public function getEmail(): string
+    public function getModified(): string
     {
-        return $this->email;
+        return $this->modified;
     }
 
-    public function setEmail(string $email): self
+    public function setModified(string $modified): self
     {
-        $this->initialized['email'] = true;
-        $this->email = $email;
+        $this->initialized['modified'] = true;
+        $this->modified = $modified;
 
         return $this;
     }
 
-    public function getPassword(): string
+    public function getIsSsoUser(): bool
     {
-        return $this->password;
+        return $this->isSsoUser;
     }
 
-    public function setPassword(string $password): self
+    public function setIsSsoUser(bool $isSsoUser): self
     {
-        $this->initialized['password'] = true;
-        $this->password = $password;
-
-        return $this;
-    }
-
-    public function getPhone(): string
-    {
-        return $this->phone;
-    }
-
-    public function setPhone(string $phone): self
-    {
-        $this->initialized['phone'] = true;
-        $this->phone = $phone;
+        $this->initialized['isSsoUser'] = true;
+        $this->isSsoUser = $isSsoUser;
 
         return $this;
     }
 
     /**
-     * User Status.
+     * @return list<Email>
      */
-    public function getUserStatus(): int
+    public function getEmails(): array
     {
-        return $this->userStatus;
+        return $this->emails;
     }
 
     /**
-     * User Status.
+     * @param list<Email> $emails
      */
-    public function setUserStatus(int $userStatus): self
+    public function setEmails(array $emails): self
     {
-        $this->initialized['userStatus'] = true;
-        $this->userStatus = $userStatus;
+        $this->initialized['emails'] = true;
+        $this->emails = $emails;
+
+        return $this;
+    }
+
+    public function getIs2faEnabled(): bool
+    {
+        return $this->is2faEnabled;
+    }
+
+    public function setIs2faEnabled(bool $is2faEnabled): self
+    {
+        $this->initialized['is2faEnabled'] = true;
+        $this->is2faEnabled = $is2faEnabled;
+
+        return $this;
+    }
+
+    public function getDefaultGroupGuid(): string
+    {
+        return $this->defaultGroupGuid;
+    }
+
+    public function setDefaultGroupGuid(string $defaultGroupGuid): self
+    {
+        $this->initialized['defaultGroupGuid'] = true;
+        $this->defaultGroupGuid = $defaultGroupGuid;
 
         return $this;
     }

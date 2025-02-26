@@ -28,21 +28,1051 @@ if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR
         use CheckArray;
         use ValidatorTrait;
         protected $normalizers = [
-            \Bitly\Model\Order::class => OrderNormalizer::class,
+            \Bitly\Model\CurrencyList::class => CurrencyListNormalizer::class,
 
-            \Bitly\Model\Customer::class => CustomerNormalizer::class,
+            \Bitly\Model\SupportedCurrency::class => SupportedCurrencyNormalizer::class,
 
-            \Bitly\Model\Address::class => AddressNormalizer::class,
+            \Bitly\Model\Regions::class => RegionsNormalizer::class,
 
-            \Bitly\Model\Category::class => CategoryNormalizer::class,
+            \Bitly\Model\Region::class => RegionNormalizer::class,
+
+            \Bitly\Model\Subregion::class => SubregionNormalizer::class,
+
+            \Bitly\Model\AutobrandedDomain::class => AutobrandedDomainNormalizer::class,
+
+            \Bitly\Model\AutobrandedDomainResultItem::class => AutobrandedDomainResultItemNormalizer::class,
+
+            \Bitly\Model\CustomDomain::class => CustomDomainNormalizer::class,
+
+            \Bitly\Model\UMGroupPreferences::class => UMGroupPreferencesNormalizer::class,
+
+            \Bitly\Model\SiteTheme::class => SiteThemeNormalizer::class,
+
+            \Bitly\Model\SiteThemes::class => SiteThemesNormalizer::class,
+
+            \Bitly\Model\Contacts::class => ContactsNormalizer::class,
+
+            \Bitly\Model\BillingAccount::class => BillingAccountNormalizer::class,
+
+            \Bitly\Model\BillingAccountID::class => BillingAccountIDNormalizer::class,
+
+            \Bitly\Model\BillingSignature::class => BillingSignatureNormalizer::class,
+
+            \Bitly\Model\PayPalToken::class => PayPalTokenNormalizer::class,
+
+            \Bitly\Model\OrgTierHistory::class => OrgTierHistoryNormalizer::class,
+
+            \Bitly\Model\SubscriptionCancelledDate::class => SubscriptionCancelledDateNormalizer::class,
+
+            \Bitly\Model\PaymentInvoices::class => PaymentInvoicesNormalizer::class,
+
+            \Bitly\Model\PaymentInvoice::class => PaymentInvoiceNormalizer::class,
+
+            \Bitly\Model\PaymentInvoiceDetail::class => PaymentInvoiceDetailNormalizer::class,
+
+            \Bitly\Model\Charges::class => ChargesNormalizer::class,
+
+            \Bitly\Model\Payments::class => PaymentsNormalizer::class,
+
+            \Bitly\Model\AnnualRenewalReminderRequest::class => AnnualRenewalReminderRequestNormalizer::class,
+
+            \Bitly\Model\FieldError::class => FieldErrorNormalizer::class,
+
+            \Bitly\Model\Error::class => ErrorNormalizer::class,
+
+            \Bitly\Model\SimplifiedError::class => SimplifiedErrorNormalizer::class,
+
+            \Bitly\Model\UsersPagination::class => UsersPaginationNormalizer::class,
+
+            \Bitly\Model\BitlinksPagination::class => BitlinksPaginationNormalizer::class,
+
+            \Bitly\Model\LaunchpadsPagination::class => LaunchpadsPaginationNormalizer::class,
+
+            \Bitly\Model\MicrositePagination::class => MicrositePaginationNormalizer::class,
+
+            \Bitly\Model\QRPagination::class => QRPaginationNormalizer::class,
+
+            \Bitly\Model\Group::class => GroupNormalizer::class,
+
+            \Bitly\Model\Groups::class => GroupsNormalizer::class,
+
+            \Bitly\Model\GroupUpdate::class => GroupUpdateNormalizer::class,
+
+            \Bitly\Model\SSOSettings::class => SSOSettingsNormalizer::class,
+
+            \Bitly\Model\GeoIP::class => GeoIPNormalizer::class,
+
+            \Bitly\Model\SSOSlug::class => SSOSlugNormalizer::class,
+
+            \Bitly\Model\SSOVerifySlug::class => SSOVerifySlugNormalizer::class,
+
+            \Bitly\Model\OrganizationUpdate::class => OrganizationUpdateNormalizer::class,
+
+            \Bitly\Model\Organization::class => OrganizationNormalizer::class,
+
+            \Bitly\Model\Organizations::class => OrganizationsNormalizer::class,
+
+            \Bitly\Model\BasicInfo::class => BasicInfoNormalizer::class,
+
+            \Bitly\Model\BillingInfo::class => BillingInfoNormalizer::class,
+
+            \Bitly\Model\UpgradeOrgBody::class => UpgradeOrgBodyNormalizer::class,
+
+            \Bitly\Model\DowngradeOrgBody::class => DowngradeOrgBodyNormalizer::class,
+
+            \Bitly\Model\ContactInfo::class => ContactInfoNormalizer::class,
+
+            \Bitly\Model\SubscriptionDiscount::class => SubscriptionDiscountNormalizer::class,
+
+            \Bitly\Model\BillingDowngrade::class => BillingDowngradeNormalizer::class,
+
+            \Bitly\Model\UpdateRetainedDowngradeEntities::class => UpdateRetainedDowngradeEntitiesNormalizer::class,
+
+            \Bitly\Model\PayPalTokenRequest::class => PayPalTokenRequestNormalizer::class,
+
+            \Bitly\Model\BillingContact::class => BillingContactNormalizer::class,
+
+            \Bitly\Model\BillingAddress::class => BillingAddressNormalizer::class,
+
+            \Bitly\Model\CreatePaymentMethod::class => CreatePaymentMethodNormalizer::class,
+
+            \Bitly\Model\PaymentMethod::class => PaymentMethodNormalizer::class,
 
             \Bitly\Model\User::class => UserNormalizer::class,
 
-            \Bitly\Model\Tag::class => TagNormalizer::class,
+            \Bitly\Model\UserInternal::class => UserInternalNormalizer::class,
 
-            \Bitly\Model\Pet::class => PetNormalizer::class,
+            \Bitly\Model\Users::class => UsersNormalizer::class,
 
-            \Bitly\Model\ApiResponse::class => ApiResponseNormalizer::class,
+            \Bitly\Model\CreateUserBody::class => CreateUserBodyNormalizer::class,
+
+            \Bitly\Model\PublicOAuthUser::class => PublicOAuthUserNormalizer::class,
+
+            \Bitly\Model\UserUpdate::class => UserUpdateNormalizer::class,
+
+            \Bitly\Model\OrganizationPreferences::class => OrganizationPreferencesNormalizer::class,
+
+            \Bitly\Model\UserPreferences::class => UserPreferencesNormalizer::class,
+
+            \Bitly\Model\UserPreferenceBody::class => UserPreferenceBodyNormalizer::class,
+
+            \Bitly\Model\UserPasswordChange::class => UserPasswordChangeNormalizer::class,
+
+            \Bitly\Model\UserOnboardingSurvey::class => UserOnboardingSurveyNormalizer::class,
+
+            \Bitly\Model\Email::class => EmailNormalizer::class,
+
+            \Bitly\Model\EmailBody::class => EmailBodyNormalizer::class,
+
+            \Bitly\Model\OrgEmailBody::class => OrgEmailBodyNormalizer::class,
+
+            \Bitly\Model\OrgEmail::class => OrgEmailNormalizer::class,
+
+            \Bitly\Model\OrgEmails::class => OrgEmailsNormalizer::class,
+
+            \Bitly\Model\GroupBitlinksCount::class => GroupBitlinksCountNormalizer::class,
+
+            \Bitly\Model\CountItem::class => CountItemNormalizer::class,
+
+            \Bitly\Model\QRCodes::class => QRCodesNormalizer::class,
+
+            \Bitly\Model\OrgInvitationRequest::class => OrgInvitationRequestNormalizer::class,
+
+            \Bitly\Model\OrgDomainStatus::class => OrgDomainStatusNormalizer::class,
+
+            \Bitly\Model\FullQRCodeWithScans::class => FullQRCodeWithScansNormalizer::class,
+
+            \Bitly\Model\FullQRCode::class => FullQRCodeNormalizer::class,
+
+            \Bitly\Model\QRCustomizations::class => QRCustomizationsNormalizer::class,
+
+            \Bitly\Model\QRLogoImagesResponse::class => QRLogoImagesResponseNormalizer::class,
+
+            \Bitly\Model\QRLogoImages::class => QRLogoImagesNormalizer::class,
+
+            \Bitly\Model\ShortenBitlinkBody::class => ShortenBitlinkBodyNormalizer::class,
+
+            \Bitly\Model\LinkDeletionResponse::class => LinkDeletionResponseNormalizer::class,
+
+            \Bitly\Model\DeletedLink::class => DeletedLinkNormalizer::class,
+
+            \Bitly\Model\BitlinkBody::class => BitlinkBodyNormalizer::class,
+
+            \Bitly\Model\BitlinkUpdate::class => BitlinkUpdateNormalizer::class,
+
+            \Bitly\Model\BitlinkUpdateBody::class => BitlinkUpdateBodyNormalizer::class,
+
+            \Bitly\Model\Bitlinks::class => BitlinksNormalizer::class,
+
+            \Bitly\Model\ExpandBitlink::class => ExpandBitlinkNormalizer::class,
+
+            \Bitly\Model\ExpandedBitlink::class => ExpandedBitlinkNormalizer::class,
+
+            \Bitly\Model\ClickLink::class => ClickLinkNormalizer::class,
+
+            \Bitly\Model\SortedLinks::class => SortedLinksNormalizer::class,
+
+            \Bitly\Model\SortedButtons::class => SortedButtonsNormalizer::class,
+
+            \Bitly\Model\SortedButtonsButtonsItem::class => SortedButtonsButtonsItemNormalizer::class,
+
+            \Bitly\Model\SortedButtonsPageViewsItem::class => SortedButtonsPageViewsItemNormalizer::class,
+
+            \Bitly\Model\DeeplinkRule::class => DeeplinkRuleNormalizer::class,
+
+            \Bitly\Model\DeeplinkRules::class => DeeplinkRulesNormalizer::class,
+
+            \Bitly\Model\Deeplink::class => DeeplinkNormalizer::class,
+
+            \Bitly\Model\FullShorten::class => FullShortenNormalizer::class,
+
+            \Bitly\Model\Shorten::class => ShortenNormalizer::class,
+
+            \Bitly\Model\MetricsParams::class => MetricsParamsNormalizer::class,
+
+            \Bitly\Model\LinkClicks::class => LinkClicksNormalizer::class,
+
+            \Bitly\Model\QRScans::class => QRScansNormalizer::class,
+
+            \Bitly\Model\Clicks::class => ClicksNormalizer::class,
+
+            \Bitly\Model\Scans::class => ScansNormalizer::class,
+
+            \Bitly\Model\TotalEngagements::class => TotalEngagementsNormalizer::class,
+
+            \Bitly\Model\Engagements::class => EngagementsNormalizer::class,
+
+            \Bitly\Model\Engagement::class => EngagementNormalizer::class,
+
+            \Bitly\Model\TotalEngagementsSummary::class => TotalEngagementsSummaryNormalizer::class,
+
+            \Bitly\Model\BitlinkClicks::class => BitlinkClicksNormalizer::class,
+
+            \Bitly\Model\BitlinkScans::class => BitlinkScansNormalizer::class,
+
+            \Bitly\Model\PaginatedAnalyticsReports::class => PaginatedAnalyticsReportsNormalizer::class,
+
+            \Bitly\Model\DayEngagements::class => DayEngagementsNormalizer::class,
+
+            \Bitly\Model\EngagementsDailySummary::class => EngagementsDailySummaryNormalizer::class,
+
+            \Bitly\Model\LinkEngagements::class => LinkEngagementsNormalizer::class,
+
+            \Bitly\Model\EngagementsDayDrillDown::class => EngagementsDayDrillDownNormalizer::class,
+
+            \Bitly\Model\AnalyticsReport::class => AnalyticsReportNormalizer::class,
+
+            \Bitly\Model\AnalyticsReports::class => AnalyticsReportsNormalizer::class,
+
+            \Bitly\Model\ButtonClicks::class => ButtonClicksNormalizer::class,
+
+            \Bitly\Model\ReportSettings::class => ReportSettingsNormalizer::class,
+
+            \Bitly\Model\ReportFilters::class => ReportFiltersNormalizer::class,
+
+            \Bitly\Model\AnalyticsReportContent::class => AnalyticsReportContentNormalizer::class,
+
+            \Bitly\Model\Module::class => ModuleNormalizer::class,
+
+            \Bitly\Model\ModuleSettings::class => ModuleSettingsNormalizer::class,
+
+            \Bitly\Model\ChartVisualization::class => ChartVisualizationNormalizer::class,
+
+            \Bitly\Model\TimeComparisonDetails::class => TimeComparisonDetailsNormalizer::class,
+
+            \Bitly\Model\UpdateAnalyticsModule::class => UpdateAnalyticsModuleNormalizer::class,
+
+            \Bitly\Model\CreateAnalyticsModule::class => CreateAnalyticsModuleNormalizer::class,
+
+            \Bitly\Model\CreateAnalyticsReport::class => CreateAnalyticsReportNormalizer::class,
+
+            \Bitly\Model\UpdateAnalyticsReport::class => UpdateAnalyticsReportNormalizer::class,
+
+            \Bitly\Model\GroupAnalyticsUsage::class => GroupAnalyticsUsageNormalizer::class,
+
+            \Bitly\Model\LaunchpadLinkPerformance::class => LaunchpadLinkPerformanceNormalizer::class,
+
+            \Bitly\Model\LaunchpadClicks::class => LaunchpadClicksNormalizer::class,
+
+            \Bitly\Model\ClicksSummary::class => ClicksSummaryNormalizer::class,
+
+            \Bitly\Model\ScansSummary::class => ScansSummaryNormalizer::class,
+
+            \Bitly\Model\BitlinkClicksSummary::class => BitlinkClicksSummaryNormalizer::class,
+
+            \Bitly\Model\BitlinkScansSummary::class => BitlinkScansSummaryNormalizer::class,
+
+            \Bitly\Model\ButtonClicksSummary::class => ButtonClicksSummaryNormalizer::class,
+
+            \Bitly\Model\Views::class => ViewsNormalizer::class,
+
+            \Bitly\Model\ViewsSummary::class => ViewsSummaryNormalizer::class,
+
+            \Bitly\Model\DownloadsOverTime::class => DownloadsOverTimeNormalizer::class,
+
+            \Bitly\Model\DownloadMetric::class => DownloadMetricNormalizer::class,
+
+            \Bitly\Model\DownloadMetrics::class => DownloadMetricsNormalizer::class,
+
+            \Bitly\Model\CityDownloadMetric::class => CityDownloadMetricNormalizer::class,
+
+            \Bitly\Model\CityDownloadMetrics::class => CityDownloadMetricsNormalizer::class,
+
+            \Bitly\Model\DeviceDownloadMetric::class => DeviceDownloadMetricNormalizer::class,
+
+            \Bitly\Model\DeviceDownloadMetrics::class => DeviceDownloadMetricsNormalizer::class,
+
+            \Bitly\Model\MicrositeDownloads::class => MicrositeDownloadsNormalizer::class,
+
+            \Bitly\Model\CampaignClickData::class => CampaignClickDataNormalizer::class,
+
+            \Bitly\Model\ChannelBitlink::class => ChannelBitlinkNormalizer::class,
+
+            \Bitly\Model\ChannelBitlinks::class => ChannelBitlinksNormalizer::class,
+
+            \Bitly\Model\CampaignClicks::class => CampaignClicksNormalizer::class,
+
+            \Bitly\Model\CampaignClicksData::class => CampaignClicksDataNormalizer::class,
+
+            \Bitly\Model\CampaignChannelClicks::class => CampaignChannelClicksNormalizer::class,
+
+            \Bitly\Model\Tags::class => TagsNormalizer::class,
+
+            \Bitly\Model\EncodingLogin::class => EncodingLoginNormalizer::class,
+
+            \Bitly\Model\GroupPreferences::class => GroupPreferencesNormalizer::class,
+
+            \Bitly\Model\AddCustomBitlink::class => AddCustomBitlinkNormalizer::class,
+
+            \Bitly\Model\UpdateCustomBitlink::class => UpdateCustomBitlinkNormalizer::class,
+
+            \Bitly\Model\CustomBitlink::class => CustomBitlinkNormalizer::class,
+
+            \Bitly\Model\CustomBitlinkHistory::class => CustomBitlinkHistoryNormalizer::class,
+
+            \Bitly\Model\Metric::class => MetricNormalizer::class,
+
+            \Bitly\Model\CityMetric::class => CityMetricNormalizer::class,
+
+            \Bitly\Model\OtherMetrics::class => OtherMetricsNormalizer::class,
+
+            \Bitly\Model\OtherScanMetrics::class => OtherScanMetricsNormalizer::class,
+
+            \Bitly\Model\CityBitlinkClicksMetric::class => CityBitlinkClicksMetricNormalizer::class,
+
+            \Bitly\Model\BitlinkClicksMetric::class => BitlinkClicksMetricNormalizer::class,
+
+            \Bitly\Model\BaseBitlinkClicksMetrics::class => BaseBitlinkClicksMetricsNormalizer::class,
+
+            \Bitly\Model\BitlinkClicksMetrics::class => BitlinkClicksMetricsNormalizer::class,
+
+            \Bitly\Model\CityBitlinkClicksMetrics::class => CityBitlinkClicksMetricsNormalizer::class,
+
+            \Bitly\Model\OtherBitlinkClicksMetrics::class => OtherBitlinkClicksMetricsNormalizer::class,
+
+            \Bitly\Model\OtherViewMetrics::class => OtherViewMetricsNormalizer::class,
+
+            \Bitly\Model\ClickMetric::class => ClickMetricNormalizer::class,
+
+            \Bitly\Model\ViewMetric::class => ViewMetricNormalizer::class,
+
+            \Bitly\Model\OtherDownloadMetric::class => OtherDownloadMetricNormalizer::class,
+
+            \Bitly\Model\MicrositeDownloadMetric::class => MicrositeDownloadMetricNormalizer::class,
+
+            \Bitly\Model\DeviceMetric::class => DeviceMetricNormalizer::class,
+
+            \Bitly\Model\BaseMetrics::class => BaseMetricsNormalizer::class,
+
+            \Bitly\Model\Metrics::class => MetricsNormalizer::class,
+
+            \Bitly\Model\ClickMetrics::class => ClickMetricsNormalizer::class,
+
+            \Bitly\Model\DeviceMetrics::class => DeviceMetricsNormalizer::class,
+
+            \Bitly\Model\CityMetrics::class => CityMetricsNormalizer::class,
+
+            \Bitly\Model\CityScanMetric::class => CityScanMetricNormalizer::class,
+
+            \Bitly\Model\ScanMetric::class => ScanMetricNormalizer::class,
+
+            \Bitly\Model\BaseScanMetrics::class => BaseScanMetricsNormalizer::class,
+
+            \Bitly\Model\ScanMetrics::class => ScanMetricsNormalizer::class,
+
+            \Bitly\Model\CityScanMetrics::class => CityScanMetricsNormalizer::class,
+
+            \Bitly\Model\CityViewMetrics::class => CityViewMetricsNormalizer::class,
+
+            \Bitly\Model\ReferrersByDomain::class => ReferrersByDomainNormalizer::class,
+
+            \Bitly\Model\ReferrersByDomains::class => ReferrersByDomainsNormalizer::class,
+
+            \Bitly\Model\AggregateClicksForBitlinks::class => AggregateClicksForBitlinksNormalizer::class,
+
+            \Bitly\Model\AggregateClicksForBitlinksByCitiesFacet::class => AggregateClicksForBitlinksByCitiesFacetNormalizer::class,
+
+            \Bitly\Model\AggregateClicksForBitlinksByFacet::class => AggregateClicksForBitlinksByFacetNormalizer::class,
+
+            \Bitly\Model\SortedEngagements::class => SortedEngagementsNormalizer::class,
+
+            \Bitly\Model\EngagementForSort::class => EngagementForSortNormalizer::class,
+
+            \Bitly\Model\BitlinkEngagements::class => BitlinkEngagementsNormalizer::class,
+
+            \Bitly\Model\ClicksForAggregate::class => ClicksForAggregateNormalizer::class,
+
+            \Bitly\Model\ClicksOverTime::class => ClicksOverTimeNormalizer::class,
+
+            \Bitly\Model\ClicksByFacet::class => ClicksByFacetNormalizer::class,
+
+            \Bitly\Model\ClicksByCitiesFacet::class => ClicksByCitiesFacetNormalizer::class,
+
+            \Bitly\Model\Campaign::class => CampaignNormalizer::class,
+
+            \Bitly\Model\Event::class => EventNormalizer::class,
+
+            \Bitly\Model\Campaigns::class => CampaignsNormalizer::class,
+
+            \Bitly\Model\CampaignModify::class => CampaignModifyNormalizer::class,
+
+            \Bitly\Model\CampaignAddBitlink::class => CampaignAddBitlinkNormalizer::class,
+
+            \Bitly\Model\CampaignAddBitlinkResponse::class => CampaignAddBitlinkResponseNormalizer::class,
+
+            \Bitly\Model\CampaignAddBitlinkResponseData::class => CampaignAddBitlinkResponseDataNormalizer::class,
+
+            \Bitly\Model\AddBitlinkResult::class => AddBitlinkResultNormalizer::class,
+
+            \Bitly\Model\BaseChannelBitlink::class => BaseChannelBitlinkNormalizer::class,
+
+            \Bitly\Model\BaseChannel::class => BaseChannelNormalizer::class,
+
+            \Bitly\Model\Channel::class => ChannelNormalizer::class,
+
+            \Bitly\Model\ChannelModify::class => ChannelModifyNormalizer::class,
+
+            \Bitly\Model\Channels::class => ChannelsNormalizer::class,
+
+            \Bitly\Model\HasReferences::class => HasReferencesNormalizer::class,
+
+            \Bitly\Model\OAuthApps::class => OAuthAppsNormalizer::class,
+
+            \Bitly\Model\OAuthApp::class => OAuthAppNormalizer::class,
+
+            \Bitly\Model\OAuthAppFull::class => OAuthAppFullNormalizer::class,
+
+            \Bitly\Model\UpdateApp::class => UpdateAppNormalizer::class,
+
+            \Bitly\Model\OAuthAppWithOwnerLogin::class => OAuthAppWithOwnerLoginNormalizer::class,
+
+            \Bitly\Model\Authorization::class => AuthorizationNormalizer::class,
+
+            \Bitly\Model\Authorizations::class => AuthorizationsNormalizer::class,
+
+            \Bitly\Model\BSDsResponse::class => BSDsResponseNormalizer::class,
+
+            \Bitly\Model\BSDAISearchPrompt::class => BSDAISearchPromptNormalizer::class,
+
+            \Bitly\Model\BSDSearchResult::class => BSDSearchResultNormalizer::class,
+
+            \Bitly\Model\BSDSearchResults::class => BSDSearchResultsNormalizer::class,
+
+            \Bitly\Model\InputDomain::class => InputDomainNormalizer::class,
+
+            \Bitly\Model\DomainStatus::class => DomainStatusNormalizer::class,
+
+            \Bitly\Model\DomainPurchase::class => DomainPurchaseNormalizer::class,
+
+            \Bitly\Model\PriceMap::class => PriceMapNormalizer::class,
+
+            \Bitly\Model\Tier::class => TierNormalizer::class,
+
+            \Bitly\Model\DefaultConsumableFeature::class => DefaultConsumableFeatureNormalizer::class,
+
+            \Bitly\Model\DefaultAccessFeature::class => DefaultAccessFeatureNormalizer::class,
+
+            \Bitly\Model\AddOnSetting::class => AddOnSettingNormalizer::class,
+
+            \Bitly\Model\AddOns::class => AddOnsNormalizer::class,
+
+            \Bitly\Model\AddOn::class => AddOnNormalizer::class,
+
+            \Bitly\Model\DomainValidateBody::class => DomainValidateBodyNormalizer::class,
+
+            \Bitly\Model\DomainValidate::class => DomainValidateNormalizer::class,
+
+            \Bitly\Model\DomainUpdate::class => DomainUpdateNormalizer::class,
+
+            \Bitly\Model\CustomDomainBody::class => CustomDomainBodyNormalizer::class,
+
+            \Bitly\Model\CustomDomains::class => CustomDomainsNormalizer::class,
+
+            \Bitly\Model\AppAssociationDetail::class => AppAssociationDetailNormalizer::class,
+
+            \Bitly\Model\AppAssociations::class => AppAssociationsNormalizer::class,
+
+            \Bitly\Model\PublicSSLCert::class => PublicSSLCertNormalizer::class,
+
+            \Bitly\Model\PublicValidate::class => PublicValidateNormalizer::class,
+
+            \Bitly\Model\MinimalDeeplinkApp::class => MinimalDeeplinkAppNormalizer::class,
+
+            \Bitly\Model\DeeplinkApp::class => DeeplinkAppNormalizer::class,
+
+            \Bitly\Model\DeeplinkApps::class => DeeplinkAppsNormalizer::class,
+
+            \Bitly\Model\DeeplinkMetric::class => DeeplinkMetricNormalizer::class,
+
+            \Bitly\Model\DeeplinkMetricsRollup::class => DeeplinkMetricsRollupNormalizer::class,
+
+            \Bitly\Model\GroupBitlinksCountRollup::class => GroupBitlinksCountRollupNormalizer::class,
+
+            \Bitly\Model\FacetCountItem::class => FacetCountItemNormalizer::class,
+
+            \Bitly\Model\FacetCountData::class => FacetCountDataNormalizer::class,
+
+            \Bitly\Model\GroupClicks::class => GroupClicksNormalizer::class,
+
+            \Bitly\Model\GroupClicksByFacet::class => GroupClicksByFacetNormalizer::class,
+
+            \Bitly\Model\GroupClicksByFacetRollup::class => GroupClicksByFacetRollupNormalizer::class,
+
+            \Bitly\Model\AccessFeature::class => AccessFeatureNormalizer::class,
+
+            \Bitly\Model\ConsumableFeature::class => ConsumableFeatureNormalizer::class,
+
+            \Bitly\Model\ConsumableFeatureAddOn::class => ConsumableFeatureAddOnNormalizer::class,
+
+            \Bitly\Model\AddOnUsage::class => AddOnUsageNormalizer::class,
+
+            \Bitly\Model\ConsumableFeatureFull::class => ConsumableFeatureFullNormalizer::class,
+
+            \Bitly\Model\GroupConsumableFeatureUsage::class => GroupConsumableFeatureUsageNormalizer::class,
+
+            \Bitly\Model\GroupHistoricalUsageTotals::class => GroupHistoricalUsageTotalsNormalizer::class,
+
+            \Bitly\Model\HistoricalUsageTotal::class => HistoricalUsageTotalNormalizer::class,
+
+            \Bitly\Model\HistoricalFeatureUsage::class => HistoricalFeatureUsageNormalizer::class,
+
+            \Bitly\Model\HistoricalUsage::class => HistoricalUsageNormalizer::class,
+
+            \Bitly\Model\AccessFeatures::class => AccessFeaturesNormalizer::class,
+
+            \Bitly\Model\ConsumableFeatures::class => ConsumableFeaturesNormalizer::class,
+
+            \Bitly\Model\FeatureUsage::class => FeatureUsageNormalizer::class,
+
+            \Bitly\Model\OrgFeatureUsageByGroup::class => OrgFeatureUsageByGroupNormalizer::class,
+
+            \Bitly\Model\GroupFeatureUsage::class => GroupFeatureUsageNormalizer::class,
+
+            \Bitly\Model\OrganizationHistoricalUsageTotals::class => OrganizationHistoricalUsageTotalsNormalizer::class,
+
+            \Bitly\Model\GroupHistoricalUsage::class => GroupHistoricalUsageNormalizer::class,
+
+            \Bitly\Model\CreateOAuthAppReq::class => CreateOAuthAppReqNormalizer::class,
+
+            \Bitly\Model\ActivityLogs::class => ActivityLogsNormalizer::class,
+
+            \Bitly\Model\ActivityLog::class => ActivityLogNormalizer::class,
+
+            \Bitly\Model\PurchaseBSD::class => PurchaseBSDNormalizer::class,
+
+            \Bitly\Model\PurchaseBSDResponse::class => PurchaseBSDResponseNormalizer::class,
+
+            \Bitly\Model\DomainAgreements::class => DomainAgreementsNormalizer::class,
+
+            \Bitly\Model\DomainDNS::class => DomainDNSNormalizer::class,
+
+            \Bitly\Model\Feedback::class => FeedbackNormalizer::class,
+
+            \Bitly\Model\DeactivateUser::class => DeactivateUserNormalizer::class,
+
+            \Bitly\Model\DeactivateUserFeedback::class => DeactivateUserFeedbackNormalizer::class,
+
+            \Bitly\Model\DomainRegistrarInfo::class => DomainRegistrarInfoNormalizer::class,
+
+            \Bitly\Model\DomainAgreement::class => DomainAgreementNormalizer::class,
+
+            \Bitly\Model\ShareableReport::class => ShareableReportNormalizer::class,
+
+            \Bitly\Model\ThirdPartyAppData::class => ThirdPartyAppDataNormalizer::class,
+
+            \Bitly\Model\Webhook::class => WebhookNormalizer::class,
+
+            \Bitly\Model\Webhooks::class => WebhooksNormalizer::class,
+
+            \Bitly\Model\WebhookCreate::class => WebhookCreateNormalizer::class,
+
+            \Bitly\Model\WebhookUpdate::class => WebhookUpdateNormalizer::class,
+
+            \Bitly\Model\PlanLimits::class => PlanLimitsNormalizer::class,
+
+            \Bitly\Model\PlanLimit::class => PlanLimitNormalizer::class,
+
+            \Bitly\Model\PlatformLimits::class => PlatformLimitsNormalizer::class,
+
+            \Bitly\Model\PlatformLimit::class => PlatformLimitNormalizer::class,
+
+            \Bitly\Model\MethodLimit::class => MethodLimitNormalizer::class,
+
+            \Bitly\Model\InvitationsCreate::class => InvitationsCreateNormalizer::class,
+
+            \Bitly\Model\Invitation::class => InvitationNormalizer::class,
+
+            \Bitly\Model\DataExportQuery::class => DataExportQueryNormalizer::class,
+
+            \Bitly\Model\LinksReportRequestBody::class => LinksReportRequestBodyNormalizer::class,
+
+            \Bitly\Model\TimePeriod::class => TimePeriodNormalizer::class,
+
+            \Bitly\Model\MetricsColumn::class => MetricsColumnNormalizer::class,
+
+            \Bitly\Model\LinksReportRequestResponse::class => LinksReportRequestResponseNormalizer::class,
+
+            \Bitly\Model\LinksReportRequestResponseRowsItem::class => LinksReportRequestResponseRowsItemNormalizer::class,
+
+            \Bitly\Model\LinksReportRequestResponseRowsItemMetricsItem::class => LinksReportRequestResponseRowsItemMetricsItemNormalizer::class,
+
+            \Bitly\Model\OrgUsersDataExportQuery::class => OrgUsersDataExportQueryNormalizer::class,
+
+            \Bitly\Model\Invitations::class => InvitationsNormalizer::class,
+
+            \Bitly\Model\FormCapturePayload::class => FormCapturePayloadNormalizer::class,
+
+            \Bitly\Model\FormPage::class => FormPageNormalizer::class,
+
+            \Bitly\Model\FormField::class => FormFieldNormalizer::class,
+
+            \Bitly\Model\FormConfig::class => FormConfigNormalizer::class,
+
+            \Bitly\Model\FormSelectOptions::class => FormSelectOptionsNormalizer::class,
+
+            \Bitly\Model\InvitationsAccept::class => InvitationsAcceptNormalizer::class,
+
+            \Bitly\Model\InvitationForLogin::class => InvitationForLoginNormalizer::class,
+
+            \Bitly\Model\InvitationsForLogin::class => InvitationsForLoginNormalizer::class,
+
+            \Bitly\Model\CreateOverrideRules::class => CreateOverrideRulesNormalizer::class,
+
+            \Bitly\Model\UpdateOverrideRules::class => UpdateOverrideRulesNormalizer::class,
+
+            \Bitly\Model\BitlinkOverrides::class => BitlinkOverridesNormalizer::class,
+
+            \Bitly\Model\BitlinkOverridesData::class => BitlinkOverridesDataNormalizer::class,
+
+            \Bitly\Model\BitlinkHistory::class => BitlinkHistoryNormalizer::class,
+
+            \Bitly\Model\BitlinkOverrideHistory::class => BitlinkOverrideHistoryNormalizer::class,
+
+            \Bitly\Model\ClicksForBitlinks::class => ClicksForBitlinksNormalizer::class,
+
+            \Bitly\Model\ClicksCount::class => ClicksCountNormalizer::class,
+
+            \Bitly\Model\BulkShortenUploads::class => BulkShortenUploadsNormalizer::class,
+
+            \Bitly\Model\BulkUploads::class => BulkUploadsNormalizer::class,
+
+            \Bitly\Model\BulkShortenUpload::class => BulkShortenUploadNormalizer::class,
+
+            \Bitly\Model\BulkUpload::class => BulkUploadNormalizer::class,
+
+            \Bitly\Model\BulkShortenValidate::class => BulkShortenValidateNormalizer::class,
+
+            \Bitly\Model\BulkUploadValidate::class => BulkUploadValidateNormalizer::class,
+
+            \Bitly\Model\BulkShortenUploadData::class => BulkShortenUploadDataNormalizer::class,
+
+            \Bitly\Model\BulkUploadData::class => BulkUploadDataNormalizer::class,
+
+            \Bitly\Model\TwoFactorCode::class => TwoFactorCodeNormalizer::class,
+
+            \Bitly\Model\TwoFactor::class => TwoFactorNormalizer::class,
+
+            \Bitly\Model\TwoFactorVerify::class => TwoFactorVerifyNormalizer::class,
+
+            \Bitly\Model\CountryCode::class => CountryCodeNormalizer::class,
+
+            \Bitly\Model\Launchpad::class => LaunchpadNormalizer::class,
+
+            \Bitly\Model\UpdateLaunchpad::class => UpdateLaunchpadNormalizer::class,
+
+            \Bitly\Model\Launchpads::class => LaunchpadsNormalizer::class,
+
+            \Bitly\Model\LaunchpadAppearance::class => LaunchpadAppearanceNormalizer::class,
+
+            \Bitly\Model\LaunchpadButtonCommon::class => LaunchpadButtonCommonNormalizer::class,
+
+            \Bitly\Model\LaunchpadButton::class => LaunchpadButtonNormalizer::class,
+
+            \Bitly\Model\LaunchpadSocial::class => LaunchpadSocialNormalizer::class,
+
+            \Bitly\Model\SiteBlockCommon::class => SiteBlockCommonNormalizer::class,
+
+            \Bitly\Model\SiteBlockContent::class => SiteBlockContentNormalizer::class,
+
+            \Bitly\Model\BlockContentYoutube::class => BlockContentYoutubeNormalizer::class,
+
+            \Bitly\Model\BlockContentSocial::class => BlockContentSocialNormalizer::class,
+
+            \Bitly\Model\TemplatesRequest::class => TemplatesRequestNormalizer::class,
+
+            \Bitly\Model\Template::class => TemplateNormalizer::class,
+
+            \Bitly\Model\TemplatesResponse::class => TemplatesResponseNormalizer::class,
+
+            \Bitly\Model\ApplyTemplateRequest::class => ApplyTemplateRequestNormalizer::class,
+
+            \Bitly\Model\SiteBlock::class => SiteBlockNormalizer::class,
+
+            \Bitly\Model\BlockOrders::class => BlockOrdersNormalizer::class,
+
+            \Bitly\Model\BlockOrder::class => BlockOrderNormalizer::class,
+
+            \Bitly\Model\SiteBlockContainerRequest::class => SiteBlockContainerRequestNormalizer::class,
+
+            \Bitly\Model\LaunchpadImages::class => LaunchpadImagesNormalizer::class,
+
+            \Bitly\Model\LaunchpadImage::class => LaunchpadImageNormalizer::class,
+
+            \Bitly\Model\ImageCommon::class => ImageCommonNormalizer::class,
+
+            \Bitly\Model\LaunchpadButtonRequest::class => LaunchpadButtonRequestNormalizer::class,
+
+            \Bitly\Model\LaunchpadSocialRequest::class => LaunchpadSocialRequestNormalizer::class,
+
+            \Bitly\Model\ContentRequestBitlink::class => ContentRequestBitlinkNormalizer::class,
+
+            \Bitly\Model\ContentRequestSocial::class => ContentRequestSocialNormalizer::class,
+
+            \Bitly\Model\LaunchpadContentBitlinkRequest::class => LaunchpadContentBitlinkRequestNormalizer::class,
+
+            \Bitly\Model\LaunchpadContentBitlinkRequestContent::class => LaunchpadContentBitlinkRequestContentNormalizer::class,
+
+            \Bitly\Model\LaunchpadContentSocialRequest::class => LaunchpadContentSocialRequestNormalizer::class,
+
+            \Bitly\Model\LaunchpadContentYouTubeRequest::class => LaunchpadContentYouTubeRequestNormalizer::class,
+
+            \Bitly\Model\LaunchpadContentYouTubeResponse::class => LaunchpadContentYouTubeResponseNormalizer::class,
+
+            \Bitly\Model\YoutubeVideoRequest::class => YoutubeVideoRequestNormalizer::class,
+
+            \Bitly\Model\YoutubeVideoResponse::class => YoutubeVideoResponseNormalizer::class,
+
+            \Bitly\Model\LaunchpadContentSocial::class => LaunchpadContentSocialNormalizer::class,
+
+            \Bitly\Model\LaunchpadContentImageRequest::class => LaunchpadContentImageRequestNormalizer::class,
+
+            \Bitly\Model\LaunchpadContentDigitalBusinessCardRequest::class => LaunchpadContentDigitalBusinessCardRequestNormalizer::class,
+
+            \Bitly\Model\LaunchpadContentDigitalBusinessCardResponse::class => LaunchpadContentDigitalBusinessCardResponseNormalizer::class,
+
+            \Bitly\Model\DigitalBusinessCardContent::class => DigitalBusinessCardContentNormalizer::class,
+
+            \Bitly\Model\DigitalBusinessCardContentFile::class => DigitalBusinessCardContentFileNormalizer::class,
+
+            \Bitly\Model\DigitalBusinessCardContact::class => DigitalBusinessCardContactNormalizer::class,
+
+            \Bitly\Model\LaunchpadContainerRequest::class => LaunchpadContainerRequestNormalizer::class,
+
+            \Bitly\Model\LaunchpadContainerResponse::class => LaunchpadContainerResponseNormalizer::class,
+
+            \Bitly\Model\LaunchpadContentImage::class => LaunchpadContentImageNormalizer::class,
+
+            \Bitly\Model\LaunchpadImageContentRequestData::class => LaunchpadImageContentRequestDataNormalizer::class,
+
+            \Bitly\Model\LaunchpadImageContentData::class => LaunchpadImageContentDataNormalizer::class,
+
+            \Bitly\Model\LaunchpadContentImageShortenURLData::class => LaunchpadContentImageShortenURLDataNormalizer::class,
+
+            \Bitly\Model\LaunchpadButtonAppearance::class => LaunchpadButtonAppearanceNormalizer::class,
+
+            \Bitly\Model\UpdateButtonSortOrder::class => UpdateButtonSortOrderNormalizer::class,
+
+            \Bitly\Model\LaunchpadButtonSortOrder::class => LaunchpadButtonSortOrderNormalizer::class,
+
+            \Bitly\Model\CreateLaunchpad::class => CreateLaunchpadNormalizer::class,
+
+            \Bitly\Model\SiteCloneRequest::class => SiteCloneRequestNormalizer::class,
+
+            \Bitly\Model\LaunchpadPresetTheme::class => LaunchpadPresetThemeNormalizer::class,
+
+            \Bitly\Model\LaunchpadQRCode::class => LaunchpadQRCodeNormalizer::class,
+
+            \Bitly\Model\BitlySiteContent::class => BitlySiteContentNormalizer::class,
+
+            \Bitly\Model\BitlySiteHeaderAppearance::class => BitlySiteHeaderAppearanceNormalizer::class,
+
+            \Bitly\Model\BitlySiteAppearance::class => BitlySiteAppearanceNormalizer::class,
+
+            \Bitly\Model\BitlySites::class => BitlySitesNormalizer::class,
+
+            \Bitly\Model\BitlySiteLayout::class => BitlySiteLayoutNormalizer::class,
+
+            \Bitly\Model\PrevalidateYouTubeVideoRequest::class => PrevalidateYouTubeVideoRequestNormalizer::class,
+
+            \Bitly\Model\KeepSitesRequest::class => KeepSitesRequestNormalizer::class,
+
+            \Bitly\Model\LaunchpadImageUpload::class => LaunchpadImageUploadNormalizer::class,
+
+            \Bitly\Model\ImageCropPoint::class => ImageCropPointNormalizer::class,
+
+            \Bitly\Model\ImageCrop::class => ImageCropNormalizer::class,
+
+            \Bitly\Model\ImageUpdate::class => ImageUpdateNormalizer::class,
+
+            \Bitly\Model\LaunchpadImageUpdate::class => LaunchpadImageUpdateNormalizer::class,
+
+            \Bitly\Model\PublicImageURL::class => PublicImageURLNormalizer::class,
+
+            \Bitly\Model\EvaluateInterventionRequest::class => EvaluateInterventionRequestNormalizer::class,
+
+            \Bitly\Model\EvaluateInterventionResponse::class => EvaluateInterventionResponseNormalizer::class,
+
+            \Bitly\Model\EvaluateInterventionResponseMonthlyPromo::class => EvaluateInterventionResponseMonthlyPromoNormalizer::class,
+
+            \Bitly\Model\EvaluateInterventionResponseAnnualPromo::class => EvaluateInterventionResponseAnnualPromoNormalizer::class,
+
+            \Bitly\Model\PromoCode::class => PromoCodeNormalizer::class,
+
+            \Bitly\Model\PromoCodeValidPlans::class => PromoCodeValidPlansNormalizer::class,
+
+            \Bitly\Model\ApplyDiscount::class => ApplyDiscountNormalizer::class,
+
+            \Bitly\Model\DecideRequest::class => DecideRequestNormalizer::class,
+
+            \Bitly\Model\DecideResponse::class => DecideResponseNormalizer::class,
+
+            \Bitly\Model\TrackRequest::class => TrackRequestNormalizer::class,
+
+            \Bitly\Model\ImageUpload::class => ImageUploadNormalizer::class,
+
+            \Bitly\Model\ImageUploadResponse::class => ImageUploadResponseNormalizer::class,
+
+            \Bitly\Model\UserRole::class => UserRoleNormalizer::class,
+
+            \Bitly\Model\BulkAddResponse::class => BulkAddResponseNormalizer::class,
+
+            \Bitly\Model\BulkAddResponseData::class => BulkAddResponseDataNormalizer::class,
+
+            \Bitly\Model\Intervention::class => InterventionNormalizer::class,
+
+            \Bitly\Model\InterventionsOffered::class => InterventionsOfferedNormalizer::class,
+
+            \Bitly\Model\BulkUpdateRequest::class => BulkUpdateRequestNormalizer::class,
+
+            \Bitly\Model\BulkUpdate::class => BulkUpdateNormalizer::class,
+
+            \Bitly\Model\GenericAccessTokenReq::class => GenericAccessTokenReqNormalizer::class,
+
+            \Bitly\Model\GenericAccessToken::class => GenericAccessTokenNormalizer::class,
+
+            \Bitly\Model\OrganizationGUID::class => OrganizationGUIDNormalizer::class,
+
+            \Bitly\Model\TitleResponse::class => TitleResponseNormalizer::class,
+
+            \Bitly\Model\QRCode::class => QRCodeNormalizer::class,
+
+            \Bitly\Model\QRCodeDetails::class => QRCodeDetailsNormalizer::class,
+
+            \Bitly\Model\QRCodeDestination::class => QRCodeDestinationNormalizer::class,
+
+            \Bitly\Model\QRCodeMinimal::class => QRCodeMinimalNormalizer::class,
+
+            \Bitly\Model\GS1Metadata::class => GS1MetadataNormalizer::class,
+
+            \Bitly\Model\GS1Value::class => GS1ValueNormalizer::class,
+
+            \Bitly\Model\QRCodeTemplate::class => QRCodeTemplateNormalizer::class,
+
+            \Bitly\Model\CreateQRCodeFromUrlRequest::class => CreateQRCodeFromUrlRequestNormalizer::class,
+
+            \Bitly\Model\CreateQRCodeRequest::class => CreateQRCodeRequestNormalizer::class,
+
+            \Bitly\Model\UpdateQRCodeRequest::class => UpdateQRCodeRequestNormalizer::class,
+
+            \Bitly\Model\QRCodeCustomizationsPublic::class => QRCodeCustomizationsPublicNormalizer::class,
+
+            \Bitly\Model\QRCodeCustomizations::class => QRCodeCustomizationsNormalizer::class,
+
+            \Bitly\Model\PublicCreateQRCodeRequest::class => PublicCreateQRCodeRequestNormalizer::class,
+
+            \Bitly\Model\PublicUpdateQRCodeRequest::class => PublicUpdateQRCodeRequestNormalizer::class,
+
+            \Bitly\Model\PublicQRCodeImageResponse::class => PublicQRCodeImageResponseNormalizer::class,
+
+            \Bitly\Model\PublicQrCode::class => PublicQrCodeNormalizer::class,
+
+            \Bitly\Model\QRCodeFullResponse::class => QRCodeFullResponseNormalizer::class,
+
+            \Bitly\Model\QRCodeFullListResponse::class => QRCodeFullListResponseNormalizer::class,
+
+            \Bitly\Model\QRCodeFullPaginatedListResponse::class => QRCodeFullPaginatedListResponseNormalizer::class,
+
+            \Bitly\Model\QRCodesMinimal::class => QRCodesMinimalNormalizer::class,
+
+            \Bitly\Model\QRCodeHistory::class => QRCodeHistoryNormalizer::class,
+
+            \Bitly\Model\QRCodeHistoryEntry::class => QRCodeHistoryEntryNormalizer::class,
+
+            \Bitly\Model\QRCodeCustomizationOptionsResponse::class => QRCodeCustomizationOptionsResponseNormalizer::class,
+
+            \Bitly\Model\PreviewQRCodeRequestV2::class => PreviewQRCodeRequestV2Normalizer::class,
+
+            \Bitly\Model\QRCodeTemplateRequest::class => QRCodeTemplateRequestNormalizer::class,
+
+            \Bitly\Model\QRCodeTemplateResponse::class => QRCodeTemplateResponseNormalizer::class,
+
+            \Bitly\Model\QRCodeTemplatesResponse::class => QRCodeTemplatesResponseNormalizer::class,
+
+            \Bitly\Model\RedirectQRCodeRequest::class => RedirectQRCodeRequestNormalizer::class,
+
+            \Bitly\Model\PublicQRCodeResponse::class => PublicQRCodeResponseNormalizer::class,
+
+            \Bitly\Model\QRCodeCorners::class => QRCodeCornersNormalizer::class,
+
+            \Bitly\Model\QRCodeCorner::class => QRCodeCornerNormalizer::class,
+
+            \Bitly\Model\QRCodeGradient::class => QRCodeGradientNormalizer::class,
+
+            \Bitly\Model\GradientColor::class => GradientColorNormalizer::class,
+
+            \Bitly\Model\QRCodeLogoPublic::class => QRCodeLogoPublicNormalizer::class,
+
+            \Bitly\Model\QRCodeLogo::class => QRCodeLogoNormalizer::class,
+
+            \Bitly\Model\QRCodeLogoCrop::class => QRCodeLogoCropNormalizer::class,
+
+            \Bitly\Model\QRCodeBranding::class => QRCodeBrandingNormalizer::class,
+
+            \Bitly\Model\QRCodeFrameRequest::class => QRCodeFrameRequestNormalizer::class,
+
+            \Bitly\Model\QRCodeFrameRequestColors::class => QRCodeFrameRequestColorsNormalizer::class,
+
+            \Bitly\Model\QRCodeFrameRequestText::class => QRCodeFrameRequestTextNormalizer::class,
+
+            \Bitly\Model\QRCodeFrame::class => QRCodeFrameNormalizer::class,
+
+            \Bitly\Model\QRCodeFrameColors::class => QRCodeFrameColorsNormalizer::class,
+
+            \Bitly\Model\QRCodeFrameText::class => QRCodeFrameTextNormalizer::class,
+
+            \Bitly\Model\QRCodeFrameResponseItem::class => QRCodeFrameResponseItemNormalizer::class,
+
+            \Bitly\Model\QRCodeText::class => QRCodeTextNormalizer::class,
+
+            \Bitly\Model\Text::class => TextNormalizer::class,
+
+            \Bitly\Model\QRCodeShape::class => QRCodeShapeNormalizer::class,
+
+            \Bitly\Model\QRCodeShapeItem::class => QRCodeShapeItemNormalizer::class,
+
+            \Bitly\Model\QRCodeDynamic::class => QRCodeDynamicNormalizer::class,
+
+            \Bitly\Model\QRCodeStatic::class => QRCodeStaticNormalizer::class,
+
+            \Bitly\Model\QRCodeVirtualCard::class => QRCodeVirtualCardNormalizer::class,
+
+            \Bitly\Model\QRCodeWifi::class => QRCodeWifiNormalizer::class,
+
+            \Bitly\Model\QRCodeEmail::class => QRCodeEmailNormalizer::class,
+
+            \Bitly\Model\QRCodePhoneNumber::class => QRCodePhoneNumberNormalizer::class,
+
+            \Bitly\Model\QRCodeTextMessage::class => QRCodeTextMessageNormalizer::class,
+
+            \Bitly\Model\DeletedQRCodeResponse::class => DeletedQRCodeResponseNormalizer::class,
+
+            \Bitly\Model\BulkAddQRCodeResponse::class => BulkAddQRCodeResponseNormalizer::class,
+
+            \Bitly\Model\QRCodeLogoImage::class => QRCodeLogoImageNormalizer::class,
+
+            \Bitly\Model\QRCodeDotPattern::class => QRCodeDotPatternNormalizer::class,
+
+            \Bitly\Model\QRCodeTypeItem::class => QRCodeTypeItemNormalizer::class,
+
+            \Bitly\Model\QRCodeTypeResponse::class => QRCodeTypeResponseNormalizer::class,
+
+            \Bitly\Model\QRCodeSpecSettingsPublic::class => QRCodeSpecSettingsPublicNormalizer::class,
+
+            \Bitly\Model\QRCodeSpecSettings::class => QRCodeSpecSettingsNormalizer::class,
+
+            \Bitly\Model\QRCodeCornerResponseItem::class => QRCodeCornerResponseItemNormalizer::class,
+
+            \Bitly\Model\QRCodeImageResponse::class => QRCodeImageResponseNormalizer::class,
+
+            \Bitly\Model\QRCodeURI::class => QRCodeURINormalizer::class,
+
+            \Bitly\Model\ProductUtilizationResponse::class => ProductUtilizationResponseNormalizer::class,
+
+            \Bitly\Model\PublicCanvaUserBrand::class => PublicCanvaUserBrandNormalizer::class,
+
+            \Bitly\Model\UpdateCanvaUserBrand::class => UpdateCanvaUserBrandNormalizer::class,
+
+            \Bitly\Model\CreateFocusRequest::class => CreateFocusRequestNormalizer::class,
+
+            \Bitly\Model\CreateFocusResponse::class => CreateFocusResponseNormalizer::class,
+
+            \Bitly\Model\GetFocusResponse::class => GetFocusResponseNormalizer::class,
+
+            \Bitly\Model\CreateOrgDomainVerificationEmailRequest::class => CreateOrgDomainVerificationEmailRequestNormalizer::class,
+
+            \Bitly\Model\OrgDomainVerification::class => OrgDomainVerificationNormalizer::class,
+
+            \Bitly\Model\PatchOrgControlledDomain::class => PatchOrgControlledDomainNormalizer::class,
+
+            \Bitly\Model\PatchOrgInvitationRequest::class => PatchOrgInvitationRequestNormalizer::class,
+
+            \Bitly\Model\Address::class => AddressNormalizer::class,
+
+            \Bitly\Model\PayerInfo::class => PayerInfoNormalizer::class,
+
+            \Bitly\Model\Payer::class => PayerNormalizer::class,
+
+            \Bitly\Model\BillingAgreement::class => BillingAgreementNormalizer::class,
+
+            \Bitly\Model\BillingAgreementToken::class => BillingAgreementTokenNormalizer::class,
+
+            \Bitly\Model\OrgDomainsStatus::class => OrgDomainsStatusNormalizer::class,
+
+            \Bitly\Model\OrgInvitationRequests::class => OrgInvitationRequestsNormalizer::class,
+
+            \Bitly\Model\TranslationRequest::class => TranslationRequestNormalizer::class,
+
+            \Bitly\Model\RetainedEntitiesAfterDowngrade::class => RetainedEntitiesAfterDowngradeNormalizer::class,
+
+            \Bitly\Model\BadRequest::class => BadRequestNormalizer::class,
+
+            \Bitly\Model\UnprocessableEntity::class => UnprocessableEntityNormalizer::class,
+
+            \Bitly\Model\TooManyRequests::class => TooManyRequestsNormalizer::class,
+
+            \Bitly\Model\MonthlyLimitExceeded::class => MonthlyLimitExceededNormalizer::class,
+
+            \Bitly\Model\NotFound::class => NotFoundNormalizer::class,
+
+            \Bitly\Model\Conflict::class => ConflictNormalizer::class,
+
+            \Bitly\Model\UpgradeRequired::class => UpgradeRequiredNormalizer::class,
+
+            \Bitly\Model\Forbidden::class => ForbiddenNormalizer::class,
+
+            \Bitly\Model\InternalError::class => InternalErrorNormalizer::class,
+
+            \Bitly\Model\BadGateway::class => BadGatewayNormalizer::class,
+
+            \Bitly\Model\TemporarilyUnavailable::class => TemporarilyUnavailableNormalizer::class,
+
+            \Bitly\Model\ExpectationFailed::class => ExpectationFailedNormalizer::class,
+
+            \Bitly\Model\Timeout::class => TimeoutNormalizer::class,
+
+            \Bitly\Model\Unauthorized::class => UnauthorizedNormalizer::class,
+
+            \Bitly\Model\Gone::class => GoneNormalizer::class,
 
             \Jane\Component\JsonSchemaRuntime\Reference::class => \Bitly\Runtime\Normalizer\ReferenceNormalizer::class,
         ];
@@ -92,14 +1122,529 @@ if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR
         public function getSupportedTypes(?string $format = null): array
         {
             return [
-                \Bitly\Model\Order::class => false,
-                \Bitly\Model\Customer::class => false,
-                \Bitly\Model\Address::class => false,
-                \Bitly\Model\Category::class => false,
+                \Bitly\Model\CurrencyList::class => false,
+                \Bitly\Model\SupportedCurrency::class => false,
+                \Bitly\Model\Regions::class => false,
+                \Bitly\Model\Region::class => false,
+                \Bitly\Model\Subregion::class => false,
+                \Bitly\Model\AutobrandedDomain::class => false,
+                \Bitly\Model\AutobrandedDomainResultItem::class => false,
+                \Bitly\Model\CustomDomain::class => false,
+                \Bitly\Model\UMGroupPreferences::class => false,
+                \Bitly\Model\SiteTheme::class => false,
+                \Bitly\Model\SiteThemes::class => false,
+                \Bitly\Model\Contacts::class => false,
+                \Bitly\Model\BillingAccount::class => false,
+                \Bitly\Model\BillingAccountID::class => false,
+                \Bitly\Model\BillingSignature::class => false,
+                \Bitly\Model\PayPalToken::class => false,
+                \Bitly\Model\OrgTierHistory::class => false,
+                \Bitly\Model\SubscriptionCancelledDate::class => false,
+                \Bitly\Model\PaymentInvoices::class => false,
+                \Bitly\Model\PaymentInvoice::class => false,
+                \Bitly\Model\PaymentInvoiceDetail::class => false,
+                \Bitly\Model\Charges::class => false,
+                \Bitly\Model\Payments::class => false,
+                \Bitly\Model\AnnualRenewalReminderRequest::class => false,
+                \Bitly\Model\FieldError::class => false,
+                \Bitly\Model\Error::class => false,
+                \Bitly\Model\SimplifiedError::class => false,
+                \Bitly\Model\UsersPagination::class => false,
+                \Bitly\Model\BitlinksPagination::class => false,
+                \Bitly\Model\LaunchpadsPagination::class => false,
+                \Bitly\Model\MicrositePagination::class => false,
+                \Bitly\Model\QRPagination::class => false,
+                \Bitly\Model\Group::class => false,
+                \Bitly\Model\Groups::class => false,
+                \Bitly\Model\GroupUpdate::class => false,
+                \Bitly\Model\SSOSettings::class => false,
+                \Bitly\Model\GeoIP::class => false,
+                \Bitly\Model\SSOSlug::class => false,
+                \Bitly\Model\SSOVerifySlug::class => false,
+                \Bitly\Model\OrganizationUpdate::class => false,
+                \Bitly\Model\Organization::class => false,
+                \Bitly\Model\Organizations::class => false,
+                \Bitly\Model\BasicInfo::class => false,
+                \Bitly\Model\BillingInfo::class => false,
+                \Bitly\Model\UpgradeOrgBody::class => false,
+                \Bitly\Model\DowngradeOrgBody::class => false,
+                \Bitly\Model\ContactInfo::class => false,
+                \Bitly\Model\SubscriptionDiscount::class => false,
+                \Bitly\Model\BillingDowngrade::class => false,
+                \Bitly\Model\UpdateRetainedDowngradeEntities::class => false,
+                \Bitly\Model\PayPalTokenRequest::class => false,
+                \Bitly\Model\BillingContact::class => false,
+                \Bitly\Model\BillingAddress::class => false,
+                \Bitly\Model\CreatePaymentMethod::class => false,
+                \Bitly\Model\PaymentMethod::class => false,
                 \Bitly\Model\User::class => false,
-                \Bitly\Model\Tag::class => false,
-                \Bitly\Model\Pet::class => false,
-                \Bitly\Model\ApiResponse::class => false,
+                \Bitly\Model\UserInternal::class => false,
+                \Bitly\Model\Users::class => false,
+                \Bitly\Model\CreateUserBody::class => false,
+                \Bitly\Model\PublicOAuthUser::class => false,
+                \Bitly\Model\UserUpdate::class => false,
+                \Bitly\Model\OrganizationPreferences::class => false,
+                \Bitly\Model\UserPreferences::class => false,
+                \Bitly\Model\UserPreferenceBody::class => false,
+                \Bitly\Model\UserPasswordChange::class => false,
+                \Bitly\Model\UserOnboardingSurvey::class => false,
+                \Bitly\Model\Email::class => false,
+                \Bitly\Model\EmailBody::class => false,
+                \Bitly\Model\OrgEmailBody::class => false,
+                \Bitly\Model\OrgEmail::class => false,
+                \Bitly\Model\OrgEmails::class => false,
+                \Bitly\Model\GroupBitlinksCount::class => false,
+                \Bitly\Model\CountItem::class => false,
+                \Bitly\Model\QRCodes::class => false,
+                \Bitly\Model\OrgInvitationRequest::class => false,
+                \Bitly\Model\OrgDomainStatus::class => false,
+                \Bitly\Model\FullQRCodeWithScans::class => false,
+                \Bitly\Model\FullQRCode::class => false,
+                \Bitly\Model\QRCustomizations::class => false,
+                \Bitly\Model\QRLogoImagesResponse::class => false,
+                \Bitly\Model\QRLogoImages::class => false,
+                \Bitly\Model\ShortenBitlinkBody::class => false,
+                \Bitly\Model\LinkDeletionResponse::class => false,
+                \Bitly\Model\DeletedLink::class => false,
+                \Bitly\Model\BitlinkBody::class => false,
+                \Bitly\Model\BitlinkUpdate::class => false,
+                \Bitly\Model\BitlinkUpdateBody::class => false,
+                \Bitly\Model\Bitlinks::class => false,
+                \Bitly\Model\ExpandBitlink::class => false,
+                \Bitly\Model\ExpandedBitlink::class => false,
+                \Bitly\Model\ClickLink::class => false,
+                \Bitly\Model\SortedLinks::class => false,
+                \Bitly\Model\SortedButtons::class => false,
+                \Bitly\Model\SortedButtonsButtonsItem::class => false,
+                \Bitly\Model\SortedButtonsPageViewsItem::class => false,
+                \Bitly\Model\DeeplinkRule::class => false,
+                \Bitly\Model\DeeplinkRules::class => false,
+                \Bitly\Model\Deeplink::class => false,
+                \Bitly\Model\FullShorten::class => false,
+                \Bitly\Model\Shorten::class => false,
+                \Bitly\Model\MetricsParams::class => false,
+                \Bitly\Model\LinkClicks::class => false,
+                \Bitly\Model\QRScans::class => false,
+                \Bitly\Model\Clicks::class => false,
+                \Bitly\Model\Scans::class => false,
+                \Bitly\Model\TotalEngagements::class => false,
+                \Bitly\Model\Engagements::class => false,
+                \Bitly\Model\Engagement::class => false,
+                \Bitly\Model\TotalEngagementsSummary::class => false,
+                \Bitly\Model\BitlinkClicks::class => false,
+                \Bitly\Model\BitlinkScans::class => false,
+                \Bitly\Model\PaginatedAnalyticsReports::class => false,
+                \Bitly\Model\DayEngagements::class => false,
+                \Bitly\Model\EngagementsDailySummary::class => false,
+                \Bitly\Model\LinkEngagements::class => false,
+                \Bitly\Model\EngagementsDayDrillDown::class => false,
+                \Bitly\Model\AnalyticsReport::class => false,
+                \Bitly\Model\AnalyticsReports::class => false,
+                \Bitly\Model\ButtonClicks::class => false,
+                \Bitly\Model\ReportSettings::class => false,
+                \Bitly\Model\ReportFilters::class => false,
+                \Bitly\Model\AnalyticsReportContent::class => false,
+                \Bitly\Model\Module::class => false,
+                \Bitly\Model\ModuleSettings::class => false,
+                \Bitly\Model\ChartVisualization::class => false,
+                \Bitly\Model\TimeComparisonDetails::class => false,
+                \Bitly\Model\UpdateAnalyticsModule::class => false,
+                \Bitly\Model\CreateAnalyticsModule::class => false,
+                \Bitly\Model\CreateAnalyticsReport::class => false,
+                \Bitly\Model\UpdateAnalyticsReport::class => false,
+                \Bitly\Model\GroupAnalyticsUsage::class => false,
+                \Bitly\Model\LaunchpadLinkPerformance::class => false,
+                \Bitly\Model\LaunchpadClicks::class => false,
+                \Bitly\Model\ClicksSummary::class => false,
+                \Bitly\Model\ScansSummary::class => false,
+                \Bitly\Model\BitlinkClicksSummary::class => false,
+                \Bitly\Model\BitlinkScansSummary::class => false,
+                \Bitly\Model\ButtonClicksSummary::class => false,
+                \Bitly\Model\Views::class => false,
+                \Bitly\Model\ViewsSummary::class => false,
+                \Bitly\Model\DownloadsOverTime::class => false,
+                \Bitly\Model\DownloadMetric::class => false,
+                \Bitly\Model\DownloadMetrics::class => false,
+                \Bitly\Model\CityDownloadMetric::class => false,
+                \Bitly\Model\CityDownloadMetrics::class => false,
+                \Bitly\Model\DeviceDownloadMetric::class => false,
+                \Bitly\Model\DeviceDownloadMetrics::class => false,
+                \Bitly\Model\MicrositeDownloads::class => false,
+                \Bitly\Model\CampaignClickData::class => false,
+                \Bitly\Model\ChannelBitlink::class => false,
+                \Bitly\Model\ChannelBitlinks::class => false,
+                \Bitly\Model\CampaignClicks::class => false,
+                \Bitly\Model\CampaignClicksData::class => false,
+                \Bitly\Model\CampaignChannelClicks::class => false,
+                \Bitly\Model\Tags::class => false,
+                \Bitly\Model\EncodingLogin::class => false,
+                \Bitly\Model\GroupPreferences::class => false,
+                \Bitly\Model\AddCustomBitlink::class => false,
+                \Bitly\Model\UpdateCustomBitlink::class => false,
+                \Bitly\Model\CustomBitlink::class => false,
+                \Bitly\Model\CustomBitlinkHistory::class => false,
+                \Bitly\Model\Metric::class => false,
+                \Bitly\Model\CityMetric::class => false,
+                \Bitly\Model\OtherMetrics::class => false,
+                \Bitly\Model\OtherScanMetrics::class => false,
+                \Bitly\Model\CityBitlinkClicksMetric::class => false,
+                \Bitly\Model\BitlinkClicksMetric::class => false,
+                \Bitly\Model\BaseBitlinkClicksMetrics::class => false,
+                \Bitly\Model\BitlinkClicksMetrics::class => false,
+                \Bitly\Model\CityBitlinkClicksMetrics::class => false,
+                \Bitly\Model\OtherBitlinkClicksMetrics::class => false,
+                \Bitly\Model\OtherViewMetrics::class => false,
+                \Bitly\Model\ClickMetric::class => false,
+                \Bitly\Model\ViewMetric::class => false,
+                \Bitly\Model\OtherDownloadMetric::class => false,
+                \Bitly\Model\MicrositeDownloadMetric::class => false,
+                \Bitly\Model\DeviceMetric::class => false,
+                \Bitly\Model\BaseMetrics::class => false,
+                \Bitly\Model\Metrics::class => false,
+                \Bitly\Model\ClickMetrics::class => false,
+                \Bitly\Model\DeviceMetrics::class => false,
+                \Bitly\Model\CityMetrics::class => false,
+                \Bitly\Model\CityScanMetric::class => false,
+                \Bitly\Model\ScanMetric::class => false,
+                \Bitly\Model\BaseScanMetrics::class => false,
+                \Bitly\Model\ScanMetrics::class => false,
+                \Bitly\Model\CityScanMetrics::class => false,
+                \Bitly\Model\CityViewMetrics::class => false,
+                \Bitly\Model\ReferrersByDomain::class => false,
+                \Bitly\Model\ReferrersByDomains::class => false,
+                \Bitly\Model\AggregateClicksForBitlinks::class => false,
+                \Bitly\Model\AggregateClicksForBitlinksByCitiesFacet::class => false,
+                \Bitly\Model\AggregateClicksForBitlinksByFacet::class => false,
+                \Bitly\Model\SortedEngagements::class => false,
+                \Bitly\Model\EngagementForSort::class => false,
+                \Bitly\Model\BitlinkEngagements::class => false,
+                \Bitly\Model\ClicksForAggregate::class => false,
+                \Bitly\Model\ClicksOverTime::class => false,
+                \Bitly\Model\ClicksByFacet::class => false,
+                \Bitly\Model\ClicksByCitiesFacet::class => false,
+                \Bitly\Model\Campaign::class => false,
+                \Bitly\Model\Event::class => false,
+                \Bitly\Model\Campaigns::class => false,
+                \Bitly\Model\CampaignModify::class => false,
+                \Bitly\Model\CampaignAddBitlink::class => false,
+                \Bitly\Model\CampaignAddBitlinkResponse::class => false,
+                \Bitly\Model\CampaignAddBitlinkResponseData::class => false,
+                \Bitly\Model\AddBitlinkResult::class => false,
+                \Bitly\Model\BaseChannelBitlink::class => false,
+                \Bitly\Model\BaseChannel::class => false,
+                \Bitly\Model\Channel::class => false,
+                \Bitly\Model\ChannelModify::class => false,
+                \Bitly\Model\Channels::class => false,
+                \Bitly\Model\HasReferences::class => false,
+                \Bitly\Model\OAuthApps::class => false,
+                \Bitly\Model\OAuthApp::class => false,
+                \Bitly\Model\OAuthAppFull::class => false,
+                \Bitly\Model\UpdateApp::class => false,
+                \Bitly\Model\OAuthAppWithOwnerLogin::class => false,
+                \Bitly\Model\Authorization::class => false,
+                \Bitly\Model\Authorizations::class => false,
+                \Bitly\Model\BSDsResponse::class => false,
+                \Bitly\Model\BSDAISearchPrompt::class => false,
+                \Bitly\Model\BSDSearchResult::class => false,
+                \Bitly\Model\BSDSearchResults::class => false,
+                \Bitly\Model\InputDomain::class => false,
+                \Bitly\Model\DomainStatus::class => false,
+                \Bitly\Model\DomainPurchase::class => false,
+                \Bitly\Model\PriceMap::class => false,
+                \Bitly\Model\Tier::class => false,
+                \Bitly\Model\DefaultConsumableFeature::class => false,
+                \Bitly\Model\DefaultAccessFeature::class => false,
+                \Bitly\Model\AddOnSetting::class => false,
+                \Bitly\Model\AddOns::class => false,
+                \Bitly\Model\AddOn::class => false,
+                \Bitly\Model\DomainValidateBody::class => false,
+                \Bitly\Model\DomainValidate::class => false,
+                \Bitly\Model\DomainUpdate::class => false,
+                \Bitly\Model\CustomDomainBody::class => false,
+                \Bitly\Model\CustomDomains::class => false,
+                \Bitly\Model\AppAssociationDetail::class => false,
+                \Bitly\Model\AppAssociations::class => false,
+                \Bitly\Model\PublicSSLCert::class => false,
+                \Bitly\Model\PublicValidate::class => false,
+                \Bitly\Model\MinimalDeeplinkApp::class => false,
+                \Bitly\Model\DeeplinkApp::class => false,
+                \Bitly\Model\DeeplinkApps::class => false,
+                \Bitly\Model\DeeplinkMetric::class => false,
+                \Bitly\Model\DeeplinkMetricsRollup::class => false,
+                \Bitly\Model\GroupBitlinksCountRollup::class => false,
+                \Bitly\Model\FacetCountItem::class => false,
+                \Bitly\Model\FacetCountData::class => false,
+                \Bitly\Model\GroupClicks::class => false,
+                \Bitly\Model\GroupClicksByFacet::class => false,
+                \Bitly\Model\GroupClicksByFacetRollup::class => false,
+                \Bitly\Model\AccessFeature::class => false,
+                \Bitly\Model\ConsumableFeature::class => false,
+                \Bitly\Model\ConsumableFeatureAddOn::class => false,
+                \Bitly\Model\AddOnUsage::class => false,
+                \Bitly\Model\ConsumableFeatureFull::class => false,
+                \Bitly\Model\GroupConsumableFeatureUsage::class => false,
+                \Bitly\Model\GroupHistoricalUsageTotals::class => false,
+                \Bitly\Model\HistoricalUsageTotal::class => false,
+                \Bitly\Model\HistoricalFeatureUsage::class => false,
+                \Bitly\Model\HistoricalUsage::class => false,
+                \Bitly\Model\AccessFeatures::class => false,
+                \Bitly\Model\ConsumableFeatures::class => false,
+                \Bitly\Model\FeatureUsage::class => false,
+                \Bitly\Model\OrgFeatureUsageByGroup::class => false,
+                \Bitly\Model\GroupFeatureUsage::class => false,
+                \Bitly\Model\OrganizationHistoricalUsageTotals::class => false,
+                \Bitly\Model\GroupHistoricalUsage::class => false,
+                \Bitly\Model\CreateOAuthAppReq::class => false,
+                \Bitly\Model\ActivityLogs::class => false,
+                \Bitly\Model\ActivityLog::class => false,
+                \Bitly\Model\PurchaseBSD::class => false,
+                \Bitly\Model\PurchaseBSDResponse::class => false,
+                \Bitly\Model\DomainAgreements::class => false,
+                \Bitly\Model\DomainDNS::class => false,
+                \Bitly\Model\Feedback::class => false,
+                \Bitly\Model\DeactivateUser::class => false,
+                \Bitly\Model\DeactivateUserFeedback::class => false,
+                \Bitly\Model\DomainRegistrarInfo::class => false,
+                \Bitly\Model\DomainAgreement::class => false,
+                \Bitly\Model\ShareableReport::class => false,
+                \Bitly\Model\ThirdPartyAppData::class => false,
+                \Bitly\Model\Webhook::class => false,
+                \Bitly\Model\Webhooks::class => false,
+                \Bitly\Model\WebhookCreate::class => false,
+                \Bitly\Model\WebhookUpdate::class => false,
+                \Bitly\Model\PlanLimits::class => false,
+                \Bitly\Model\PlanLimit::class => false,
+                \Bitly\Model\PlatformLimits::class => false,
+                \Bitly\Model\PlatformLimit::class => false,
+                \Bitly\Model\MethodLimit::class => false,
+                \Bitly\Model\InvitationsCreate::class => false,
+                \Bitly\Model\Invitation::class => false,
+                \Bitly\Model\DataExportQuery::class => false,
+                \Bitly\Model\LinksReportRequestBody::class => false,
+                \Bitly\Model\TimePeriod::class => false,
+                \Bitly\Model\MetricsColumn::class => false,
+                \Bitly\Model\LinksReportRequestResponse::class => false,
+                \Bitly\Model\LinksReportRequestResponseRowsItem::class => false,
+                \Bitly\Model\LinksReportRequestResponseRowsItemMetricsItem::class => false,
+                \Bitly\Model\OrgUsersDataExportQuery::class => false,
+                \Bitly\Model\Invitations::class => false,
+                \Bitly\Model\FormCapturePayload::class => false,
+                \Bitly\Model\FormPage::class => false,
+                \Bitly\Model\FormField::class => false,
+                \Bitly\Model\FormConfig::class => false,
+                \Bitly\Model\FormSelectOptions::class => false,
+                \Bitly\Model\InvitationsAccept::class => false,
+                \Bitly\Model\InvitationForLogin::class => false,
+                \Bitly\Model\InvitationsForLogin::class => false,
+                \Bitly\Model\CreateOverrideRules::class => false,
+                \Bitly\Model\UpdateOverrideRules::class => false,
+                \Bitly\Model\BitlinkOverrides::class => false,
+                \Bitly\Model\BitlinkOverridesData::class => false,
+                \Bitly\Model\BitlinkHistory::class => false,
+                \Bitly\Model\BitlinkOverrideHistory::class => false,
+                \Bitly\Model\ClicksForBitlinks::class => false,
+                \Bitly\Model\ClicksCount::class => false,
+                \Bitly\Model\BulkShortenUploads::class => false,
+                \Bitly\Model\BulkUploads::class => false,
+                \Bitly\Model\BulkShortenUpload::class => false,
+                \Bitly\Model\BulkUpload::class => false,
+                \Bitly\Model\BulkShortenValidate::class => false,
+                \Bitly\Model\BulkUploadValidate::class => false,
+                \Bitly\Model\BulkShortenUploadData::class => false,
+                \Bitly\Model\BulkUploadData::class => false,
+                \Bitly\Model\TwoFactorCode::class => false,
+                \Bitly\Model\TwoFactor::class => false,
+                \Bitly\Model\TwoFactorVerify::class => false,
+                \Bitly\Model\CountryCode::class => false,
+                \Bitly\Model\Launchpad::class => false,
+                \Bitly\Model\UpdateLaunchpad::class => false,
+                \Bitly\Model\Launchpads::class => false,
+                \Bitly\Model\LaunchpadAppearance::class => false,
+                \Bitly\Model\LaunchpadButtonCommon::class => false,
+                \Bitly\Model\LaunchpadButton::class => false,
+                \Bitly\Model\LaunchpadSocial::class => false,
+                \Bitly\Model\SiteBlockCommon::class => false,
+                \Bitly\Model\SiteBlockContent::class => false,
+                \Bitly\Model\BlockContentYoutube::class => false,
+                \Bitly\Model\BlockContentSocial::class => false,
+                \Bitly\Model\TemplatesRequest::class => false,
+                \Bitly\Model\Template::class => false,
+                \Bitly\Model\TemplatesResponse::class => false,
+                \Bitly\Model\ApplyTemplateRequest::class => false,
+                \Bitly\Model\SiteBlock::class => false,
+                \Bitly\Model\BlockOrders::class => false,
+                \Bitly\Model\BlockOrder::class => false,
+                \Bitly\Model\SiteBlockContainerRequest::class => false,
+                \Bitly\Model\LaunchpadImages::class => false,
+                \Bitly\Model\LaunchpadImage::class => false,
+                \Bitly\Model\ImageCommon::class => false,
+                \Bitly\Model\LaunchpadButtonRequest::class => false,
+                \Bitly\Model\LaunchpadSocialRequest::class => false,
+                \Bitly\Model\ContentRequestBitlink::class => false,
+                \Bitly\Model\ContentRequestSocial::class => false,
+                \Bitly\Model\LaunchpadContentBitlinkRequest::class => false,
+                \Bitly\Model\LaunchpadContentBitlinkRequestContent::class => false,
+                \Bitly\Model\LaunchpadContentSocialRequest::class => false,
+                \Bitly\Model\LaunchpadContentYouTubeRequest::class => false,
+                \Bitly\Model\LaunchpadContentYouTubeResponse::class => false,
+                \Bitly\Model\YoutubeVideoRequest::class => false,
+                \Bitly\Model\YoutubeVideoResponse::class => false,
+                \Bitly\Model\LaunchpadContentSocial::class => false,
+                \Bitly\Model\LaunchpadContentImageRequest::class => false,
+                \Bitly\Model\LaunchpadContentDigitalBusinessCardRequest::class => false,
+                \Bitly\Model\LaunchpadContentDigitalBusinessCardResponse::class => false,
+                \Bitly\Model\DigitalBusinessCardContent::class => false,
+                \Bitly\Model\DigitalBusinessCardContentFile::class => false,
+                \Bitly\Model\DigitalBusinessCardContact::class => false,
+                \Bitly\Model\LaunchpadContainerRequest::class => false,
+                \Bitly\Model\LaunchpadContainerResponse::class => false,
+                \Bitly\Model\LaunchpadContentImage::class => false,
+                \Bitly\Model\LaunchpadImageContentRequestData::class => false,
+                \Bitly\Model\LaunchpadImageContentData::class => false,
+                \Bitly\Model\LaunchpadContentImageShortenURLData::class => false,
+                \Bitly\Model\LaunchpadButtonAppearance::class => false,
+                \Bitly\Model\UpdateButtonSortOrder::class => false,
+                \Bitly\Model\LaunchpadButtonSortOrder::class => false,
+                \Bitly\Model\CreateLaunchpad::class => false,
+                \Bitly\Model\SiteCloneRequest::class => false,
+                \Bitly\Model\LaunchpadPresetTheme::class => false,
+                \Bitly\Model\LaunchpadQRCode::class => false,
+                \Bitly\Model\BitlySiteContent::class => false,
+                \Bitly\Model\BitlySiteHeaderAppearance::class => false,
+                \Bitly\Model\BitlySiteAppearance::class => false,
+                \Bitly\Model\BitlySites::class => false,
+                \Bitly\Model\BitlySiteLayout::class => false,
+                \Bitly\Model\PrevalidateYouTubeVideoRequest::class => false,
+                \Bitly\Model\KeepSitesRequest::class => false,
+                \Bitly\Model\LaunchpadImageUpload::class => false,
+                \Bitly\Model\ImageCropPoint::class => false,
+                \Bitly\Model\ImageCrop::class => false,
+                \Bitly\Model\ImageUpdate::class => false,
+                \Bitly\Model\LaunchpadImageUpdate::class => false,
+                \Bitly\Model\PublicImageURL::class => false,
+                \Bitly\Model\EvaluateInterventionRequest::class => false,
+                \Bitly\Model\EvaluateInterventionResponse::class => false,
+                \Bitly\Model\EvaluateInterventionResponseMonthlyPromo::class => false,
+                \Bitly\Model\EvaluateInterventionResponseAnnualPromo::class => false,
+                \Bitly\Model\PromoCode::class => false,
+                \Bitly\Model\PromoCodeValidPlans::class => false,
+                \Bitly\Model\ApplyDiscount::class => false,
+                \Bitly\Model\DecideRequest::class => false,
+                \Bitly\Model\DecideResponse::class => false,
+                \Bitly\Model\TrackRequest::class => false,
+                \Bitly\Model\ImageUpload::class => false,
+                \Bitly\Model\ImageUploadResponse::class => false,
+                \Bitly\Model\UserRole::class => false,
+                \Bitly\Model\BulkAddResponse::class => false,
+                \Bitly\Model\BulkAddResponseData::class => false,
+                \Bitly\Model\Intervention::class => false,
+                \Bitly\Model\InterventionsOffered::class => false,
+                \Bitly\Model\BulkUpdateRequest::class => false,
+                \Bitly\Model\BulkUpdate::class => false,
+                \Bitly\Model\GenericAccessTokenReq::class => false,
+                \Bitly\Model\GenericAccessToken::class => false,
+                \Bitly\Model\OrganizationGUID::class => false,
+                \Bitly\Model\TitleResponse::class => false,
+                \Bitly\Model\QRCode::class => false,
+                \Bitly\Model\QRCodeDetails::class => false,
+                \Bitly\Model\QRCodeDestination::class => false,
+                \Bitly\Model\QRCodeMinimal::class => false,
+                \Bitly\Model\GS1Metadata::class => false,
+                \Bitly\Model\GS1Value::class => false,
+                \Bitly\Model\QRCodeTemplate::class => false,
+                \Bitly\Model\CreateQRCodeFromUrlRequest::class => false,
+                \Bitly\Model\CreateQRCodeRequest::class => false,
+                \Bitly\Model\UpdateQRCodeRequest::class => false,
+                \Bitly\Model\QRCodeCustomizationsPublic::class => false,
+                \Bitly\Model\QRCodeCustomizations::class => false,
+                \Bitly\Model\PublicCreateQRCodeRequest::class => false,
+                \Bitly\Model\PublicUpdateQRCodeRequest::class => false,
+                \Bitly\Model\PublicQRCodeImageResponse::class => false,
+                \Bitly\Model\PublicQrCode::class => false,
+                \Bitly\Model\QRCodeFullResponse::class => false,
+                \Bitly\Model\QRCodeFullListResponse::class => false,
+                \Bitly\Model\QRCodeFullPaginatedListResponse::class => false,
+                \Bitly\Model\QRCodesMinimal::class => false,
+                \Bitly\Model\QRCodeHistory::class => false,
+                \Bitly\Model\QRCodeHistoryEntry::class => false,
+                \Bitly\Model\QRCodeCustomizationOptionsResponse::class => false,
+                \Bitly\Model\PreviewQRCodeRequestV2::class => false,
+                \Bitly\Model\QRCodeTemplateRequest::class => false,
+                \Bitly\Model\QRCodeTemplateResponse::class => false,
+                \Bitly\Model\QRCodeTemplatesResponse::class => false,
+                \Bitly\Model\RedirectQRCodeRequest::class => false,
+                \Bitly\Model\PublicQRCodeResponse::class => false,
+                \Bitly\Model\QRCodeCorners::class => false,
+                \Bitly\Model\QRCodeCorner::class => false,
+                \Bitly\Model\QRCodeGradient::class => false,
+                \Bitly\Model\GradientColor::class => false,
+                \Bitly\Model\QRCodeLogoPublic::class => false,
+                \Bitly\Model\QRCodeLogo::class => false,
+                \Bitly\Model\QRCodeLogoCrop::class => false,
+                \Bitly\Model\QRCodeBranding::class => false,
+                \Bitly\Model\QRCodeFrameRequest::class => false,
+                \Bitly\Model\QRCodeFrameRequestColors::class => false,
+                \Bitly\Model\QRCodeFrameRequestText::class => false,
+                \Bitly\Model\QRCodeFrame::class => false,
+                \Bitly\Model\QRCodeFrameColors::class => false,
+                \Bitly\Model\QRCodeFrameText::class => false,
+                \Bitly\Model\QRCodeFrameResponseItem::class => false,
+                \Bitly\Model\QRCodeText::class => false,
+                \Bitly\Model\Text::class => false,
+                \Bitly\Model\QRCodeShape::class => false,
+                \Bitly\Model\QRCodeShapeItem::class => false,
+                \Bitly\Model\QRCodeDynamic::class => false,
+                \Bitly\Model\QRCodeStatic::class => false,
+                \Bitly\Model\QRCodeVirtualCard::class => false,
+                \Bitly\Model\QRCodeWifi::class => false,
+                \Bitly\Model\QRCodeEmail::class => false,
+                \Bitly\Model\QRCodePhoneNumber::class => false,
+                \Bitly\Model\QRCodeTextMessage::class => false,
+                \Bitly\Model\DeletedQRCodeResponse::class => false,
+                \Bitly\Model\BulkAddQRCodeResponse::class => false,
+                \Bitly\Model\QRCodeLogoImage::class => false,
+                \Bitly\Model\QRCodeDotPattern::class => false,
+                \Bitly\Model\QRCodeTypeItem::class => false,
+                \Bitly\Model\QRCodeTypeResponse::class => false,
+                \Bitly\Model\QRCodeSpecSettingsPublic::class => false,
+                \Bitly\Model\QRCodeSpecSettings::class => false,
+                \Bitly\Model\QRCodeCornerResponseItem::class => false,
+                \Bitly\Model\QRCodeImageResponse::class => false,
+                \Bitly\Model\QRCodeURI::class => false,
+                \Bitly\Model\ProductUtilizationResponse::class => false,
+                \Bitly\Model\PublicCanvaUserBrand::class => false,
+                \Bitly\Model\UpdateCanvaUserBrand::class => false,
+                \Bitly\Model\CreateFocusRequest::class => false,
+                \Bitly\Model\CreateFocusResponse::class => false,
+                \Bitly\Model\GetFocusResponse::class => false,
+                \Bitly\Model\CreateOrgDomainVerificationEmailRequest::class => false,
+                \Bitly\Model\OrgDomainVerification::class => false,
+                \Bitly\Model\PatchOrgControlledDomain::class => false,
+                \Bitly\Model\PatchOrgInvitationRequest::class => false,
+                \Bitly\Model\Address::class => false,
+                \Bitly\Model\PayerInfo::class => false,
+                \Bitly\Model\Payer::class => false,
+                \Bitly\Model\BillingAgreement::class => false,
+                \Bitly\Model\BillingAgreementToken::class => false,
+                \Bitly\Model\OrgDomainsStatus::class => false,
+                \Bitly\Model\OrgInvitationRequests::class => false,
+                \Bitly\Model\TranslationRequest::class => false,
+                \Bitly\Model\RetainedEntitiesAfterDowngrade::class => false,
+                \Bitly\Model\BadRequest::class => false,
+                \Bitly\Model\UnprocessableEntity::class => false,
+                \Bitly\Model\TooManyRequests::class => false,
+                \Bitly\Model\MonthlyLimitExceeded::class => false,
+                \Bitly\Model\NotFound::class => false,
+                \Bitly\Model\Conflict::class => false,
+                \Bitly\Model\UpgradeRequired::class => false,
+                \Bitly\Model\Forbidden::class => false,
+                \Bitly\Model\InternalError::class => false,
+                \Bitly\Model\BadGateway::class => false,
+                \Bitly\Model\TemporarilyUnavailable::class => false,
+                \Bitly\Model\ExpectationFailed::class => false,
+                \Bitly\Model\Timeout::class => false,
+                \Bitly\Model\Unauthorized::class => false,
+                \Bitly\Model\Gone::class => false,
                 \Jane\Component\JsonSchemaRuntime\Reference::class => false,
             ];
         }
@@ -112,21 +1657,1051 @@ if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR
         use CheckArray;
         use ValidatorTrait;
         protected $normalizers = [
-            \Bitly\Model\Order::class => OrderNormalizer::class,
+            \Bitly\Model\CurrencyList::class => CurrencyListNormalizer::class,
 
-            \Bitly\Model\Customer::class => CustomerNormalizer::class,
+            \Bitly\Model\SupportedCurrency::class => SupportedCurrencyNormalizer::class,
 
-            \Bitly\Model\Address::class => AddressNormalizer::class,
+            \Bitly\Model\Regions::class => RegionsNormalizer::class,
 
-            \Bitly\Model\Category::class => CategoryNormalizer::class,
+            \Bitly\Model\Region::class => RegionNormalizer::class,
+
+            \Bitly\Model\Subregion::class => SubregionNormalizer::class,
+
+            \Bitly\Model\AutobrandedDomain::class => AutobrandedDomainNormalizer::class,
+
+            \Bitly\Model\AutobrandedDomainResultItem::class => AutobrandedDomainResultItemNormalizer::class,
+
+            \Bitly\Model\CustomDomain::class => CustomDomainNormalizer::class,
+
+            \Bitly\Model\UMGroupPreferences::class => UMGroupPreferencesNormalizer::class,
+
+            \Bitly\Model\SiteTheme::class => SiteThemeNormalizer::class,
+
+            \Bitly\Model\SiteThemes::class => SiteThemesNormalizer::class,
+
+            \Bitly\Model\Contacts::class => ContactsNormalizer::class,
+
+            \Bitly\Model\BillingAccount::class => BillingAccountNormalizer::class,
+
+            \Bitly\Model\BillingAccountID::class => BillingAccountIDNormalizer::class,
+
+            \Bitly\Model\BillingSignature::class => BillingSignatureNormalizer::class,
+
+            \Bitly\Model\PayPalToken::class => PayPalTokenNormalizer::class,
+
+            \Bitly\Model\OrgTierHistory::class => OrgTierHistoryNormalizer::class,
+
+            \Bitly\Model\SubscriptionCancelledDate::class => SubscriptionCancelledDateNormalizer::class,
+
+            \Bitly\Model\PaymentInvoices::class => PaymentInvoicesNormalizer::class,
+
+            \Bitly\Model\PaymentInvoice::class => PaymentInvoiceNormalizer::class,
+
+            \Bitly\Model\PaymentInvoiceDetail::class => PaymentInvoiceDetailNormalizer::class,
+
+            \Bitly\Model\Charges::class => ChargesNormalizer::class,
+
+            \Bitly\Model\Payments::class => PaymentsNormalizer::class,
+
+            \Bitly\Model\AnnualRenewalReminderRequest::class => AnnualRenewalReminderRequestNormalizer::class,
+
+            \Bitly\Model\FieldError::class => FieldErrorNormalizer::class,
+
+            \Bitly\Model\Error::class => ErrorNormalizer::class,
+
+            \Bitly\Model\SimplifiedError::class => SimplifiedErrorNormalizer::class,
+
+            \Bitly\Model\UsersPagination::class => UsersPaginationNormalizer::class,
+
+            \Bitly\Model\BitlinksPagination::class => BitlinksPaginationNormalizer::class,
+
+            \Bitly\Model\LaunchpadsPagination::class => LaunchpadsPaginationNormalizer::class,
+
+            \Bitly\Model\MicrositePagination::class => MicrositePaginationNormalizer::class,
+
+            \Bitly\Model\QRPagination::class => QRPaginationNormalizer::class,
+
+            \Bitly\Model\Group::class => GroupNormalizer::class,
+
+            \Bitly\Model\Groups::class => GroupsNormalizer::class,
+
+            \Bitly\Model\GroupUpdate::class => GroupUpdateNormalizer::class,
+
+            \Bitly\Model\SSOSettings::class => SSOSettingsNormalizer::class,
+
+            \Bitly\Model\GeoIP::class => GeoIPNormalizer::class,
+
+            \Bitly\Model\SSOSlug::class => SSOSlugNormalizer::class,
+
+            \Bitly\Model\SSOVerifySlug::class => SSOVerifySlugNormalizer::class,
+
+            \Bitly\Model\OrganizationUpdate::class => OrganizationUpdateNormalizer::class,
+
+            \Bitly\Model\Organization::class => OrganizationNormalizer::class,
+
+            \Bitly\Model\Organizations::class => OrganizationsNormalizer::class,
+
+            \Bitly\Model\BasicInfo::class => BasicInfoNormalizer::class,
+
+            \Bitly\Model\BillingInfo::class => BillingInfoNormalizer::class,
+
+            \Bitly\Model\UpgradeOrgBody::class => UpgradeOrgBodyNormalizer::class,
+
+            \Bitly\Model\DowngradeOrgBody::class => DowngradeOrgBodyNormalizer::class,
+
+            \Bitly\Model\ContactInfo::class => ContactInfoNormalizer::class,
+
+            \Bitly\Model\SubscriptionDiscount::class => SubscriptionDiscountNormalizer::class,
+
+            \Bitly\Model\BillingDowngrade::class => BillingDowngradeNormalizer::class,
+
+            \Bitly\Model\UpdateRetainedDowngradeEntities::class => UpdateRetainedDowngradeEntitiesNormalizer::class,
+
+            \Bitly\Model\PayPalTokenRequest::class => PayPalTokenRequestNormalizer::class,
+
+            \Bitly\Model\BillingContact::class => BillingContactNormalizer::class,
+
+            \Bitly\Model\BillingAddress::class => BillingAddressNormalizer::class,
+
+            \Bitly\Model\CreatePaymentMethod::class => CreatePaymentMethodNormalizer::class,
+
+            \Bitly\Model\PaymentMethod::class => PaymentMethodNormalizer::class,
 
             \Bitly\Model\User::class => UserNormalizer::class,
 
-            \Bitly\Model\Tag::class => TagNormalizer::class,
+            \Bitly\Model\UserInternal::class => UserInternalNormalizer::class,
 
-            \Bitly\Model\Pet::class => PetNormalizer::class,
+            \Bitly\Model\Users::class => UsersNormalizer::class,
 
-            \Bitly\Model\ApiResponse::class => ApiResponseNormalizer::class,
+            \Bitly\Model\CreateUserBody::class => CreateUserBodyNormalizer::class,
+
+            \Bitly\Model\PublicOAuthUser::class => PublicOAuthUserNormalizer::class,
+
+            \Bitly\Model\UserUpdate::class => UserUpdateNormalizer::class,
+
+            \Bitly\Model\OrganizationPreferences::class => OrganizationPreferencesNormalizer::class,
+
+            \Bitly\Model\UserPreferences::class => UserPreferencesNormalizer::class,
+
+            \Bitly\Model\UserPreferenceBody::class => UserPreferenceBodyNormalizer::class,
+
+            \Bitly\Model\UserPasswordChange::class => UserPasswordChangeNormalizer::class,
+
+            \Bitly\Model\UserOnboardingSurvey::class => UserOnboardingSurveyNormalizer::class,
+
+            \Bitly\Model\Email::class => EmailNormalizer::class,
+
+            \Bitly\Model\EmailBody::class => EmailBodyNormalizer::class,
+
+            \Bitly\Model\OrgEmailBody::class => OrgEmailBodyNormalizer::class,
+
+            \Bitly\Model\OrgEmail::class => OrgEmailNormalizer::class,
+
+            \Bitly\Model\OrgEmails::class => OrgEmailsNormalizer::class,
+
+            \Bitly\Model\GroupBitlinksCount::class => GroupBitlinksCountNormalizer::class,
+
+            \Bitly\Model\CountItem::class => CountItemNormalizer::class,
+
+            \Bitly\Model\QRCodes::class => QRCodesNormalizer::class,
+
+            \Bitly\Model\OrgInvitationRequest::class => OrgInvitationRequestNormalizer::class,
+
+            \Bitly\Model\OrgDomainStatus::class => OrgDomainStatusNormalizer::class,
+
+            \Bitly\Model\FullQRCodeWithScans::class => FullQRCodeWithScansNormalizer::class,
+
+            \Bitly\Model\FullQRCode::class => FullQRCodeNormalizer::class,
+
+            \Bitly\Model\QRCustomizations::class => QRCustomizationsNormalizer::class,
+
+            \Bitly\Model\QRLogoImagesResponse::class => QRLogoImagesResponseNormalizer::class,
+
+            \Bitly\Model\QRLogoImages::class => QRLogoImagesNormalizer::class,
+
+            \Bitly\Model\ShortenBitlinkBody::class => ShortenBitlinkBodyNormalizer::class,
+
+            \Bitly\Model\LinkDeletionResponse::class => LinkDeletionResponseNormalizer::class,
+
+            \Bitly\Model\DeletedLink::class => DeletedLinkNormalizer::class,
+
+            \Bitly\Model\BitlinkBody::class => BitlinkBodyNormalizer::class,
+
+            \Bitly\Model\BitlinkUpdate::class => BitlinkUpdateNormalizer::class,
+
+            \Bitly\Model\BitlinkUpdateBody::class => BitlinkUpdateBodyNormalizer::class,
+
+            \Bitly\Model\Bitlinks::class => BitlinksNormalizer::class,
+
+            \Bitly\Model\ExpandBitlink::class => ExpandBitlinkNormalizer::class,
+
+            \Bitly\Model\ExpandedBitlink::class => ExpandedBitlinkNormalizer::class,
+
+            \Bitly\Model\ClickLink::class => ClickLinkNormalizer::class,
+
+            \Bitly\Model\SortedLinks::class => SortedLinksNormalizer::class,
+
+            \Bitly\Model\SortedButtons::class => SortedButtonsNormalizer::class,
+
+            \Bitly\Model\SortedButtonsButtonsItem::class => SortedButtonsButtonsItemNormalizer::class,
+
+            \Bitly\Model\SortedButtonsPageViewsItem::class => SortedButtonsPageViewsItemNormalizer::class,
+
+            \Bitly\Model\DeeplinkRule::class => DeeplinkRuleNormalizer::class,
+
+            \Bitly\Model\DeeplinkRules::class => DeeplinkRulesNormalizer::class,
+
+            \Bitly\Model\Deeplink::class => DeeplinkNormalizer::class,
+
+            \Bitly\Model\FullShorten::class => FullShortenNormalizer::class,
+
+            \Bitly\Model\Shorten::class => ShortenNormalizer::class,
+
+            \Bitly\Model\MetricsParams::class => MetricsParamsNormalizer::class,
+
+            \Bitly\Model\LinkClicks::class => LinkClicksNormalizer::class,
+
+            \Bitly\Model\QRScans::class => QRScansNormalizer::class,
+
+            \Bitly\Model\Clicks::class => ClicksNormalizer::class,
+
+            \Bitly\Model\Scans::class => ScansNormalizer::class,
+
+            \Bitly\Model\TotalEngagements::class => TotalEngagementsNormalizer::class,
+
+            \Bitly\Model\Engagements::class => EngagementsNormalizer::class,
+
+            \Bitly\Model\Engagement::class => EngagementNormalizer::class,
+
+            \Bitly\Model\TotalEngagementsSummary::class => TotalEngagementsSummaryNormalizer::class,
+
+            \Bitly\Model\BitlinkClicks::class => BitlinkClicksNormalizer::class,
+
+            \Bitly\Model\BitlinkScans::class => BitlinkScansNormalizer::class,
+
+            \Bitly\Model\PaginatedAnalyticsReports::class => PaginatedAnalyticsReportsNormalizer::class,
+
+            \Bitly\Model\DayEngagements::class => DayEngagementsNormalizer::class,
+
+            \Bitly\Model\EngagementsDailySummary::class => EngagementsDailySummaryNormalizer::class,
+
+            \Bitly\Model\LinkEngagements::class => LinkEngagementsNormalizer::class,
+
+            \Bitly\Model\EngagementsDayDrillDown::class => EngagementsDayDrillDownNormalizer::class,
+
+            \Bitly\Model\AnalyticsReport::class => AnalyticsReportNormalizer::class,
+
+            \Bitly\Model\AnalyticsReports::class => AnalyticsReportsNormalizer::class,
+
+            \Bitly\Model\ButtonClicks::class => ButtonClicksNormalizer::class,
+
+            \Bitly\Model\ReportSettings::class => ReportSettingsNormalizer::class,
+
+            \Bitly\Model\ReportFilters::class => ReportFiltersNormalizer::class,
+
+            \Bitly\Model\AnalyticsReportContent::class => AnalyticsReportContentNormalizer::class,
+
+            \Bitly\Model\Module::class => ModuleNormalizer::class,
+
+            \Bitly\Model\ModuleSettings::class => ModuleSettingsNormalizer::class,
+
+            \Bitly\Model\ChartVisualization::class => ChartVisualizationNormalizer::class,
+
+            \Bitly\Model\TimeComparisonDetails::class => TimeComparisonDetailsNormalizer::class,
+
+            \Bitly\Model\UpdateAnalyticsModule::class => UpdateAnalyticsModuleNormalizer::class,
+
+            \Bitly\Model\CreateAnalyticsModule::class => CreateAnalyticsModuleNormalizer::class,
+
+            \Bitly\Model\CreateAnalyticsReport::class => CreateAnalyticsReportNormalizer::class,
+
+            \Bitly\Model\UpdateAnalyticsReport::class => UpdateAnalyticsReportNormalizer::class,
+
+            \Bitly\Model\GroupAnalyticsUsage::class => GroupAnalyticsUsageNormalizer::class,
+
+            \Bitly\Model\LaunchpadLinkPerformance::class => LaunchpadLinkPerformanceNormalizer::class,
+
+            \Bitly\Model\LaunchpadClicks::class => LaunchpadClicksNormalizer::class,
+
+            \Bitly\Model\ClicksSummary::class => ClicksSummaryNormalizer::class,
+
+            \Bitly\Model\ScansSummary::class => ScansSummaryNormalizer::class,
+
+            \Bitly\Model\BitlinkClicksSummary::class => BitlinkClicksSummaryNormalizer::class,
+
+            \Bitly\Model\BitlinkScansSummary::class => BitlinkScansSummaryNormalizer::class,
+
+            \Bitly\Model\ButtonClicksSummary::class => ButtonClicksSummaryNormalizer::class,
+
+            \Bitly\Model\Views::class => ViewsNormalizer::class,
+
+            \Bitly\Model\ViewsSummary::class => ViewsSummaryNormalizer::class,
+
+            \Bitly\Model\DownloadsOverTime::class => DownloadsOverTimeNormalizer::class,
+
+            \Bitly\Model\DownloadMetric::class => DownloadMetricNormalizer::class,
+
+            \Bitly\Model\DownloadMetrics::class => DownloadMetricsNormalizer::class,
+
+            \Bitly\Model\CityDownloadMetric::class => CityDownloadMetricNormalizer::class,
+
+            \Bitly\Model\CityDownloadMetrics::class => CityDownloadMetricsNormalizer::class,
+
+            \Bitly\Model\DeviceDownloadMetric::class => DeviceDownloadMetricNormalizer::class,
+
+            \Bitly\Model\DeviceDownloadMetrics::class => DeviceDownloadMetricsNormalizer::class,
+
+            \Bitly\Model\MicrositeDownloads::class => MicrositeDownloadsNormalizer::class,
+
+            \Bitly\Model\CampaignClickData::class => CampaignClickDataNormalizer::class,
+
+            \Bitly\Model\ChannelBitlink::class => ChannelBitlinkNormalizer::class,
+
+            \Bitly\Model\ChannelBitlinks::class => ChannelBitlinksNormalizer::class,
+
+            \Bitly\Model\CampaignClicks::class => CampaignClicksNormalizer::class,
+
+            \Bitly\Model\CampaignClicksData::class => CampaignClicksDataNormalizer::class,
+
+            \Bitly\Model\CampaignChannelClicks::class => CampaignChannelClicksNormalizer::class,
+
+            \Bitly\Model\Tags::class => TagsNormalizer::class,
+
+            \Bitly\Model\EncodingLogin::class => EncodingLoginNormalizer::class,
+
+            \Bitly\Model\GroupPreferences::class => GroupPreferencesNormalizer::class,
+
+            \Bitly\Model\AddCustomBitlink::class => AddCustomBitlinkNormalizer::class,
+
+            \Bitly\Model\UpdateCustomBitlink::class => UpdateCustomBitlinkNormalizer::class,
+
+            \Bitly\Model\CustomBitlink::class => CustomBitlinkNormalizer::class,
+
+            \Bitly\Model\CustomBitlinkHistory::class => CustomBitlinkHistoryNormalizer::class,
+
+            \Bitly\Model\Metric::class => MetricNormalizer::class,
+
+            \Bitly\Model\CityMetric::class => CityMetricNormalizer::class,
+
+            \Bitly\Model\OtherMetrics::class => OtherMetricsNormalizer::class,
+
+            \Bitly\Model\OtherScanMetrics::class => OtherScanMetricsNormalizer::class,
+
+            \Bitly\Model\CityBitlinkClicksMetric::class => CityBitlinkClicksMetricNormalizer::class,
+
+            \Bitly\Model\BitlinkClicksMetric::class => BitlinkClicksMetricNormalizer::class,
+
+            \Bitly\Model\BaseBitlinkClicksMetrics::class => BaseBitlinkClicksMetricsNormalizer::class,
+
+            \Bitly\Model\BitlinkClicksMetrics::class => BitlinkClicksMetricsNormalizer::class,
+
+            \Bitly\Model\CityBitlinkClicksMetrics::class => CityBitlinkClicksMetricsNormalizer::class,
+
+            \Bitly\Model\OtherBitlinkClicksMetrics::class => OtherBitlinkClicksMetricsNormalizer::class,
+
+            \Bitly\Model\OtherViewMetrics::class => OtherViewMetricsNormalizer::class,
+
+            \Bitly\Model\ClickMetric::class => ClickMetricNormalizer::class,
+
+            \Bitly\Model\ViewMetric::class => ViewMetricNormalizer::class,
+
+            \Bitly\Model\OtherDownloadMetric::class => OtherDownloadMetricNormalizer::class,
+
+            \Bitly\Model\MicrositeDownloadMetric::class => MicrositeDownloadMetricNormalizer::class,
+
+            \Bitly\Model\DeviceMetric::class => DeviceMetricNormalizer::class,
+
+            \Bitly\Model\BaseMetrics::class => BaseMetricsNormalizer::class,
+
+            \Bitly\Model\Metrics::class => MetricsNormalizer::class,
+
+            \Bitly\Model\ClickMetrics::class => ClickMetricsNormalizer::class,
+
+            \Bitly\Model\DeviceMetrics::class => DeviceMetricsNormalizer::class,
+
+            \Bitly\Model\CityMetrics::class => CityMetricsNormalizer::class,
+
+            \Bitly\Model\CityScanMetric::class => CityScanMetricNormalizer::class,
+
+            \Bitly\Model\ScanMetric::class => ScanMetricNormalizer::class,
+
+            \Bitly\Model\BaseScanMetrics::class => BaseScanMetricsNormalizer::class,
+
+            \Bitly\Model\ScanMetrics::class => ScanMetricsNormalizer::class,
+
+            \Bitly\Model\CityScanMetrics::class => CityScanMetricsNormalizer::class,
+
+            \Bitly\Model\CityViewMetrics::class => CityViewMetricsNormalizer::class,
+
+            \Bitly\Model\ReferrersByDomain::class => ReferrersByDomainNormalizer::class,
+
+            \Bitly\Model\ReferrersByDomains::class => ReferrersByDomainsNormalizer::class,
+
+            \Bitly\Model\AggregateClicksForBitlinks::class => AggregateClicksForBitlinksNormalizer::class,
+
+            \Bitly\Model\AggregateClicksForBitlinksByCitiesFacet::class => AggregateClicksForBitlinksByCitiesFacetNormalizer::class,
+
+            \Bitly\Model\AggregateClicksForBitlinksByFacet::class => AggregateClicksForBitlinksByFacetNormalizer::class,
+
+            \Bitly\Model\SortedEngagements::class => SortedEngagementsNormalizer::class,
+
+            \Bitly\Model\EngagementForSort::class => EngagementForSortNormalizer::class,
+
+            \Bitly\Model\BitlinkEngagements::class => BitlinkEngagementsNormalizer::class,
+
+            \Bitly\Model\ClicksForAggregate::class => ClicksForAggregateNormalizer::class,
+
+            \Bitly\Model\ClicksOverTime::class => ClicksOverTimeNormalizer::class,
+
+            \Bitly\Model\ClicksByFacet::class => ClicksByFacetNormalizer::class,
+
+            \Bitly\Model\ClicksByCitiesFacet::class => ClicksByCitiesFacetNormalizer::class,
+
+            \Bitly\Model\Campaign::class => CampaignNormalizer::class,
+
+            \Bitly\Model\Event::class => EventNormalizer::class,
+
+            \Bitly\Model\Campaigns::class => CampaignsNormalizer::class,
+
+            \Bitly\Model\CampaignModify::class => CampaignModifyNormalizer::class,
+
+            \Bitly\Model\CampaignAddBitlink::class => CampaignAddBitlinkNormalizer::class,
+
+            \Bitly\Model\CampaignAddBitlinkResponse::class => CampaignAddBitlinkResponseNormalizer::class,
+
+            \Bitly\Model\CampaignAddBitlinkResponseData::class => CampaignAddBitlinkResponseDataNormalizer::class,
+
+            \Bitly\Model\AddBitlinkResult::class => AddBitlinkResultNormalizer::class,
+
+            \Bitly\Model\BaseChannelBitlink::class => BaseChannelBitlinkNormalizer::class,
+
+            \Bitly\Model\BaseChannel::class => BaseChannelNormalizer::class,
+
+            \Bitly\Model\Channel::class => ChannelNormalizer::class,
+
+            \Bitly\Model\ChannelModify::class => ChannelModifyNormalizer::class,
+
+            \Bitly\Model\Channels::class => ChannelsNormalizer::class,
+
+            \Bitly\Model\HasReferences::class => HasReferencesNormalizer::class,
+
+            \Bitly\Model\OAuthApps::class => OAuthAppsNormalizer::class,
+
+            \Bitly\Model\OAuthApp::class => OAuthAppNormalizer::class,
+
+            \Bitly\Model\OAuthAppFull::class => OAuthAppFullNormalizer::class,
+
+            \Bitly\Model\UpdateApp::class => UpdateAppNormalizer::class,
+
+            \Bitly\Model\OAuthAppWithOwnerLogin::class => OAuthAppWithOwnerLoginNormalizer::class,
+
+            \Bitly\Model\Authorization::class => AuthorizationNormalizer::class,
+
+            \Bitly\Model\Authorizations::class => AuthorizationsNormalizer::class,
+
+            \Bitly\Model\BSDsResponse::class => BSDsResponseNormalizer::class,
+
+            \Bitly\Model\BSDAISearchPrompt::class => BSDAISearchPromptNormalizer::class,
+
+            \Bitly\Model\BSDSearchResult::class => BSDSearchResultNormalizer::class,
+
+            \Bitly\Model\BSDSearchResults::class => BSDSearchResultsNormalizer::class,
+
+            \Bitly\Model\InputDomain::class => InputDomainNormalizer::class,
+
+            \Bitly\Model\DomainStatus::class => DomainStatusNormalizer::class,
+
+            \Bitly\Model\DomainPurchase::class => DomainPurchaseNormalizer::class,
+
+            \Bitly\Model\PriceMap::class => PriceMapNormalizer::class,
+
+            \Bitly\Model\Tier::class => TierNormalizer::class,
+
+            \Bitly\Model\DefaultConsumableFeature::class => DefaultConsumableFeatureNormalizer::class,
+
+            \Bitly\Model\DefaultAccessFeature::class => DefaultAccessFeatureNormalizer::class,
+
+            \Bitly\Model\AddOnSetting::class => AddOnSettingNormalizer::class,
+
+            \Bitly\Model\AddOns::class => AddOnsNormalizer::class,
+
+            \Bitly\Model\AddOn::class => AddOnNormalizer::class,
+
+            \Bitly\Model\DomainValidateBody::class => DomainValidateBodyNormalizer::class,
+
+            \Bitly\Model\DomainValidate::class => DomainValidateNormalizer::class,
+
+            \Bitly\Model\DomainUpdate::class => DomainUpdateNormalizer::class,
+
+            \Bitly\Model\CustomDomainBody::class => CustomDomainBodyNormalizer::class,
+
+            \Bitly\Model\CustomDomains::class => CustomDomainsNormalizer::class,
+
+            \Bitly\Model\AppAssociationDetail::class => AppAssociationDetailNormalizer::class,
+
+            \Bitly\Model\AppAssociations::class => AppAssociationsNormalizer::class,
+
+            \Bitly\Model\PublicSSLCert::class => PublicSSLCertNormalizer::class,
+
+            \Bitly\Model\PublicValidate::class => PublicValidateNormalizer::class,
+
+            \Bitly\Model\MinimalDeeplinkApp::class => MinimalDeeplinkAppNormalizer::class,
+
+            \Bitly\Model\DeeplinkApp::class => DeeplinkAppNormalizer::class,
+
+            \Bitly\Model\DeeplinkApps::class => DeeplinkAppsNormalizer::class,
+
+            \Bitly\Model\DeeplinkMetric::class => DeeplinkMetricNormalizer::class,
+
+            \Bitly\Model\DeeplinkMetricsRollup::class => DeeplinkMetricsRollupNormalizer::class,
+
+            \Bitly\Model\GroupBitlinksCountRollup::class => GroupBitlinksCountRollupNormalizer::class,
+
+            \Bitly\Model\FacetCountItem::class => FacetCountItemNormalizer::class,
+
+            \Bitly\Model\FacetCountData::class => FacetCountDataNormalizer::class,
+
+            \Bitly\Model\GroupClicks::class => GroupClicksNormalizer::class,
+
+            \Bitly\Model\GroupClicksByFacet::class => GroupClicksByFacetNormalizer::class,
+
+            \Bitly\Model\GroupClicksByFacetRollup::class => GroupClicksByFacetRollupNormalizer::class,
+
+            \Bitly\Model\AccessFeature::class => AccessFeatureNormalizer::class,
+
+            \Bitly\Model\ConsumableFeature::class => ConsumableFeatureNormalizer::class,
+
+            \Bitly\Model\ConsumableFeatureAddOn::class => ConsumableFeatureAddOnNormalizer::class,
+
+            \Bitly\Model\AddOnUsage::class => AddOnUsageNormalizer::class,
+
+            \Bitly\Model\ConsumableFeatureFull::class => ConsumableFeatureFullNormalizer::class,
+
+            \Bitly\Model\GroupConsumableFeatureUsage::class => GroupConsumableFeatureUsageNormalizer::class,
+
+            \Bitly\Model\GroupHistoricalUsageTotals::class => GroupHistoricalUsageTotalsNormalizer::class,
+
+            \Bitly\Model\HistoricalUsageTotal::class => HistoricalUsageTotalNormalizer::class,
+
+            \Bitly\Model\HistoricalFeatureUsage::class => HistoricalFeatureUsageNormalizer::class,
+
+            \Bitly\Model\HistoricalUsage::class => HistoricalUsageNormalizer::class,
+
+            \Bitly\Model\AccessFeatures::class => AccessFeaturesNormalizer::class,
+
+            \Bitly\Model\ConsumableFeatures::class => ConsumableFeaturesNormalizer::class,
+
+            \Bitly\Model\FeatureUsage::class => FeatureUsageNormalizer::class,
+
+            \Bitly\Model\OrgFeatureUsageByGroup::class => OrgFeatureUsageByGroupNormalizer::class,
+
+            \Bitly\Model\GroupFeatureUsage::class => GroupFeatureUsageNormalizer::class,
+
+            \Bitly\Model\OrganizationHistoricalUsageTotals::class => OrganizationHistoricalUsageTotalsNormalizer::class,
+
+            \Bitly\Model\GroupHistoricalUsage::class => GroupHistoricalUsageNormalizer::class,
+
+            \Bitly\Model\CreateOAuthAppReq::class => CreateOAuthAppReqNormalizer::class,
+
+            \Bitly\Model\ActivityLogs::class => ActivityLogsNormalizer::class,
+
+            \Bitly\Model\ActivityLog::class => ActivityLogNormalizer::class,
+
+            \Bitly\Model\PurchaseBSD::class => PurchaseBSDNormalizer::class,
+
+            \Bitly\Model\PurchaseBSDResponse::class => PurchaseBSDResponseNormalizer::class,
+
+            \Bitly\Model\DomainAgreements::class => DomainAgreementsNormalizer::class,
+
+            \Bitly\Model\DomainDNS::class => DomainDNSNormalizer::class,
+
+            \Bitly\Model\Feedback::class => FeedbackNormalizer::class,
+
+            \Bitly\Model\DeactivateUser::class => DeactivateUserNormalizer::class,
+
+            \Bitly\Model\DeactivateUserFeedback::class => DeactivateUserFeedbackNormalizer::class,
+
+            \Bitly\Model\DomainRegistrarInfo::class => DomainRegistrarInfoNormalizer::class,
+
+            \Bitly\Model\DomainAgreement::class => DomainAgreementNormalizer::class,
+
+            \Bitly\Model\ShareableReport::class => ShareableReportNormalizer::class,
+
+            \Bitly\Model\ThirdPartyAppData::class => ThirdPartyAppDataNormalizer::class,
+
+            \Bitly\Model\Webhook::class => WebhookNormalizer::class,
+
+            \Bitly\Model\Webhooks::class => WebhooksNormalizer::class,
+
+            \Bitly\Model\WebhookCreate::class => WebhookCreateNormalizer::class,
+
+            \Bitly\Model\WebhookUpdate::class => WebhookUpdateNormalizer::class,
+
+            \Bitly\Model\PlanLimits::class => PlanLimitsNormalizer::class,
+
+            \Bitly\Model\PlanLimit::class => PlanLimitNormalizer::class,
+
+            \Bitly\Model\PlatformLimits::class => PlatformLimitsNormalizer::class,
+
+            \Bitly\Model\PlatformLimit::class => PlatformLimitNormalizer::class,
+
+            \Bitly\Model\MethodLimit::class => MethodLimitNormalizer::class,
+
+            \Bitly\Model\InvitationsCreate::class => InvitationsCreateNormalizer::class,
+
+            \Bitly\Model\Invitation::class => InvitationNormalizer::class,
+
+            \Bitly\Model\DataExportQuery::class => DataExportQueryNormalizer::class,
+
+            \Bitly\Model\LinksReportRequestBody::class => LinksReportRequestBodyNormalizer::class,
+
+            \Bitly\Model\TimePeriod::class => TimePeriodNormalizer::class,
+
+            \Bitly\Model\MetricsColumn::class => MetricsColumnNormalizer::class,
+
+            \Bitly\Model\LinksReportRequestResponse::class => LinksReportRequestResponseNormalizer::class,
+
+            \Bitly\Model\LinksReportRequestResponseRowsItem::class => LinksReportRequestResponseRowsItemNormalizer::class,
+
+            \Bitly\Model\LinksReportRequestResponseRowsItemMetricsItem::class => LinksReportRequestResponseRowsItemMetricsItemNormalizer::class,
+
+            \Bitly\Model\OrgUsersDataExportQuery::class => OrgUsersDataExportQueryNormalizer::class,
+
+            \Bitly\Model\Invitations::class => InvitationsNormalizer::class,
+
+            \Bitly\Model\FormCapturePayload::class => FormCapturePayloadNormalizer::class,
+
+            \Bitly\Model\FormPage::class => FormPageNormalizer::class,
+
+            \Bitly\Model\FormField::class => FormFieldNormalizer::class,
+
+            \Bitly\Model\FormConfig::class => FormConfigNormalizer::class,
+
+            \Bitly\Model\FormSelectOptions::class => FormSelectOptionsNormalizer::class,
+
+            \Bitly\Model\InvitationsAccept::class => InvitationsAcceptNormalizer::class,
+
+            \Bitly\Model\InvitationForLogin::class => InvitationForLoginNormalizer::class,
+
+            \Bitly\Model\InvitationsForLogin::class => InvitationsForLoginNormalizer::class,
+
+            \Bitly\Model\CreateOverrideRules::class => CreateOverrideRulesNormalizer::class,
+
+            \Bitly\Model\UpdateOverrideRules::class => UpdateOverrideRulesNormalizer::class,
+
+            \Bitly\Model\BitlinkOverrides::class => BitlinkOverridesNormalizer::class,
+
+            \Bitly\Model\BitlinkOverridesData::class => BitlinkOverridesDataNormalizer::class,
+
+            \Bitly\Model\BitlinkHistory::class => BitlinkHistoryNormalizer::class,
+
+            \Bitly\Model\BitlinkOverrideHistory::class => BitlinkOverrideHistoryNormalizer::class,
+
+            \Bitly\Model\ClicksForBitlinks::class => ClicksForBitlinksNormalizer::class,
+
+            \Bitly\Model\ClicksCount::class => ClicksCountNormalizer::class,
+
+            \Bitly\Model\BulkShortenUploads::class => BulkShortenUploadsNormalizer::class,
+
+            \Bitly\Model\BulkUploads::class => BulkUploadsNormalizer::class,
+
+            \Bitly\Model\BulkShortenUpload::class => BulkShortenUploadNormalizer::class,
+
+            \Bitly\Model\BulkUpload::class => BulkUploadNormalizer::class,
+
+            \Bitly\Model\BulkShortenValidate::class => BulkShortenValidateNormalizer::class,
+
+            \Bitly\Model\BulkUploadValidate::class => BulkUploadValidateNormalizer::class,
+
+            \Bitly\Model\BulkShortenUploadData::class => BulkShortenUploadDataNormalizer::class,
+
+            \Bitly\Model\BulkUploadData::class => BulkUploadDataNormalizer::class,
+
+            \Bitly\Model\TwoFactorCode::class => TwoFactorCodeNormalizer::class,
+
+            \Bitly\Model\TwoFactor::class => TwoFactorNormalizer::class,
+
+            \Bitly\Model\TwoFactorVerify::class => TwoFactorVerifyNormalizer::class,
+
+            \Bitly\Model\CountryCode::class => CountryCodeNormalizer::class,
+
+            \Bitly\Model\Launchpad::class => LaunchpadNormalizer::class,
+
+            \Bitly\Model\UpdateLaunchpad::class => UpdateLaunchpadNormalizer::class,
+
+            \Bitly\Model\Launchpads::class => LaunchpadsNormalizer::class,
+
+            \Bitly\Model\LaunchpadAppearance::class => LaunchpadAppearanceNormalizer::class,
+
+            \Bitly\Model\LaunchpadButtonCommon::class => LaunchpadButtonCommonNormalizer::class,
+
+            \Bitly\Model\LaunchpadButton::class => LaunchpadButtonNormalizer::class,
+
+            \Bitly\Model\LaunchpadSocial::class => LaunchpadSocialNormalizer::class,
+
+            \Bitly\Model\SiteBlockCommon::class => SiteBlockCommonNormalizer::class,
+
+            \Bitly\Model\SiteBlockContent::class => SiteBlockContentNormalizer::class,
+
+            \Bitly\Model\BlockContentYoutube::class => BlockContentYoutubeNormalizer::class,
+
+            \Bitly\Model\BlockContentSocial::class => BlockContentSocialNormalizer::class,
+
+            \Bitly\Model\TemplatesRequest::class => TemplatesRequestNormalizer::class,
+
+            \Bitly\Model\Template::class => TemplateNormalizer::class,
+
+            \Bitly\Model\TemplatesResponse::class => TemplatesResponseNormalizer::class,
+
+            \Bitly\Model\ApplyTemplateRequest::class => ApplyTemplateRequestNormalizer::class,
+
+            \Bitly\Model\SiteBlock::class => SiteBlockNormalizer::class,
+
+            \Bitly\Model\BlockOrders::class => BlockOrdersNormalizer::class,
+
+            \Bitly\Model\BlockOrder::class => BlockOrderNormalizer::class,
+
+            \Bitly\Model\SiteBlockContainerRequest::class => SiteBlockContainerRequestNormalizer::class,
+
+            \Bitly\Model\LaunchpadImages::class => LaunchpadImagesNormalizer::class,
+
+            \Bitly\Model\LaunchpadImage::class => LaunchpadImageNormalizer::class,
+
+            \Bitly\Model\ImageCommon::class => ImageCommonNormalizer::class,
+
+            \Bitly\Model\LaunchpadButtonRequest::class => LaunchpadButtonRequestNormalizer::class,
+
+            \Bitly\Model\LaunchpadSocialRequest::class => LaunchpadSocialRequestNormalizer::class,
+
+            \Bitly\Model\ContentRequestBitlink::class => ContentRequestBitlinkNormalizer::class,
+
+            \Bitly\Model\ContentRequestSocial::class => ContentRequestSocialNormalizer::class,
+
+            \Bitly\Model\LaunchpadContentBitlinkRequest::class => LaunchpadContentBitlinkRequestNormalizer::class,
+
+            \Bitly\Model\LaunchpadContentBitlinkRequestContent::class => LaunchpadContentBitlinkRequestContentNormalizer::class,
+
+            \Bitly\Model\LaunchpadContentSocialRequest::class => LaunchpadContentSocialRequestNormalizer::class,
+
+            \Bitly\Model\LaunchpadContentYouTubeRequest::class => LaunchpadContentYouTubeRequestNormalizer::class,
+
+            \Bitly\Model\LaunchpadContentYouTubeResponse::class => LaunchpadContentYouTubeResponseNormalizer::class,
+
+            \Bitly\Model\YoutubeVideoRequest::class => YoutubeVideoRequestNormalizer::class,
+
+            \Bitly\Model\YoutubeVideoResponse::class => YoutubeVideoResponseNormalizer::class,
+
+            \Bitly\Model\LaunchpadContentSocial::class => LaunchpadContentSocialNormalizer::class,
+
+            \Bitly\Model\LaunchpadContentImageRequest::class => LaunchpadContentImageRequestNormalizer::class,
+
+            \Bitly\Model\LaunchpadContentDigitalBusinessCardRequest::class => LaunchpadContentDigitalBusinessCardRequestNormalizer::class,
+
+            \Bitly\Model\LaunchpadContentDigitalBusinessCardResponse::class => LaunchpadContentDigitalBusinessCardResponseNormalizer::class,
+
+            \Bitly\Model\DigitalBusinessCardContent::class => DigitalBusinessCardContentNormalizer::class,
+
+            \Bitly\Model\DigitalBusinessCardContentFile::class => DigitalBusinessCardContentFileNormalizer::class,
+
+            \Bitly\Model\DigitalBusinessCardContact::class => DigitalBusinessCardContactNormalizer::class,
+
+            \Bitly\Model\LaunchpadContainerRequest::class => LaunchpadContainerRequestNormalizer::class,
+
+            \Bitly\Model\LaunchpadContainerResponse::class => LaunchpadContainerResponseNormalizer::class,
+
+            \Bitly\Model\LaunchpadContentImage::class => LaunchpadContentImageNormalizer::class,
+
+            \Bitly\Model\LaunchpadImageContentRequestData::class => LaunchpadImageContentRequestDataNormalizer::class,
+
+            \Bitly\Model\LaunchpadImageContentData::class => LaunchpadImageContentDataNormalizer::class,
+
+            \Bitly\Model\LaunchpadContentImageShortenURLData::class => LaunchpadContentImageShortenURLDataNormalizer::class,
+
+            \Bitly\Model\LaunchpadButtonAppearance::class => LaunchpadButtonAppearanceNormalizer::class,
+
+            \Bitly\Model\UpdateButtonSortOrder::class => UpdateButtonSortOrderNormalizer::class,
+
+            \Bitly\Model\LaunchpadButtonSortOrder::class => LaunchpadButtonSortOrderNormalizer::class,
+
+            \Bitly\Model\CreateLaunchpad::class => CreateLaunchpadNormalizer::class,
+
+            \Bitly\Model\SiteCloneRequest::class => SiteCloneRequestNormalizer::class,
+
+            \Bitly\Model\LaunchpadPresetTheme::class => LaunchpadPresetThemeNormalizer::class,
+
+            \Bitly\Model\LaunchpadQRCode::class => LaunchpadQRCodeNormalizer::class,
+
+            \Bitly\Model\BitlySiteContent::class => BitlySiteContentNormalizer::class,
+
+            \Bitly\Model\BitlySiteHeaderAppearance::class => BitlySiteHeaderAppearanceNormalizer::class,
+
+            \Bitly\Model\BitlySiteAppearance::class => BitlySiteAppearanceNormalizer::class,
+
+            \Bitly\Model\BitlySites::class => BitlySitesNormalizer::class,
+
+            \Bitly\Model\BitlySiteLayout::class => BitlySiteLayoutNormalizer::class,
+
+            \Bitly\Model\PrevalidateYouTubeVideoRequest::class => PrevalidateYouTubeVideoRequestNormalizer::class,
+
+            \Bitly\Model\KeepSitesRequest::class => KeepSitesRequestNormalizer::class,
+
+            \Bitly\Model\LaunchpadImageUpload::class => LaunchpadImageUploadNormalizer::class,
+
+            \Bitly\Model\ImageCropPoint::class => ImageCropPointNormalizer::class,
+
+            \Bitly\Model\ImageCrop::class => ImageCropNormalizer::class,
+
+            \Bitly\Model\ImageUpdate::class => ImageUpdateNormalizer::class,
+
+            \Bitly\Model\LaunchpadImageUpdate::class => LaunchpadImageUpdateNormalizer::class,
+
+            \Bitly\Model\PublicImageURL::class => PublicImageURLNormalizer::class,
+
+            \Bitly\Model\EvaluateInterventionRequest::class => EvaluateInterventionRequestNormalizer::class,
+
+            \Bitly\Model\EvaluateInterventionResponse::class => EvaluateInterventionResponseNormalizer::class,
+
+            \Bitly\Model\EvaluateInterventionResponseMonthlyPromo::class => EvaluateInterventionResponseMonthlyPromoNormalizer::class,
+
+            \Bitly\Model\EvaluateInterventionResponseAnnualPromo::class => EvaluateInterventionResponseAnnualPromoNormalizer::class,
+
+            \Bitly\Model\PromoCode::class => PromoCodeNormalizer::class,
+
+            \Bitly\Model\PromoCodeValidPlans::class => PromoCodeValidPlansNormalizer::class,
+
+            \Bitly\Model\ApplyDiscount::class => ApplyDiscountNormalizer::class,
+
+            \Bitly\Model\DecideRequest::class => DecideRequestNormalizer::class,
+
+            \Bitly\Model\DecideResponse::class => DecideResponseNormalizer::class,
+
+            \Bitly\Model\TrackRequest::class => TrackRequestNormalizer::class,
+
+            \Bitly\Model\ImageUpload::class => ImageUploadNormalizer::class,
+
+            \Bitly\Model\ImageUploadResponse::class => ImageUploadResponseNormalizer::class,
+
+            \Bitly\Model\UserRole::class => UserRoleNormalizer::class,
+
+            \Bitly\Model\BulkAddResponse::class => BulkAddResponseNormalizer::class,
+
+            \Bitly\Model\BulkAddResponseData::class => BulkAddResponseDataNormalizer::class,
+
+            \Bitly\Model\Intervention::class => InterventionNormalizer::class,
+
+            \Bitly\Model\InterventionsOffered::class => InterventionsOfferedNormalizer::class,
+
+            \Bitly\Model\BulkUpdateRequest::class => BulkUpdateRequestNormalizer::class,
+
+            \Bitly\Model\BulkUpdate::class => BulkUpdateNormalizer::class,
+
+            \Bitly\Model\GenericAccessTokenReq::class => GenericAccessTokenReqNormalizer::class,
+
+            \Bitly\Model\GenericAccessToken::class => GenericAccessTokenNormalizer::class,
+
+            \Bitly\Model\OrganizationGUID::class => OrganizationGUIDNormalizer::class,
+
+            \Bitly\Model\TitleResponse::class => TitleResponseNormalizer::class,
+
+            \Bitly\Model\QRCode::class => QRCodeNormalizer::class,
+
+            \Bitly\Model\QRCodeDetails::class => QRCodeDetailsNormalizer::class,
+
+            \Bitly\Model\QRCodeDestination::class => QRCodeDestinationNormalizer::class,
+
+            \Bitly\Model\QRCodeMinimal::class => QRCodeMinimalNormalizer::class,
+
+            \Bitly\Model\GS1Metadata::class => GS1MetadataNormalizer::class,
+
+            \Bitly\Model\GS1Value::class => GS1ValueNormalizer::class,
+
+            \Bitly\Model\QRCodeTemplate::class => QRCodeTemplateNormalizer::class,
+
+            \Bitly\Model\CreateQRCodeFromUrlRequest::class => CreateQRCodeFromUrlRequestNormalizer::class,
+
+            \Bitly\Model\CreateQRCodeRequest::class => CreateQRCodeRequestNormalizer::class,
+
+            \Bitly\Model\UpdateQRCodeRequest::class => UpdateQRCodeRequestNormalizer::class,
+
+            \Bitly\Model\QRCodeCustomizationsPublic::class => QRCodeCustomizationsPublicNormalizer::class,
+
+            \Bitly\Model\QRCodeCustomizations::class => QRCodeCustomizationsNormalizer::class,
+
+            \Bitly\Model\PublicCreateQRCodeRequest::class => PublicCreateQRCodeRequestNormalizer::class,
+
+            \Bitly\Model\PublicUpdateQRCodeRequest::class => PublicUpdateQRCodeRequestNormalizer::class,
+
+            \Bitly\Model\PublicQRCodeImageResponse::class => PublicQRCodeImageResponseNormalizer::class,
+
+            \Bitly\Model\PublicQrCode::class => PublicQrCodeNormalizer::class,
+
+            \Bitly\Model\QRCodeFullResponse::class => QRCodeFullResponseNormalizer::class,
+
+            \Bitly\Model\QRCodeFullListResponse::class => QRCodeFullListResponseNormalizer::class,
+
+            \Bitly\Model\QRCodeFullPaginatedListResponse::class => QRCodeFullPaginatedListResponseNormalizer::class,
+
+            \Bitly\Model\QRCodesMinimal::class => QRCodesMinimalNormalizer::class,
+
+            \Bitly\Model\QRCodeHistory::class => QRCodeHistoryNormalizer::class,
+
+            \Bitly\Model\QRCodeHistoryEntry::class => QRCodeHistoryEntryNormalizer::class,
+
+            \Bitly\Model\QRCodeCustomizationOptionsResponse::class => QRCodeCustomizationOptionsResponseNormalizer::class,
+
+            \Bitly\Model\PreviewQRCodeRequestV2::class => PreviewQRCodeRequestV2Normalizer::class,
+
+            \Bitly\Model\QRCodeTemplateRequest::class => QRCodeTemplateRequestNormalizer::class,
+
+            \Bitly\Model\QRCodeTemplateResponse::class => QRCodeTemplateResponseNormalizer::class,
+
+            \Bitly\Model\QRCodeTemplatesResponse::class => QRCodeTemplatesResponseNormalizer::class,
+
+            \Bitly\Model\RedirectQRCodeRequest::class => RedirectQRCodeRequestNormalizer::class,
+
+            \Bitly\Model\PublicQRCodeResponse::class => PublicQRCodeResponseNormalizer::class,
+
+            \Bitly\Model\QRCodeCorners::class => QRCodeCornersNormalizer::class,
+
+            \Bitly\Model\QRCodeCorner::class => QRCodeCornerNormalizer::class,
+
+            \Bitly\Model\QRCodeGradient::class => QRCodeGradientNormalizer::class,
+
+            \Bitly\Model\GradientColor::class => GradientColorNormalizer::class,
+
+            \Bitly\Model\QRCodeLogoPublic::class => QRCodeLogoPublicNormalizer::class,
+
+            \Bitly\Model\QRCodeLogo::class => QRCodeLogoNormalizer::class,
+
+            \Bitly\Model\QRCodeLogoCrop::class => QRCodeLogoCropNormalizer::class,
+
+            \Bitly\Model\QRCodeBranding::class => QRCodeBrandingNormalizer::class,
+
+            \Bitly\Model\QRCodeFrameRequest::class => QRCodeFrameRequestNormalizer::class,
+
+            \Bitly\Model\QRCodeFrameRequestColors::class => QRCodeFrameRequestColorsNormalizer::class,
+
+            \Bitly\Model\QRCodeFrameRequestText::class => QRCodeFrameRequestTextNormalizer::class,
+
+            \Bitly\Model\QRCodeFrame::class => QRCodeFrameNormalizer::class,
+
+            \Bitly\Model\QRCodeFrameColors::class => QRCodeFrameColorsNormalizer::class,
+
+            \Bitly\Model\QRCodeFrameText::class => QRCodeFrameTextNormalizer::class,
+
+            \Bitly\Model\QRCodeFrameResponseItem::class => QRCodeFrameResponseItemNormalizer::class,
+
+            \Bitly\Model\QRCodeText::class => QRCodeTextNormalizer::class,
+
+            \Bitly\Model\Text::class => TextNormalizer::class,
+
+            \Bitly\Model\QRCodeShape::class => QRCodeShapeNormalizer::class,
+
+            \Bitly\Model\QRCodeShapeItem::class => QRCodeShapeItemNormalizer::class,
+
+            \Bitly\Model\QRCodeDynamic::class => QRCodeDynamicNormalizer::class,
+
+            \Bitly\Model\QRCodeStatic::class => QRCodeStaticNormalizer::class,
+
+            \Bitly\Model\QRCodeVirtualCard::class => QRCodeVirtualCardNormalizer::class,
+
+            \Bitly\Model\QRCodeWifi::class => QRCodeWifiNormalizer::class,
+
+            \Bitly\Model\QRCodeEmail::class => QRCodeEmailNormalizer::class,
+
+            \Bitly\Model\QRCodePhoneNumber::class => QRCodePhoneNumberNormalizer::class,
+
+            \Bitly\Model\QRCodeTextMessage::class => QRCodeTextMessageNormalizer::class,
+
+            \Bitly\Model\DeletedQRCodeResponse::class => DeletedQRCodeResponseNormalizer::class,
+
+            \Bitly\Model\BulkAddQRCodeResponse::class => BulkAddQRCodeResponseNormalizer::class,
+
+            \Bitly\Model\QRCodeLogoImage::class => QRCodeLogoImageNormalizer::class,
+
+            \Bitly\Model\QRCodeDotPattern::class => QRCodeDotPatternNormalizer::class,
+
+            \Bitly\Model\QRCodeTypeItem::class => QRCodeTypeItemNormalizer::class,
+
+            \Bitly\Model\QRCodeTypeResponse::class => QRCodeTypeResponseNormalizer::class,
+
+            \Bitly\Model\QRCodeSpecSettingsPublic::class => QRCodeSpecSettingsPublicNormalizer::class,
+
+            \Bitly\Model\QRCodeSpecSettings::class => QRCodeSpecSettingsNormalizer::class,
+
+            \Bitly\Model\QRCodeCornerResponseItem::class => QRCodeCornerResponseItemNormalizer::class,
+
+            \Bitly\Model\QRCodeImageResponse::class => QRCodeImageResponseNormalizer::class,
+
+            \Bitly\Model\QRCodeURI::class => QRCodeURINormalizer::class,
+
+            \Bitly\Model\ProductUtilizationResponse::class => ProductUtilizationResponseNormalizer::class,
+
+            \Bitly\Model\PublicCanvaUserBrand::class => PublicCanvaUserBrandNormalizer::class,
+
+            \Bitly\Model\UpdateCanvaUserBrand::class => UpdateCanvaUserBrandNormalizer::class,
+
+            \Bitly\Model\CreateFocusRequest::class => CreateFocusRequestNormalizer::class,
+
+            \Bitly\Model\CreateFocusResponse::class => CreateFocusResponseNormalizer::class,
+
+            \Bitly\Model\GetFocusResponse::class => GetFocusResponseNormalizer::class,
+
+            \Bitly\Model\CreateOrgDomainVerificationEmailRequest::class => CreateOrgDomainVerificationEmailRequestNormalizer::class,
+
+            \Bitly\Model\OrgDomainVerification::class => OrgDomainVerificationNormalizer::class,
+
+            \Bitly\Model\PatchOrgControlledDomain::class => PatchOrgControlledDomainNormalizer::class,
+
+            \Bitly\Model\PatchOrgInvitationRequest::class => PatchOrgInvitationRequestNormalizer::class,
+
+            \Bitly\Model\Address::class => AddressNormalizer::class,
+
+            \Bitly\Model\PayerInfo::class => PayerInfoNormalizer::class,
+
+            \Bitly\Model\Payer::class => PayerNormalizer::class,
+
+            \Bitly\Model\BillingAgreement::class => BillingAgreementNormalizer::class,
+
+            \Bitly\Model\BillingAgreementToken::class => BillingAgreementTokenNormalizer::class,
+
+            \Bitly\Model\OrgDomainsStatus::class => OrgDomainsStatusNormalizer::class,
+
+            \Bitly\Model\OrgInvitationRequests::class => OrgInvitationRequestsNormalizer::class,
+
+            \Bitly\Model\TranslationRequest::class => TranslationRequestNormalizer::class,
+
+            \Bitly\Model\RetainedEntitiesAfterDowngrade::class => RetainedEntitiesAfterDowngradeNormalizer::class,
+
+            \Bitly\Model\BadRequest::class => BadRequestNormalizer::class,
+
+            \Bitly\Model\UnprocessableEntity::class => UnprocessableEntityNormalizer::class,
+
+            \Bitly\Model\TooManyRequests::class => TooManyRequestsNormalizer::class,
+
+            \Bitly\Model\MonthlyLimitExceeded::class => MonthlyLimitExceededNormalizer::class,
+
+            \Bitly\Model\NotFound::class => NotFoundNormalizer::class,
+
+            \Bitly\Model\Conflict::class => ConflictNormalizer::class,
+
+            \Bitly\Model\UpgradeRequired::class => UpgradeRequiredNormalizer::class,
+
+            \Bitly\Model\Forbidden::class => ForbiddenNormalizer::class,
+
+            \Bitly\Model\InternalError::class => InternalErrorNormalizer::class,
+
+            \Bitly\Model\BadGateway::class => BadGatewayNormalizer::class,
+
+            \Bitly\Model\TemporarilyUnavailable::class => TemporarilyUnavailableNormalizer::class,
+
+            \Bitly\Model\ExpectationFailed::class => ExpectationFailedNormalizer::class,
+
+            \Bitly\Model\Timeout::class => TimeoutNormalizer::class,
+
+            \Bitly\Model\Unauthorized::class => UnauthorizedNormalizer::class,
+
+            \Bitly\Model\Gone::class => GoneNormalizer::class,
 
             \Jane\Component\JsonSchemaRuntime\Reference::class => \Bitly\Runtime\Normalizer\ReferenceNormalizer::class,
         ];
@@ -179,14 +2754,529 @@ if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR
         public function getSupportedTypes(?string $format = null): array
         {
             return [
-                \Bitly\Model\Order::class => false,
-                \Bitly\Model\Customer::class => false,
-                \Bitly\Model\Address::class => false,
-                \Bitly\Model\Category::class => false,
+                \Bitly\Model\CurrencyList::class => false,
+                \Bitly\Model\SupportedCurrency::class => false,
+                \Bitly\Model\Regions::class => false,
+                \Bitly\Model\Region::class => false,
+                \Bitly\Model\Subregion::class => false,
+                \Bitly\Model\AutobrandedDomain::class => false,
+                \Bitly\Model\AutobrandedDomainResultItem::class => false,
+                \Bitly\Model\CustomDomain::class => false,
+                \Bitly\Model\UMGroupPreferences::class => false,
+                \Bitly\Model\SiteTheme::class => false,
+                \Bitly\Model\SiteThemes::class => false,
+                \Bitly\Model\Contacts::class => false,
+                \Bitly\Model\BillingAccount::class => false,
+                \Bitly\Model\BillingAccountID::class => false,
+                \Bitly\Model\BillingSignature::class => false,
+                \Bitly\Model\PayPalToken::class => false,
+                \Bitly\Model\OrgTierHistory::class => false,
+                \Bitly\Model\SubscriptionCancelledDate::class => false,
+                \Bitly\Model\PaymentInvoices::class => false,
+                \Bitly\Model\PaymentInvoice::class => false,
+                \Bitly\Model\PaymentInvoiceDetail::class => false,
+                \Bitly\Model\Charges::class => false,
+                \Bitly\Model\Payments::class => false,
+                \Bitly\Model\AnnualRenewalReminderRequest::class => false,
+                \Bitly\Model\FieldError::class => false,
+                \Bitly\Model\Error::class => false,
+                \Bitly\Model\SimplifiedError::class => false,
+                \Bitly\Model\UsersPagination::class => false,
+                \Bitly\Model\BitlinksPagination::class => false,
+                \Bitly\Model\LaunchpadsPagination::class => false,
+                \Bitly\Model\MicrositePagination::class => false,
+                \Bitly\Model\QRPagination::class => false,
+                \Bitly\Model\Group::class => false,
+                \Bitly\Model\Groups::class => false,
+                \Bitly\Model\GroupUpdate::class => false,
+                \Bitly\Model\SSOSettings::class => false,
+                \Bitly\Model\GeoIP::class => false,
+                \Bitly\Model\SSOSlug::class => false,
+                \Bitly\Model\SSOVerifySlug::class => false,
+                \Bitly\Model\OrganizationUpdate::class => false,
+                \Bitly\Model\Organization::class => false,
+                \Bitly\Model\Organizations::class => false,
+                \Bitly\Model\BasicInfo::class => false,
+                \Bitly\Model\BillingInfo::class => false,
+                \Bitly\Model\UpgradeOrgBody::class => false,
+                \Bitly\Model\DowngradeOrgBody::class => false,
+                \Bitly\Model\ContactInfo::class => false,
+                \Bitly\Model\SubscriptionDiscount::class => false,
+                \Bitly\Model\BillingDowngrade::class => false,
+                \Bitly\Model\UpdateRetainedDowngradeEntities::class => false,
+                \Bitly\Model\PayPalTokenRequest::class => false,
+                \Bitly\Model\BillingContact::class => false,
+                \Bitly\Model\BillingAddress::class => false,
+                \Bitly\Model\CreatePaymentMethod::class => false,
+                \Bitly\Model\PaymentMethod::class => false,
                 \Bitly\Model\User::class => false,
-                \Bitly\Model\Tag::class => false,
-                \Bitly\Model\Pet::class => false,
-                \Bitly\Model\ApiResponse::class => false,
+                \Bitly\Model\UserInternal::class => false,
+                \Bitly\Model\Users::class => false,
+                \Bitly\Model\CreateUserBody::class => false,
+                \Bitly\Model\PublicOAuthUser::class => false,
+                \Bitly\Model\UserUpdate::class => false,
+                \Bitly\Model\OrganizationPreferences::class => false,
+                \Bitly\Model\UserPreferences::class => false,
+                \Bitly\Model\UserPreferenceBody::class => false,
+                \Bitly\Model\UserPasswordChange::class => false,
+                \Bitly\Model\UserOnboardingSurvey::class => false,
+                \Bitly\Model\Email::class => false,
+                \Bitly\Model\EmailBody::class => false,
+                \Bitly\Model\OrgEmailBody::class => false,
+                \Bitly\Model\OrgEmail::class => false,
+                \Bitly\Model\OrgEmails::class => false,
+                \Bitly\Model\GroupBitlinksCount::class => false,
+                \Bitly\Model\CountItem::class => false,
+                \Bitly\Model\QRCodes::class => false,
+                \Bitly\Model\OrgInvitationRequest::class => false,
+                \Bitly\Model\OrgDomainStatus::class => false,
+                \Bitly\Model\FullQRCodeWithScans::class => false,
+                \Bitly\Model\FullQRCode::class => false,
+                \Bitly\Model\QRCustomizations::class => false,
+                \Bitly\Model\QRLogoImagesResponse::class => false,
+                \Bitly\Model\QRLogoImages::class => false,
+                \Bitly\Model\ShortenBitlinkBody::class => false,
+                \Bitly\Model\LinkDeletionResponse::class => false,
+                \Bitly\Model\DeletedLink::class => false,
+                \Bitly\Model\BitlinkBody::class => false,
+                \Bitly\Model\BitlinkUpdate::class => false,
+                \Bitly\Model\BitlinkUpdateBody::class => false,
+                \Bitly\Model\Bitlinks::class => false,
+                \Bitly\Model\ExpandBitlink::class => false,
+                \Bitly\Model\ExpandedBitlink::class => false,
+                \Bitly\Model\ClickLink::class => false,
+                \Bitly\Model\SortedLinks::class => false,
+                \Bitly\Model\SortedButtons::class => false,
+                \Bitly\Model\SortedButtonsButtonsItem::class => false,
+                \Bitly\Model\SortedButtonsPageViewsItem::class => false,
+                \Bitly\Model\DeeplinkRule::class => false,
+                \Bitly\Model\DeeplinkRules::class => false,
+                \Bitly\Model\Deeplink::class => false,
+                \Bitly\Model\FullShorten::class => false,
+                \Bitly\Model\Shorten::class => false,
+                \Bitly\Model\MetricsParams::class => false,
+                \Bitly\Model\LinkClicks::class => false,
+                \Bitly\Model\QRScans::class => false,
+                \Bitly\Model\Clicks::class => false,
+                \Bitly\Model\Scans::class => false,
+                \Bitly\Model\TotalEngagements::class => false,
+                \Bitly\Model\Engagements::class => false,
+                \Bitly\Model\Engagement::class => false,
+                \Bitly\Model\TotalEngagementsSummary::class => false,
+                \Bitly\Model\BitlinkClicks::class => false,
+                \Bitly\Model\BitlinkScans::class => false,
+                \Bitly\Model\PaginatedAnalyticsReports::class => false,
+                \Bitly\Model\DayEngagements::class => false,
+                \Bitly\Model\EngagementsDailySummary::class => false,
+                \Bitly\Model\LinkEngagements::class => false,
+                \Bitly\Model\EngagementsDayDrillDown::class => false,
+                \Bitly\Model\AnalyticsReport::class => false,
+                \Bitly\Model\AnalyticsReports::class => false,
+                \Bitly\Model\ButtonClicks::class => false,
+                \Bitly\Model\ReportSettings::class => false,
+                \Bitly\Model\ReportFilters::class => false,
+                \Bitly\Model\AnalyticsReportContent::class => false,
+                \Bitly\Model\Module::class => false,
+                \Bitly\Model\ModuleSettings::class => false,
+                \Bitly\Model\ChartVisualization::class => false,
+                \Bitly\Model\TimeComparisonDetails::class => false,
+                \Bitly\Model\UpdateAnalyticsModule::class => false,
+                \Bitly\Model\CreateAnalyticsModule::class => false,
+                \Bitly\Model\CreateAnalyticsReport::class => false,
+                \Bitly\Model\UpdateAnalyticsReport::class => false,
+                \Bitly\Model\GroupAnalyticsUsage::class => false,
+                \Bitly\Model\LaunchpadLinkPerformance::class => false,
+                \Bitly\Model\LaunchpadClicks::class => false,
+                \Bitly\Model\ClicksSummary::class => false,
+                \Bitly\Model\ScansSummary::class => false,
+                \Bitly\Model\BitlinkClicksSummary::class => false,
+                \Bitly\Model\BitlinkScansSummary::class => false,
+                \Bitly\Model\ButtonClicksSummary::class => false,
+                \Bitly\Model\Views::class => false,
+                \Bitly\Model\ViewsSummary::class => false,
+                \Bitly\Model\DownloadsOverTime::class => false,
+                \Bitly\Model\DownloadMetric::class => false,
+                \Bitly\Model\DownloadMetrics::class => false,
+                \Bitly\Model\CityDownloadMetric::class => false,
+                \Bitly\Model\CityDownloadMetrics::class => false,
+                \Bitly\Model\DeviceDownloadMetric::class => false,
+                \Bitly\Model\DeviceDownloadMetrics::class => false,
+                \Bitly\Model\MicrositeDownloads::class => false,
+                \Bitly\Model\CampaignClickData::class => false,
+                \Bitly\Model\ChannelBitlink::class => false,
+                \Bitly\Model\ChannelBitlinks::class => false,
+                \Bitly\Model\CampaignClicks::class => false,
+                \Bitly\Model\CampaignClicksData::class => false,
+                \Bitly\Model\CampaignChannelClicks::class => false,
+                \Bitly\Model\Tags::class => false,
+                \Bitly\Model\EncodingLogin::class => false,
+                \Bitly\Model\GroupPreferences::class => false,
+                \Bitly\Model\AddCustomBitlink::class => false,
+                \Bitly\Model\UpdateCustomBitlink::class => false,
+                \Bitly\Model\CustomBitlink::class => false,
+                \Bitly\Model\CustomBitlinkHistory::class => false,
+                \Bitly\Model\Metric::class => false,
+                \Bitly\Model\CityMetric::class => false,
+                \Bitly\Model\OtherMetrics::class => false,
+                \Bitly\Model\OtherScanMetrics::class => false,
+                \Bitly\Model\CityBitlinkClicksMetric::class => false,
+                \Bitly\Model\BitlinkClicksMetric::class => false,
+                \Bitly\Model\BaseBitlinkClicksMetrics::class => false,
+                \Bitly\Model\BitlinkClicksMetrics::class => false,
+                \Bitly\Model\CityBitlinkClicksMetrics::class => false,
+                \Bitly\Model\OtherBitlinkClicksMetrics::class => false,
+                \Bitly\Model\OtherViewMetrics::class => false,
+                \Bitly\Model\ClickMetric::class => false,
+                \Bitly\Model\ViewMetric::class => false,
+                \Bitly\Model\OtherDownloadMetric::class => false,
+                \Bitly\Model\MicrositeDownloadMetric::class => false,
+                \Bitly\Model\DeviceMetric::class => false,
+                \Bitly\Model\BaseMetrics::class => false,
+                \Bitly\Model\Metrics::class => false,
+                \Bitly\Model\ClickMetrics::class => false,
+                \Bitly\Model\DeviceMetrics::class => false,
+                \Bitly\Model\CityMetrics::class => false,
+                \Bitly\Model\CityScanMetric::class => false,
+                \Bitly\Model\ScanMetric::class => false,
+                \Bitly\Model\BaseScanMetrics::class => false,
+                \Bitly\Model\ScanMetrics::class => false,
+                \Bitly\Model\CityScanMetrics::class => false,
+                \Bitly\Model\CityViewMetrics::class => false,
+                \Bitly\Model\ReferrersByDomain::class => false,
+                \Bitly\Model\ReferrersByDomains::class => false,
+                \Bitly\Model\AggregateClicksForBitlinks::class => false,
+                \Bitly\Model\AggregateClicksForBitlinksByCitiesFacet::class => false,
+                \Bitly\Model\AggregateClicksForBitlinksByFacet::class => false,
+                \Bitly\Model\SortedEngagements::class => false,
+                \Bitly\Model\EngagementForSort::class => false,
+                \Bitly\Model\BitlinkEngagements::class => false,
+                \Bitly\Model\ClicksForAggregate::class => false,
+                \Bitly\Model\ClicksOverTime::class => false,
+                \Bitly\Model\ClicksByFacet::class => false,
+                \Bitly\Model\ClicksByCitiesFacet::class => false,
+                \Bitly\Model\Campaign::class => false,
+                \Bitly\Model\Event::class => false,
+                \Bitly\Model\Campaigns::class => false,
+                \Bitly\Model\CampaignModify::class => false,
+                \Bitly\Model\CampaignAddBitlink::class => false,
+                \Bitly\Model\CampaignAddBitlinkResponse::class => false,
+                \Bitly\Model\CampaignAddBitlinkResponseData::class => false,
+                \Bitly\Model\AddBitlinkResult::class => false,
+                \Bitly\Model\BaseChannelBitlink::class => false,
+                \Bitly\Model\BaseChannel::class => false,
+                \Bitly\Model\Channel::class => false,
+                \Bitly\Model\ChannelModify::class => false,
+                \Bitly\Model\Channels::class => false,
+                \Bitly\Model\HasReferences::class => false,
+                \Bitly\Model\OAuthApps::class => false,
+                \Bitly\Model\OAuthApp::class => false,
+                \Bitly\Model\OAuthAppFull::class => false,
+                \Bitly\Model\UpdateApp::class => false,
+                \Bitly\Model\OAuthAppWithOwnerLogin::class => false,
+                \Bitly\Model\Authorization::class => false,
+                \Bitly\Model\Authorizations::class => false,
+                \Bitly\Model\BSDsResponse::class => false,
+                \Bitly\Model\BSDAISearchPrompt::class => false,
+                \Bitly\Model\BSDSearchResult::class => false,
+                \Bitly\Model\BSDSearchResults::class => false,
+                \Bitly\Model\InputDomain::class => false,
+                \Bitly\Model\DomainStatus::class => false,
+                \Bitly\Model\DomainPurchase::class => false,
+                \Bitly\Model\PriceMap::class => false,
+                \Bitly\Model\Tier::class => false,
+                \Bitly\Model\DefaultConsumableFeature::class => false,
+                \Bitly\Model\DefaultAccessFeature::class => false,
+                \Bitly\Model\AddOnSetting::class => false,
+                \Bitly\Model\AddOns::class => false,
+                \Bitly\Model\AddOn::class => false,
+                \Bitly\Model\DomainValidateBody::class => false,
+                \Bitly\Model\DomainValidate::class => false,
+                \Bitly\Model\DomainUpdate::class => false,
+                \Bitly\Model\CustomDomainBody::class => false,
+                \Bitly\Model\CustomDomains::class => false,
+                \Bitly\Model\AppAssociationDetail::class => false,
+                \Bitly\Model\AppAssociations::class => false,
+                \Bitly\Model\PublicSSLCert::class => false,
+                \Bitly\Model\PublicValidate::class => false,
+                \Bitly\Model\MinimalDeeplinkApp::class => false,
+                \Bitly\Model\DeeplinkApp::class => false,
+                \Bitly\Model\DeeplinkApps::class => false,
+                \Bitly\Model\DeeplinkMetric::class => false,
+                \Bitly\Model\DeeplinkMetricsRollup::class => false,
+                \Bitly\Model\GroupBitlinksCountRollup::class => false,
+                \Bitly\Model\FacetCountItem::class => false,
+                \Bitly\Model\FacetCountData::class => false,
+                \Bitly\Model\GroupClicks::class => false,
+                \Bitly\Model\GroupClicksByFacet::class => false,
+                \Bitly\Model\GroupClicksByFacetRollup::class => false,
+                \Bitly\Model\AccessFeature::class => false,
+                \Bitly\Model\ConsumableFeature::class => false,
+                \Bitly\Model\ConsumableFeatureAddOn::class => false,
+                \Bitly\Model\AddOnUsage::class => false,
+                \Bitly\Model\ConsumableFeatureFull::class => false,
+                \Bitly\Model\GroupConsumableFeatureUsage::class => false,
+                \Bitly\Model\GroupHistoricalUsageTotals::class => false,
+                \Bitly\Model\HistoricalUsageTotal::class => false,
+                \Bitly\Model\HistoricalFeatureUsage::class => false,
+                \Bitly\Model\HistoricalUsage::class => false,
+                \Bitly\Model\AccessFeatures::class => false,
+                \Bitly\Model\ConsumableFeatures::class => false,
+                \Bitly\Model\FeatureUsage::class => false,
+                \Bitly\Model\OrgFeatureUsageByGroup::class => false,
+                \Bitly\Model\GroupFeatureUsage::class => false,
+                \Bitly\Model\OrganizationHistoricalUsageTotals::class => false,
+                \Bitly\Model\GroupHistoricalUsage::class => false,
+                \Bitly\Model\CreateOAuthAppReq::class => false,
+                \Bitly\Model\ActivityLogs::class => false,
+                \Bitly\Model\ActivityLog::class => false,
+                \Bitly\Model\PurchaseBSD::class => false,
+                \Bitly\Model\PurchaseBSDResponse::class => false,
+                \Bitly\Model\DomainAgreements::class => false,
+                \Bitly\Model\DomainDNS::class => false,
+                \Bitly\Model\Feedback::class => false,
+                \Bitly\Model\DeactivateUser::class => false,
+                \Bitly\Model\DeactivateUserFeedback::class => false,
+                \Bitly\Model\DomainRegistrarInfo::class => false,
+                \Bitly\Model\DomainAgreement::class => false,
+                \Bitly\Model\ShareableReport::class => false,
+                \Bitly\Model\ThirdPartyAppData::class => false,
+                \Bitly\Model\Webhook::class => false,
+                \Bitly\Model\Webhooks::class => false,
+                \Bitly\Model\WebhookCreate::class => false,
+                \Bitly\Model\WebhookUpdate::class => false,
+                \Bitly\Model\PlanLimits::class => false,
+                \Bitly\Model\PlanLimit::class => false,
+                \Bitly\Model\PlatformLimits::class => false,
+                \Bitly\Model\PlatformLimit::class => false,
+                \Bitly\Model\MethodLimit::class => false,
+                \Bitly\Model\InvitationsCreate::class => false,
+                \Bitly\Model\Invitation::class => false,
+                \Bitly\Model\DataExportQuery::class => false,
+                \Bitly\Model\LinksReportRequestBody::class => false,
+                \Bitly\Model\TimePeriod::class => false,
+                \Bitly\Model\MetricsColumn::class => false,
+                \Bitly\Model\LinksReportRequestResponse::class => false,
+                \Bitly\Model\LinksReportRequestResponseRowsItem::class => false,
+                \Bitly\Model\LinksReportRequestResponseRowsItemMetricsItem::class => false,
+                \Bitly\Model\OrgUsersDataExportQuery::class => false,
+                \Bitly\Model\Invitations::class => false,
+                \Bitly\Model\FormCapturePayload::class => false,
+                \Bitly\Model\FormPage::class => false,
+                \Bitly\Model\FormField::class => false,
+                \Bitly\Model\FormConfig::class => false,
+                \Bitly\Model\FormSelectOptions::class => false,
+                \Bitly\Model\InvitationsAccept::class => false,
+                \Bitly\Model\InvitationForLogin::class => false,
+                \Bitly\Model\InvitationsForLogin::class => false,
+                \Bitly\Model\CreateOverrideRules::class => false,
+                \Bitly\Model\UpdateOverrideRules::class => false,
+                \Bitly\Model\BitlinkOverrides::class => false,
+                \Bitly\Model\BitlinkOverridesData::class => false,
+                \Bitly\Model\BitlinkHistory::class => false,
+                \Bitly\Model\BitlinkOverrideHistory::class => false,
+                \Bitly\Model\ClicksForBitlinks::class => false,
+                \Bitly\Model\ClicksCount::class => false,
+                \Bitly\Model\BulkShortenUploads::class => false,
+                \Bitly\Model\BulkUploads::class => false,
+                \Bitly\Model\BulkShortenUpload::class => false,
+                \Bitly\Model\BulkUpload::class => false,
+                \Bitly\Model\BulkShortenValidate::class => false,
+                \Bitly\Model\BulkUploadValidate::class => false,
+                \Bitly\Model\BulkShortenUploadData::class => false,
+                \Bitly\Model\BulkUploadData::class => false,
+                \Bitly\Model\TwoFactorCode::class => false,
+                \Bitly\Model\TwoFactor::class => false,
+                \Bitly\Model\TwoFactorVerify::class => false,
+                \Bitly\Model\CountryCode::class => false,
+                \Bitly\Model\Launchpad::class => false,
+                \Bitly\Model\UpdateLaunchpad::class => false,
+                \Bitly\Model\Launchpads::class => false,
+                \Bitly\Model\LaunchpadAppearance::class => false,
+                \Bitly\Model\LaunchpadButtonCommon::class => false,
+                \Bitly\Model\LaunchpadButton::class => false,
+                \Bitly\Model\LaunchpadSocial::class => false,
+                \Bitly\Model\SiteBlockCommon::class => false,
+                \Bitly\Model\SiteBlockContent::class => false,
+                \Bitly\Model\BlockContentYoutube::class => false,
+                \Bitly\Model\BlockContentSocial::class => false,
+                \Bitly\Model\TemplatesRequest::class => false,
+                \Bitly\Model\Template::class => false,
+                \Bitly\Model\TemplatesResponse::class => false,
+                \Bitly\Model\ApplyTemplateRequest::class => false,
+                \Bitly\Model\SiteBlock::class => false,
+                \Bitly\Model\BlockOrders::class => false,
+                \Bitly\Model\BlockOrder::class => false,
+                \Bitly\Model\SiteBlockContainerRequest::class => false,
+                \Bitly\Model\LaunchpadImages::class => false,
+                \Bitly\Model\LaunchpadImage::class => false,
+                \Bitly\Model\ImageCommon::class => false,
+                \Bitly\Model\LaunchpadButtonRequest::class => false,
+                \Bitly\Model\LaunchpadSocialRequest::class => false,
+                \Bitly\Model\ContentRequestBitlink::class => false,
+                \Bitly\Model\ContentRequestSocial::class => false,
+                \Bitly\Model\LaunchpadContentBitlinkRequest::class => false,
+                \Bitly\Model\LaunchpadContentBitlinkRequestContent::class => false,
+                \Bitly\Model\LaunchpadContentSocialRequest::class => false,
+                \Bitly\Model\LaunchpadContentYouTubeRequest::class => false,
+                \Bitly\Model\LaunchpadContentYouTubeResponse::class => false,
+                \Bitly\Model\YoutubeVideoRequest::class => false,
+                \Bitly\Model\YoutubeVideoResponse::class => false,
+                \Bitly\Model\LaunchpadContentSocial::class => false,
+                \Bitly\Model\LaunchpadContentImageRequest::class => false,
+                \Bitly\Model\LaunchpadContentDigitalBusinessCardRequest::class => false,
+                \Bitly\Model\LaunchpadContentDigitalBusinessCardResponse::class => false,
+                \Bitly\Model\DigitalBusinessCardContent::class => false,
+                \Bitly\Model\DigitalBusinessCardContentFile::class => false,
+                \Bitly\Model\DigitalBusinessCardContact::class => false,
+                \Bitly\Model\LaunchpadContainerRequest::class => false,
+                \Bitly\Model\LaunchpadContainerResponse::class => false,
+                \Bitly\Model\LaunchpadContentImage::class => false,
+                \Bitly\Model\LaunchpadImageContentRequestData::class => false,
+                \Bitly\Model\LaunchpadImageContentData::class => false,
+                \Bitly\Model\LaunchpadContentImageShortenURLData::class => false,
+                \Bitly\Model\LaunchpadButtonAppearance::class => false,
+                \Bitly\Model\UpdateButtonSortOrder::class => false,
+                \Bitly\Model\LaunchpadButtonSortOrder::class => false,
+                \Bitly\Model\CreateLaunchpad::class => false,
+                \Bitly\Model\SiteCloneRequest::class => false,
+                \Bitly\Model\LaunchpadPresetTheme::class => false,
+                \Bitly\Model\LaunchpadQRCode::class => false,
+                \Bitly\Model\BitlySiteContent::class => false,
+                \Bitly\Model\BitlySiteHeaderAppearance::class => false,
+                \Bitly\Model\BitlySiteAppearance::class => false,
+                \Bitly\Model\BitlySites::class => false,
+                \Bitly\Model\BitlySiteLayout::class => false,
+                \Bitly\Model\PrevalidateYouTubeVideoRequest::class => false,
+                \Bitly\Model\KeepSitesRequest::class => false,
+                \Bitly\Model\LaunchpadImageUpload::class => false,
+                \Bitly\Model\ImageCropPoint::class => false,
+                \Bitly\Model\ImageCrop::class => false,
+                \Bitly\Model\ImageUpdate::class => false,
+                \Bitly\Model\LaunchpadImageUpdate::class => false,
+                \Bitly\Model\PublicImageURL::class => false,
+                \Bitly\Model\EvaluateInterventionRequest::class => false,
+                \Bitly\Model\EvaluateInterventionResponse::class => false,
+                \Bitly\Model\EvaluateInterventionResponseMonthlyPromo::class => false,
+                \Bitly\Model\EvaluateInterventionResponseAnnualPromo::class => false,
+                \Bitly\Model\PromoCode::class => false,
+                \Bitly\Model\PromoCodeValidPlans::class => false,
+                \Bitly\Model\ApplyDiscount::class => false,
+                \Bitly\Model\DecideRequest::class => false,
+                \Bitly\Model\DecideResponse::class => false,
+                \Bitly\Model\TrackRequest::class => false,
+                \Bitly\Model\ImageUpload::class => false,
+                \Bitly\Model\ImageUploadResponse::class => false,
+                \Bitly\Model\UserRole::class => false,
+                \Bitly\Model\BulkAddResponse::class => false,
+                \Bitly\Model\BulkAddResponseData::class => false,
+                \Bitly\Model\Intervention::class => false,
+                \Bitly\Model\InterventionsOffered::class => false,
+                \Bitly\Model\BulkUpdateRequest::class => false,
+                \Bitly\Model\BulkUpdate::class => false,
+                \Bitly\Model\GenericAccessTokenReq::class => false,
+                \Bitly\Model\GenericAccessToken::class => false,
+                \Bitly\Model\OrganizationGUID::class => false,
+                \Bitly\Model\TitleResponse::class => false,
+                \Bitly\Model\QRCode::class => false,
+                \Bitly\Model\QRCodeDetails::class => false,
+                \Bitly\Model\QRCodeDestination::class => false,
+                \Bitly\Model\QRCodeMinimal::class => false,
+                \Bitly\Model\GS1Metadata::class => false,
+                \Bitly\Model\GS1Value::class => false,
+                \Bitly\Model\QRCodeTemplate::class => false,
+                \Bitly\Model\CreateQRCodeFromUrlRequest::class => false,
+                \Bitly\Model\CreateQRCodeRequest::class => false,
+                \Bitly\Model\UpdateQRCodeRequest::class => false,
+                \Bitly\Model\QRCodeCustomizationsPublic::class => false,
+                \Bitly\Model\QRCodeCustomizations::class => false,
+                \Bitly\Model\PublicCreateQRCodeRequest::class => false,
+                \Bitly\Model\PublicUpdateQRCodeRequest::class => false,
+                \Bitly\Model\PublicQRCodeImageResponse::class => false,
+                \Bitly\Model\PublicQrCode::class => false,
+                \Bitly\Model\QRCodeFullResponse::class => false,
+                \Bitly\Model\QRCodeFullListResponse::class => false,
+                \Bitly\Model\QRCodeFullPaginatedListResponse::class => false,
+                \Bitly\Model\QRCodesMinimal::class => false,
+                \Bitly\Model\QRCodeHistory::class => false,
+                \Bitly\Model\QRCodeHistoryEntry::class => false,
+                \Bitly\Model\QRCodeCustomizationOptionsResponse::class => false,
+                \Bitly\Model\PreviewQRCodeRequestV2::class => false,
+                \Bitly\Model\QRCodeTemplateRequest::class => false,
+                \Bitly\Model\QRCodeTemplateResponse::class => false,
+                \Bitly\Model\QRCodeTemplatesResponse::class => false,
+                \Bitly\Model\RedirectQRCodeRequest::class => false,
+                \Bitly\Model\PublicQRCodeResponse::class => false,
+                \Bitly\Model\QRCodeCorners::class => false,
+                \Bitly\Model\QRCodeCorner::class => false,
+                \Bitly\Model\QRCodeGradient::class => false,
+                \Bitly\Model\GradientColor::class => false,
+                \Bitly\Model\QRCodeLogoPublic::class => false,
+                \Bitly\Model\QRCodeLogo::class => false,
+                \Bitly\Model\QRCodeLogoCrop::class => false,
+                \Bitly\Model\QRCodeBranding::class => false,
+                \Bitly\Model\QRCodeFrameRequest::class => false,
+                \Bitly\Model\QRCodeFrameRequestColors::class => false,
+                \Bitly\Model\QRCodeFrameRequestText::class => false,
+                \Bitly\Model\QRCodeFrame::class => false,
+                \Bitly\Model\QRCodeFrameColors::class => false,
+                \Bitly\Model\QRCodeFrameText::class => false,
+                \Bitly\Model\QRCodeFrameResponseItem::class => false,
+                \Bitly\Model\QRCodeText::class => false,
+                \Bitly\Model\Text::class => false,
+                \Bitly\Model\QRCodeShape::class => false,
+                \Bitly\Model\QRCodeShapeItem::class => false,
+                \Bitly\Model\QRCodeDynamic::class => false,
+                \Bitly\Model\QRCodeStatic::class => false,
+                \Bitly\Model\QRCodeVirtualCard::class => false,
+                \Bitly\Model\QRCodeWifi::class => false,
+                \Bitly\Model\QRCodeEmail::class => false,
+                \Bitly\Model\QRCodePhoneNumber::class => false,
+                \Bitly\Model\QRCodeTextMessage::class => false,
+                \Bitly\Model\DeletedQRCodeResponse::class => false,
+                \Bitly\Model\BulkAddQRCodeResponse::class => false,
+                \Bitly\Model\QRCodeLogoImage::class => false,
+                \Bitly\Model\QRCodeDotPattern::class => false,
+                \Bitly\Model\QRCodeTypeItem::class => false,
+                \Bitly\Model\QRCodeTypeResponse::class => false,
+                \Bitly\Model\QRCodeSpecSettingsPublic::class => false,
+                \Bitly\Model\QRCodeSpecSettings::class => false,
+                \Bitly\Model\QRCodeCornerResponseItem::class => false,
+                \Bitly\Model\QRCodeImageResponse::class => false,
+                \Bitly\Model\QRCodeURI::class => false,
+                \Bitly\Model\ProductUtilizationResponse::class => false,
+                \Bitly\Model\PublicCanvaUserBrand::class => false,
+                \Bitly\Model\UpdateCanvaUserBrand::class => false,
+                \Bitly\Model\CreateFocusRequest::class => false,
+                \Bitly\Model\CreateFocusResponse::class => false,
+                \Bitly\Model\GetFocusResponse::class => false,
+                \Bitly\Model\CreateOrgDomainVerificationEmailRequest::class => false,
+                \Bitly\Model\OrgDomainVerification::class => false,
+                \Bitly\Model\PatchOrgControlledDomain::class => false,
+                \Bitly\Model\PatchOrgInvitationRequest::class => false,
+                \Bitly\Model\Address::class => false,
+                \Bitly\Model\PayerInfo::class => false,
+                \Bitly\Model\Payer::class => false,
+                \Bitly\Model\BillingAgreement::class => false,
+                \Bitly\Model\BillingAgreementToken::class => false,
+                \Bitly\Model\OrgDomainsStatus::class => false,
+                \Bitly\Model\OrgInvitationRequests::class => false,
+                \Bitly\Model\TranslationRequest::class => false,
+                \Bitly\Model\RetainedEntitiesAfterDowngrade::class => false,
+                \Bitly\Model\BadRequest::class => false,
+                \Bitly\Model\UnprocessableEntity::class => false,
+                \Bitly\Model\TooManyRequests::class => false,
+                \Bitly\Model\MonthlyLimitExceeded::class => false,
+                \Bitly\Model\NotFound::class => false,
+                \Bitly\Model\Conflict::class => false,
+                \Bitly\Model\UpgradeRequired::class => false,
+                \Bitly\Model\Forbidden::class => false,
+                \Bitly\Model\InternalError::class => false,
+                \Bitly\Model\BadGateway::class => false,
+                \Bitly\Model\TemporarilyUnavailable::class => false,
+                \Bitly\Model\ExpectationFailed::class => false,
+                \Bitly\Model\Timeout::class => false,
+                \Bitly\Model\Unauthorized::class => false,
+                \Bitly\Model\Gone::class => false,
                 \Jane\Component\JsonSchemaRuntime\Reference::class => false,
             ];
         }

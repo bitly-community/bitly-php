@@ -24,7 +24,15 @@ class Address extends \ArrayObject
     /**
      * @var string
      */
-    protected $street;
+    protected $recipientName;
+    /**
+     * @var string
+     */
+    protected $line1;
+    /**
+     * @var string
+     */
+    protected $line2;
     /**
      * @var string
      */
@@ -36,17 +44,47 @@ class Address extends \ArrayObject
     /**
      * @var string
      */
-    protected $zip;
+    protected $postalCode;
+    /**
+     * @var string
+     */
+    protected $countryCode;
 
-    public function getStreet(): string
+    public function getRecipientName(): string
     {
-        return $this->street;
+        return $this->recipientName;
     }
 
-    public function setStreet(string $street): self
+    public function setRecipientName(string $recipientName): self
     {
-        $this->initialized['street'] = true;
-        $this->street = $street;
+        $this->initialized['recipientName'] = true;
+        $this->recipientName = $recipientName;
+
+        return $this;
+    }
+
+    public function getLine1(): string
+    {
+        return $this->line1;
+    }
+
+    public function setLine1(string $line1): self
+    {
+        $this->initialized['line1'] = true;
+        $this->line1 = $line1;
+
+        return $this;
+    }
+
+    public function getLine2(): string
+    {
+        return $this->line2;
+    }
+
+    public function setLine2(string $line2): self
+    {
+        $this->initialized['line2'] = true;
+        $this->line2 = $line2;
 
         return $this;
     }
@@ -77,15 +115,28 @@ class Address extends \ArrayObject
         return $this;
     }
 
-    public function getZip(): string
+    public function getPostalCode(): string
     {
-        return $this->zip;
+        return $this->postalCode;
     }
 
-    public function setZip(string $zip): self
+    public function setPostalCode(string $postalCode): self
     {
-        $this->initialized['zip'] = true;
-        $this->zip = $zip;
+        $this->initialized['postalCode'] = true;
+        $this->postalCode = $postalCode;
+
+        return $this;
+    }
+
+    public function getCountryCode(): string
+    {
+        return $this->countryCode;
+    }
+
+    public function setCountryCode(string $countryCode): self
+    {
+        $this->initialized['countryCode'] = true;
+        $this->countryCode = $countryCode;
 
         return $this;
     }
