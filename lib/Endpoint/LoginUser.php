@@ -8,11 +8,11 @@ declare(strict_types=1);
  * Do no edit it directly.
  */
 
-namespace Petstore\Endpoint;
+namespace Bitly\Endpoint;
 
-class LoginUser extends \Petstore\Runtime\Client\BaseEndpoint implements \Petstore\Runtime\Client\Endpoint
+class LoginUser extends \Bitly\Runtime\Client\BaseEndpoint implements \Bitly\Runtime\Client\Endpoint
 {
-    use \Petstore\Runtime\Client\EndpointTrait;
+    use \Bitly\Runtime\Client\EndpointTrait;
     protected $accept;
 
     /**
@@ -69,7 +69,7 @@ class LoginUser extends \Petstore\Runtime\Client\BaseEndpoint implements \Petsto
     /**
      * @return null
      *
-     * @throws \Petstore\Exception\LoginUserBadRequestException
+     * @throws \Bitly\Exception\LoginUserBadRequestException
      */
     protected function transformResponseBody(\Psr\Http\Message\ResponseInterface $response, \Symfony\Component\Serializer\SerializerInterface $serializer, ?string $contentType = null)
     {
@@ -79,7 +79,7 @@ class LoginUser extends \Petstore\Runtime\Client\BaseEndpoint implements \Petsto
             return json_decode($body);
         }
         if (400 === $status) {
-            throw new \Petstore\Exception\LoginUserBadRequestException($response);
+            throw new \Bitly\Exception\LoginUserBadRequestException($response);
         }
     }
 

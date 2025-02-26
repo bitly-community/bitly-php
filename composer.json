@@ -1,15 +1,15 @@
 {
-    "name": "petstore/sdk",
+    "name": "bitly/sdk",
     "type": "library",
-    "description": "Petstore SDK.",
+    "description": "PHP library for Bitly API.",
     "keywords": [
-        "petstore",
+        "bitly",
         "api",
         "sdk",
         "rest",
         "php"
     ],
-    "homepage": "https://github.com/remarkablemark/janephp-template",
+    "homepage": "https://github.com/bitly-community/bitly-php",
     "license": "MIT",
     "authors": [
         {
@@ -39,14 +39,14 @@
     },
     "autoload": {
         "psr-4": {
-            "Petstore\\": "lib/"
+            "Bitly\\": "lib/"
         }
     },
     "scripts": {
         "build": [
             "composer update",
             "vendor/bin/jane-openapi generate",
-            "cp src/Petstore.php lib/Petstore.php"
+            "cp src/Bitly.php lib/Bitly.php"
         ],
         "clean": [
             "rm -rf lib/"

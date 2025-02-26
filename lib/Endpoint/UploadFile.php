@@ -8,11 +8,11 @@ declare(strict_types=1);
  * Do no edit it directly.
  */
 
-namespace Petstore\Endpoint;
+namespace Bitly\Endpoint;
 
-class UploadFile extends \Petstore\Runtime\Client\BaseEndpoint implements \Petstore\Runtime\Client\Endpoint
+class UploadFile extends \Bitly\Runtime\Client\BaseEndpoint implements \Bitly\Runtime\Client\Endpoint
 {
-    use \Petstore\Runtime\Client\EndpointTrait;
+    use \Bitly\Runtime\Client\EndpointTrait;
     protected $petId;
 
     /**
@@ -66,14 +66,14 @@ class UploadFile extends \Petstore\Runtime\Client\BaseEndpoint implements \Petst
     }
 
     /**
-     * @return \Petstore\Model\ApiResponse|null
+     * @return \Bitly\Model\ApiResponse|null
      */
     protected function transformResponseBody(\Psr\Http\Message\ResponseInterface $response, \Symfony\Component\Serializer\SerializerInterface $serializer, ?string $contentType = null)
     {
         $status = $response->getStatusCode();
         $body = (string) $response->getBody();
         if (is_null($contentType) === false && (200 === $status && mb_strpos($contentType, 'application/json') !== false)) {
-            return $serializer->deserialize($body, 'Petstore\Model\ApiResponse', 'json');
+            return $serializer->deserialize($body, 'Bitly\Model\ApiResponse', 'json');
         }
     }
 

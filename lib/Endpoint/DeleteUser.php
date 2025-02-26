@@ -8,11 +8,11 @@ declare(strict_types=1);
  * Do no edit it directly.
  */
 
-namespace Petstore\Endpoint;
+namespace Bitly\Endpoint;
 
-class DeleteUser extends \Petstore\Runtime\Client\BaseEndpoint implements \Petstore\Runtime\Client\Endpoint
+class DeleteUser extends \Bitly\Runtime\Client\BaseEndpoint implements \Bitly\Runtime\Client\Endpoint
 {
-    use \Petstore\Runtime\Client\EndpointTrait;
+    use \Bitly\Runtime\Client\EndpointTrait;
     protected $username;
 
     /**
@@ -43,18 +43,18 @@ class DeleteUser extends \Petstore\Runtime\Client\BaseEndpoint implements \Petst
     /**
      * @return null
      *
-     * @throws \Petstore\Exception\DeleteUserBadRequestException
-     * @throws \Petstore\Exception\DeleteUserNotFoundException
+     * @throws \Bitly\Exception\DeleteUserBadRequestException
+     * @throws \Bitly\Exception\DeleteUserNotFoundException
      */
     protected function transformResponseBody(\Psr\Http\Message\ResponseInterface $response, \Symfony\Component\Serializer\SerializerInterface $serializer, ?string $contentType = null)
     {
         $status = $response->getStatusCode();
         $body = (string) $response->getBody();
         if (400 === $status) {
-            throw new \Petstore\Exception\DeleteUserBadRequestException($response);
+            throw new \Bitly\Exception\DeleteUserBadRequestException($response);
         }
         if (404 === $status) {
-            throw new \Petstore\Exception\DeleteUserNotFoundException($response);
+            throw new \Bitly\Exception\DeleteUserNotFoundException($response);
         }
     }
 

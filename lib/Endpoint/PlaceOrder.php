@@ -8,16 +8,16 @@ declare(strict_types=1);
  * Do no edit it directly.
  */
 
-namespace Petstore\Endpoint;
+namespace Bitly\Endpoint;
 
-class PlaceOrder extends \Petstore\Runtime\Client\BaseEndpoint implements \Petstore\Runtime\Client\Endpoint
+class PlaceOrder extends \Bitly\Runtime\Client\BaseEndpoint implements \Bitly\Runtime\Client\Endpoint
 {
-    use \Petstore\Runtime\Client\EndpointTrait;
+    use \Bitly\Runtime\Client\EndpointTrait;
 
     /**
      * Place a new order in the store.
      */
-    public function __construct(?\Petstore\Model\Order $requestBody = null)
+    public function __construct(?\Bitly\Model\Order $requestBody = null)
     {
         $this->body = $requestBody;
     }
@@ -34,13 +34,13 @@ class PlaceOrder extends \Petstore\Runtime\Client\BaseEndpoint implements \Petst
 
     public function getBody(\Symfony\Component\Serializer\SerializerInterface $serializer, $streamFactory = null): array
     {
-        if ($this->body instanceof \Petstore\Model\Order) {
+        if ($this->body instanceof \Bitly\Model\Order) {
             return [['Content-Type' => ['application/json']], $serializer->serialize($this->body, 'json')];
         }
-        if ($this->body instanceof \Petstore\Model\Order) {
+        if ($this->body instanceof \Bitly\Model\Order) {
             return [['Content-Type' => ['application/xml']], $this->body];
         }
-        if ($this->body instanceof \Petstore\Model\Order) {
+        if ($this->body instanceof \Bitly\Model\Order) {
             return [['Content-Type' => ['application/x-www-form-urlencoded']], http_build_query($serializer->normalize($this->body, 'json'))];
         }
 
@@ -53,19 +53,19 @@ class PlaceOrder extends \Petstore\Runtime\Client\BaseEndpoint implements \Petst
     }
 
     /**
-     * @return \Petstore\Model\Order|null
+     * @return \Bitly\Model\Order|null
      *
-     * @throws \Petstore\Exception\PlaceOrderMethodNotAllowedException
+     * @throws \Bitly\Exception\PlaceOrderMethodNotAllowedException
      */
     protected function transformResponseBody(\Psr\Http\Message\ResponseInterface $response, \Symfony\Component\Serializer\SerializerInterface $serializer, ?string $contentType = null)
     {
         $status = $response->getStatusCode();
         $body = (string) $response->getBody();
         if (is_null($contentType) === false && (200 === $status && mb_strpos($contentType, 'application/json') !== false)) {
-            return $serializer->deserialize($body, 'Petstore\Model\Order', 'json');
+            return $serializer->deserialize($body, 'Bitly\Model\Order', 'json');
         }
         if (405 === $status) {
-            throw new \Petstore\Exception\PlaceOrderMethodNotAllowedException($response);
+            throw new \Bitly\Exception\PlaceOrderMethodNotAllowedException($response);
         }
     }
 

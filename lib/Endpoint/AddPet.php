@@ -8,11 +8,11 @@ declare(strict_types=1);
  * Do no edit it directly.
  */
 
-namespace Petstore\Endpoint;
+namespace Bitly\Endpoint;
 
-class AddPet extends \Petstore\Runtime\Client\BaseEndpoint implements \Petstore\Runtime\Client\Endpoint
+class AddPet extends \Bitly\Runtime\Client\BaseEndpoint implements \Bitly\Runtime\Client\Endpoint
 {
-    use \Petstore\Runtime\Client\EndpointTrait;
+    use \Bitly\Runtime\Client\EndpointTrait;
     protected $accept;
 
     /**
@@ -20,7 +20,7 @@ class AddPet extends \Petstore\Runtime\Client\BaseEndpoint implements \Petstore\
      *
      * @param array $accept Accept content header application/xml|application/json
      */
-    public function __construct(\Petstore\Model\Pet $requestBody, array $accept = [])
+    public function __construct(\Bitly\Model\Pet $requestBody, array $accept = [])
     {
         $this->body = $requestBody;
         $this->accept = $accept;
@@ -38,13 +38,13 @@ class AddPet extends \Petstore\Runtime\Client\BaseEndpoint implements \Petstore\
 
     public function getBody(\Symfony\Component\Serializer\SerializerInterface $serializer, $streamFactory = null): array
     {
-        if ($this->body instanceof \Petstore\Model\Pet) {
+        if ($this->body instanceof \Bitly\Model\Pet) {
             return [['Content-Type' => ['application/json']], $serializer->serialize($this->body, 'json')];
         }
-        if ($this->body instanceof \Petstore\Model\Pet) {
+        if ($this->body instanceof \Bitly\Model\Pet) {
             return [['Content-Type' => ['application/xml']], $this->body];
         }
-        if ($this->body instanceof \Petstore\Model\Pet) {
+        if ($this->body instanceof \Bitly\Model\Pet) {
             return [['Content-Type' => ['application/x-www-form-urlencoded']], http_build_query($serializer->normalize($this->body, 'json'))];
         }
 
@@ -61,19 +61,19 @@ class AddPet extends \Petstore\Runtime\Client\BaseEndpoint implements \Petstore\
     }
 
     /**
-     * @return \Petstore\Model\Pet|null
+     * @return \Bitly\Model\Pet|null
      *
-     * @throws \Petstore\Exception\AddPetMethodNotAllowedException
+     * @throws \Bitly\Exception\AddPetMethodNotAllowedException
      */
     protected function transformResponseBody(\Psr\Http\Message\ResponseInterface $response, \Symfony\Component\Serializer\SerializerInterface $serializer, ?string $contentType = null)
     {
         $status = $response->getStatusCode();
         $body = (string) $response->getBody();
         if (is_null($contentType) === false && (200 === $status && mb_strpos($contentType, 'application/json') !== false)) {
-            return $serializer->deserialize($body, 'Petstore\Model\Pet', 'json');
+            return $serializer->deserialize($body, 'Bitly\Model\Pet', 'json');
         }
         if (405 === $status) {
-            throw new \Petstore\Exception\AddPetMethodNotAllowedException($response);
+            throw new \Bitly\Exception\AddPetMethodNotAllowedException($response);
         }
     }
 

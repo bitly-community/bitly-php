@@ -1,10 +1,10 @@
-# janephp-template
+# bitly-php
 
-[![packagist](https://img.shields.io/packagist/v/petstore/sdk)](https://packagist.org/packages/petstore/sdk)
-[![build](https://github.com/remarkablemark/janephp-template/actions/workflows/build.yml/badge.svg)](https://github.com/remarkablemark/janephp-template/actions/workflows/build.yml)
-[![test](https://github.com/remarkablemark/janephp-template/actions/workflows/test.yml/badge.svg)](https://github.com/remarkablemark/janephp-template/actions/workflows/test.yml)
+[![packagist](https://img.shields.io/packagist/v/bitly/sdk)](https://packagist.org/packages/bitly/sdk)
+[![build](https://github.com/bitly-community/bitly-php/actions/workflows/build.yml/badge.svg)](https://github.com/bitly-community/bitly-php/actions/workflows/build.yml)
+[![test](https://github.com/bitly-community/bitly-php/actions/workflows/test.yml/badge.svg)](https://github.com/bitly-community/bitly-php/actions/workflows/test.yml)
 
-PHP library for [Petstore](https://petstore3.swagger.io/). Code is generated using the [OpenAPI spec](https://petstore3.swagger.io/api/v3/openapi.json).
+PHP library for [Bitly](https://dev.bitly.com/docs/sdks/openapi-30/). Code is generated using the [OpenAPI spec](https://dev.bitly.com/v4/v4.json).
 
 ## Requirements
 
@@ -12,12 +12,16 @@ PHP library for [Petstore](https://petstore3.swagger.io/). Code is generated usi
 
 PHP >=8.0
 
+### API Key
+
+Generate your [access token](https://app.bitly.com/settings/api/).
+
 ## Install
 
 Install with [Composer](http://getcomposer.org/):
 
 ```sh
-composer require petstore/sdk
+composer require bitly/sdk
 ```
 
 Use Composer's [autoload](https://getcomposer.org/doc/01-basic-usage.md#autoloading):
@@ -31,17 +35,17 @@ require_once 'vendor/autoload.php';
 Instantiate the client:
 
 ```php
-use Petstore\Petstore;
+use Bitly\Bitly;
 
-$petstore = new Petstore('YOUR_API_KEY', 'YOUR_API_URL');
+$bitly = new Bitly('YOUR_API_KEY', 'YOUR_API_URL');
 
-$client = $petstore->client;
+$client = $bitly->client;
 ```
 
 Or create a custom client:
 
 ```php
-use Petstore\Client;
+use Bitly\Client;
 
 $httpClient = \Http\Discovery\Psr18ClientDiscovery::find();
 $uri = \Http\Discovery\Psr17FactoryDiscovery::findUriFactory()->createUri('YOUR_API_URL');
@@ -58,26 +62,26 @@ $client = Client::create($httpClient);
 Add a pet:
 
 ```php
-use Petstore\Petstore;
-use Petstore\Model\Pet;
+use Bitly\Bitly;
+use Bitly\Model\Pet;
 
-$petstore = new Petstore('YOUR_API_KEY');
+$bitly = new Bitly('YOUR_API_KEY');
 
 $pet = new Pet();
 $pet->setName('Neo');
 $pet->setPhotoUrls(['https://placecats.com/neo/300/200']);
-$response = $petstore->client->addPet($pet);
+$response = $bitly->client->addPet($pet);
 ```
 
 Handle an API error:
 
 ```php
-use Petstore\Petstore;
+use Bitly\Bitly;
 
-$petstore = new Petstore('YOUR_API_KEY');
+$bitly = new Bitly('YOUR_API_KEY');
 
 try {
-    $petstore->client->getPetById(0);
+    $bitly->client->getPetById(0);
 } catch (Throwable $exception) {
     echo $exception->getMessage();
     echo $exception->getCode();

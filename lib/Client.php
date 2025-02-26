@@ -8,7 +8,7 @@ declare(strict_types=1);
  * Do no edit it directly.
  */
 
-namespace Petstore;
+namespace Bitly;
 
 class Client extends Runtime\Client\Client
 {

@@ -8,11 +8,11 @@ declare(strict_types=1);
  * Do no edit it directly.
  */
 
-namespace Petstore\Endpoint;
+namespace Bitly\Endpoint;
 
-class UpdatePetWithForm extends \Petstore\Runtime\Client\BaseEndpoint implements \Petstore\Runtime\Client\Endpoint
+class UpdatePetWithForm extends \Bitly\Runtime\Client\BaseEndpoint implements \Bitly\Runtime\Client\Endpoint
 {
-    use \Petstore\Runtime\Client\EndpointTrait;
+    use \Bitly\Runtime\Client\EndpointTrait;
     protected $petId;
 
     /**
@@ -59,14 +59,14 @@ class UpdatePetWithForm extends \Petstore\Runtime\Client\BaseEndpoint implements
     /**
      * @return null
      *
-     * @throws \Petstore\Exception\UpdatePetWithFormMethodNotAllowedException
+     * @throws \Bitly\Exception\UpdatePetWithFormMethodNotAllowedException
      */
     protected function transformResponseBody(\Psr\Http\Message\ResponseInterface $response, \Symfony\Component\Serializer\SerializerInterface $serializer, ?string $contentType = null)
     {
         $status = $response->getStatusCode();
         $body = (string) $response->getBody();
         if (405 === $status) {
-            throw new \Petstore\Exception\UpdatePetWithFormMethodNotAllowedException($response);
+            throw new \Bitly\Exception\UpdatePetWithFormMethodNotAllowedException($response);
         }
     }
 

@@ -8,11 +8,11 @@ declare(strict_types=1);
  * Do no edit it directly.
  */
 
-namespace Petstore\Endpoint;
+namespace Bitly\Endpoint;
 
-class DeletePet extends \Petstore\Runtime\Client\BaseEndpoint implements \Petstore\Runtime\Client\Endpoint
+class DeletePet extends \Bitly\Runtime\Client\BaseEndpoint implements \Bitly\Runtime\Client\Endpoint
 {
-    use \Petstore\Runtime\Client\EndpointTrait;
+    use \Bitly\Runtime\Client\EndpointTrait;
     protected $petId;
 
     /**
@@ -57,14 +57,14 @@ class DeletePet extends \Petstore\Runtime\Client\BaseEndpoint implements \Petsto
     /**
      * @return null
      *
-     * @throws \Petstore\Exception\DeletePetBadRequestException
+     * @throws \Bitly\Exception\DeletePetBadRequestException
      */
     protected function transformResponseBody(\Psr\Http\Message\ResponseInterface $response, \Symfony\Component\Serializer\SerializerInterface $serializer, ?string $contentType = null)
     {
         $status = $response->getStatusCode();
         $body = (string) $response->getBody();
         if (400 === $status) {
-            throw new \Petstore\Exception\DeletePetBadRequestException($response);
+            throw new \Bitly\Exception\DeletePetBadRequestException($response);
         }
     }
 

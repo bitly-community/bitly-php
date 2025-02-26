@@ -8,18 +8,18 @@ declare(strict_types=1);
  * Do no edit it directly.
  */
 
-namespace Petstore\Endpoint;
+namespace Bitly\Endpoint;
 
-class CreateUsersWithListInput extends \Petstore\Runtime\Client\BaseEndpoint implements \Petstore\Runtime\Client\Endpoint
+class CreateUsersWithListInput extends \Bitly\Runtime\Client\BaseEndpoint implements \Bitly\Runtime\Client\Endpoint
 {
-    use \Petstore\Runtime\Client\EndpointTrait;
+    use \Bitly\Runtime\Client\EndpointTrait;
     protected $accept;
 
     /**
      * Creates list of users with given input array.
      *
-     * @param \Petstore\Model\User[]|null $requestBody
-     * @param array                       $accept      Accept content header application/xml|application/json
+     * @param \Bitly\Model\User[]|null $requestBody
+     * @param array                    $accept      Accept content header application/xml|application/json
      */
     public function __construct(?array $requestBody = null, array $accept = [])
     {
@@ -39,7 +39,7 @@ class CreateUsersWithListInput extends \Petstore\Runtime\Client\BaseEndpoint imp
 
     public function getBody(\Symfony\Component\Serializer\SerializerInterface $serializer, $streamFactory = null): array
     {
-        if (is_array($this->body) and isset($this->body[0]) and $this->body[0] instanceof \Petstore\Model\User) {
+        if (is_array($this->body) and isset($this->body[0]) and $this->body[0] instanceof \Bitly\Model\User) {
             return [['Content-Type' => ['application/json']], $serializer->serialize($this->body, 'json')];
         }
 
@@ -56,14 +56,14 @@ class CreateUsersWithListInput extends \Petstore\Runtime\Client\BaseEndpoint imp
     }
 
     /**
-     * @return \Petstore\Model\User|null
+     * @return \Bitly\Model\User|null
      */
     protected function transformResponseBody(\Psr\Http\Message\ResponseInterface $response, \Symfony\Component\Serializer\SerializerInterface $serializer, ?string $contentType = null)
     {
         $status = $response->getStatusCode();
         $body = (string) $response->getBody();
         if (is_null($contentType) === false && (200 === $status && mb_strpos($contentType, 'application/json') !== false)) {
-            return $serializer->deserialize($body, 'Petstore\Model\User', 'json');
+            return $serializer->deserialize($body, 'Bitly\Model\User', 'json');
         }
 
         return null;

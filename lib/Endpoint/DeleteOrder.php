@@ -8,11 +8,11 @@ declare(strict_types=1);
  * Do no edit it directly.
  */
 
-namespace Petstore\Endpoint;
+namespace Bitly\Endpoint;
 
-class DeleteOrder extends \Petstore\Runtime\Client\BaseEndpoint implements \Petstore\Runtime\Client\Endpoint
+class DeleteOrder extends \Bitly\Runtime\Client\BaseEndpoint implements \Bitly\Runtime\Client\Endpoint
 {
-    use \Petstore\Runtime\Client\EndpointTrait;
+    use \Bitly\Runtime\Client\EndpointTrait;
     protected $orderId;
 
     /**
@@ -43,18 +43,18 @@ class DeleteOrder extends \Petstore\Runtime\Client\BaseEndpoint implements \Pets
     /**
      * @return null
      *
-     * @throws \Petstore\Exception\DeleteOrderBadRequestException
-     * @throws \Petstore\Exception\DeleteOrderNotFoundException
+     * @throws \Bitly\Exception\DeleteOrderBadRequestException
+     * @throws \Bitly\Exception\DeleteOrderNotFoundException
      */
     protected function transformResponseBody(\Psr\Http\Message\ResponseInterface $response, \Symfony\Component\Serializer\SerializerInterface $serializer, ?string $contentType = null)
     {
         $status = $response->getStatusCode();
         $body = (string) $response->getBody();
         if (400 === $status) {
-            throw new \Petstore\Exception\DeleteOrderBadRequestException($response);
+            throw new \Bitly\Exception\DeleteOrderBadRequestException($response);
         }
         if (404 === $status) {
-            throw new \Petstore\Exception\DeleteOrderNotFoundException($response);
+            throw new \Bitly\Exception\DeleteOrderNotFoundException($response);
         }
     }
 

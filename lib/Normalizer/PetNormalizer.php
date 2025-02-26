@@ -8,11 +8,11 @@ declare(strict_types=1);
  * Do no edit it directly.
  */
 
-namespace Petstore\Normalizer;
+namespace Bitly\Normalizer;
 
+use Bitly\Runtime\Normalizer\CheckArray;
+use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Petstore\Runtime\Normalizer\CheckArray;
-use Petstore\Runtime\Normalizer\ValidatorTrait;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
@@ -31,12 +31,12 @@ if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR
 
         public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
         {
-            return $type === \Petstore\Model\Pet::class;
+            return $type === \Bitly\Model\Pet::class;
         }
 
         public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
         {
-            return is_object($data) && get_class($data) === \Petstore\Model\Pet::class;
+            return is_object($data) && get_class($data) === \Bitly\Model\Pet::class;
         }
 
         public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
@@ -47,7 +47,7 @@ if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR
             if (isset($data['$recursiveRef'])) {
                 return new Reference($data['$recursiveRef'], $context['document-origin']);
             }
-            $object = new \Petstore\Model\Pet();
+            $object = new \Bitly\Model\Pet();
             if (null === $data || false === \is_array($data)) {
                 return $object;
             }
@@ -60,7 +60,7 @@ if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR
                 unset($data['name']);
             }
             if (\array_key_exists('category', $data)) {
-                $object->setCategory($this->denormalizer->denormalize($data['category'], \Petstore\Model\Category::class, 'json', $context));
+                $object->setCategory($this->denormalizer->denormalize($data['category'], \Bitly\Model\Category::class, 'json', $context));
                 unset($data['category']);
             }
             if (\array_key_exists('photoUrls', $data)) {
@@ -74,7 +74,7 @@ if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR
             if (\array_key_exists('tags', $data)) {
                 $values_1 = [];
                 foreach ($data['tags'] as $value_1) {
-                    $values_1[] = $this->denormalizer->denormalize($value_1, \Petstore\Model\Tag::class, 'json', $context);
+                    $values_1[] = $this->denormalizer->denormalize($value_1, \Bitly\Model\Tag::class, 'json', $context);
                 }
                 $object->setTags($values_1);
                 unset($data['tags']);
@@ -128,7 +128,7 @@ if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR
 
         public function getSupportedTypes(?string $format = null): array
         {
-            return [\Petstore\Model\Pet::class => false];
+            return [\Bitly\Model\Pet::class => false];
         }
     }
 } else {
@@ -141,12 +141,12 @@ if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR
 
         public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
         {
-            return $type === \Petstore\Model\Pet::class;
+            return $type === \Bitly\Model\Pet::class;
         }
 
         public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
         {
-            return is_object($data) && get_class($data) === \Petstore\Model\Pet::class;
+            return is_object($data) && get_class($data) === \Bitly\Model\Pet::class;
         }
 
         public function denormalize($data, $type, $format = null, array $context = [])
@@ -157,7 +157,7 @@ if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR
             if (isset($data['$recursiveRef'])) {
                 return new Reference($data['$recursiveRef'], $context['document-origin']);
             }
-            $object = new \Petstore\Model\Pet();
+            $object = new \Bitly\Model\Pet();
             if (null === $data || false === \is_array($data)) {
                 return $object;
             }
@@ -170,7 +170,7 @@ if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR
                 unset($data['name']);
             }
             if (\array_key_exists('category', $data)) {
-                $object->setCategory($this->denormalizer->denormalize($data['category'], \Petstore\Model\Category::class, 'json', $context));
+                $object->setCategory($this->denormalizer->denormalize($data['category'], \Bitly\Model\Category::class, 'json', $context));
                 unset($data['category']);
             }
             if (\array_key_exists('photoUrls', $data)) {
@@ -184,7 +184,7 @@ if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR
             if (\array_key_exists('tags', $data)) {
                 $values_1 = [];
                 foreach ($data['tags'] as $value_1) {
-                    $values_1[] = $this->denormalizer->denormalize($value_1, \Petstore\Model\Tag::class, 'json', $context);
+                    $values_1[] = $this->denormalizer->denormalize($value_1, \Bitly\Model\Tag::class, 'json', $context);
                 }
                 $object->setTags($values_1);
                 unset($data['tags']);
@@ -241,7 +241,7 @@ if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR
 
         public function getSupportedTypes(?string $format = null): array
         {
-            return [\Petstore\Model\Pet::class => false];
+            return [\Bitly\Model\Pet::class => false];
         }
     }
 }

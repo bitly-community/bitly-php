@@ -8,7 +8,7 @@ declare(strict_types=1);
  * Do no edit it directly.
  */
 
-namespace Petstore\Runtime\Normalizer;
+namespace Bitly\Runtime\Normalizer;
 
 trait CheckArray
 {

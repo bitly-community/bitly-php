@@ -8,11 +8,11 @@ declare(strict_types=1);
  * Do no edit it directly.
  */
 
-namespace Petstore\Normalizer;
+namespace Bitly\Normalizer;
 
+use Bitly\Runtime\Normalizer\CheckArray;
+use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Petstore\Runtime\Normalizer\CheckArray;
-use Petstore\Runtime\Normalizer\ValidatorTrait;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
@@ -31,12 +31,12 @@ if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR
 
         public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
         {
-            return $type === \Petstore\Model\User::class;
+            return $type === \Bitly\Model\User::class;
         }
 
         public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
         {
-            return is_object($data) && get_class($data) === \Petstore\Model\User::class;
+            return is_object($data) && get_class($data) === \Bitly\Model\User::class;
         }
 
         public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
@@ -47,7 +47,7 @@ if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR
             if (isset($data['$recursiveRef'])) {
                 return new Reference($data['$recursiveRef'], $context['document-origin']);
             }
-            $object = new \Petstore\Model\User();
+            $object = new \Bitly\Model\User();
             if (null === $data || false === \is_array($data)) {
                 return $object;
             }
@@ -130,7 +130,7 @@ if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR
 
         public function getSupportedTypes(?string $format = null): array
         {
-            return [\Petstore\Model\User::class => false];
+            return [\Bitly\Model\User::class => false];
         }
     }
 } else {
@@ -143,12 +143,12 @@ if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR
 
         public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
         {
-            return $type === \Petstore\Model\User::class;
+            return $type === \Bitly\Model\User::class;
         }
 
         public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
         {
-            return is_object($data) && get_class($data) === \Petstore\Model\User::class;
+            return is_object($data) && get_class($data) === \Bitly\Model\User::class;
         }
 
         public function denormalize($data, $type, $format = null, array $context = [])
@@ -159,7 +159,7 @@ if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR
             if (isset($data['$recursiveRef'])) {
                 return new Reference($data['$recursiveRef'], $context['document-origin']);
             }
-            $object = new \Petstore\Model\User();
+            $object = new \Bitly\Model\User();
             if (null === $data || false === \is_array($data)) {
                 return $object;
             }
@@ -245,7 +245,7 @@ if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR
 
         public function getSupportedTypes(?string $format = null): array
         {
-            return [\Petstore\Model\User::class => false];
+            return [\Bitly\Model\User::class => false];
         }
     }
 }

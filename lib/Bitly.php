@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Petstore;
+namespace Bitly;
 
 use Http\Client\Common\Plugin\AddHostPlugin;
 use Http\Client\Common\Plugin\AuthenticationPlugin;
@@ -11,7 +11,7 @@ use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Discovery\Psr18ClientDiscovery;
 use Http\Message\Authentication\Bearer;
 
-class Petstore
+class Bitly
 {
     /** @var Client */
     public $client;

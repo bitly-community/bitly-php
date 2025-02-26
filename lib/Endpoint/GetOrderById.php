@@ -8,11 +8,11 @@ declare(strict_types=1);
  * Do no edit it directly.
  */
 
-namespace Petstore\Endpoint;
+namespace Bitly\Endpoint;
 
-class GetOrderById extends \Petstore\Runtime\Client\BaseEndpoint implements \Petstore\Runtime\Client\Endpoint
+class GetOrderById extends \Bitly\Runtime\Client\BaseEndpoint implements \Bitly\Runtime\Client\Endpoint
 {
-    use \Petstore\Runtime\Client\EndpointTrait;
+    use \Bitly\Runtime\Client\EndpointTrait;
     protected $orderId;
     protected $accept;
 
@@ -53,23 +53,23 @@ class GetOrderById extends \Petstore\Runtime\Client\BaseEndpoint implements \Pet
     }
 
     /**
-     * @return \Petstore\Model\Order|null
+     * @return \Bitly\Model\Order|null
      *
-     * @throws \Petstore\Exception\GetOrderByIdBadRequestException
-     * @throws \Petstore\Exception\GetOrderByIdNotFoundException
+     * @throws \Bitly\Exception\GetOrderByIdBadRequestException
+     * @throws \Bitly\Exception\GetOrderByIdNotFoundException
      */
     protected function transformResponseBody(\Psr\Http\Message\ResponseInterface $response, \Symfony\Component\Serializer\SerializerInterface $serializer, ?string $contentType = null)
     {
         $status = $response->getStatusCode();
         $body = (string) $response->getBody();
         if (is_null($contentType) === false && (200 === $status && mb_strpos($contentType, 'application/json') !== false)) {
-            return $serializer->deserialize($body, 'Petstore\Model\Order', 'json');
+            return $serializer->deserialize($body, 'Bitly\Model\Order', 'json');
         }
         if (400 === $status) {
-            throw new \Petstore\Exception\GetOrderByIdBadRequestException($response);
+            throw new \Bitly\Exception\GetOrderByIdBadRequestException($response);
         }
         if (404 === $status) {
-            throw new \Petstore\Exception\GetOrderByIdNotFoundException($response);
+            throw new \Bitly\Exception\GetOrderByIdNotFoundException($response);
         }
     }
 

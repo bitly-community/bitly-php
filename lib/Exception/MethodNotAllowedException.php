@@ -8,7 +8,7 @@ declare(strict_types=1);
  * Do no edit it directly.
  */
 
-namespace Petstore\Exception;
+namespace Bitly\Exception;
 
 class MethodNotAllowedException extends \RuntimeException implements ClientException
 {

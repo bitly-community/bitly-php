@@ -8,10 +8,10 @@ declare(strict_types=1);
  * Do no edit it directly.
  */
 
-namespace Petstore\Normalizer;
+namespace Bitly\Normalizer;
 
-use Petstore\Runtime\Normalizer\CheckArray;
-use Petstore\Runtime\Normalizer\ValidatorTrait;
+use Bitly\Runtime\Normalizer\CheckArray;
+use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
@@ -28,23 +28,23 @@ if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR
         use CheckArray;
         use ValidatorTrait;
         protected $normalizers = [
-            \Petstore\Model\Order::class => OrderNormalizer::class,
+            \Bitly\Model\Order::class => OrderNormalizer::class,
 
-            \Petstore\Model\Customer::class => CustomerNormalizer::class,
+            \Bitly\Model\Customer::class => CustomerNormalizer::class,
 
-            \Petstore\Model\Address::class => AddressNormalizer::class,
+            \Bitly\Model\Address::class => AddressNormalizer::class,
 
-            \Petstore\Model\Category::class => CategoryNormalizer::class,
+            \Bitly\Model\Category::class => CategoryNormalizer::class,
 
-            \Petstore\Model\User::class => UserNormalizer::class,
+            \Bitly\Model\User::class => UserNormalizer::class,
 
-            \Petstore\Model\Tag::class => TagNormalizer::class,
+            \Bitly\Model\Tag::class => TagNormalizer::class,
 
-            \Petstore\Model\Pet::class => PetNormalizer::class,
+            \Bitly\Model\Pet::class => PetNormalizer::class,
 
-            \Petstore\Model\ApiResponse::class => ApiResponseNormalizer::class,
+            \Bitly\Model\ApiResponse::class => ApiResponseNormalizer::class,
 
-            \Jane\Component\JsonSchemaRuntime\Reference::class => \Petstore\Runtime\Normalizer\ReferenceNormalizer::class,
+            \Jane\Component\JsonSchemaRuntime\Reference::class => \Bitly\Runtime\Normalizer\ReferenceNormalizer::class,
         ];
         protected $normalizersCache = [];
 
@@ -92,14 +92,14 @@ if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR
         public function getSupportedTypes(?string $format = null): array
         {
             return [
-                \Petstore\Model\Order::class => false,
-                \Petstore\Model\Customer::class => false,
-                \Petstore\Model\Address::class => false,
-                \Petstore\Model\Category::class => false,
-                \Petstore\Model\User::class => false,
-                \Petstore\Model\Tag::class => false,
-                \Petstore\Model\Pet::class => false,
-                \Petstore\Model\ApiResponse::class => false,
+                \Bitly\Model\Order::class => false,
+                \Bitly\Model\Customer::class => false,
+                \Bitly\Model\Address::class => false,
+                \Bitly\Model\Category::class => false,
+                \Bitly\Model\User::class => false,
+                \Bitly\Model\Tag::class => false,
+                \Bitly\Model\Pet::class => false,
+                \Bitly\Model\ApiResponse::class => false,
                 \Jane\Component\JsonSchemaRuntime\Reference::class => false,
             ];
         }
@@ -112,23 +112,23 @@ if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR
         use CheckArray;
         use ValidatorTrait;
         protected $normalizers = [
-            \Petstore\Model\Order::class => OrderNormalizer::class,
+            \Bitly\Model\Order::class => OrderNormalizer::class,
 
-            \Petstore\Model\Customer::class => CustomerNormalizer::class,
+            \Bitly\Model\Customer::class => CustomerNormalizer::class,
 
-            \Petstore\Model\Address::class => AddressNormalizer::class,
+            \Bitly\Model\Address::class => AddressNormalizer::class,
 
-            \Petstore\Model\Category::class => CategoryNormalizer::class,
+            \Bitly\Model\Category::class => CategoryNormalizer::class,
 
-            \Petstore\Model\User::class => UserNormalizer::class,
+            \Bitly\Model\User::class => UserNormalizer::class,
 
-            \Petstore\Model\Tag::class => TagNormalizer::class,
+            \Bitly\Model\Tag::class => TagNormalizer::class,
 
-            \Petstore\Model\Pet::class => PetNormalizer::class,
+            \Bitly\Model\Pet::class => PetNormalizer::class,
 
-            \Petstore\Model\ApiResponse::class => ApiResponseNormalizer::class,
+            \Bitly\Model\ApiResponse::class => ApiResponseNormalizer::class,
 
-            \Jane\Component\JsonSchemaRuntime\Reference::class => \Petstore\Runtime\Normalizer\ReferenceNormalizer::class,
+            \Jane\Component\JsonSchemaRuntime\Reference::class => \Bitly\Runtime\Normalizer\ReferenceNormalizer::class,
         ];
         protected $normalizersCache = [];
 
@@ -179,14 +179,14 @@ if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR
         public function getSupportedTypes(?string $format = null): array
         {
             return [
-                \Petstore\Model\Order::class => false,
-                \Petstore\Model\Customer::class => false,
-                \Petstore\Model\Address::class => false,
-                \Petstore\Model\Category::class => false,
-                \Petstore\Model\User::class => false,
-                \Petstore\Model\Tag::class => false,
-                \Petstore\Model\Pet::class => false,
-                \Petstore\Model\ApiResponse::class => false,
+                \Bitly\Model\Order::class => false,
+                \Bitly\Model\Customer::class => false,
+                \Bitly\Model\Address::class => false,
+                \Bitly\Model\Category::class => false,
+                \Bitly\Model\User::class => false,
+                \Bitly\Model\Tag::class => false,
+                \Bitly\Model\Pet::class => false,
+                \Bitly\Model\ApiResponse::class => false,
                 \Jane\Component\JsonSchemaRuntime\Reference::class => false,
             ];
         }

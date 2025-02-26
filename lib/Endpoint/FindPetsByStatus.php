@@ -8,11 +8,11 @@ declare(strict_types=1);
  * Do no edit it directly.
  */
 
-namespace Petstore\Endpoint;
+namespace Bitly\Endpoint;
 
-class FindPetsByStatus extends \Petstore\Runtime\Client\BaseEndpoint implements \Petstore\Runtime\Client\Endpoint
+class FindPetsByStatus extends \Bitly\Runtime\Client\BaseEndpoint implements \Bitly\Runtime\Client\Endpoint
 {
-    use \Petstore\Runtime\Client\EndpointTrait;
+    use \Bitly\Runtime\Client\EndpointTrait;
     protected $accept;
 
     /**
@@ -67,19 +67,19 @@ class FindPetsByStatus extends \Petstore\Runtime\Client\BaseEndpoint implements 
     }
 
     /**
-     * @return \Petstore\Model\Pet[]|null
+     * @return \Bitly\Model\Pet[]|null
      *
-     * @throws \Petstore\Exception\FindPetsByStatusBadRequestException
+     * @throws \Bitly\Exception\FindPetsByStatusBadRequestException
      */
     protected function transformResponseBody(\Psr\Http\Message\ResponseInterface $response, \Symfony\Component\Serializer\SerializerInterface $serializer, ?string $contentType = null)
     {
         $status = $response->getStatusCode();
         $body = (string) $response->getBody();
         if (is_null($contentType) === false && (200 === $status && mb_strpos($contentType, 'application/json') !== false)) {
-            return $serializer->deserialize($body, 'Petstore\Model\Pet[]', 'json');
+            return $serializer->deserialize($body, 'Bitly\Model\Pet[]', 'json');
         }
         if (400 === $status) {
-            throw new \Petstore\Exception\FindPetsByStatusBadRequestException($response);
+            throw new \Bitly\Exception\FindPetsByStatusBadRequestException($response);
         }
     }
 
