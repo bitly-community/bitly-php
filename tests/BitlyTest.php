@@ -4,38 +4,34 @@ declare(strict_types=1);
 
 use Bitly\Bitly;
 use Bitly\Client;
-use Bitly\Exception\ApiException;
-use Bitly\Model\Pet;
+use Bitly\Model\Shorten;
+use Http\Client\Common\Plugin\AuthenticationPlugin;
+use Http\Message\Authentication\Bearer;
 
-it('gets client from Bitly class', function (): void {
-    $bitly = new Bitly('API_KEY', 'https://petstore.swagger.io');
+it('instantiates Bitly client', function (): void {
+    $bitly = new Bitly('API_KEY');
     $client = $bitly->client;
     expect($client)->toBeInstanceOf(Client::class);
-    expect(method_exists($client, 'addPet'))->toBeTrue();
+    expect(method_exists($client, 'deleteBitlink'))->toBeTrue();
 });
 
-it('gets client from Client::create', function (): void {
-    $client = Client::create();
+it('instantiates client from Client::create', function (): void {
+    $bearer = new Bearer('API_KEY');
+    $plugins = [new AuthenticationPlugin($bearer)];
+    $client = Client::create(null, $plugins);
     expect($client)->toBeInstanceOf(Client::class);
-    expect(method_exists($client, 'addPet'))->toBeTrue();
+    expect(method_exists($client, 'createFullBitlink'))->toBeTrue();
 });
 
-it('adds pet', function (): void {
+it('creates Bitlink', function (): void {
     $bitly = new Bitly('API_KEY');
-    $pet = new Pet();
-    $pet->setName('Neo');
-    $pet->setPhotoUrls(['https://placecats.com/neo/300/200']);
-    $response = $bitly->client->addPet($pet);
-    expect($response)->toBe(null);
-});
+    $shorten = new Shorten();
+    $shorten->setLongUrl('http://example.com');
 
-it('gets pet not found', function (): void {
     try {
-        $bitly = new Bitly('API_KEY');
-        $bitly->client->getPetById(0);
-    } catch (Throwable $throwable) {
-        expect($throwable)->toBeInstanceOf(ApiException::class);
-        expect($throwable->getMessage())->toBe('Pet not found');
-        expect($throwable->getCode())->toBe(404);
+        $bitly->client->createBitlink($shorten);
+    } catch (Throwable $exception) {
+        expect($exception->getMessage())->toBe('FORBIDDEN');
+        expect($exception->getCode())->toBe(403);
     }
 });

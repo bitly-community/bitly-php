@@ -51,41 +51,49 @@ if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR
             if (null === $data || false === \is_array($data)) {
                 return $object;
             }
-            if (\array_key_exists('id', $data)) {
-                $object->setId($data['id']);
-                unset($data['id']);
+            if (\array_key_exists('login', $data)) {
+                $object->setLogin($data['login']);
+                unset($data['login']);
             }
-            if (\array_key_exists('username', $data)) {
-                $object->setUsername($data['username']);
-                unset($data['username']);
+            if (\array_key_exists('name', $data)) {
+                $object->setName($data['name']);
+                unset($data['name']);
             }
-            if (\array_key_exists('firstName', $data)) {
-                $object->setFirstName($data['firstName']);
-                unset($data['firstName']);
+            if (\array_key_exists('is_active', $data)) {
+                $object->setIsActive($data['is_active']);
+                unset($data['is_active']);
             }
-            if (\array_key_exists('lastName', $data)) {
-                $object->setLastName($data['lastName']);
-                unset($data['lastName']);
+            if (\array_key_exists('created', $data)) {
+                $object->setCreated($data['created']);
+                unset($data['created']);
             }
-            if (\array_key_exists('email', $data)) {
-                $object->setEmail($data['email']);
-                unset($data['email']);
+            if (\array_key_exists('modified', $data)) {
+                $object->setModified($data['modified']);
+                unset($data['modified']);
             }
-            if (\array_key_exists('password', $data)) {
-                $object->setPassword($data['password']);
-                unset($data['password']);
+            if (\array_key_exists('is_sso_user', $data)) {
+                $object->setIsSsoUser($data['is_sso_user']);
+                unset($data['is_sso_user']);
             }
-            if (\array_key_exists('phone', $data)) {
-                $object->setPhone($data['phone']);
-                unset($data['phone']);
+            if (\array_key_exists('emails', $data)) {
+                $values = [];
+                foreach ($data['emails'] as $value) {
+                    $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\Email::class, 'json', $context);
+                }
+                $object->setEmails($values);
+                unset($data['emails']);
             }
-            if (\array_key_exists('userStatus', $data)) {
-                $object->setUserStatus($data['userStatus']);
-                unset($data['userStatus']);
+            if (\array_key_exists('is_2fa_enabled', $data)) {
+                $object->setIs2faEnabled($data['is_2fa_enabled']);
+                unset($data['is_2fa_enabled']);
             }
-            foreach ($data as $key => $value) {
+            if (\array_key_exists('default_group_guid', $data)) {
+                $object->setDefaultGroupGuid($data['default_group_guid']);
+                unset($data['default_group_guid']);
+            }
+            foreach ($data as $key => $value_1) {
                 if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
+                    $object[$key] = $value_1;
                 }
             }
 
@@ -95,33 +103,24 @@ if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR
         public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
         {
             $data = [];
-            if ($object->isInitialized('id') && null !== $object->getId()) {
-                $data['id'] = $object->getId();
+            $data['login'] = $object->getLogin();
+            $data['name'] = $object->getName();
+            $data['is_active'] = $object->getIsActive();
+            $data['created'] = $object->getCreated();
+            $data['modified'] = $object->getModified();
+            $data['is_sso_user'] = $object->getIsSsoUser();
+            $values = [];
+            foreach ($object->getEmails() as $value) {
+                $values[] = $this->normalizer->normalize($value, 'json', $context);
             }
-            if ($object->isInitialized('username') && null !== $object->getUsername()) {
-                $data['username'] = $object->getUsername();
+            $data['emails'] = $values;
+            $data['is_2fa_enabled'] = $object->getIs2faEnabled();
+            if ($object->isInitialized('defaultGroupGuid') && null !== $object->getDefaultGroupGuid()) {
+                $data['default_group_guid'] = $object->getDefaultGroupGuid();
             }
-            if ($object->isInitialized('firstName') && null !== $object->getFirstName()) {
-                $data['firstName'] = $object->getFirstName();
-            }
-            if ($object->isInitialized('lastName') && null !== $object->getLastName()) {
-                $data['lastName'] = $object->getLastName();
-            }
-            if ($object->isInitialized('email') && null !== $object->getEmail()) {
-                $data['email'] = $object->getEmail();
-            }
-            if ($object->isInitialized('password') && null !== $object->getPassword()) {
-                $data['password'] = $object->getPassword();
-            }
-            if ($object->isInitialized('phone') && null !== $object->getPhone()) {
-                $data['phone'] = $object->getPhone();
-            }
-            if ($object->isInitialized('userStatus') && null !== $object->getUserStatus()) {
-                $data['userStatus'] = $object->getUserStatus();
-            }
-            foreach ($object as $key => $value) {
+            foreach ($object as $key => $value_1) {
                 if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
+                    $data[$key] = $value_1;
                 }
             }
 
@@ -163,41 +162,49 @@ if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR
             if (null === $data || false === \is_array($data)) {
                 return $object;
             }
-            if (\array_key_exists('id', $data)) {
-                $object->setId($data['id']);
-                unset($data['id']);
+            if (\array_key_exists('login', $data)) {
+                $object->setLogin($data['login']);
+                unset($data['login']);
             }
-            if (\array_key_exists('username', $data)) {
-                $object->setUsername($data['username']);
-                unset($data['username']);
+            if (\array_key_exists('name', $data)) {
+                $object->setName($data['name']);
+                unset($data['name']);
             }
-            if (\array_key_exists('firstName', $data)) {
-                $object->setFirstName($data['firstName']);
-                unset($data['firstName']);
+            if (\array_key_exists('is_active', $data)) {
+                $object->setIsActive($data['is_active']);
+                unset($data['is_active']);
             }
-            if (\array_key_exists('lastName', $data)) {
-                $object->setLastName($data['lastName']);
-                unset($data['lastName']);
+            if (\array_key_exists('created', $data)) {
+                $object->setCreated($data['created']);
+                unset($data['created']);
             }
-            if (\array_key_exists('email', $data)) {
-                $object->setEmail($data['email']);
-                unset($data['email']);
+            if (\array_key_exists('modified', $data)) {
+                $object->setModified($data['modified']);
+                unset($data['modified']);
             }
-            if (\array_key_exists('password', $data)) {
-                $object->setPassword($data['password']);
-                unset($data['password']);
+            if (\array_key_exists('is_sso_user', $data)) {
+                $object->setIsSsoUser($data['is_sso_user']);
+                unset($data['is_sso_user']);
             }
-            if (\array_key_exists('phone', $data)) {
-                $object->setPhone($data['phone']);
-                unset($data['phone']);
+            if (\array_key_exists('emails', $data)) {
+                $values = [];
+                foreach ($data['emails'] as $value) {
+                    $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\Email::class, 'json', $context);
+                }
+                $object->setEmails($values);
+                unset($data['emails']);
             }
-            if (\array_key_exists('userStatus', $data)) {
-                $object->setUserStatus($data['userStatus']);
-                unset($data['userStatus']);
+            if (\array_key_exists('is_2fa_enabled', $data)) {
+                $object->setIs2faEnabled($data['is_2fa_enabled']);
+                unset($data['is_2fa_enabled']);
             }
-            foreach ($data as $key => $value) {
+            if (\array_key_exists('default_group_guid', $data)) {
+                $object->setDefaultGroupGuid($data['default_group_guid']);
+                unset($data['default_group_guid']);
+            }
+            foreach ($data as $key => $value_1) {
                 if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
+                    $object[$key] = $value_1;
                 }
             }
 
@@ -210,33 +217,24 @@ if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR
         public function normalize($object, $format = null, array $context = [])
         {
             $data = [];
-            if ($object->isInitialized('id') && null !== $object->getId()) {
-                $data['id'] = $object->getId();
+            $data['login'] = $object->getLogin();
+            $data['name'] = $object->getName();
+            $data['is_active'] = $object->getIsActive();
+            $data['created'] = $object->getCreated();
+            $data['modified'] = $object->getModified();
+            $data['is_sso_user'] = $object->getIsSsoUser();
+            $values = [];
+            foreach ($object->getEmails() as $value) {
+                $values[] = $this->normalizer->normalize($value, 'json', $context);
             }
-            if ($object->isInitialized('username') && null !== $object->getUsername()) {
-                $data['username'] = $object->getUsername();
+            $data['emails'] = $values;
+            $data['is_2fa_enabled'] = $object->getIs2faEnabled();
+            if ($object->isInitialized('defaultGroupGuid') && null !== $object->getDefaultGroupGuid()) {
+                $data['default_group_guid'] = $object->getDefaultGroupGuid();
             }
-            if ($object->isInitialized('firstName') && null !== $object->getFirstName()) {
-                $data['firstName'] = $object->getFirstName();
-            }
-            if ($object->isInitialized('lastName') && null !== $object->getLastName()) {
-                $data['lastName'] = $object->getLastName();
-            }
-            if ($object->isInitialized('email') && null !== $object->getEmail()) {
-                $data['email'] = $object->getEmail();
-            }
-            if ($object->isInitialized('password') && null !== $object->getPassword()) {
-                $data['password'] = $object->getPassword();
-            }
-            if ($object->isInitialized('phone') && null !== $object->getPhone()) {
-                $data['phone'] = $object->getPhone();
-            }
-            if ($object->isInitialized('userStatus') && null !== $object->getUserStatus()) {
-                $data['userStatus'] = $object->getUserStatus();
-            }
-            foreach ($object as $key => $value) {
+            foreach ($object as $key => $value_1) {
                 if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
+                    $data[$key] = $value_1;
                 }
             }
 

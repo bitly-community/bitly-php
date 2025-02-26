@@ -51,9 +51,17 @@ if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR
             if (null === $data || false === \is_array($data)) {
                 return $object;
             }
-            if (\array_key_exists('street', $data)) {
-                $object->setStreet($data['street']);
-                unset($data['street']);
+            if (\array_key_exists('recipient_name', $data)) {
+                $object->setRecipientName($data['recipient_name']);
+                unset($data['recipient_name']);
+            }
+            if (\array_key_exists('line1', $data)) {
+                $object->setLine1($data['line1']);
+                unset($data['line1']);
+            }
+            if (\array_key_exists('line2', $data)) {
+                $object->setLine2($data['line2']);
+                unset($data['line2']);
             }
             if (\array_key_exists('city', $data)) {
                 $object->setCity($data['city']);
@@ -63,9 +71,13 @@ if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR
                 $object->setState($data['state']);
                 unset($data['state']);
             }
-            if (\array_key_exists('zip', $data)) {
-                $object->setZip($data['zip']);
-                unset($data['zip']);
+            if (\array_key_exists('postal_code', $data)) {
+                $object->setPostalCode($data['postal_code']);
+                unset($data['postal_code']);
+            }
+            if (\array_key_exists('country_code', $data)) {
+                $object->setCountryCode($data['country_code']);
+                unset($data['country_code']);
             }
             foreach ($data as $key => $value) {
                 if (preg_match('/.*/', (string) $key)) {
@@ -79,8 +91,14 @@ if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR
         public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
         {
             $data = [];
-            if ($object->isInitialized('street') && null !== $object->getStreet()) {
-                $data['street'] = $object->getStreet();
+            if ($object->isInitialized('recipientName') && null !== $object->getRecipientName()) {
+                $data['recipient_name'] = $object->getRecipientName();
+            }
+            if ($object->isInitialized('line1') && null !== $object->getLine1()) {
+                $data['line1'] = $object->getLine1();
+            }
+            if ($object->isInitialized('line2') && null !== $object->getLine2()) {
+                $data['line2'] = $object->getLine2();
             }
             if ($object->isInitialized('city') && null !== $object->getCity()) {
                 $data['city'] = $object->getCity();
@@ -88,8 +106,11 @@ if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR
             if ($object->isInitialized('state') && null !== $object->getState()) {
                 $data['state'] = $object->getState();
             }
-            if ($object->isInitialized('zip') && null !== $object->getZip()) {
-                $data['zip'] = $object->getZip();
+            if ($object->isInitialized('postalCode') && null !== $object->getPostalCode()) {
+                $data['postal_code'] = $object->getPostalCode();
+            }
+            if ($object->isInitialized('countryCode') && null !== $object->getCountryCode()) {
+                $data['country_code'] = $object->getCountryCode();
             }
             foreach ($object as $key => $value) {
                 if (preg_match('/.*/', (string) $key)) {
@@ -135,9 +156,17 @@ if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR
             if (null === $data || false === \is_array($data)) {
                 return $object;
             }
-            if (\array_key_exists('street', $data)) {
-                $object->setStreet($data['street']);
-                unset($data['street']);
+            if (\array_key_exists('recipient_name', $data)) {
+                $object->setRecipientName($data['recipient_name']);
+                unset($data['recipient_name']);
+            }
+            if (\array_key_exists('line1', $data)) {
+                $object->setLine1($data['line1']);
+                unset($data['line1']);
+            }
+            if (\array_key_exists('line2', $data)) {
+                $object->setLine2($data['line2']);
+                unset($data['line2']);
             }
             if (\array_key_exists('city', $data)) {
                 $object->setCity($data['city']);
@@ -147,9 +176,13 @@ if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR
                 $object->setState($data['state']);
                 unset($data['state']);
             }
-            if (\array_key_exists('zip', $data)) {
-                $object->setZip($data['zip']);
-                unset($data['zip']);
+            if (\array_key_exists('postal_code', $data)) {
+                $object->setPostalCode($data['postal_code']);
+                unset($data['postal_code']);
+            }
+            if (\array_key_exists('country_code', $data)) {
+                $object->setCountryCode($data['country_code']);
+                unset($data['country_code']);
             }
             foreach ($data as $key => $value) {
                 if (preg_match('/.*/', (string) $key)) {
@@ -166,8 +199,14 @@ if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR
         public function normalize($object, $format = null, array $context = [])
         {
             $data = [];
-            if ($object->isInitialized('street') && null !== $object->getStreet()) {
-                $data['street'] = $object->getStreet();
+            if ($object->isInitialized('recipientName') && null !== $object->getRecipientName()) {
+                $data['recipient_name'] = $object->getRecipientName();
+            }
+            if ($object->isInitialized('line1') && null !== $object->getLine1()) {
+                $data['line1'] = $object->getLine1();
+            }
+            if ($object->isInitialized('line2') && null !== $object->getLine2()) {
+                $data['line2'] = $object->getLine2();
             }
             if ($object->isInitialized('city') && null !== $object->getCity()) {
                 $data['city'] = $object->getCity();
@@ -175,8 +214,11 @@ if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR
             if ($object->isInitialized('state') && null !== $object->getState()) {
                 $data['state'] = $object->getState();
             }
-            if ($object->isInitialized('zip') && null !== $object->getZip()) {
-                $data['zip'] = $object->getZip();
+            if ($object->isInitialized('postalCode') && null !== $object->getPostalCode()) {
+                $data['postal_code'] = $object->getPostalCode();
+            }
+            if ($object->isInitialized('countryCode') && null !== $object->getCountryCode()) {
+                $data['country_code'] = $object->getCountryCode();
             }
             foreach ($object as $key => $value) {
                 if (preg_match('/.*/', (string) $key)) {
