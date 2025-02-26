@@ -1,0 +1,14 @@
+--- vendor/jane-php/open-api-3/Generator/Parameter/NonBodyParameterGenerator.php	2024-07-29 09:51:58
++++ patches/NonBodyParameterGenerator.php	2025-02-25 23:35:23
+@@ -161,7 +161,10 @@
+      */
+     private function getDefaultAsExpr(Parameter $parameter): Expr
+     {
+-        $expr = $this->parser->parse('<?php ' . var_export($parameter->getSchema()->getDefault(), true) . ';')[0];
++        // https://github.com/janephp/janephp/issues/299
++        $schema = $parameter->getSchema();
++        $default = $schema instanceof Reference ? $schema->resolve()['default'] : $schema->getDefault();
++        $expr = $this->parser->parse('<?php ' . var_export($default, true) . ';')[0];
+ 
+         if ($expr instanceof Stmt\Expression) {
+             return $expr->expr;

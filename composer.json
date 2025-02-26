@@ -43,6 +43,9 @@
         }
     },
     "scripts": {
+        "post-autoload-dump": [
+            "patch -N vendor/jane-php/open-api-3/Generator/Parameter/NonBodyParameterGenerator.php < patches/NonBodyParameterGenerator.php.diff || true"
+        ],
         "build": [
             "composer update",
             "vendor/bin/jane-openapi generate",
