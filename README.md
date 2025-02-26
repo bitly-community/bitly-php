@@ -1,6 +1,6 @@
 # bitly-php
 
-[![packagist](https://img.shields.io/packagist/v/bitly/sdk)](https://packagist.org/packages/bitly/sdk)
+[![packagist](https://img.shields.io/packagist/v/bitly-api/sdk)](https://packagist.org/packages/bitly-api/sdk)
 [![build](https://github.com/bitly-community/bitly-php/actions/workflows/build.yml/badge.svg)](https://github.com/bitly-community/bitly-php/actions/workflows/build.yml)
 [![test](https://github.com/bitly-community/bitly-php/actions/workflows/test.yml/badge.svg)](https://github.com/bitly-community/bitly-php/actions/workflows/test.yml)
 
@@ -21,7 +21,7 @@ Generate your [access token](https://app.bitly.com/settings/api/).
 Install with [Composer](http://getcomposer.org/):
 
 ```sh
-composer require bitly/sdk
+composer require bitly-api/sdk
 ```
 
 Use Composer's [autoload](https://getcomposer.org/doc/01-basic-usage.md#autoloading):

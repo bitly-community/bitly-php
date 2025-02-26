@@ -1,5 +1,5 @@
 {
-    "name": "bitly/sdk",
+    "name": "bitly-api/sdk",
     "type": "library",
     "description": "PHP library for Bitly API.",
     "keywords": [
