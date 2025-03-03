@@ -38,7 +38,7 @@ require_once 'vendor/autoload.php';
 
 ## Usage
 
-Instantiate the client:
+Instantiate the SDK:
 
 ```php
 use Bitly\Bitly;
