@@ -18,7 +18,7 @@ Generate an [access token](https://app.bitly.com/settings/api/).
 
 ## Install
 
-Install with [Composer](http://getcomposer.org/):
+Install package with [Composer](http://getcomposer.org/):
 
 ```sh
 composer require bitly-api/sdk
