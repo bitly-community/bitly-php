@@ -24,7 +24,19 @@ Install with [Composer](http://getcomposer.org/):
 composer require bitly-api/sdk
 ```
 
-Use Composer's [autoload](https://getcomposer.org/doc/01-basic-usage.md#autoloading):
+If you're missing a package providing `psr/http-client-implementation`:
+
+```sh
+composer require php-http/guzzle7-adapter
+```
+
+Add [autoloading](https://getcomposer.org/doc/01-basic-usage.md#autoloading):
+
+```sh
+composer dump-autoload
+```
+
+And include at the top of your PHP file:
 
 ```php
 require_once 'vendor/autoload.php';
@@ -46,7 +58,7 @@ Convert a long URL to a Bitlink:
 
 ```php
 use Bitly\Bitly;
-use Bitly\Model\Pet;
+use Bitly\Model\Shorten;
 
 $bitly = new Bitly('YOUR_API_KEY');
 
