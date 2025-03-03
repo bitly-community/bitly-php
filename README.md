@@ -32,12 +32,6 @@ composer require php-http/guzzle7-adapter
 
 Add [autoloading](https://getcomposer.org/doc/01-basic-usage.md#autoloading):
 
-```sh
-composer dump-autoload
-```
-
-Include at the top of your PHP file:
-
 ```php
 require_once 'vendor/autoload.php';
 ```
