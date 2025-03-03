@@ -14,7 +14,7 @@ PHP >=8.0
 
 ### API Key
 
-Generate your [access token](https://app.bitly.com/settings/api/).
+Generate an [access token](https://app.bitly.com/settings/api/).
 
 ## Install
 
