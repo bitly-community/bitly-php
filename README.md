@@ -36,7 +36,7 @@ Add [autoloading](https://getcomposer.org/doc/01-basic-usage.md#autoloading):
 composer dump-autoload
 ```
 
-And include at the top of your PHP file:
+Include at the top of your PHP file:
 
 ```php
 require_once 'vendor/autoload.php';
