@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,239 +20,121 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class EvaluateInterventionResponseMonthlyPromoNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class EvaluateInterventionResponseMonthlyPromoNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\EvaluateInterventionResponseMonthlyPromo::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\EvaluateInterventionResponseMonthlyPromo::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\EvaluateInterventionResponseMonthlyPromo();
-            if (\array_key_exists('discount_amount', $data) && \is_int($data['discount_amount'])) {
-                $data['discount_amount'] = (float) $data['discount_amount'];
-            }
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('promo_code', $data)) {
-                $object->setPromoCode($data['promo_code']);
-                unset($data['promo_code']);
-            }
-            if (\array_key_exists('is_valid', $data)) {
-                $object->setIsValid($data['is_valid']);
-                unset($data['is_valid']);
-            }
-            if (\array_key_exists('discount_type', $data)) {
-                $object->setDiscountType($data['discount_type']);
-                unset($data['discount_type']);
-            }
-            if (\array_key_exists('discount_amount', $data)) {
-                $object->setDiscountAmount($data['discount_amount']);
-                unset($data['discount_amount']);
-            }
-            if (\array_key_exists('num_periods_to_apply_discount', $data)) {
-                $object->setNumPeriodsToApplyDiscount($data['num_periods_to_apply_discount']);
-                unset($data['num_periods_to_apply_discount']);
-            }
-            if (\array_key_exists('num_periods_to_apply_discount_type', $data)) {
-                $object->setNumPeriodsToApplyDiscountType($data['num_periods_to_apply_discount_type']);
-                unset($data['num_periods_to_apply_discount_type']);
-            }
-            if (\array_key_exists('valid_plans', $data)) {
-                $values = [];
-                foreach ($data['valid_plans'] as $value) {
-                    $values[] = $value;
-                }
-                $object->setValidPlans($values);
-                unset($data['valid_plans']);
-            }
-            foreach ($data as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_1;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('promoCode') && null !== $object->getPromoCode()) {
-                $data['promo_code'] = $object->getPromoCode();
-            }
-            if ($object->isInitialized('isValid') && null !== $object->getIsValid()) {
-                $data['is_valid'] = $object->getIsValid();
-            }
-            if ($object->isInitialized('discountType') && null !== $object->getDiscountType()) {
-                $data['discount_type'] = $object->getDiscountType();
-            }
-            if ($object->isInitialized('discountAmount') && null !== $object->getDiscountAmount()) {
-                $data['discount_amount'] = $object->getDiscountAmount();
-            }
-            if ($object->isInitialized('numPeriodsToApplyDiscount') && null !== $object->getNumPeriodsToApplyDiscount()) {
-                $data['num_periods_to_apply_discount'] = $object->getNumPeriodsToApplyDiscount();
-            }
-            if ($object->isInitialized('numPeriodsToApplyDiscountType') && null !== $object->getNumPeriodsToApplyDiscountType()) {
-                $data['num_periods_to_apply_discount_type'] = $object->getNumPeriodsToApplyDiscountType();
-            }
-            if ($object->isInitialized('validPlans') && null !== $object->getValidPlans()) {
-                $values = [];
-                foreach ($object->getValidPlans() as $value) {
-                    $values[] = $value;
-                }
-                $data['valid_plans'] = $values;
-            }
-            foreach ($object as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_1;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\EvaluateInterventionResponseMonthlyPromo::class => false];
-        }
+        return $type === \Bitly\Model\EvaluateInterventionResponseMonthlyPromo::class;
     }
-} else {
-    class EvaluateInterventionResponseMonthlyPromoNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\EvaluateInterventionResponseMonthlyPromo::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\EvaluateInterventionResponseMonthlyPromo::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\EvaluateInterventionResponseMonthlyPromo::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\EvaluateInterventionResponseMonthlyPromo();
-            if (\array_key_exists('discount_amount', $data) && \is_int($data['discount_amount'])) {
-                $data['discount_amount'] = (float) $data['discount_amount'];
-            }
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('promo_code', $data)) {
-                $object->setPromoCode($data['promo_code']);
-                unset($data['promo_code']);
-            }
-            if (\array_key_exists('is_valid', $data)) {
-                $object->setIsValid($data['is_valid']);
-                unset($data['is_valid']);
-            }
-            if (\array_key_exists('discount_type', $data)) {
-                $object->setDiscountType($data['discount_type']);
-                unset($data['discount_type']);
-            }
-            if (\array_key_exists('discount_amount', $data)) {
-                $object->setDiscountAmount($data['discount_amount']);
-                unset($data['discount_amount']);
-            }
-            if (\array_key_exists('num_periods_to_apply_discount', $data)) {
-                $object->setNumPeriodsToApplyDiscount($data['num_periods_to_apply_discount']);
-                unset($data['num_periods_to_apply_discount']);
-            }
-            if (\array_key_exists('num_periods_to_apply_discount_type', $data)) {
-                $object->setNumPeriodsToApplyDiscountType($data['num_periods_to_apply_discount_type']);
-                unset($data['num_periods_to_apply_discount_type']);
-            }
-            if (\array_key_exists('valid_plans', $data)) {
-                $values = [];
-                foreach ($data['valid_plans'] as $value) {
-                    $values[] = $value;
-                }
-                $object->setValidPlans($values);
-                unset($data['valid_plans']);
-            }
-            foreach ($data as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_1;
-                }
-            }
-
+        $object = new \Bitly\Model\EvaluateInterventionResponseMonthlyPromo();
+        if (\array_key_exists('discount_amount', $data) && \is_int($data['discount_amount'])) {
+            $data['discount_amount'] = (float) $data['discount_amount'];
+        }
+        if (\array_key_exists('is_valid', $data) && \is_int($data['is_valid'])) {
+            $data['is_valid'] = (bool) $data['is_valid'];
+        }
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('promoCode') && null !== $object->getPromoCode()) {
-                $data['promo_code'] = $object->getPromoCode();
+        if (\array_key_exists('promo_code', $data)) {
+            $object->setPromoCode($data['promo_code']);
+            unset($data['promo_code']);
+        }
+        if (\array_key_exists('is_valid', $data)) {
+            $object->setIsValid($data['is_valid']);
+            unset($data['is_valid']);
+        }
+        if (\array_key_exists('discount_type', $data)) {
+            $object->setDiscountType($data['discount_type']);
+            unset($data['discount_type']);
+        }
+        if (\array_key_exists('discount_amount', $data)) {
+            $object->setDiscountAmount($data['discount_amount']);
+            unset($data['discount_amount']);
+        }
+        if (\array_key_exists('num_periods_to_apply_discount', $data)) {
+            $object->setNumPeriodsToApplyDiscount($data['num_periods_to_apply_discount']);
+            unset($data['num_periods_to_apply_discount']);
+        }
+        if (\array_key_exists('num_periods_to_apply_discount_type', $data)) {
+            $object->setNumPeriodsToApplyDiscountType($data['num_periods_to_apply_discount_type']);
+            unset($data['num_periods_to_apply_discount_type']);
+        }
+        if (\array_key_exists('valid_plans', $data)) {
+            $values = [];
+            foreach ($data['valid_plans'] as $value) {
+                $values[] = $value;
             }
-            if ($object->isInitialized('isValid') && null !== $object->getIsValid()) {
-                $data['is_valid'] = $object->getIsValid();
+            $object->setValidPlans($values);
+            unset($data['valid_plans']);
+        }
+        foreach ($data as $key => $value_1) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value_1;
             }
-            if ($object->isInitialized('discountType') && null !== $object->getDiscountType()) {
-                $data['discount_type'] = $object->getDiscountType();
-            }
-            if ($object->isInitialized('discountAmount') && null !== $object->getDiscountAmount()) {
-                $data['discount_amount'] = $object->getDiscountAmount();
-            }
-            if ($object->isInitialized('numPeriodsToApplyDiscount') && null !== $object->getNumPeriodsToApplyDiscount()) {
-                $data['num_periods_to_apply_discount'] = $object->getNumPeriodsToApplyDiscount();
-            }
-            if ($object->isInitialized('numPeriodsToApplyDiscountType') && null !== $object->getNumPeriodsToApplyDiscountType()) {
-                $data['num_periods_to_apply_discount_type'] = $object->getNumPeriodsToApplyDiscountType();
-            }
-            if ($object->isInitialized('validPlans') && null !== $object->getValidPlans()) {
-                $values = [];
-                foreach ($object->getValidPlans() as $value) {
-                    $values[] = $value;
-                }
-                $data['valid_plans'] = $values;
-            }
-            foreach ($object as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_1;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\EvaluateInterventionResponseMonthlyPromo::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('promoCode') && null !== $data->getPromoCode()) {
+            $dataArray['promo_code'] = $data->getPromoCode();
         }
+        if ($data->isInitialized('isValid') && null !== $data->getIsValid()) {
+            $dataArray['is_valid'] = $data->getIsValid();
+        }
+        if ($data->isInitialized('discountType') && null !== $data->getDiscountType()) {
+            $dataArray['discount_type'] = $data->getDiscountType();
+        }
+        if ($data->isInitialized('discountAmount') && null !== $data->getDiscountAmount()) {
+            $dataArray['discount_amount'] = $data->getDiscountAmount();
+        }
+        if ($data->isInitialized('numPeriodsToApplyDiscount') && null !== $data->getNumPeriodsToApplyDiscount()) {
+            $dataArray['num_periods_to_apply_discount'] = $data->getNumPeriodsToApplyDiscount();
+        }
+        if ($data->isInitialized('numPeriodsToApplyDiscountType') && null !== $data->getNumPeriodsToApplyDiscountType()) {
+            $dataArray['num_periods_to_apply_discount_type'] = $data->getNumPeriodsToApplyDiscountType();
+        }
+        if ($data->isInitialized('validPlans') && null !== $data->getValidPlans()) {
+            $values = [];
+            foreach ($data->getValidPlans() as $value) {
+                $values[] = $value;
+            }
+            $dataArray['valid_plans'] = $values;
+        }
+        foreach ($data as $key => $value_1) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value_1;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\EvaluateInterventionResponseMonthlyPromo::class => false];
     }
 }

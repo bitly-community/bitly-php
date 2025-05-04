@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,235 +20,119 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class UpdateAppNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class UpdateAppNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\UpdateApp::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\UpdateApp::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\UpdateApp();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('name', $data)) {
-                $object->setName($data['name']);
-                unset($data['name']);
-            }
-            if (\array_key_exists('description', $data)) {
-                $object->setDescription($data['description']);
-                unset($data['description']);
-            }
-            if (\array_key_exists('link', $data)) {
-                $object->setLink($data['link']);
-                unset($data['link']);
-            }
-            if (\array_key_exists('redirect_uris', $data)) {
-                $values = [];
-                foreach ($data['redirect_uris'] as $value) {
-                    $values[] = $value;
-                }
-                $object->setRedirectUris($values);
-                unset($data['redirect_uris']);
-            }
-            if (\array_key_exists('ip_allowlist', $data)) {
-                $values_1 = [];
-                foreach ($data['ip_allowlist'] as $value_1) {
-                    $values_1[] = $value_1;
-                }
-                $object->setIpAllowlist($values_1);
-                unset($data['ip_allowlist']);
-            }
-            if (\array_key_exists('require_oauth_pkce', $data)) {
-                $object->setRequireOauthPkce($data['require_oauth_pkce']);
-                unset($data['require_oauth_pkce']);
-            }
-            foreach ($data as $key => $value_2) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_2;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('name') && null !== $object->getName()) {
-                $data['name'] = $object->getName();
-            }
-            if ($object->isInitialized('description') && null !== $object->getDescription()) {
-                $data['description'] = $object->getDescription();
-            }
-            if ($object->isInitialized('link') && null !== $object->getLink()) {
-                $data['link'] = $object->getLink();
-            }
-            if ($object->isInitialized('redirectUris') && null !== $object->getRedirectUris()) {
-                $values = [];
-                foreach ($object->getRedirectUris() as $value) {
-                    $values[] = $value;
-                }
-                $data['redirect_uris'] = $values;
-            }
-            if ($object->isInitialized('ipAllowlist') && null !== $object->getIpAllowlist()) {
-                $values_1 = [];
-                foreach ($object->getIpAllowlist() as $value_1) {
-                    $values_1[] = $value_1;
-                }
-                $data['ip_allowlist'] = $values_1;
-            }
-            if ($object->isInitialized('requireOauthPkce') && null !== $object->getRequireOauthPkce()) {
-                $data['require_oauth_pkce'] = $object->getRequireOauthPkce();
-            }
-            foreach ($object as $key => $value_2) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_2;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\UpdateApp::class => false];
-        }
+        return $type === \Bitly\Model\UpdateApp::class;
     }
-} else {
-    class UpdateAppNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\UpdateApp::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\UpdateApp::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\UpdateApp::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\UpdateApp();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('name', $data)) {
-                $object->setName($data['name']);
-                unset($data['name']);
-            }
-            if (\array_key_exists('description', $data)) {
-                $object->setDescription($data['description']);
-                unset($data['description']);
-            }
-            if (\array_key_exists('link', $data)) {
-                $object->setLink($data['link']);
-                unset($data['link']);
-            }
-            if (\array_key_exists('redirect_uris', $data)) {
-                $values = [];
-                foreach ($data['redirect_uris'] as $value) {
-                    $values[] = $value;
-                }
-                $object->setRedirectUris($values);
-                unset($data['redirect_uris']);
-            }
-            if (\array_key_exists('ip_allowlist', $data)) {
-                $values_1 = [];
-                foreach ($data['ip_allowlist'] as $value_1) {
-                    $values_1[] = $value_1;
-                }
-                $object->setIpAllowlist($values_1);
-                unset($data['ip_allowlist']);
-            }
-            if (\array_key_exists('require_oauth_pkce', $data)) {
-                $object->setRequireOauthPkce($data['require_oauth_pkce']);
-                unset($data['require_oauth_pkce']);
-            }
-            foreach ($data as $key => $value_2) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_2;
-                }
-            }
-
+        $object = new \Bitly\Model\UpdateApp();
+        if (\array_key_exists('require_oauth_pkce', $data) && \is_int($data['require_oauth_pkce'])) {
+            $data['require_oauth_pkce'] = (bool) $data['require_oauth_pkce'];
+        }
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('name') && null !== $object->getName()) {
-                $data['name'] = $object->getName();
+        if (\array_key_exists('name', $data)) {
+            $object->setName($data['name']);
+            unset($data['name']);
+        }
+        if (\array_key_exists('description', $data)) {
+            $object->setDescription($data['description']);
+            unset($data['description']);
+        }
+        if (\array_key_exists('link', $data)) {
+            $object->setLink($data['link']);
+            unset($data['link']);
+        }
+        if (\array_key_exists('redirect_uris', $data)) {
+            $values = [];
+            foreach ($data['redirect_uris'] as $value) {
+                $values[] = $value;
             }
-            if ($object->isInitialized('description') && null !== $object->getDescription()) {
-                $data['description'] = $object->getDescription();
+            $object->setRedirectUris($values);
+            unset($data['redirect_uris']);
+        }
+        if (\array_key_exists('ip_allowlist', $data)) {
+            $values_1 = [];
+            foreach ($data['ip_allowlist'] as $value_1) {
+                $values_1[] = $value_1;
             }
-            if ($object->isInitialized('link') && null !== $object->getLink()) {
-                $data['link'] = $object->getLink();
+            $object->setIpAllowlist($values_1);
+            unset($data['ip_allowlist']);
+        }
+        if (\array_key_exists('require_oauth_pkce', $data)) {
+            $object->setRequireOauthPkce($data['require_oauth_pkce']);
+            unset($data['require_oauth_pkce']);
+        }
+        foreach ($data as $key => $value_2) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value_2;
             }
-            if ($object->isInitialized('redirectUris') && null !== $object->getRedirectUris()) {
-                $values = [];
-                foreach ($object->getRedirectUris() as $value) {
-                    $values[] = $value;
-                }
-                $data['redirect_uris'] = $values;
-            }
-            if ($object->isInitialized('ipAllowlist') && null !== $object->getIpAllowlist()) {
-                $values_1 = [];
-                foreach ($object->getIpAllowlist() as $value_1) {
-                    $values_1[] = $value_1;
-                }
-                $data['ip_allowlist'] = $values_1;
-            }
-            if ($object->isInitialized('requireOauthPkce') && null !== $object->getRequireOauthPkce()) {
-                $data['require_oauth_pkce'] = $object->getRequireOauthPkce();
-            }
-            foreach ($object as $key => $value_2) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_2;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\UpdateApp::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('name') && null !== $data->getName()) {
+            $dataArray['name'] = $data->getName();
         }
+        if ($data->isInitialized('description') && null !== $data->getDescription()) {
+            $dataArray['description'] = $data->getDescription();
+        }
+        if ($data->isInitialized('link') && null !== $data->getLink()) {
+            $dataArray['link'] = $data->getLink();
+        }
+        if ($data->isInitialized('redirectUris') && null !== $data->getRedirectUris()) {
+            $values = [];
+            foreach ($data->getRedirectUris() as $value) {
+                $values[] = $value;
+            }
+            $dataArray['redirect_uris'] = $values;
+        }
+        if ($data->isInitialized('ipAllowlist') && null !== $data->getIpAllowlist()) {
+            $values_1 = [];
+            foreach ($data->getIpAllowlist() as $value_1) {
+                $values_1[] = $value_1;
+            }
+            $dataArray['ip_allowlist'] = $values_1;
+        }
+        if ($data->isInitialized('requireOauthPkce') && null !== $data->getRequireOauthPkce()) {
+            $dataArray['require_oauth_pkce'] = $data->getRequireOauthPkce();
+        }
+        foreach ($data as $key => $value_2) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value_2;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\UpdateApp::class => false];
     }
 }

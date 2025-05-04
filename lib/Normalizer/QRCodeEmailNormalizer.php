@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,189 +20,93 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class QRCodeEmailNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class QRCodeEmailNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\QRCodeEmail::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\QRCodeEmail::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\QRCodeEmail();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('to', $data)) {
-                $object->setTo($data['to']);
-                unset($data['to']);
-            }
-            if (\array_key_exists('from', $data)) {
-                $object->setFrom($data['from']);
-                unset($data['from']);
-            }
-            if (\array_key_exists('cc', $data)) {
-                $object->setCc($data['cc']);
-                unset($data['cc']);
-            }
-            if (\array_key_exists('subject', $data)) {
-                $object->setSubject($data['subject']);
-                unset($data['subject']);
-            }
-            if (\array_key_exists('body', $data)) {
-                $object->setBody($data['body']);
-                unset($data['body']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('to') && null !== $object->getTo()) {
-                $data['to'] = $object->getTo();
-            }
-            if ($object->isInitialized('from') && null !== $object->getFrom()) {
-                $data['from'] = $object->getFrom();
-            }
-            if ($object->isInitialized('cc') && null !== $object->getCc()) {
-                $data['cc'] = $object->getCc();
-            }
-            if ($object->isInitialized('subject') && null !== $object->getSubject()) {
-                $data['subject'] = $object->getSubject();
-            }
-            if ($object->isInitialized('body') && null !== $object->getBody()) {
-                $data['body'] = $object->getBody();
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\QRCodeEmail::class => false];
-        }
+        return $type === \Bitly\Model\QRCodeEmail::class;
     }
-} else {
-    class QRCodeEmailNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\QRCodeEmail::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\QRCodeEmail::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\QRCodeEmail::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\QRCodeEmail();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('to', $data)) {
-                $object->setTo($data['to']);
-                unset($data['to']);
-            }
-            if (\array_key_exists('from', $data)) {
-                $object->setFrom($data['from']);
-                unset($data['from']);
-            }
-            if (\array_key_exists('cc', $data)) {
-                $object->setCc($data['cc']);
-                unset($data['cc']);
-            }
-            if (\array_key_exists('subject', $data)) {
-                $object->setSubject($data['subject']);
-                unset($data['subject']);
-            }
-            if (\array_key_exists('body', $data)) {
-                $object->setBody($data['body']);
-                unset($data['body']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
+        $object = new \Bitly\Model\QRCodeEmail();
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('to') && null !== $object->getTo()) {
-                $data['to'] = $object->getTo();
+        if (\array_key_exists('to', $data)) {
+            $object->setTo($data['to']);
+            unset($data['to']);
+        }
+        if (\array_key_exists('from', $data)) {
+            $object->setFrom($data['from']);
+            unset($data['from']);
+        }
+        if (\array_key_exists('cc', $data)) {
+            $object->setCc($data['cc']);
+            unset($data['cc']);
+        }
+        if (\array_key_exists('subject', $data)) {
+            $object->setSubject($data['subject']);
+            unset($data['subject']);
+        }
+        if (\array_key_exists('body', $data)) {
+            $object->setBody($data['body']);
+            unset($data['body']);
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value;
             }
-            if ($object->isInitialized('from') && null !== $object->getFrom()) {
-                $data['from'] = $object->getFrom();
-            }
-            if ($object->isInitialized('cc') && null !== $object->getCc()) {
-                $data['cc'] = $object->getCc();
-            }
-            if ($object->isInitialized('subject') && null !== $object->getSubject()) {
-                $data['subject'] = $object->getSubject();
-            }
-            if ($object->isInitialized('body') && null !== $object->getBody()) {
-                $data['body'] = $object->getBody();
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\QRCodeEmail::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('to') && null !== $data->getTo()) {
+            $dataArray['to'] = $data->getTo();
         }
+        if ($data->isInitialized('from') && null !== $data->getFrom()) {
+            $dataArray['from'] = $data->getFrom();
+        }
+        if ($data->isInitialized('cc') && null !== $data->getCc()) {
+            $dataArray['cc'] = $data->getCc();
+        }
+        if ($data->isInitialized('subject') && null !== $data->getSubject()) {
+            $dataArray['subject'] = $data->getSubject();
+        }
+        if ($data->isInitialized('body') && null !== $data->getBody()) {
+            $dataArray['body'] = $data->getBody();
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\QRCodeEmail::class => false];
     }
 }

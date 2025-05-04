@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,191 +20,94 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class CampaignModifyNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class CampaignModifyNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\CampaignModify::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\CampaignModify::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\CampaignModify();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('group_guid', $data)) {
-                $object->setGroupGuid($data['group_guid']);
-                unset($data['group_guid']);
-            }
-            if (\array_key_exists('name', $data)) {
-                $object->setName($data['name']);
-                unset($data['name']);
-            }
-            if (\array_key_exists('description', $data)) {
-                $object->setDescription($data['description']);
-                unset($data['description']);
-            }
-            if (\array_key_exists('channel_guids', $data)) {
-                $values = [];
-                foreach ($data['channel_guids'] as $value) {
-                    $values[] = $value;
-                }
-                $object->setChannelGuids($values);
-                unset($data['channel_guids']);
-            }
-            foreach ($data as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_1;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('groupGuid') && null !== $object->getGroupGuid()) {
-                $data['group_guid'] = $object->getGroupGuid();
-            }
-            if ($object->isInitialized('name') && null !== $object->getName()) {
-                $data['name'] = $object->getName();
-            }
-            if ($object->isInitialized('description') && null !== $object->getDescription()) {
-                $data['description'] = $object->getDescription();
-            }
-            if ($object->isInitialized('channelGuids') && null !== $object->getChannelGuids()) {
-                $values = [];
-                foreach ($object->getChannelGuids() as $value) {
-                    $values[] = $value;
-                }
-                $data['channel_guids'] = $values;
-            }
-            foreach ($object as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_1;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\CampaignModify::class => false];
-        }
+        return $type === \Bitly\Model\CampaignModify::class;
     }
-} else {
-    class CampaignModifyNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\CampaignModify::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\CampaignModify::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\CampaignModify::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\CampaignModify();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('group_guid', $data)) {
-                $object->setGroupGuid($data['group_guid']);
-                unset($data['group_guid']);
-            }
-            if (\array_key_exists('name', $data)) {
-                $object->setName($data['name']);
-                unset($data['name']);
-            }
-            if (\array_key_exists('description', $data)) {
-                $object->setDescription($data['description']);
-                unset($data['description']);
-            }
-            if (\array_key_exists('channel_guids', $data)) {
-                $values = [];
-                foreach ($data['channel_guids'] as $value) {
-                    $values[] = $value;
-                }
-                $object->setChannelGuids($values);
-                unset($data['channel_guids']);
-            }
-            foreach ($data as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_1;
-                }
-            }
-
+        $object = new \Bitly\Model\CampaignModify();
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('groupGuid') && null !== $object->getGroupGuid()) {
-                $data['group_guid'] = $object->getGroupGuid();
+        if (\array_key_exists('group_guid', $data)) {
+            $object->setGroupGuid($data['group_guid']);
+            unset($data['group_guid']);
+        }
+        if (\array_key_exists('name', $data)) {
+            $object->setName($data['name']);
+            unset($data['name']);
+        }
+        if (\array_key_exists('description', $data)) {
+            $object->setDescription($data['description']);
+            unset($data['description']);
+        }
+        if (\array_key_exists('channel_guids', $data)) {
+            $values = [];
+            foreach ($data['channel_guids'] as $value) {
+                $values[] = $value;
             }
-            if ($object->isInitialized('name') && null !== $object->getName()) {
-                $data['name'] = $object->getName();
+            $object->setChannelGuids($values);
+            unset($data['channel_guids']);
+        }
+        foreach ($data as $key => $value_1) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value_1;
             }
-            if ($object->isInitialized('description') && null !== $object->getDescription()) {
-                $data['description'] = $object->getDescription();
-            }
-            if ($object->isInitialized('channelGuids') && null !== $object->getChannelGuids()) {
-                $values = [];
-                foreach ($object->getChannelGuids() as $value) {
-                    $values[] = $value;
-                }
-                $data['channel_guids'] = $values;
-            }
-            foreach ($object as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_1;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\CampaignModify::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('groupGuid') && null !== $data->getGroupGuid()) {
+            $dataArray['group_guid'] = $data->getGroupGuid();
         }
+        if ($data->isInitialized('name') && null !== $data->getName()) {
+            $dataArray['name'] = $data->getName();
+        }
+        if ($data->isInitialized('description') && null !== $data->getDescription()) {
+            $dataArray['description'] = $data->getDescription();
+        }
+        if ($data->isInitialized('channelGuids') && null !== $data->getChannelGuids()) {
+            $values = [];
+            foreach ($data->getChannelGuids() as $value) {
+                $values[] = $value;
+            }
+            $dataArray['channel_guids'] = $values;
+        }
+        foreach ($data as $key => $value_1) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value_1;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\CampaignModify::class => false];
     }
 }

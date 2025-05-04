@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,237 +20,110 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class SortedButtonsNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class SortedButtonsNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\SortedButtons::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\SortedButtons::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\SortedButtons();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('params', $data)) {
-                $object->setParams($this->denormalizer->denormalize($data['params'], \Bitly\Model\MetricsParams::class, 'json', $context));
-                unset($data['params']);
-            }
-            if (\array_key_exists('info', $data)) {
-                $object->setInfo($data['info']);
-                unset($data['info']);
-            }
-            if (\array_key_exists('sorted_buttons', $data)) {
-                $values = [];
-                foreach ($data['sorted_buttons'] as $value) {
-                    $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\ClickLink::class, 'json', $context);
-                }
-                $object->setSortedButtons($values);
-                unset($data['sorted_buttons']);
-            }
-            if (\array_key_exists('buttons', $data)) {
-                $values_1 = [];
-                foreach ($data['buttons'] as $value_1) {
-                    $values_1[] = $this->denormalizer->denormalize($value_1, \Bitly\Model\SortedButtonsButtonsItem::class, 'json', $context);
-                }
-                $object->setButtons($values_1);
-                unset($data['buttons']);
-            }
-            if (\array_key_exists('page_views', $data)) {
-                $values_2 = [];
-                foreach ($data['page_views'] as $value_2) {
-                    $values_2[] = $this->denormalizer->denormalize($value_2, \Bitly\Model\SortedButtonsPageViewsItem::class, 'json', $context);
-                }
-                $object->setPageViews($values_2);
-                unset($data['page_views']);
-            }
-            foreach ($data as $key => $value_3) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_3;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('params') && null !== $object->getParams()) {
-                $data['params'] = $this->normalizer->normalize($object->getParams(), 'json', $context);
-            }
-            if ($object->isInitialized('info') && null !== $object->getInfo()) {
-                $data['info'] = $object->getInfo();
-            }
-            if ($object->isInitialized('sortedButtons') && null !== $object->getSortedButtons()) {
-                $values = [];
-                foreach ($object->getSortedButtons() as $value) {
-                    $values[] = $this->normalizer->normalize($value, 'json', $context);
-                }
-                $data['sorted_buttons'] = $values;
-            }
-            if ($object->isInitialized('buttons') && null !== $object->getButtons()) {
-                $values_1 = [];
-                foreach ($object->getButtons() as $value_1) {
-                    $values_1[] = $this->normalizer->normalize($value_1, 'json', $context);
-                }
-                $data['buttons'] = $values_1;
-            }
-            if ($object->isInitialized('pageViews') && null !== $object->getPageViews()) {
-                $values_2 = [];
-                foreach ($object->getPageViews() as $value_2) {
-                    $values_2[] = $this->normalizer->normalize($value_2, 'json', $context);
-                }
-                $data['page_views'] = $values_2;
-            }
-            foreach ($object as $key => $value_3) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_3;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\SortedButtons::class => false];
-        }
+        return $type === \Bitly\Model\SortedButtons::class;
     }
-} else {
-    class SortedButtonsNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\SortedButtons::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\SortedButtons::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\SortedButtons::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\SortedButtons();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('params', $data)) {
-                $object->setParams($this->denormalizer->denormalize($data['params'], \Bitly\Model\MetricsParams::class, 'json', $context));
-                unset($data['params']);
-            }
-            if (\array_key_exists('info', $data)) {
-                $object->setInfo($data['info']);
-                unset($data['info']);
-            }
-            if (\array_key_exists('sorted_buttons', $data)) {
-                $values = [];
-                foreach ($data['sorted_buttons'] as $value) {
-                    $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\ClickLink::class, 'json', $context);
-                }
-                $object->setSortedButtons($values);
-                unset($data['sorted_buttons']);
-            }
-            if (\array_key_exists('buttons', $data)) {
-                $values_1 = [];
-                foreach ($data['buttons'] as $value_1) {
-                    $values_1[] = $this->denormalizer->denormalize($value_1, \Bitly\Model\SortedButtonsButtonsItem::class, 'json', $context);
-                }
-                $object->setButtons($values_1);
-                unset($data['buttons']);
-            }
-            if (\array_key_exists('page_views', $data)) {
-                $values_2 = [];
-                foreach ($data['page_views'] as $value_2) {
-                    $values_2[] = $this->denormalizer->denormalize($value_2, \Bitly\Model\SortedButtonsPageViewsItem::class, 'json', $context);
-                }
-                $object->setPageViews($values_2);
-                unset($data['page_views']);
-            }
-            foreach ($data as $key => $value_3) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_3;
-                }
-            }
-
+        $object = new \Bitly\Model\SortedButtons();
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('params') && null !== $object->getParams()) {
-                $data['params'] = $this->normalizer->normalize($object->getParams(), 'json', $context);
+        if (\array_key_exists('info', $data)) {
+            $object->setInfo($data['info']);
+            unset($data['info']);
+        }
+        if (\array_key_exists('sorted_buttons', $data)) {
+            $values = [];
+            foreach ($data['sorted_buttons'] as $value) {
+                $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\ClickLink::class, 'json', $context);
             }
-            if ($object->isInitialized('info') && null !== $object->getInfo()) {
-                $data['info'] = $object->getInfo();
+            $object->setSortedButtons($values);
+            unset($data['sorted_buttons']);
+        }
+        if (\array_key_exists('buttons', $data)) {
+            $values_1 = [];
+            foreach ($data['buttons'] as $value_1) {
+                $values_1[] = $this->denormalizer->denormalize($value_1, \Bitly\Model\SortedButtonsButtonsItem::class, 'json', $context);
             }
-            if ($object->isInitialized('sortedButtons') && null !== $object->getSortedButtons()) {
-                $values = [];
-                foreach ($object->getSortedButtons() as $value) {
-                    $values[] = $this->normalizer->normalize($value, 'json', $context);
-                }
-                $data['sorted_buttons'] = $values;
+            $object->setButtons($values_1);
+            unset($data['buttons']);
+        }
+        if (\array_key_exists('page_views', $data)) {
+            $values_2 = [];
+            foreach ($data['page_views'] as $value_2) {
+                $values_2[] = $this->denormalizer->denormalize($value_2, \Bitly\Model\SortedButtonsPageViewsItem::class, 'json', $context);
             }
-            if ($object->isInitialized('buttons') && null !== $object->getButtons()) {
-                $values_1 = [];
-                foreach ($object->getButtons() as $value_1) {
-                    $values_1[] = $this->normalizer->normalize($value_1, 'json', $context);
-                }
-                $data['buttons'] = $values_1;
+            $object->setPageViews($values_2);
+            unset($data['page_views']);
+        }
+        foreach ($data as $key => $value_3) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value_3;
             }
-            if ($object->isInitialized('pageViews') && null !== $object->getPageViews()) {
-                $values_2 = [];
-                foreach ($object->getPageViews() as $value_2) {
-                    $values_2[] = $this->normalizer->normalize($value_2, 'json', $context);
-                }
-                $data['page_views'] = $values_2;
-            }
-            foreach ($object as $key => $value_3) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_3;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\SortedButtons::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('info') && null !== $data->getInfo()) {
+            $dataArray['info'] = $data->getInfo();
         }
+        if ($data->isInitialized('sortedButtons') && null !== $data->getSortedButtons()) {
+            $values = [];
+            foreach ($data->getSortedButtons() as $value) {
+                $values[] = $this->normalizer->normalize($value, 'json', $context);
+            }
+            $dataArray['sorted_buttons'] = $values;
+        }
+        if ($data->isInitialized('buttons') && null !== $data->getButtons()) {
+            $values_1 = [];
+            foreach ($data->getButtons() as $value_1) {
+                $values_1[] = $this->normalizer->normalize($value_1, 'json', $context);
+            }
+            $dataArray['buttons'] = $values_1;
+        }
+        if ($data->isInitialized('pageViews') && null !== $data->getPageViews()) {
+            $values_2 = [];
+            foreach ($data->getPageViews() as $value_2) {
+                $values_2[] = $this->normalizer->normalize($value_2, 'json', $context);
+            }
+            $dataArray['page_views'] = $values_2;
+        }
+        foreach ($data as $key => $value_3) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value_3;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\SortedButtons::class => false];
     }
 }

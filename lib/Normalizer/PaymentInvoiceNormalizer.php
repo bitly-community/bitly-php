@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,293 +20,145 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class PaymentInvoiceNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class PaymentInvoiceNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\PaymentInvoice::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\PaymentInvoice::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\PaymentInvoice();
-            if (\array_key_exists('subtotal', $data) && \is_int($data['subtotal'])) {
-                $data['subtotal'] = (float) $data['subtotal'];
-            }
-            if (\array_key_exists('total_tax', $data) && \is_int($data['total_tax'])) {
-                $data['total_tax'] = (float) $data['total_tax'];
-            }
-            if (\array_key_exists('total', $data) && \is_int($data['total'])) {
-                $data['total'] = (float) $data['total'];
-            }
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('invoice_date', $data)) {
-                $object->setInvoiceDate($data['invoice_date']);
-                unset($data['invoice_date']);
-            }
-            if (\array_key_exists('invoice_due_date', $data)) {
-                $object->setInvoiceDueDate($data['invoice_due_date']);
-                unset($data['invoice_due_date']);
-            }
-            if (\array_key_exists('invoice_number', $data)) {
-                $object->setInvoiceNumber($data['invoice_number']);
-                unset($data['invoice_number']);
-            }
-            if (\array_key_exists('invoice_id', $data)) {
-                $object->setInvoiceId($data['invoice_id']);
-                unset($data['invoice_id']);
-            }
-            if (\array_key_exists('charges', $data)) {
-                $object->setCharges($this->denormalizer->denormalize($data['charges'], \Bitly\Model\Charges::class, 'json', $context));
-                unset($data['charges']);
-            }
-            if (\array_key_exists('subtotal', $data)) {
-                $object->setSubtotal($data['subtotal']);
-                unset($data['subtotal']);
-            }
-            if (\array_key_exists('total_tax', $data)) {
-                $object->setTotalTax($data['total_tax']);
-                unset($data['total_tax']);
-            }
-            if (\array_key_exists('total', $data)) {
-                $object->setTotal($data['total']);
-                unset($data['total']);
-            }
-            if (\array_key_exists('payments', $data)) {
-                $values = [];
-                foreach ($data['payments'] as $value) {
-                    $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\Payments::class, 'json', $context);
-                }
-                $object->setPayments($values);
-                unset($data['payments']);
-            }
-            if (\array_key_exists('description', $data)) {
-                $object->setDescription($data['description']);
-                unset($data['description']);
-            }
-            foreach ($data as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_1;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('invoiceDate') && null !== $object->getInvoiceDate()) {
-                $data['invoice_date'] = $object->getInvoiceDate();
-            }
-            if ($object->isInitialized('invoiceDueDate') && null !== $object->getInvoiceDueDate()) {
-                $data['invoice_due_date'] = $object->getInvoiceDueDate();
-            }
-            if ($object->isInitialized('invoiceNumber') && null !== $object->getInvoiceNumber()) {
-                $data['invoice_number'] = $object->getInvoiceNumber();
-            }
-            if ($object->isInitialized('invoiceId') && null !== $object->getInvoiceId()) {
-                $data['invoice_id'] = $object->getInvoiceId();
-            }
-            if ($object->isInitialized('charges') && null !== $object->getCharges()) {
-                $data['charges'] = $this->normalizer->normalize($object->getCharges(), 'json', $context);
-            }
-            if ($object->isInitialized('subtotal') && null !== $object->getSubtotal()) {
-                $data['subtotal'] = $object->getSubtotal();
-            }
-            if ($object->isInitialized('totalTax') && null !== $object->getTotalTax()) {
-                $data['total_tax'] = $object->getTotalTax();
-            }
-            if ($object->isInitialized('total') && null !== $object->getTotal()) {
-                $data['total'] = $object->getTotal();
-            }
-            if ($object->isInitialized('payments') && null !== $object->getPayments()) {
-                $values = [];
-                foreach ($object->getPayments() as $value) {
-                    $values[] = $this->normalizer->normalize($value, 'json', $context);
-                }
-                $data['payments'] = $values;
-            }
-            if ($object->isInitialized('description') && null !== $object->getDescription()) {
-                $data['description'] = $object->getDescription();
-            }
-            foreach ($object as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_1;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\PaymentInvoice::class => false];
-        }
+        return $type === \Bitly\Model\PaymentInvoice::class;
     }
-} else {
-    class PaymentInvoiceNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\PaymentInvoice::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\PaymentInvoice::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\PaymentInvoice::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\PaymentInvoice();
-            if (\array_key_exists('subtotal', $data) && \is_int($data['subtotal'])) {
-                $data['subtotal'] = (float) $data['subtotal'];
-            }
-            if (\array_key_exists('total_tax', $data) && \is_int($data['total_tax'])) {
-                $data['total_tax'] = (float) $data['total_tax'];
-            }
-            if (\array_key_exists('total', $data) && \is_int($data['total'])) {
-                $data['total'] = (float) $data['total'];
-            }
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('invoice_date', $data)) {
-                $object->setInvoiceDate($data['invoice_date']);
-                unset($data['invoice_date']);
-            }
-            if (\array_key_exists('invoice_due_date', $data)) {
-                $object->setInvoiceDueDate($data['invoice_due_date']);
-                unset($data['invoice_due_date']);
-            }
-            if (\array_key_exists('invoice_number', $data)) {
-                $object->setInvoiceNumber($data['invoice_number']);
-                unset($data['invoice_number']);
-            }
-            if (\array_key_exists('invoice_id', $data)) {
-                $object->setInvoiceId($data['invoice_id']);
-                unset($data['invoice_id']);
-            }
-            if (\array_key_exists('charges', $data)) {
-                $object->setCharges($this->denormalizer->denormalize($data['charges'], \Bitly\Model\Charges::class, 'json', $context));
-                unset($data['charges']);
-            }
-            if (\array_key_exists('subtotal', $data)) {
-                $object->setSubtotal($data['subtotal']);
-                unset($data['subtotal']);
-            }
-            if (\array_key_exists('total_tax', $data)) {
-                $object->setTotalTax($data['total_tax']);
-                unset($data['total_tax']);
-            }
-            if (\array_key_exists('total', $data)) {
-                $object->setTotal($data['total']);
-                unset($data['total']);
-            }
-            if (\array_key_exists('payments', $data)) {
-                $values = [];
-                foreach ($data['payments'] as $value) {
-                    $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\Payments::class, 'json', $context);
-                }
-                $object->setPayments($values);
-                unset($data['payments']);
-            }
-            if (\array_key_exists('description', $data)) {
-                $object->setDescription($data['description']);
-                unset($data['description']);
-            }
-            foreach ($data as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_1;
-                }
-            }
-
+        $object = new \Bitly\Model\PaymentInvoice();
+        if (\array_key_exists('subtotal', $data) && \is_int($data['subtotal'])) {
+            $data['subtotal'] = (float) $data['subtotal'];
+        }
+        if (\array_key_exists('total_tax', $data) && \is_int($data['total_tax'])) {
+            $data['total_tax'] = (float) $data['total_tax'];
+        }
+        if (\array_key_exists('total', $data) && \is_int($data['total'])) {
+            $data['total'] = (float) $data['total'];
+        }
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('invoiceDate') && null !== $object->getInvoiceDate()) {
-                $data['invoice_date'] = $object->getInvoiceDate();
+        if (\array_key_exists('invoice_date', $data)) {
+            $object->setInvoiceDate($data['invoice_date']);
+            unset($data['invoice_date']);
+        }
+        if (\array_key_exists('invoice_due_date', $data)) {
+            $object->setInvoiceDueDate($data['invoice_due_date']);
+            unset($data['invoice_due_date']);
+        }
+        if (\array_key_exists('invoice_number', $data)) {
+            $object->setInvoiceNumber($data['invoice_number']);
+            unset($data['invoice_number']);
+        }
+        if (\array_key_exists('invoice_id', $data)) {
+            $object->setInvoiceId($data['invoice_id']);
+            unset($data['invoice_id']);
+        }
+        if (\array_key_exists('charges', $data)) {
+            $object->setCharges($this->denormalizer->denormalize($data['charges'], \Bitly\Model\Charges::class, 'json', $context));
+            unset($data['charges']);
+        }
+        if (\array_key_exists('subtotal', $data)) {
+            $object->setSubtotal($data['subtotal']);
+            unset($data['subtotal']);
+        }
+        if (\array_key_exists('total_tax', $data)) {
+            $object->setTotalTax($data['total_tax']);
+            unset($data['total_tax']);
+        }
+        if (\array_key_exists('total', $data)) {
+            $object->setTotal($data['total']);
+            unset($data['total']);
+        }
+        if (\array_key_exists('payments', $data)) {
+            $values = [];
+            foreach ($data['payments'] as $value) {
+                $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\Payments::class, 'json', $context);
             }
-            if ($object->isInitialized('invoiceDueDate') && null !== $object->getInvoiceDueDate()) {
-                $data['invoice_due_date'] = $object->getInvoiceDueDate();
+            $object->setPayments($values);
+            unset($data['payments']);
+        }
+        if (\array_key_exists('description', $data)) {
+            $object->setDescription($data['description']);
+            unset($data['description']);
+        }
+        foreach ($data as $key => $value_1) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value_1;
             }
-            if ($object->isInitialized('invoiceNumber') && null !== $object->getInvoiceNumber()) {
-                $data['invoice_number'] = $object->getInvoiceNumber();
-            }
-            if ($object->isInitialized('invoiceId') && null !== $object->getInvoiceId()) {
-                $data['invoice_id'] = $object->getInvoiceId();
-            }
-            if ($object->isInitialized('charges') && null !== $object->getCharges()) {
-                $data['charges'] = $this->normalizer->normalize($object->getCharges(), 'json', $context);
-            }
-            if ($object->isInitialized('subtotal') && null !== $object->getSubtotal()) {
-                $data['subtotal'] = $object->getSubtotal();
-            }
-            if ($object->isInitialized('totalTax') && null !== $object->getTotalTax()) {
-                $data['total_tax'] = $object->getTotalTax();
-            }
-            if ($object->isInitialized('total') && null !== $object->getTotal()) {
-                $data['total'] = $object->getTotal();
-            }
-            if ($object->isInitialized('payments') && null !== $object->getPayments()) {
-                $values = [];
-                foreach ($object->getPayments() as $value) {
-                    $values[] = $this->normalizer->normalize($value, 'json', $context);
-                }
-                $data['payments'] = $values;
-            }
-            if ($object->isInitialized('description') && null !== $object->getDescription()) {
-                $data['description'] = $object->getDescription();
-            }
-            foreach ($object as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_1;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\PaymentInvoice::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('invoiceDate') && null !== $data->getInvoiceDate()) {
+            $dataArray['invoice_date'] = $data->getInvoiceDate();
         }
+        if ($data->isInitialized('invoiceDueDate') && null !== $data->getInvoiceDueDate()) {
+            $dataArray['invoice_due_date'] = $data->getInvoiceDueDate();
+        }
+        if ($data->isInitialized('invoiceNumber') && null !== $data->getInvoiceNumber()) {
+            $dataArray['invoice_number'] = $data->getInvoiceNumber();
+        }
+        if ($data->isInitialized('invoiceId') && null !== $data->getInvoiceId()) {
+            $dataArray['invoice_id'] = $data->getInvoiceId();
+        }
+        if ($data->isInitialized('charges') && null !== $data->getCharges()) {
+            $dataArray['charges'] = $this->normalizer->normalize($data->getCharges(), 'json', $context);
+        }
+        if ($data->isInitialized('subtotal') && null !== $data->getSubtotal()) {
+            $dataArray['subtotal'] = $data->getSubtotal();
+        }
+        if ($data->isInitialized('totalTax') && null !== $data->getTotalTax()) {
+            $dataArray['total_tax'] = $data->getTotalTax();
+        }
+        if ($data->isInitialized('total') && null !== $data->getTotal()) {
+            $dataArray['total'] = $data->getTotal();
+        }
+        if ($data->isInitialized('payments') && null !== $data->getPayments()) {
+            $values = [];
+            foreach ($data->getPayments() as $value) {
+                $values[] = $this->normalizer->normalize($value, 'json', $context);
+            }
+            $dataArray['payments'] = $values;
+        }
+        if ($data->isInitialized('description') && null !== $data->getDescription()) {
+            $dataArray['description'] = $data->getDescription();
+        }
+        foreach ($data as $key => $value_1) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value_1;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\PaymentInvoice::class => false];
     }
 }

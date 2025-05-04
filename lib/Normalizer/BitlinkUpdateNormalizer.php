@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,425 +20,217 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class BitlinkUpdateNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class BitlinkUpdateNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\BitlinkUpdate::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\BitlinkUpdate::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\BitlinkUpdate();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('link', $data)) {
-                $object->setLink($data['link']);
-                unset($data['link']);
-            }
-            if (\array_key_exists('id', $data)) {
-                $object->setId($data['id']);
-                unset($data['id']);
-            }
-            if (\array_key_exists('long_url', $data)) {
-                $object->setLongUrl($data['long_url']);
-                unset($data['long_url']);
-            }
-            if (\array_key_exists('title', $data)) {
-                $object->setTitle($data['title']);
-                unset($data['title']);
-            }
-            if (\array_key_exists('archived', $data)) {
-                $object->setArchived($data['archived']);
-                unset($data['archived']);
-            }
-            if (\array_key_exists('created_at', $data)) {
-                $object->setCreatedAt($data['created_at']);
-                unset($data['created_at']);
-            }
-            if (\array_key_exists('created_by', $data)) {
-                $object->setCreatedBy($data['created_by']);
-                unset($data['created_by']);
-            }
-            if (\array_key_exists('client_id', $data)) {
-                $object->setClientId($data['client_id']);
-                unset($data['client_id']);
-            }
-            if (\array_key_exists('custom_bitlinks', $data)) {
-                $values = [];
-                foreach ($data['custom_bitlinks'] as $value) {
-                    $values[] = $value;
-                }
-                $object->setCustomBitlinks($values);
-                unset($data['custom_bitlinks']);
-            }
-            if (\array_key_exists('tags', $data)) {
-                $values_1 = [];
-                foreach ($data['tags'] as $value_1) {
-                    $values_1[] = $value_1;
-                }
-                $object->setTags($values_1);
-                unset($data['tags']);
-            }
-            if (\array_key_exists('launchpad_ids', $data)) {
-                $values_2 = [];
-                foreach ($data['launchpad_ids'] as $value_2) {
-                    $values_2[] = $value_2;
-                }
-                $object->setLaunchpadIds($values_2);
-                unset($data['launchpad_ids']);
-            }
-            if (\array_key_exists('qr_code_ids', $data)) {
-                $values_3 = [];
-                foreach ($data['qr_code_ids'] as $value_3) {
-                    $values_3[] = $value_3;
-                }
-                $object->setQrCodeIds($values_3);
-                unset($data['qr_code_ids']);
-            }
-            if (\array_key_exists('deeplinks', $data)) {
-                $values_4 = [];
-                foreach ($data['deeplinks'] as $value_4) {
-                    $values_4[] = $this->denormalizer->denormalize($value_4, \Bitly\Model\DeeplinkRule::class, 'json', $context);
-                }
-                $object->setDeeplinks($values_4);
-                unset($data['deeplinks']);
-            }
-            if (\array_key_exists('is_deleted', $data)) {
-                $object->setIsDeleted($data['is_deleted']);
-                unset($data['is_deleted']);
-            }
-            if (\array_key_exists('campaign_ids', $data)) {
-                $values_5 = [];
-                foreach ($data['campaign_ids'] as $value_5) {
-                    $values_5[] = $value_5;
-                }
-                $object->setCampaignIds($values_5);
-                unset($data['campaign_ids']);
-            }
-            foreach ($data as $key => $value_6) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_6;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('link') && null !== $object->getLink()) {
-                $data['link'] = $object->getLink();
-            }
-            if ($object->isInitialized('id') && null !== $object->getId()) {
-                $data['id'] = $object->getId();
-            }
-            if ($object->isInitialized('longUrl') && null !== $object->getLongUrl()) {
-                $data['long_url'] = $object->getLongUrl();
-            }
-            if ($object->isInitialized('title') && null !== $object->getTitle()) {
-                $data['title'] = $object->getTitle();
-            }
-            if ($object->isInitialized('archived') && null !== $object->getArchived()) {
-                $data['archived'] = $object->getArchived();
-            }
-            if ($object->isInitialized('createdAt') && null !== $object->getCreatedAt()) {
-                $data['created_at'] = $object->getCreatedAt();
-            }
-            if ($object->isInitialized('createdBy') && null !== $object->getCreatedBy()) {
-                $data['created_by'] = $object->getCreatedBy();
-            }
-            if ($object->isInitialized('clientId') && null !== $object->getClientId()) {
-                $data['client_id'] = $object->getClientId();
-            }
-            if ($object->isInitialized('customBitlinks') && null !== $object->getCustomBitlinks()) {
-                $values = [];
-                foreach ($object->getCustomBitlinks() as $value) {
-                    $values[] = $value;
-                }
-                $data['custom_bitlinks'] = $values;
-            }
-            if ($object->isInitialized('tags') && null !== $object->getTags()) {
-                $values_1 = [];
-                foreach ($object->getTags() as $value_1) {
-                    $values_1[] = $value_1;
-                }
-                $data['tags'] = $values_1;
-            }
-            if ($object->isInitialized('launchpadIds') && null !== $object->getLaunchpadIds()) {
-                $values_2 = [];
-                foreach ($object->getLaunchpadIds() as $value_2) {
-                    $values_2[] = $value_2;
-                }
-                $data['launchpad_ids'] = $values_2;
-            }
-            if ($object->isInitialized('qrCodeIds') && null !== $object->getQrCodeIds()) {
-                $values_3 = [];
-                foreach ($object->getQrCodeIds() as $value_3) {
-                    $values_3[] = $value_3;
-                }
-                $data['qr_code_ids'] = $values_3;
-            }
-            if ($object->isInitialized('deeplinks') && null !== $object->getDeeplinks()) {
-                $values_4 = [];
-                foreach ($object->getDeeplinks() as $value_4) {
-                    $values_4[] = $this->normalizer->normalize($value_4, 'json', $context);
-                }
-                $data['deeplinks'] = $values_4;
-            }
-            if ($object->isInitialized('isDeleted') && null !== $object->getIsDeleted()) {
-                $data['is_deleted'] = $object->getIsDeleted();
-            }
-            if ($object->isInitialized('campaignIds') && null !== $object->getCampaignIds()) {
-                $values_5 = [];
-                foreach ($object->getCampaignIds() as $value_5) {
-                    $values_5[] = $value_5;
-                }
-                $data['campaign_ids'] = $values_5;
-            }
-            foreach ($object as $key => $value_6) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_6;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\BitlinkUpdate::class => false];
-        }
+        return $type === \Bitly\Model\BitlinkUpdate::class;
     }
-} else {
-    class BitlinkUpdateNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\BitlinkUpdate::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\BitlinkUpdate::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\BitlinkUpdate::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\BitlinkUpdate();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('link', $data)) {
-                $object->setLink($data['link']);
-                unset($data['link']);
-            }
-            if (\array_key_exists('id', $data)) {
-                $object->setId($data['id']);
-                unset($data['id']);
-            }
-            if (\array_key_exists('long_url', $data)) {
-                $object->setLongUrl($data['long_url']);
-                unset($data['long_url']);
-            }
-            if (\array_key_exists('title', $data)) {
-                $object->setTitle($data['title']);
-                unset($data['title']);
-            }
-            if (\array_key_exists('archived', $data)) {
-                $object->setArchived($data['archived']);
-                unset($data['archived']);
-            }
-            if (\array_key_exists('created_at', $data)) {
-                $object->setCreatedAt($data['created_at']);
-                unset($data['created_at']);
-            }
-            if (\array_key_exists('created_by', $data)) {
-                $object->setCreatedBy($data['created_by']);
-                unset($data['created_by']);
-            }
-            if (\array_key_exists('client_id', $data)) {
-                $object->setClientId($data['client_id']);
-                unset($data['client_id']);
-            }
-            if (\array_key_exists('custom_bitlinks', $data)) {
-                $values = [];
-                foreach ($data['custom_bitlinks'] as $value) {
-                    $values[] = $value;
-                }
-                $object->setCustomBitlinks($values);
-                unset($data['custom_bitlinks']);
-            }
-            if (\array_key_exists('tags', $data)) {
-                $values_1 = [];
-                foreach ($data['tags'] as $value_1) {
-                    $values_1[] = $value_1;
-                }
-                $object->setTags($values_1);
-                unset($data['tags']);
-            }
-            if (\array_key_exists('launchpad_ids', $data)) {
-                $values_2 = [];
-                foreach ($data['launchpad_ids'] as $value_2) {
-                    $values_2[] = $value_2;
-                }
-                $object->setLaunchpadIds($values_2);
-                unset($data['launchpad_ids']);
-            }
-            if (\array_key_exists('qr_code_ids', $data)) {
-                $values_3 = [];
-                foreach ($data['qr_code_ids'] as $value_3) {
-                    $values_3[] = $value_3;
-                }
-                $object->setQrCodeIds($values_3);
-                unset($data['qr_code_ids']);
-            }
-            if (\array_key_exists('deeplinks', $data)) {
-                $values_4 = [];
-                foreach ($data['deeplinks'] as $value_4) {
-                    $values_4[] = $this->denormalizer->denormalize($value_4, \Bitly\Model\DeeplinkRule::class, 'json', $context);
-                }
-                $object->setDeeplinks($values_4);
-                unset($data['deeplinks']);
-            }
-            if (\array_key_exists('is_deleted', $data)) {
-                $object->setIsDeleted($data['is_deleted']);
-                unset($data['is_deleted']);
-            }
-            if (\array_key_exists('campaign_ids', $data)) {
-                $values_5 = [];
-                foreach ($data['campaign_ids'] as $value_5) {
-                    $values_5[] = $value_5;
-                }
-                $object->setCampaignIds($values_5);
-                unset($data['campaign_ids']);
-            }
-            foreach ($data as $key => $value_6) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_6;
-                }
-            }
-
+        $object = new \Bitly\Model\BitlinkUpdate();
+        if (\array_key_exists('archived', $data) && \is_int($data['archived'])) {
+            $data['archived'] = (bool) $data['archived'];
+        }
+        if (\array_key_exists('is_deleted', $data) && \is_int($data['is_deleted'])) {
+            $data['is_deleted'] = (bool) $data['is_deleted'];
+        }
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('link') && null !== $object->getLink()) {
-                $data['link'] = $object->getLink();
+        if (\array_key_exists('link', $data)) {
+            $object->setLink($data['link']);
+            unset($data['link']);
+        }
+        if (\array_key_exists('id', $data)) {
+            $object->setId($data['id']);
+            unset($data['id']);
+        }
+        if (\array_key_exists('long_url', $data)) {
+            $object->setLongUrl($data['long_url']);
+            unset($data['long_url']);
+        }
+        if (\array_key_exists('title', $data)) {
+            $object->setTitle($data['title']);
+            unset($data['title']);
+        }
+        if (\array_key_exists('archived', $data)) {
+            $object->setArchived($data['archived']);
+            unset($data['archived']);
+        }
+        if (\array_key_exists('created_at', $data)) {
+            $object->setCreatedAt($data['created_at']);
+            unset($data['created_at']);
+        }
+        if (\array_key_exists('created_by', $data)) {
+            $object->setCreatedBy($data['created_by']);
+            unset($data['created_by']);
+        }
+        if (\array_key_exists('client_id', $data)) {
+            $object->setClientId($data['client_id']);
+            unset($data['client_id']);
+        }
+        if (\array_key_exists('custom_bitlinks', $data)) {
+            $values = [];
+            foreach ($data['custom_bitlinks'] as $value) {
+                $values[] = $value;
             }
-            if ($object->isInitialized('id') && null !== $object->getId()) {
-                $data['id'] = $object->getId();
+            $object->setCustomBitlinks($values);
+            unset($data['custom_bitlinks']);
+        }
+        if (\array_key_exists('tags', $data)) {
+            $values_1 = [];
+            foreach ($data['tags'] as $value_1) {
+                $values_1[] = $value_1;
             }
-            if ($object->isInitialized('longUrl') && null !== $object->getLongUrl()) {
-                $data['long_url'] = $object->getLongUrl();
+            $object->setTags($values_1);
+            unset($data['tags']);
+        }
+        if (\array_key_exists('launchpad_ids', $data)) {
+            $values_2 = [];
+            foreach ($data['launchpad_ids'] as $value_2) {
+                $values_2[] = $value_2;
             }
-            if ($object->isInitialized('title') && null !== $object->getTitle()) {
-                $data['title'] = $object->getTitle();
+            $object->setLaunchpadIds($values_2);
+            unset($data['launchpad_ids']);
+        }
+        if (\array_key_exists('qr_code_ids', $data)) {
+            $values_3 = [];
+            foreach ($data['qr_code_ids'] as $value_3) {
+                $values_3[] = $value_3;
             }
-            if ($object->isInitialized('archived') && null !== $object->getArchived()) {
-                $data['archived'] = $object->getArchived();
+            $object->setQrCodeIds($values_3);
+            unset($data['qr_code_ids']);
+        }
+        if (\array_key_exists('deeplinks', $data)) {
+            $values_4 = [];
+            foreach ($data['deeplinks'] as $value_4) {
+                $values_4[] = $this->denormalizer->denormalize($value_4, \Bitly\Model\DeeplinkRule::class, 'json', $context);
             }
-            if ($object->isInitialized('createdAt') && null !== $object->getCreatedAt()) {
-                $data['created_at'] = $object->getCreatedAt();
+            $object->setDeeplinks($values_4);
+            unset($data['deeplinks']);
+        }
+        if (\array_key_exists('is_deleted', $data)) {
+            $object->setIsDeleted($data['is_deleted']);
+            unset($data['is_deleted']);
+        }
+        if (\array_key_exists('campaign_ids', $data)) {
+            $values_5 = [];
+            foreach ($data['campaign_ids'] as $value_5) {
+                $values_5[] = $value_5;
             }
-            if ($object->isInitialized('createdBy') && null !== $object->getCreatedBy()) {
-                $data['created_by'] = $object->getCreatedBy();
+            $object->setCampaignIds($values_5);
+            unset($data['campaign_ids']);
+        }
+        foreach ($data as $key => $value_6) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value_6;
             }
-            if ($object->isInitialized('clientId') && null !== $object->getClientId()) {
-                $data['client_id'] = $object->getClientId();
-            }
-            if ($object->isInitialized('customBitlinks') && null !== $object->getCustomBitlinks()) {
-                $values = [];
-                foreach ($object->getCustomBitlinks() as $value) {
-                    $values[] = $value;
-                }
-                $data['custom_bitlinks'] = $values;
-            }
-            if ($object->isInitialized('tags') && null !== $object->getTags()) {
-                $values_1 = [];
-                foreach ($object->getTags() as $value_1) {
-                    $values_1[] = $value_1;
-                }
-                $data['tags'] = $values_1;
-            }
-            if ($object->isInitialized('launchpadIds') && null !== $object->getLaunchpadIds()) {
-                $values_2 = [];
-                foreach ($object->getLaunchpadIds() as $value_2) {
-                    $values_2[] = $value_2;
-                }
-                $data['launchpad_ids'] = $values_2;
-            }
-            if ($object->isInitialized('qrCodeIds') && null !== $object->getQrCodeIds()) {
-                $values_3 = [];
-                foreach ($object->getQrCodeIds() as $value_3) {
-                    $values_3[] = $value_3;
-                }
-                $data['qr_code_ids'] = $values_3;
-            }
-            if ($object->isInitialized('deeplinks') && null !== $object->getDeeplinks()) {
-                $values_4 = [];
-                foreach ($object->getDeeplinks() as $value_4) {
-                    $values_4[] = $this->normalizer->normalize($value_4, 'json', $context);
-                }
-                $data['deeplinks'] = $values_4;
-            }
-            if ($object->isInitialized('isDeleted') && null !== $object->getIsDeleted()) {
-                $data['is_deleted'] = $object->getIsDeleted();
-            }
-            if ($object->isInitialized('campaignIds') && null !== $object->getCampaignIds()) {
-                $values_5 = [];
-                foreach ($object->getCampaignIds() as $value_5) {
-                    $values_5[] = $value_5;
-                }
-                $data['campaign_ids'] = $values_5;
-            }
-            foreach ($object as $key => $value_6) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_6;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\BitlinkUpdate::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('link') && null !== $data->getLink()) {
+            $dataArray['link'] = $data->getLink();
         }
+        if ($data->isInitialized('id') && null !== $data->getId()) {
+            $dataArray['id'] = $data->getId();
+        }
+        if ($data->isInitialized('longUrl') && null !== $data->getLongUrl()) {
+            $dataArray['long_url'] = $data->getLongUrl();
+        }
+        if ($data->isInitialized('title') && null !== $data->getTitle()) {
+            $dataArray['title'] = $data->getTitle();
+        }
+        if ($data->isInitialized('archived') && null !== $data->getArchived()) {
+            $dataArray['archived'] = $data->getArchived();
+        }
+        if ($data->isInitialized('createdAt') && null !== $data->getCreatedAt()) {
+            $dataArray['created_at'] = $data->getCreatedAt();
+        }
+        if ($data->isInitialized('createdBy') && null !== $data->getCreatedBy()) {
+            $dataArray['created_by'] = $data->getCreatedBy();
+        }
+        if ($data->isInitialized('clientId') && null !== $data->getClientId()) {
+            $dataArray['client_id'] = $data->getClientId();
+        }
+        if ($data->isInitialized('customBitlinks') && null !== $data->getCustomBitlinks()) {
+            $values = [];
+            foreach ($data->getCustomBitlinks() as $value) {
+                $values[] = $value;
+            }
+            $dataArray['custom_bitlinks'] = $values;
+        }
+        if ($data->isInitialized('tags') && null !== $data->getTags()) {
+            $values_1 = [];
+            foreach ($data->getTags() as $value_1) {
+                $values_1[] = $value_1;
+            }
+            $dataArray['tags'] = $values_1;
+        }
+        if ($data->isInitialized('launchpadIds') && null !== $data->getLaunchpadIds()) {
+            $values_2 = [];
+            foreach ($data->getLaunchpadIds() as $value_2) {
+                $values_2[] = $value_2;
+            }
+            $dataArray['launchpad_ids'] = $values_2;
+        }
+        if ($data->isInitialized('qrCodeIds') && null !== $data->getQrCodeIds()) {
+            $values_3 = [];
+            foreach ($data->getQrCodeIds() as $value_3) {
+                $values_3[] = $value_3;
+            }
+            $dataArray['qr_code_ids'] = $values_3;
+        }
+        if ($data->isInitialized('deeplinks') && null !== $data->getDeeplinks()) {
+            $values_4 = [];
+            foreach ($data->getDeeplinks() as $value_4) {
+                $values_4[] = $this->normalizer->normalize($value_4, 'json', $context);
+            }
+            $dataArray['deeplinks'] = $values_4;
+        }
+        if ($data->isInitialized('isDeleted') && null !== $data->getIsDeleted()) {
+            $dataArray['is_deleted'] = $data->getIsDeleted();
+        }
+        if ($data->isInitialized('campaignIds') && null !== $data->getCampaignIds()) {
+            $values_5 = [];
+            foreach ($data->getCampaignIds() as $value_5) {
+                $values_5[] = $value_5;
+            }
+            $dataArray['campaign_ids'] = $values_5;
+        }
+        foreach ($data as $key => $value_6) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value_6;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\BitlinkUpdate::class => false];
     }
 }

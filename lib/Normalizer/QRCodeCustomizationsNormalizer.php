@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,287 +20,142 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class QRCodeCustomizationsNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class QRCodeCustomizationsNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\QRCodeCustomizations::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\QRCodeCustomizations::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\QRCodeCustomizations();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('background_color', $data)) {
-                $object->setBackgroundColor($data['background_color']);
-                unset($data['background_color']);
-            }
-            if (\array_key_exists('dot_pattern_color', $data)) {
-                $object->setDotPatternColor($data['dot_pattern_color']);
-                unset($data['dot_pattern_color']);
-            }
-            if (\array_key_exists('dot_pattern_type', $data)) {
-                $object->setDotPatternType($data['dot_pattern_type']);
-                unset($data['dot_pattern_type']);
-            }
-            if (\array_key_exists('corners', $data)) {
-                $object->setCorners($this->denormalizer->denormalize($data['corners'], \Bitly\Model\QRCodeCorners::class, 'json', $context));
-                unset($data['corners']);
-            }
-            if (\array_key_exists('gradient', $data)) {
-                $object->setGradient($this->denormalizer->denormalize($data['gradient'], \Bitly\Model\QRCodeGradient::class, 'json', $context));
-                unset($data['gradient']);
-            }
-            if (\array_key_exists('background_gradient', $data)) {
-                $object->setBackgroundGradient($this->denormalizer->denormalize($data['background_gradient'], \Bitly\Model\QRCodeGradient::class, 'json', $context));
-                unset($data['background_gradient']);
-            }
-            if (\array_key_exists('logo', $data)) {
-                $object->setLogo($this->denormalizer->denormalize($data['logo'], \Bitly\Model\QRCodeLogo::class, 'json', $context));
-                unset($data['logo']);
-            }
-            if (\array_key_exists('frame', $data)) {
-                $object->setFrame($this->denormalizer->denormalize($data['frame'], \Bitly\Model\QRCodeFrameRequest::class, 'json', $context));
-                unset($data['frame']);
-            }
-            if (\array_key_exists('text', $data)) {
-                $object->setText($this->denormalizer->denormalize($data['text'], \Bitly\Model\QRCodeText::class, 'json', $context));
-                unset($data['text']);
-            }
-            if (\array_key_exists('shape', $data)) {
-                $object->setShape($this->denormalizer->denormalize($data['shape'], \Bitly\Model\QRCodeShape::class, 'json', $context));
-                unset($data['shape']);
-            }
-            if (\array_key_exists('branding', $data)) {
-                $object->setBranding($this->denormalizer->denormalize($data['branding'], \Bitly\Model\QRCodeBranding::class, 'json', $context));
-                unset($data['branding']);
-            }
-            if (\array_key_exists('spec_settings', $data)) {
-                $object->setSpecSettings($this->denormalizer->denormalize($data['spec_settings'], \Bitly\Model\QRCodeSpecSettings::class, 'json', $context));
-                unset($data['spec_settings']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('backgroundColor') && null !== $object->getBackgroundColor()) {
-                $data['background_color'] = $object->getBackgroundColor();
-            }
-            if ($object->isInitialized('dotPatternColor') && null !== $object->getDotPatternColor()) {
-                $data['dot_pattern_color'] = $object->getDotPatternColor();
-            }
-            if ($object->isInitialized('dotPatternType') && null !== $object->getDotPatternType()) {
-                $data['dot_pattern_type'] = $object->getDotPatternType();
-            }
-            if ($object->isInitialized('corners') && null !== $object->getCorners()) {
-                $data['corners'] = $this->normalizer->normalize($object->getCorners(), 'json', $context);
-            }
-            if ($object->isInitialized('gradient') && null !== $object->getGradient()) {
-                $data['gradient'] = $this->normalizer->normalize($object->getGradient(), 'json', $context);
-            }
-            if ($object->isInitialized('backgroundGradient') && null !== $object->getBackgroundGradient()) {
-                $data['background_gradient'] = $this->normalizer->normalize($object->getBackgroundGradient(), 'json', $context);
-            }
-            if ($object->isInitialized('logo') && null !== $object->getLogo()) {
-                $data['logo'] = $this->normalizer->normalize($object->getLogo(), 'json', $context);
-            }
-            if ($object->isInitialized('frame') && null !== $object->getFrame()) {
-                $data['frame'] = $this->normalizer->normalize($object->getFrame(), 'json', $context);
-            }
-            if ($object->isInitialized('text') && null !== $object->getText()) {
-                $data['text'] = $this->normalizer->normalize($object->getText(), 'json', $context);
-            }
-            if ($object->isInitialized('shape') && null !== $object->getShape()) {
-                $data['shape'] = $this->normalizer->normalize($object->getShape(), 'json', $context);
-            }
-            if ($object->isInitialized('branding') && null !== $object->getBranding()) {
-                $data['branding'] = $this->normalizer->normalize($object->getBranding(), 'json', $context);
-            }
-            if ($object->isInitialized('specSettings') && null !== $object->getSpecSettings()) {
-                $data['spec_settings'] = $this->normalizer->normalize($object->getSpecSettings(), 'json', $context);
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\QRCodeCustomizations::class => false];
-        }
+        return $type === \Bitly\Model\QRCodeCustomizations::class;
     }
-} else {
-    class QRCodeCustomizationsNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\QRCodeCustomizations::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\QRCodeCustomizations::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\QRCodeCustomizations::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\QRCodeCustomizations();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('background_color', $data)) {
-                $object->setBackgroundColor($data['background_color']);
-                unset($data['background_color']);
-            }
-            if (\array_key_exists('dot_pattern_color', $data)) {
-                $object->setDotPatternColor($data['dot_pattern_color']);
-                unset($data['dot_pattern_color']);
-            }
-            if (\array_key_exists('dot_pattern_type', $data)) {
-                $object->setDotPatternType($data['dot_pattern_type']);
-                unset($data['dot_pattern_type']);
-            }
-            if (\array_key_exists('corners', $data)) {
-                $object->setCorners($this->denormalizer->denormalize($data['corners'], \Bitly\Model\QRCodeCorners::class, 'json', $context));
-                unset($data['corners']);
-            }
-            if (\array_key_exists('gradient', $data)) {
-                $object->setGradient($this->denormalizer->denormalize($data['gradient'], \Bitly\Model\QRCodeGradient::class, 'json', $context));
-                unset($data['gradient']);
-            }
-            if (\array_key_exists('background_gradient', $data)) {
-                $object->setBackgroundGradient($this->denormalizer->denormalize($data['background_gradient'], \Bitly\Model\QRCodeGradient::class, 'json', $context));
-                unset($data['background_gradient']);
-            }
-            if (\array_key_exists('logo', $data)) {
-                $object->setLogo($this->denormalizer->denormalize($data['logo'], \Bitly\Model\QRCodeLogo::class, 'json', $context));
-                unset($data['logo']);
-            }
-            if (\array_key_exists('frame', $data)) {
-                $object->setFrame($this->denormalizer->denormalize($data['frame'], \Bitly\Model\QRCodeFrameRequest::class, 'json', $context));
-                unset($data['frame']);
-            }
-            if (\array_key_exists('text', $data)) {
-                $object->setText($this->denormalizer->denormalize($data['text'], \Bitly\Model\QRCodeText::class, 'json', $context));
-                unset($data['text']);
-            }
-            if (\array_key_exists('shape', $data)) {
-                $object->setShape($this->denormalizer->denormalize($data['shape'], \Bitly\Model\QRCodeShape::class, 'json', $context));
-                unset($data['shape']);
-            }
-            if (\array_key_exists('branding', $data)) {
-                $object->setBranding($this->denormalizer->denormalize($data['branding'], \Bitly\Model\QRCodeBranding::class, 'json', $context));
-                unset($data['branding']);
-            }
-            if (\array_key_exists('spec_settings', $data)) {
-                $object->setSpecSettings($this->denormalizer->denormalize($data['spec_settings'], \Bitly\Model\QRCodeSpecSettings::class, 'json', $context));
-                unset($data['spec_settings']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
+        $object = new \Bitly\Model\QRCodeCustomizations();
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('backgroundColor') && null !== $object->getBackgroundColor()) {
-                $data['background_color'] = $object->getBackgroundColor();
+        if (\array_key_exists('background_color', $data)) {
+            $object->setBackgroundColor($data['background_color']);
+            unset($data['background_color']);
+        }
+        if (\array_key_exists('dot_pattern_color', $data)) {
+            $object->setDotPatternColor($data['dot_pattern_color']);
+            unset($data['dot_pattern_color']);
+        }
+        if (\array_key_exists('dot_pattern_type', $data)) {
+            $object->setDotPatternType($data['dot_pattern_type']);
+            unset($data['dot_pattern_type']);
+        }
+        if (\array_key_exists('corners', $data)) {
+            $object->setCorners($this->denormalizer->denormalize($data['corners'], \Bitly\Model\QRCodeCorners::class, 'json', $context));
+            unset($data['corners']);
+        }
+        if (\array_key_exists('gradient', $data)) {
+            $object->setGradient($this->denormalizer->denormalize($data['gradient'], \Bitly\Model\QRCodeGradient::class, 'json', $context));
+            unset($data['gradient']);
+        }
+        if (\array_key_exists('background_gradient', $data)) {
+            $object->setBackgroundGradient($this->denormalizer->denormalize($data['background_gradient'], \Bitly\Model\QRCodeGradient::class, 'json', $context));
+            unset($data['background_gradient']);
+        }
+        if (\array_key_exists('logo', $data)) {
+            $object->setLogo($this->denormalizer->denormalize($data['logo'], \Bitly\Model\QRCodeLogo::class, 'json', $context));
+            unset($data['logo']);
+        }
+        if (\array_key_exists('frame', $data)) {
+            $object->setFrame($this->denormalizer->denormalize($data['frame'], \Bitly\Model\QRCodeFrameRequest::class, 'json', $context));
+            unset($data['frame']);
+        }
+        if (\array_key_exists('text', $data)) {
+            $object->setText($this->denormalizer->denormalize($data['text'], \Bitly\Model\QRCodeText::class, 'json', $context));
+            unset($data['text']);
+        }
+        if (\array_key_exists('shape', $data)) {
+            $object->setShape($this->denormalizer->denormalize($data['shape'], \Bitly\Model\QRCodeShape::class, 'json', $context));
+            unset($data['shape']);
+        }
+        if (\array_key_exists('branding', $data)) {
+            $object->setBranding($this->denormalizer->denormalize($data['branding'], \Bitly\Model\QRCodeBranding::class, 'json', $context));
+            unset($data['branding']);
+        }
+        if (\array_key_exists('spec_settings', $data)) {
+            $object->setSpecSettings($this->denormalizer->denormalize($data['spec_settings'], \Bitly\Model\QRCodeSpecSettings::class, 'json', $context));
+            unset($data['spec_settings']);
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value;
             }
-            if ($object->isInitialized('dotPatternColor') && null !== $object->getDotPatternColor()) {
-                $data['dot_pattern_color'] = $object->getDotPatternColor();
-            }
-            if ($object->isInitialized('dotPatternType') && null !== $object->getDotPatternType()) {
-                $data['dot_pattern_type'] = $object->getDotPatternType();
-            }
-            if ($object->isInitialized('corners') && null !== $object->getCorners()) {
-                $data['corners'] = $this->normalizer->normalize($object->getCorners(), 'json', $context);
-            }
-            if ($object->isInitialized('gradient') && null !== $object->getGradient()) {
-                $data['gradient'] = $this->normalizer->normalize($object->getGradient(), 'json', $context);
-            }
-            if ($object->isInitialized('backgroundGradient') && null !== $object->getBackgroundGradient()) {
-                $data['background_gradient'] = $this->normalizer->normalize($object->getBackgroundGradient(), 'json', $context);
-            }
-            if ($object->isInitialized('logo') && null !== $object->getLogo()) {
-                $data['logo'] = $this->normalizer->normalize($object->getLogo(), 'json', $context);
-            }
-            if ($object->isInitialized('frame') && null !== $object->getFrame()) {
-                $data['frame'] = $this->normalizer->normalize($object->getFrame(), 'json', $context);
-            }
-            if ($object->isInitialized('text') && null !== $object->getText()) {
-                $data['text'] = $this->normalizer->normalize($object->getText(), 'json', $context);
-            }
-            if ($object->isInitialized('shape') && null !== $object->getShape()) {
-                $data['shape'] = $this->normalizer->normalize($object->getShape(), 'json', $context);
-            }
-            if ($object->isInitialized('branding') && null !== $object->getBranding()) {
-                $data['branding'] = $this->normalizer->normalize($object->getBranding(), 'json', $context);
-            }
-            if ($object->isInitialized('specSettings') && null !== $object->getSpecSettings()) {
-                $data['spec_settings'] = $this->normalizer->normalize($object->getSpecSettings(), 'json', $context);
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\QRCodeCustomizations::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('backgroundColor') && null !== $data->getBackgroundColor()) {
+            $dataArray['background_color'] = $data->getBackgroundColor();
         }
+        if ($data->isInitialized('dotPatternColor') && null !== $data->getDotPatternColor()) {
+            $dataArray['dot_pattern_color'] = $data->getDotPatternColor();
+        }
+        if ($data->isInitialized('dotPatternType') && null !== $data->getDotPatternType()) {
+            $dataArray['dot_pattern_type'] = $data->getDotPatternType();
+        }
+        if ($data->isInitialized('corners') && null !== $data->getCorners()) {
+            $dataArray['corners'] = $this->normalizer->normalize($data->getCorners(), 'json', $context);
+        }
+        if ($data->isInitialized('gradient') && null !== $data->getGradient()) {
+            $dataArray['gradient'] = $this->normalizer->normalize($data->getGradient(), 'json', $context);
+        }
+        if ($data->isInitialized('backgroundGradient') && null !== $data->getBackgroundGradient()) {
+            $dataArray['background_gradient'] = $this->normalizer->normalize($data->getBackgroundGradient(), 'json', $context);
+        }
+        if ($data->isInitialized('logo') && null !== $data->getLogo()) {
+            $dataArray['logo'] = $this->normalizer->normalize($data->getLogo(), 'json', $context);
+        }
+        if ($data->isInitialized('frame') && null !== $data->getFrame()) {
+            $dataArray['frame'] = $this->normalizer->normalize($data->getFrame(), 'json', $context);
+        }
+        if ($data->isInitialized('text') && null !== $data->getText()) {
+            $dataArray['text'] = $this->normalizer->normalize($data->getText(), 'json', $context);
+        }
+        if ($data->isInitialized('shape') && null !== $data->getShape()) {
+            $dataArray['shape'] = $this->normalizer->normalize($data->getShape(), 'json', $context);
+        }
+        if ($data->isInitialized('branding') && null !== $data->getBranding()) {
+            $dataArray['branding'] = $this->normalizer->normalize($data->getBranding(), 'json', $context);
+        }
+        if ($data->isInitialized('specSettings') && null !== $data->getSpecSettings()) {
+            $dataArray['spec_settings'] = $this->normalizer->normalize($data->getSpecSettings(), 'json', $context);
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\QRCodeCustomizations::class => false];
     }
 }

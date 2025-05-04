@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,221 +20,109 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class AppAssociationsNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class AppAssociationsNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\AppAssociations::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\AppAssociations::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\AppAssociations();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('custom_domain', $data)) {
-                $object->setCustomDomain($data['custom_domain']);
-                unset($data['custom_domain']);
-            }
-            if (\array_key_exists('ios_apps', $data)) {
-                $values = [];
-                foreach ($data['ios_apps'] as $value) {
-                    $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\AppAssociationDetail::class, 'json', $context);
-                }
-                $object->setIosApps($values);
-                unset($data['ios_apps']);
-            }
-            if (\array_key_exists('android_apps', $data)) {
-                $values_1 = [];
-                foreach ($data['android_apps'] as $value_1) {
-                    $values_1[] = $this->denormalizer->denormalize($value_1, \Bitly\Model\AppAssociationDetail::class, 'json', $context);
-                }
-                $object->setAndroidApps($values_1);
-                unset($data['android_apps']);
-            }
-            if (\array_key_exists('ios_install_preference', $data)) {
-                $object->setIosInstallPreference($data['ios_install_preference']);
-                unset($data['ios_install_preference']);
-            }
-            if (\array_key_exists('android_install_preference', $data)) {
-                $object->setAndroidInstallPreference($data['android_install_preference']);
-                unset($data['android_install_preference']);
-            }
-            foreach ($data as $key => $value_2) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_2;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('customDomain') && null !== $object->getCustomDomain()) {
-                $data['custom_domain'] = $object->getCustomDomain();
-            }
-            if ($object->isInitialized('iosApps') && null !== $object->getIosApps()) {
-                $values = [];
-                foreach ($object->getIosApps() as $value) {
-                    $values[] = $this->normalizer->normalize($value, 'json', $context);
-                }
-                $data['ios_apps'] = $values;
-            }
-            if ($object->isInitialized('androidApps') && null !== $object->getAndroidApps()) {
-                $values_1 = [];
-                foreach ($object->getAndroidApps() as $value_1) {
-                    $values_1[] = $this->normalizer->normalize($value_1, 'json', $context);
-                }
-                $data['android_apps'] = $values_1;
-            }
-            if ($object->isInitialized('iosInstallPreference') && null !== $object->getIosInstallPreference()) {
-                $data['ios_install_preference'] = $object->getIosInstallPreference();
-            }
-            if ($object->isInitialized('androidInstallPreference') && null !== $object->getAndroidInstallPreference()) {
-                $data['android_install_preference'] = $object->getAndroidInstallPreference();
-            }
-            foreach ($object as $key => $value_2) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_2;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\AppAssociations::class => false];
-        }
+        return $type === \Bitly\Model\AppAssociations::class;
     }
-} else {
-    class AppAssociationsNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\AppAssociations::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\AppAssociations::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\AppAssociations::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\AppAssociations();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('custom_domain', $data)) {
-                $object->setCustomDomain($data['custom_domain']);
-                unset($data['custom_domain']);
-            }
-            if (\array_key_exists('ios_apps', $data)) {
-                $values = [];
-                foreach ($data['ios_apps'] as $value) {
-                    $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\AppAssociationDetail::class, 'json', $context);
-                }
-                $object->setIosApps($values);
-                unset($data['ios_apps']);
-            }
-            if (\array_key_exists('android_apps', $data)) {
-                $values_1 = [];
-                foreach ($data['android_apps'] as $value_1) {
-                    $values_1[] = $this->denormalizer->denormalize($value_1, \Bitly\Model\AppAssociationDetail::class, 'json', $context);
-                }
-                $object->setAndroidApps($values_1);
-                unset($data['android_apps']);
-            }
-            if (\array_key_exists('ios_install_preference', $data)) {
-                $object->setIosInstallPreference($data['ios_install_preference']);
-                unset($data['ios_install_preference']);
-            }
-            if (\array_key_exists('android_install_preference', $data)) {
-                $object->setAndroidInstallPreference($data['android_install_preference']);
-                unset($data['android_install_preference']);
-            }
-            foreach ($data as $key => $value_2) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_2;
-                }
-            }
-
+        $object = new \Bitly\Model\AppAssociations();
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('customDomain') && null !== $object->getCustomDomain()) {
-                $data['custom_domain'] = $object->getCustomDomain();
+        if (\array_key_exists('custom_domain', $data)) {
+            $object->setCustomDomain($data['custom_domain']);
+            unset($data['custom_domain']);
+        }
+        if (\array_key_exists('ios_apps', $data)) {
+            $values = [];
+            foreach ($data['ios_apps'] as $value) {
+                $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\AppAssociationDetail::class, 'json', $context);
             }
-            if ($object->isInitialized('iosApps') && null !== $object->getIosApps()) {
-                $values = [];
-                foreach ($object->getIosApps() as $value) {
-                    $values[] = $this->normalizer->normalize($value, 'json', $context);
-                }
-                $data['ios_apps'] = $values;
+            $object->setIosApps($values);
+            unset($data['ios_apps']);
+        }
+        if (\array_key_exists('android_apps', $data)) {
+            $values_1 = [];
+            foreach ($data['android_apps'] as $value_1) {
+                $values_1[] = $this->denormalizer->denormalize($value_1, \Bitly\Model\AppAssociationDetail::class, 'json', $context);
             }
-            if ($object->isInitialized('androidApps') && null !== $object->getAndroidApps()) {
-                $values_1 = [];
-                foreach ($object->getAndroidApps() as $value_1) {
-                    $values_1[] = $this->normalizer->normalize($value_1, 'json', $context);
-                }
-                $data['android_apps'] = $values_1;
+            $object->setAndroidApps($values_1);
+            unset($data['android_apps']);
+        }
+        if (\array_key_exists('ios_install_preference', $data)) {
+            $object->setIosInstallPreference($data['ios_install_preference']);
+            unset($data['ios_install_preference']);
+        }
+        if (\array_key_exists('android_install_preference', $data)) {
+            $object->setAndroidInstallPreference($data['android_install_preference']);
+            unset($data['android_install_preference']);
+        }
+        foreach ($data as $key => $value_2) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value_2;
             }
-            if ($object->isInitialized('iosInstallPreference') && null !== $object->getIosInstallPreference()) {
-                $data['ios_install_preference'] = $object->getIosInstallPreference();
-            }
-            if ($object->isInitialized('androidInstallPreference') && null !== $object->getAndroidInstallPreference()) {
-                $data['android_install_preference'] = $object->getAndroidInstallPreference();
-            }
-            foreach ($object as $key => $value_2) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_2;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\AppAssociations::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('customDomain') && null !== $data->getCustomDomain()) {
+            $dataArray['custom_domain'] = $data->getCustomDomain();
         }
+        if ($data->isInitialized('iosApps') && null !== $data->getIosApps()) {
+            $values = [];
+            foreach ($data->getIosApps() as $value) {
+                $values[] = $this->normalizer->normalize($value, 'json', $context);
+            }
+            $dataArray['ios_apps'] = $values;
+        }
+        if ($data->isInitialized('androidApps') && null !== $data->getAndroidApps()) {
+            $values_1 = [];
+            foreach ($data->getAndroidApps() as $value_1) {
+                $values_1[] = $this->normalizer->normalize($value_1, 'json', $context);
+            }
+            $dataArray['android_apps'] = $values_1;
+        }
+        if ($data->isInitialized('iosInstallPreference') && null !== $data->getIosInstallPreference()) {
+            $dataArray['ios_install_preference'] = $data->getIosInstallPreference();
+        }
+        if ($data->isInitialized('androidInstallPreference') && null !== $data->getAndroidInstallPreference()) {
+            $dataArray['android_install_preference'] = $data->getAndroidInstallPreference();
+        }
+        foreach ($data as $key => $value_2) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value_2;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\AppAssociations::class => false];
     }
 }

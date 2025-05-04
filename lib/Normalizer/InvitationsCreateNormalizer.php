@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,229 +20,113 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class InvitationsCreateNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class InvitationsCreateNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\InvitationsCreate::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\InvitationsCreate::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\InvitationsCreate();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('emails', $data)) {
-                $values = [];
-                foreach ($data['emails'] as $value) {
-                    $values[] = $value;
-                }
-                $object->setEmails($values);
-                unset($data['emails']);
-            }
-            if (\array_key_exists('role_name', $data)) {
-                $object->setRoleName($data['role_name']);
-                unset($data['role_name']);
-            }
-            if (\array_key_exists('groups', $data)) {
-                $values_1 = [];
-                foreach ($data['groups'] as $value_1) {
-                    $values_2 = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
-                    foreach ($value_1 as $key => $value_2) {
-                        $values_2[$key] = $value_2;
-                    }
-                    $values_1[] = $values_2;
-                }
-                $object->setGroups($values_1);
-                unset($data['groups']);
-            }
-            if (\array_key_exists('created', $data)) {
-                $object->setCreated($data['created']);
-                unset($data['created']);
-            }
-            if (\array_key_exists('source', $data)) {
-                $object->setSource($data['source']);
-                unset($data['source']);
-            }
-            foreach ($data as $key_1 => $value_3) {
-                if (preg_match('/.*/', (string) $key_1)) {
-                    $object[$key_1] = $value_3;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            $values = [];
-            foreach ($object->getEmails() as $value) {
-                $values[] = $value;
-            }
-            $data['emails'] = $values;
-            $data['role_name'] = $object->getRoleName();
-            if ($object->isInitialized('groups') && null !== $object->getGroups()) {
-                $values_1 = [];
-                foreach ($object->getGroups() as $value_1) {
-                    $values_2 = [];
-                    foreach ($value_1 as $key => $value_2) {
-                        $values_2[$key] = $value_2;
-                    }
-                    $values_1[] = $values_2;
-                }
-                $data['groups'] = $values_1;
-            }
-            if ($object->isInitialized('created') && null !== $object->getCreated()) {
-                $data['created'] = $object->getCreated();
-            }
-            if ($object->isInitialized('source') && null !== $object->getSource()) {
-                $data['source'] = $object->getSource();
-            }
-            foreach ($object as $key_1 => $value_3) {
-                if (preg_match('/.*/', (string) $key_1)) {
-                    $data[$key_1] = $value_3;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\InvitationsCreate::class => false];
-        }
+        return $type === \Bitly\Model\InvitationsCreate::class;
     }
-} else {
-    class InvitationsCreateNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\InvitationsCreate::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\InvitationsCreate::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\InvitationsCreate::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\InvitationsCreate();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('emails', $data)) {
-                $values = [];
-                foreach ($data['emails'] as $value) {
-                    $values[] = $value;
-                }
-                $object->setEmails($values);
-                unset($data['emails']);
-            }
-            if (\array_key_exists('role_name', $data)) {
-                $object->setRoleName($data['role_name']);
-                unset($data['role_name']);
-            }
-            if (\array_key_exists('groups', $data)) {
-                $values_1 = [];
-                foreach ($data['groups'] as $value_1) {
-                    $values_2 = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
-                    foreach ($value_1 as $key => $value_2) {
-                        $values_2[$key] = $value_2;
-                    }
-                    $values_1[] = $values_2;
-                }
-                $object->setGroups($values_1);
-                unset($data['groups']);
-            }
-            if (\array_key_exists('created', $data)) {
-                $object->setCreated($data['created']);
-                unset($data['created']);
-            }
-            if (\array_key_exists('source', $data)) {
-                $object->setSource($data['source']);
-                unset($data['source']);
-            }
-            foreach ($data as $key_1 => $value_3) {
-                if (preg_match('/.*/', (string) $key_1)) {
-                    $object[$key_1] = $value_3;
-                }
-            }
-
+        $object = new \Bitly\Model\InvitationsCreate();
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
+        if (\array_key_exists('emails', $data)) {
             $values = [];
-            foreach ($object->getEmails() as $value) {
+            foreach ($data['emails'] as $value) {
                 $values[] = $value;
             }
-            $data['emails'] = $values;
-            $data['role_name'] = $object->getRoleName();
-            if ($object->isInitialized('groups') && null !== $object->getGroups()) {
-                $values_1 = [];
-                foreach ($object->getGroups() as $value_1) {
-                    $values_2 = [];
-                    foreach ($value_1 as $key => $value_2) {
-                        $values_2[$key] = $value_2;
-                    }
-                    $values_1[] = $values_2;
+            $object->setEmails($values);
+            unset($data['emails']);
+        }
+        if (\array_key_exists('role_name', $data)) {
+            $object->setRoleName($data['role_name']);
+            unset($data['role_name']);
+        }
+        if (\array_key_exists('groups', $data)) {
+            $values_1 = [];
+            foreach ($data['groups'] as $value_1) {
+                $values_2 = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
+                foreach ($value_1 as $key => $value_2) {
+                    $values_2[$key] = $value_2;
                 }
-                $data['groups'] = $values_1;
+                $values_1[] = $values_2;
             }
-            if ($object->isInitialized('created') && null !== $object->getCreated()) {
-                $data['created'] = $object->getCreated();
+            $object->setGroups($values_1);
+            unset($data['groups']);
+        }
+        if (\array_key_exists('created', $data)) {
+            $object->setCreated($data['created']);
+            unset($data['created']);
+        }
+        if (\array_key_exists('source', $data)) {
+            $object->setSource($data['source']);
+            unset($data['source']);
+        }
+        foreach ($data as $key_1 => $value_3) {
+            if (preg_match('/.*/', (string) $key_1)) {
+                $object[$key_1] = $value_3;
             }
-            if ($object->isInitialized('source') && null !== $object->getSource()) {
-                $data['source'] = $object->getSource();
-            }
-            foreach ($object as $key_1 => $value_3) {
-                if (preg_match('/.*/', (string) $key_1)) {
-                    $data[$key_1] = $value_3;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\InvitationsCreate::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        $values = [];
+        foreach ($data->getEmails() as $value) {
+            $values[] = $value;
         }
+        $dataArray['emails'] = $values;
+        $dataArray['role_name'] = $data->getRoleName();
+        if ($data->isInitialized('groups') && null !== $data->getGroups()) {
+            $values_1 = [];
+            foreach ($data->getGroups() as $value_1) {
+                $values_2 = [];
+                foreach ($value_1 as $key => $value_2) {
+                    $values_2[$key] = $value_2;
+                }
+                $values_1[] = $values_2;
+            }
+            $dataArray['groups'] = $values_1;
+        }
+        if ($data->isInitialized('created') && null !== $data->getCreated()) {
+            $dataArray['created'] = $data->getCreated();
+        }
+        if ($data->isInitialized('source') && null !== $data->getSource()) {
+            $dataArray['source'] = $data->getSource();
+        }
+        foreach ($data as $key_1 => $value_3) {
+            if (preg_match('/.*/', (string) $key_1)) {
+                $dataArray[$key_1] = $value_3;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\InvitationsCreate::class => false];
     }
 }

@@ -41,6 +41,10 @@ class BulkUploadValidate extends \ArrayObject
      * @var string
      */
     protected $uploadType;
+    /**
+     * @var string
+     */
+    protected $templateId;
 
     public function getGroupGuid(): string
     {
@@ -103,6 +107,19 @@ class BulkUploadValidate extends \ArrayObject
     {
         $this->initialized['uploadType'] = true;
         $this->uploadType = $uploadType;
+
+        return $this;
+    }
+
+    public function getTemplateId(): string
+    {
+        return $this->templateId;
+    }
+
+    public function setTemplateId(string $templateId): self
+    {
+        $this->initialized['templateId'] = true;
+        $this->templateId = $templateId;
 
         return $this;
     }

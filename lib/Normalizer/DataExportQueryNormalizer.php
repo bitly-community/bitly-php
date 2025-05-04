@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,499 +20,259 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class DataExportQueryNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class DataExportQueryNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\DataExportQuery::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\DataExportQuery::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\DataExportQuery();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('report_type', $data)) {
-                $object->setReportType($data['report_type']);
-                unset($data['report_type']);
-            }
-            if (\array_key_exists('emails', $data)) {
-                $values = [];
-                foreach ($data['emails'] as $value) {
-                    $values[] = $value;
-                }
-                $object->setEmails($values);
-                unset($data['emails']);
-            }
-            if (\array_key_exists('created_before', $data)) {
-                $object->setCreatedBefore($data['created_before']);
-                unset($data['created_before']);
-            }
-            if (\array_key_exists('created_after', $data)) {
-                $object->setCreatedAfter($data['created_after']);
-                unset($data['created_after']);
-            }
-            if (\array_key_exists('modified_after', $data)) {
-                $object->setModifiedAfter($data['modified_after']);
-                unset($data['modified_after']);
-            }
-            if (\array_key_exists('query', $data)) {
-                $object->setQuery($data['query']);
-                unset($data['query']);
-            }
-            if (\array_key_exists('keyword', $data)) {
-                $object->setKeyword($data['keyword']);
-                unset($data['keyword']);
-            }
-            if (\array_key_exists('archived', $data)) {
-                $object->setArchived($data['archived']);
-                unset($data['archived']);
-            }
-            if (\array_key_exists('link_deeplinks', $data)) {
-                $object->setLinkDeeplinks($data['link_deeplinks']);
-                unset($data['link_deeplinks']);
-            }
-            if (\array_key_exists('custom_bitlink', $data)) {
-                $object->setCustomBitlink($data['custom_bitlink']);
-                unset($data['custom_bitlink']);
-            }
-            if (\array_key_exists('creating_logins', $data)) {
-                $values_1 = [];
-                foreach ($data['creating_logins'] as $value_1) {
-                    $values_1[] = $value_1;
-                }
-                $object->setCreatingLogins($values_1);
-                unset($data['creating_logins']);
-            }
-            if (\array_key_exists('is_customized', $data)) {
-                $object->setIsCustomized($data['is_customized']);
-                unset($data['is_customized']);
-            }
-            if (\array_key_exists('is_gs1', $data)) {
-                $object->setIsGs1($data['is_gs1']);
-                unset($data['is_gs1']);
-            }
-            if (\array_key_exists('qrc_types', $data)) {
-                $object->setQrcTypes($data['qrc_types']);
-                unset($data['qrc_types']);
-            }
-            if (\array_key_exists('tags', $data)) {
-                $values_2 = [];
-                foreach ($data['tags'] as $value_2) {
-                    $values_2[] = $value_2;
-                }
-                $object->setTags($values_2);
-                unset($data['tags']);
-            }
-            if (\array_key_exists('campaign_ids', $data)) {
-                $values_3 = [];
-                foreach ($data['campaign_ids'] as $value_3) {
-                    $values_3[] = $value_3;
-                }
-                $object->setCampaignIds($values_3);
-                unset($data['campaign_ids']);
-            }
-            if (\array_key_exists('unit', $data)) {
-                $object->setUnit($data['unit']);
-                unset($data['unit']);
-            }
-            if (\array_key_exists('units', $data)) {
-                $object->setUnits($data['units']);
-                unset($data['units']);
-            }
-            if (\array_key_exists('unit_reference', $data)) {
-                $object->setUnitReference($data['unit_reference']);
-                unset($data['unit_reference']);
-            }
-            if (\array_key_exists('include_max_history', $data)) {
-                $object->setIncludeMaxHistory($data['include_max_history']);
-                unset($data['include_max_history']);
-            }
-            if (\array_key_exists('max_history_minimum_count', $data)) {
-                $object->setMaxHistoryMinimumCount($data['max_history_minimum_count']);
-                unset($data['max_history_minimum_count']);
-            }
-            if (\array_key_exists('metrics_columns', $data)) {
-                $values_4 = [];
-                foreach ($data['metrics_columns'] as $value_4) {
-                    $values_4[] = $this->denormalizer->denormalize($value_4, \Bitly\Model\MetricsColumn::class, 'json', $context);
-                }
-                $object->setMetricsColumns($values_4);
-                unset($data['metrics_columns']);
-            }
-            foreach ($data as $key => $value_5) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_5;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            $data['report_type'] = $object->getReportType();
-            $values = [];
-            foreach ($object->getEmails() as $value) {
-                $values[] = $value;
-            }
-            $data['emails'] = $values;
-            if ($object->isInitialized('createdBefore') && null !== $object->getCreatedBefore()) {
-                $data['created_before'] = $object->getCreatedBefore();
-            }
-            if ($object->isInitialized('createdAfter') && null !== $object->getCreatedAfter()) {
-                $data['created_after'] = $object->getCreatedAfter();
-            }
-            if ($object->isInitialized('modifiedAfter') && null !== $object->getModifiedAfter()) {
-                $data['modified_after'] = $object->getModifiedAfter();
-            }
-            if ($object->isInitialized('query') && null !== $object->getQuery()) {
-                $data['query'] = $object->getQuery();
-            }
-            if ($object->isInitialized('keyword') && null !== $object->getKeyword()) {
-                $data['keyword'] = $object->getKeyword();
-            }
-            if ($object->isInitialized('archived') && null !== $object->getArchived()) {
-                $data['archived'] = $object->getArchived();
-            }
-            if ($object->isInitialized('linkDeeplinks') && null !== $object->getLinkDeeplinks()) {
-                $data['link_deeplinks'] = $object->getLinkDeeplinks();
-            }
-            if ($object->isInitialized('customBitlink') && null !== $object->getCustomBitlink()) {
-                $data['custom_bitlink'] = $object->getCustomBitlink();
-            }
-            if ($object->isInitialized('creatingLogins') && null !== $object->getCreatingLogins()) {
-                $values_1 = [];
-                foreach ($object->getCreatingLogins() as $value_1) {
-                    $values_1[] = $value_1;
-                }
-                $data['creating_logins'] = $values_1;
-            }
-            if ($object->isInitialized('isCustomized') && null !== $object->getIsCustomized()) {
-                $data['is_customized'] = $object->getIsCustomized();
-            }
-            if ($object->isInitialized('isGs1') && null !== $object->getIsGs1()) {
-                $data['is_gs1'] = $object->getIsGs1();
-            }
-            if ($object->isInitialized('qrcTypes') && null !== $object->getQrcTypes()) {
-                $data['qrc_types'] = $object->getQrcTypes();
-            }
-            if ($object->isInitialized('tags') && null !== $object->getTags()) {
-                $values_2 = [];
-                foreach ($object->getTags() as $value_2) {
-                    $values_2[] = $value_2;
-                }
-                $data['tags'] = $values_2;
-            }
-            if ($object->isInitialized('campaignIds') && null !== $object->getCampaignIds()) {
-                $values_3 = [];
-                foreach ($object->getCampaignIds() as $value_3) {
-                    $values_3[] = $value_3;
-                }
-                $data['campaign_ids'] = $values_3;
-            }
-            if ($object->isInitialized('unit') && null !== $object->getUnit()) {
-                $data['unit'] = $object->getUnit();
-            }
-            if ($object->isInitialized('units') && null !== $object->getUnits()) {
-                $data['units'] = $object->getUnits();
-            }
-            if ($object->isInitialized('unitReference') && null !== $object->getUnitReference()) {
-                $data['unit_reference'] = $object->getUnitReference();
-            }
-            if ($object->isInitialized('includeMaxHistory') && null !== $object->getIncludeMaxHistory()) {
-                $data['include_max_history'] = $object->getIncludeMaxHistory();
-            }
-            if ($object->isInitialized('maxHistoryMinimumCount') && null !== $object->getMaxHistoryMinimumCount()) {
-                $data['max_history_minimum_count'] = $object->getMaxHistoryMinimumCount();
-            }
-            if ($object->isInitialized('metricsColumns') && null !== $object->getMetricsColumns()) {
-                $values_4 = [];
-                foreach ($object->getMetricsColumns() as $value_4) {
-                    $values_4[] = $this->normalizer->normalize($value_4, 'json', $context);
-                }
-                $data['metrics_columns'] = $values_4;
-            }
-            foreach ($object as $key => $value_5) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_5;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\DataExportQuery::class => false];
-        }
+        return $type === \Bitly\Model\DataExportQuery::class;
     }
-} else {
-    class DataExportQueryNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\DataExportQuery::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\DataExportQuery::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\DataExportQuery::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\DataExportQuery();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('report_type', $data)) {
-                $object->setReportType($data['report_type']);
-                unset($data['report_type']);
-            }
-            if (\array_key_exists('emails', $data)) {
-                $values = [];
-                foreach ($data['emails'] as $value) {
-                    $values[] = $value;
-                }
-                $object->setEmails($values);
-                unset($data['emails']);
-            }
-            if (\array_key_exists('created_before', $data)) {
-                $object->setCreatedBefore($data['created_before']);
-                unset($data['created_before']);
-            }
-            if (\array_key_exists('created_after', $data)) {
-                $object->setCreatedAfter($data['created_after']);
-                unset($data['created_after']);
-            }
-            if (\array_key_exists('modified_after', $data)) {
-                $object->setModifiedAfter($data['modified_after']);
-                unset($data['modified_after']);
-            }
-            if (\array_key_exists('query', $data)) {
-                $object->setQuery($data['query']);
-                unset($data['query']);
-            }
-            if (\array_key_exists('keyword', $data)) {
-                $object->setKeyword($data['keyword']);
-                unset($data['keyword']);
-            }
-            if (\array_key_exists('archived', $data)) {
-                $object->setArchived($data['archived']);
-                unset($data['archived']);
-            }
-            if (\array_key_exists('link_deeplinks', $data)) {
-                $object->setLinkDeeplinks($data['link_deeplinks']);
-                unset($data['link_deeplinks']);
-            }
-            if (\array_key_exists('custom_bitlink', $data)) {
-                $object->setCustomBitlink($data['custom_bitlink']);
-                unset($data['custom_bitlink']);
-            }
-            if (\array_key_exists('creating_logins', $data)) {
-                $values_1 = [];
-                foreach ($data['creating_logins'] as $value_1) {
-                    $values_1[] = $value_1;
-                }
-                $object->setCreatingLogins($values_1);
-                unset($data['creating_logins']);
-            }
-            if (\array_key_exists('is_customized', $data)) {
-                $object->setIsCustomized($data['is_customized']);
-                unset($data['is_customized']);
-            }
-            if (\array_key_exists('is_gs1', $data)) {
-                $object->setIsGs1($data['is_gs1']);
-                unset($data['is_gs1']);
-            }
-            if (\array_key_exists('qrc_types', $data)) {
-                $object->setQrcTypes($data['qrc_types']);
-                unset($data['qrc_types']);
-            }
-            if (\array_key_exists('tags', $data)) {
-                $values_2 = [];
-                foreach ($data['tags'] as $value_2) {
-                    $values_2[] = $value_2;
-                }
-                $object->setTags($values_2);
-                unset($data['tags']);
-            }
-            if (\array_key_exists('campaign_ids', $data)) {
-                $values_3 = [];
-                foreach ($data['campaign_ids'] as $value_3) {
-                    $values_3[] = $value_3;
-                }
-                $object->setCampaignIds($values_3);
-                unset($data['campaign_ids']);
-            }
-            if (\array_key_exists('unit', $data)) {
-                $object->setUnit($data['unit']);
-                unset($data['unit']);
-            }
-            if (\array_key_exists('units', $data)) {
-                $object->setUnits($data['units']);
-                unset($data['units']);
-            }
-            if (\array_key_exists('unit_reference', $data)) {
-                $object->setUnitReference($data['unit_reference']);
-                unset($data['unit_reference']);
-            }
-            if (\array_key_exists('include_max_history', $data)) {
-                $object->setIncludeMaxHistory($data['include_max_history']);
-                unset($data['include_max_history']);
-            }
-            if (\array_key_exists('max_history_minimum_count', $data)) {
-                $object->setMaxHistoryMinimumCount($data['max_history_minimum_count']);
-                unset($data['max_history_minimum_count']);
-            }
-            if (\array_key_exists('metrics_columns', $data)) {
-                $values_4 = [];
-                foreach ($data['metrics_columns'] as $value_4) {
-                    $values_4[] = $this->denormalizer->denormalize($value_4, \Bitly\Model\MetricsColumn::class, 'json', $context);
-                }
-                $object->setMetricsColumns($values_4);
-                unset($data['metrics_columns']);
-            }
-            foreach ($data as $key => $value_5) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_5;
-                }
-            }
-
+        $object = new \Bitly\Model\DataExportQuery();
+        if (\array_key_exists('include_max_history', $data) && \is_int($data['include_max_history'])) {
+            $data['include_max_history'] = (bool) $data['include_max_history'];
+        }
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            $data['report_type'] = $object->getReportType();
+        if (\array_key_exists('report_type', $data)) {
+            $object->setReportType($data['report_type']);
+            unset($data['report_type']);
+        }
+        if (\array_key_exists('emails', $data)) {
             $values = [];
-            foreach ($object->getEmails() as $value) {
+            foreach ($data['emails'] as $value) {
                 $values[] = $value;
             }
-            $data['emails'] = $values;
-            if ($object->isInitialized('createdBefore') && null !== $object->getCreatedBefore()) {
-                $data['created_before'] = $object->getCreatedBefore();
+            $object->setEmails($values);
+            unset($data['emails']);
+        }
+        if (\array_key_exists('created_before', $data)) {
+            $object->setCreatedBefore($data['created_before']);
+            unset($data['created_before']);
+        }
+        if (\array_key_exists('created_after', $data)) {
+            $object->setCreatedAfter($data['created_after']);
+            unset($data['created_after']);
+        }
+        if (\array_key_exists('modified_after', $data)) {
+            $object->setModifiedAfter($data['modified_after']);
+            unset($data['modified_after']);
+        }
+        if (\array_key_exists('query', $data)) {
+            $object->setQuery($data['query']);
+            unset($data['query']);
+        }
+        if (\array_key_exists('keyword', $data)) {
+            $object->setKeyword($data['keyword']);
+            unset($data['keyword']);
+        }
+        if (\array_key_exists('archived', $data)) {
+            $object->setArchived($data['archived']);
+            unset($data['archived']);
+        }
+        if (\array_key_exists('link_deeplinks', $data)) {
+            $object->setLinkDeeplinks($data['link_deeplinks']);
+            unset($data['link_deeplinks']);
+        }
+        if (\array_key_exists('custom_bitlink', $data)) {
+            $object->setCustomBitlink($data['custom_bitlink']);
+            unset($data['custom_bitlink']);
+        }
+        if (\array_key_exists('creating_logins', $data)) {
+            $values_1 = [];
+            foreach ($data['creating_logins'] as $value_1) {
+                $values_1[] = $value_1;
             }
-            if ($object->isInitialized('createdAfter') && null !== $object->getCreatedAfter()) {
-                $data['created_after'] = $object->getCreatedAfter();
+            $object->setCreatingLogins($values_1);
+            unset($data['creating_logins']);
+        }
+        if (\array_key_exists('is_customized', $data)) {
+            $object->setIsCustomized($data['is_customized']);
+            unset($data['is_customized']);
+        }
+        if (\array_key_exists('is_gs1', $data)) {
+            $object->setIsGs1($data['is_gs1']);
+            unset($data['is_gs1']);
+        }
+        if (\array_key_exists('qrc_types', $data)) {
+            $values_2 = [];
+            foreach ($data['qrc_types'] as $value_2) {
+                $values_2[] = $value_2;
             }
-            if ($object->isInitialized('modifiedAfter') && null !== $object->getModifiedAfter()) {
-                $data['modified_after'] = $object->getModifiedAfter();
+            $object->setQrcTypes($values_2);
+            unset($data['qrc_types']);
+        }
+        if (\array_key_exists('tags', $data)) {
+            $values_3 = [];
+            foreach ($data['tags'] as $value_3) {
+                $values_3[] = $value_3;
             }
-            if ($object->isInitialized('query') && null !== $object->getQuery()) {
-                $data['query'] = $object->getQuery();
+            $object->setTags($values_3);
+            unset($data['tags']);
+        }
+        if (\array_key_exists('campaign_ids', $data)) {
+            $values_4 = [];
+            foreach ($data['campaign_ids'] as $value_4) {
+                $values_4[] = $value_4;
             }
-            if ($object->isInitialized('keyword') && null !== $object->getKeyword()) {
-                $data['keyword'] = $object->getKeyword();
+            $object->setCampaignIds($values_4);
+            unset($data['campaign_ids']);
+        }
+        if (\array_key_exists('unit', $data)) {
+            $object->setUnit($data['unit']);
+            unset($data['unit']);
+        }
+        if (\array_key_exists('units', $data)) {
+            $object->setUnits($data['units']);
+            unset($data['units']);
+        }
+        if (\array_key_exists('unit_reference', $data)) {
+            $object->setUnitReference($data['unit_reference']);
+            unset($data['unit_reference']);
+        }
+        if (\array_key_exists('include_max_history', $data)) {
+            $object->setIncludeMaxHistory($data['include_max_history']);
+            unset($data['include_max_history']);
+        }
+        if (\array_key_exists('max_history_minimum_count', $data)) {
+            $object->setMaxHistoryMinimumCount($data['max_history_minimum_count']);
+            unset($data['max_history_minimum_count']);
+        }
+        if (\array_key_exists('metrics_columns', $data)) {
+            $values_5 = [];
+            foreach ($data['metrics_columns'] as $value_5) {
+                $values_5[] = $this->denormalizer->denormalize($value_5, \Bitly\Model\MetricsColumn::class, 'json', $context);
             }
-            if ($object->isInitialized('archived') && null !== $object->getArchived()) {
-                $data['archived'] = $object->getArchived();
+            $object->setMetricsColumns($values_5);
+            unset($data['metrics_columns']);
+        }
+        foreach ($data as $key => $value_6) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value_6;
             }
-            if ($object->isInitialized('linkDeeplinks') && null !== $object->getLinkDeeplinks()) {
-                $data['link_deeplinks'] = $object->getLinkDeeplinks();
-            }
-            if ($object->isInitialized('customBitlink') && null !== $object->getCustomBitlink()) {
-                $data['custom_bitlink'] = $object->getCustomBitlink();
-            }
-            if ($object->isInitialized('creatingLogins') && null !== $object->getCreatingLogins()) {
-                $values_1 = [];
-                foreach ($object->getCreatingLogins() as $value_1) {
-                    $values_1[] = $value_1;
-                }
-                $data['creating_logins'] = $values_1;
-            }
-            if ($object->isInitialized('isCustomized') && null !== $object->getIsCustomized()) {
-                $data['is_customized'] = $object->getIsCustomized();
-            }
-            if ($object->isInitialized('isGs1') && null !== $object->getIsGs1()) {
-                $data['is_gs1'] = $object->getIsGs1();
-            }
-            if ($object->isInitialized('qrcTypes') && null !== $object->getQrcTypes()) {
-                $data['qrc_types'] = $object->getQrcTypes();
-            }
-            if ($object->isInitialized('tags') && null !== $object->getTags()) {
-                $values_2 = [];
-                foreach ($object->getTags() as $value_2) {
-                    $values_2[] = $value_2;
-                }
-                $data['tags'] = $values_2;
-            }
-            if ($object->isInitialized('campaignIds') && null !== $object->getCampaignIds()) {
-                $values_3 = [];
-                foreach ($object->getCampaignIds() as $value_3) {
-                    $values_3[] = $value_3;
-                }
-                $data['campaign_ids'] = $values_3;
-            }
-            if ($object->isInitialized('unit') && null !== $object->getUnit()) {
-                $data['unit'] = $object->getUnit();
-            }
-            if ($object->isInitialized('units') && null !== $object->getUnits()) {
-                $data['units'] = $object->getUnits();
-            }
-            if ($object->isInitialized('unitReference') && null !== $object->getUnitReference()) {
-                $data['unit_reference'] = $object->getUnitReference();
-            }
-            if ($object->isInitialized('includeMaxHistory') && null !== $object->getIncludeMaxHistory()) {
-                $data['include_max_history'] = $object->getIncludeMaxHistory();
-            }
-            if ($object->isInitialized('maxHistoryMinimumCount') && null !== $object->getMaxHistoryMinimumCount()) {
-                $data['max_history_minimum_count'] = $object->getMaxHistoryMinimumCount();
-            }
-            if ($object->isInitialized('metricsColumns') && null !== $object->getMetricsColumns()) {
-                $values_4 = [];
-                foreach ($object->getMetricsColumns() as $value_4) {
-                    $values_4[] = $this->normalizer->normalize($value_4, 'json', $context);
-                }
-                $data['metrics_columns'] = $values_4;
-            }
-            foreach ($object as $key => $value_5) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_5;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\DataExportQuery::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        $dataArray['report_type'] = $data->getReportType();
+        $values = [];
+        foreach ($data->getEmails() as $value) {
+            $values[] = $value;
         }
+        $dataArray['emails'] = $values;
+        if ($data->isInitialized('createdBefore') && null !== $data->getCreatedBefore()) {
+            $dataArray['created_before'] = $data->getCreatedBefore();
+        }
+        if ($data->isInitialized('createdAfter') && null !== $data->getCreatedAfter()) {
+            $dataArray['created_after'] = $data->getCreatedAfter();
+        }
+        if ($data->isInitialized('modifiedAfter') && null !== $data->getModifiedAfter()) {
+            $dataArray['modified_after'] = $data->getModifiedAfter();
+        }
+        if ($data->isInitialized('query') && null !== $data->getQuery()) {
+            $dataArray['query'] = $data->getQuery();
+        }
+        if ($data->isInitialized('keyword') && null !== $data->getKeyword()) {
+            $dataArray['keyword'] = $data->getKeyword();
+        }
+        if ($data->isInitialized('archived') && null !== $data->getArchived()) {
+            $dataArray['archived'] = $data->getArchived();
+        }
+        if ($data->isInitialized('linkDeeplinks') && null !== $data->getLinkDeeplinks()) {
+            $dataArray['link_deeplinks'] = $data->getLinkDeeplinks();
+        }
+        if ($data->isInitialized('customBitlink') && null !== $data->getCustomBitlink()) {
+            $dataArray['custom_bitlink'] = $data->getCustomBitlink();
+        }
+        if ($data->isInitialized('creatingLogins') && null !== $data->getCreatingLogins()) {
+            $values_1 = [];
+            foreach ($data->getCreatingLogins() as $value_1) {
+                $values_1[] = $value_1;
+            }
+            $dataArray['creating_logins'] = $values_1;
+        }
+        if ($data->isInitialized('isCustomized') && null !== $data->getIsCustomized()) {
+            $dataArray['is_customized'] = $data->getIsCustomized();
+        }
+        if ($data->isInitialized('isGs1') && null !== $data->getIsGs1()) {
+            $dataArray['is_gs1'] = $data->getIsGs1();
+        }
+        if ($data->isInitialized('qrcTypes') && null !== $data->getQrcTypes()) {
+            $values_2 = [];
+            foreach ($data->getQrcTypes() as $value_2) {
+                $values_2[] = $value_2;
+            }
+            $dataArray['qrc_types'] = $values_2;
+        }
+        if ($data->isInitialized('tags') && null !== $data->getTags()) {
+            $values_3 = [];
+            foreach ($data->getTags() as $value_3) {
+                $values_3[] = $value_3;
+            }
+            $dataArray['tags'] = $values_3;
+        }
+        if ($data->isInitialized('campaignIds') && null !== $data->getCampaignIds()) {
+            $values_4 = [];
+            foreach ($data->getCampaignIds() as $value_4) {
+                $values_4[] = $value_4;
+            }
+            $dataArray['campaign_ids'] = $values_4;
+        }
+        if ($data->isInitialized('unit') && null !== $data->getUnit()) {
+            $dataArray['unit'] = $data->getUnit();
+        }
+        if ($data->isInitialized('units') && null !== $data->getUnits()) {
+            $dataArray['units'] = $data->getUnits();
+        }
+        if ($data->isInitialized('unitReference') && null !== $data->getUnitReference()) {
+            $dataArray['unit_reference'] = $data->getUnitReference();
+        }
+        if ($data->isInitialized('includeMaxHistory') && null !== $data->getIncludeMaxHistory()) {
+            $dataArray['include_max_history'] = $data->getIncludeMaxHistory();
+        }
+        if ($data->isInitialized('maxHistoryMinimumCount') && null !== $data->getMaxHistoryMinimumCount()) {
+            $dataArray['max_history_minimum_count'] = $data->getMaxHistoryMinimumCount();
+        }
+        if ($data->isInitialized('metricsColumns') && null !== $data->getMetricsColumns()) {
+            $values_5 = [];
+            foreach ($data->getMetricsColumns() as $value_5) {
+                $values_5[] = $this->normalizer->normalize($value_5, 'json', $context);
+            }
+            $dataArray['metrics_columns'] = $values_5;
+        }
+        foreach ($data as $key => $value_6) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value_6;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\DataExportQuery::class => false];
     }
 }

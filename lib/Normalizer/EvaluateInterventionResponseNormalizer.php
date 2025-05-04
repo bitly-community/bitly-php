@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,175 +20,86 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class EvaluateInterventionResponseNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class EvaluateInterventionResponseNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\EvaluateInterventionResponse::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\EvaluateInterventionResponse::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\EvaluateInterventionResponse();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('tier', $data)) {
-                $object->setTier($data['tier']);
-                unset($data['tier']);
-            }
-            if (\array_key_exists('intervention', $data)) {
-                $object->setIntervention($data['intervention']);
-                unset($data['intervention']);
-            }
-            if (\array_key_exists('monthly_promo', $data)) {
-                $object->setMonthlyPromo($this->denormalizer->denormalize($data['monthly_promo'], \Bitly\Model\EvaluateInterventionResponseMonthlyPromo::class, 'json', $context));
-                unset($data['monthly_promo']);
-            }
-            if (\array_key_exists('annual_promo', $data)) {
-                $object->setAnnualPromo($this->denormalizer->denormalize($data['annual_promo'], \Bitly\Model\EvaluateInterventionResponseAnnualPromo::class, 'json', $context));
-                unset($data['annual_promo']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('tier') && null !== $object->getTier()) {
-                $data['tier'] = $object->getTier();
-            }
-            if ($object->isInitialized('intervention') && null !== $object->getIntervention()) {
-                $data['intervention'] = $object->getIntervention();
-            }
-            if ($object->isInitialized('monthlyPromo') && null !== $object->getMonthlyPromo()) {
-                $data['monthly_promo'] = $this->normalizer->normalize($object->getMonthlyPromo(), 'json', $context);
-            }
-            if ($object->isInitialized('annualPromo') && null !== $object->getAnnualPromo()) {
-                $data['annual_promo'] = $this->normalizer->normalize($object->getAnnualPromo(), 'json', $context);
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\EvaluateInterventionResponse::class => false];
-        }
+        return $type === \Bitly\Model\EvaluateInterventionResponse::class;
     }
-} else {
-    class EvaluateInterventionResponseNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\EvaluateInterventionResponse::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\EvaluateInterventionResponse::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\EvaluateInterventionResponse::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\EvaluateInterventionResponse();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('tier', $data)) {
-                $object->setTier($data['tier']);
-                unset($data['tier']);
-            }
-            if (\array_key_exists('intervention', $data)) {
-                $object->setIntervention($data['intervention']);
-                unset($data['intervention']);
-            }
-            if (\array_key_exists('monthly_promo', $data)) {
-                $object->setMonthlyPromo($this->denormalizer->denormalize($data['monthly_promo'], \Bitly\Model\EvaluateInterventionResponseMonthlyPromo::class, 'json', $context));
-                unset($data['monthly_promo']);
-            }
-            if (\array_key_exists('annual_promo', $data)) {
-                $object->setAnnualPromo($this->denormalizer->denormalize($data['annual_promo'], \Bitly\Model\EvaluateInterventionResponseAnnualPromo::class, 'json', $context));
-                unset($data['annual_promo']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
+        $object = new \Bitly\Model\EvaluateInterventionResponse();
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('tier') && null !== $object->getTier()) {
-                $data['tier'] = $object->getTier();
+        if (\array_key_exists('tier', $data)) {
+            $object->setTier($data['tier']);
+            unset($data['tier']);
+        }
+        if (\array_key_exists('intervention', $data)) {
+            $object->setIntervention($data['intervention']);
+            unset($data['intervention']);
+        }
+        if (\array_key_exists('monthly_promo', $data)) {
+            $object->setMonthlyPromo($this->denormalizer->denormalize($data['monthly_promo'], \Bitly\Model\EvaluateInterventionResponseMonthlyPromo::class, 'json', $context));
+            unset($data['monthly_promo']);
+        }
+        if (\array_key_exists('annual_promo', $data)) {
+            $object->setAnnualPromo($this->denormalizer->denormalize($data['annual_promo'], \Bitly\Model\EvaluateInterventionResponseAnnualPromo::class, 'json', $context));
+            unset($data['annual_promo']);
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value;
             }
-            if ($object->isInitialized('intervention') && null !== $object->getIntervention()) {
-                $data['intervention'] = $object->getIntervention();
-            }
-            if ($object->isInitialized('monthlyPromo') && null !== $object->getMonthlyPromo()) {
-                $data['monthly_promo'] = $this->normalizer->normalize($object->getMonthlyPromo(), 'json', $context);
-            }
-            if ($object->isInitialized('annualPromo') && null !== $object->getAnnualPromo()) {
-                $data['annual_promo'] = $this->normalizer->normalize($object->getAnnualPromo(), 'json', $context);
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\EvaluateInterventionResponse::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('tier') && null !== $data->getTier()) {
+            $dataArray['tier'] = $data->getTier();
         }
+        if ($data->isInitialized('intervention') && null !== $data->getIntervention()) {
+            $dataArray['intervention'] = $data->getIntervention();
+        }
+        if ($data->isInitialized('monthlyPromo') && null !== $data->getMonthlyPromo()) {
+            $dataArray['monthly_promo'] = $this->normalizer->normalize($data->getMonthlyPromo(), 'json', $context);
+        }
+        if ($data->isInitialized('annualPromo') && null !== $data->getAnnualPromo()) {
+            $dataArray['annual_promo'] = $this->normalizer->normalize($data->getAnnualPromo(), 'json', $context);
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\EvaluateInterventionResponse::class => false];
     }
 }

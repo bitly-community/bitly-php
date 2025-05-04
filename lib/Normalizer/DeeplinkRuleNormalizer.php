@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,259 +20,128 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class DeeplinkRuleNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class DeeplinkRuleNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\DeeplinkRule::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\DeeplinkRule::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\DeeplinkRule();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('guid', $data)) {
-                $object->setGuid($data['guid']);
-                unset($data['guid']);
-            }
-            if (\array_key_exists('bitlink', $data)) {
-                $object->setBitlink($data['bitlink']);
-                unset($data['bitlink']);
-            }
-            if (\array_key_exists('app_uri_path', $data)) {
-                $object->setAppUriPath($data['app_uri_path']);
-                unset($data['app_uri_path']);
-            }
-            if (\array_key_exists('install_url', $data)) {
-                $object->setInstallUrl($data['install_url']);
-                unset($data['install_url']);
-            }
-            if (\array_key_exists('app_guid', $data)) {
-                $object->setAppGuid($data['app_guid']);
-                unset($data['app_guid']);
-            }
-            if (\array_key_exists('os', $data)) {
-                $object->setOs($data['os']);
-                unset($data['os']);
-            }
-            if (\array_key_exists('install_type', $data)) {
-                $object->setInstallType($data['install_type']);
-                unset($data['install_type']);
-            }
-            if (\array_key_exists('created', $data)) {
-                $object->setCreated($data['created']);
-                unset($data['created']);
-            }
-            if (\array_key_exists('modified', $data)) {
-                $object->setModified($data['modified']);
-                unset($data['modified']);
-            }
-            if (\array_key_exists('brand_guid', $data)) {
-                $object->setBrandGuid($data['brand_guid']);
-                unset($data['brand_guid']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('guid') && null !== $object->getGuid()) {
-                $data['guid'] = $object->getGuid();
-            }
-            if ($object->isInitialized('bitlink') && null !== $object->getBitlink()) {
-                $data['bitlink'] = $object->getBitlink();
-            }
-            if ($object->isInitialized('appUriPath') && null !== $object->getAppUriPath()) {
-                $data['app_uri_path'] = $object->getAppUriPath();
-            }
-            if ($object->isInitialized('installUrl') && null !== $object->getInstallUrl()) {
-                $data['install_url'] = $object->getInstallUrl();
-            }
-            if ($object->isInitialized('appGuid') && null !== $object->getAppGuid()) {
-                $data['app_guid'] = $object->getAppGuid();
-            }
-            if ($object->isInitialized('os') && null !== $object->getOs()) {
-                $data['os'] = $object->getOs();
-            }
-            if ($object->isInitialized('installType') && null !== $object->getInstallType()) {
-                $data['install_type'] = $object->getInstallType();
-            }
-            if ($object->isInitialized('created') && null !== $object->getCreated()) {
-                $data['created'] = $object->getCreated();
-            }
-            if ($object->isInitialized('modified') && null !== $object->getModified()) {
-                $data['modified'] = $object->getModified();
-            }
-            if ($object->isInitialized('brandGuid') && null !== $object->getBrandGuid()) {
-                $data['brand_guid'] = $object->getBrandGuid();
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\DeeplinkRule::class => false];
-        }
+        return $type === \Bitly\Model\DeeplinkRule::class;
     }
-} else {
-    class DeeplinkRuleNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\DeeplinkRule::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\DeeplinkRule::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\DeeplinkRule::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\DeeplinkRule();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('guid', $data)) {
-                $object->setGuid($data['guid']);
-                unset($data['guid']);
-            }
-            if (\array_key_exists('bitlink', $data)) {
-                $object->setBitlink($data['bitlink']);
-                unset($data['bitlink']);
-            }
-            if (\array_key_exists('app_uri_path', $data)) {
-                $object->setAppUriPath($data['app_uri_path']);
-                unset($data['app_uri_path']);
-            }
-            if (\array_key_exists('install_url', $data)) {
-                $object->setInstallUrl($data['install_url']);
-                unset($data['install_url']);
-            }
-            if (\array_key_exists('app_guid', $data)) {
-                $object->setAppGuid($data['app_guid']);
-                unset($data['app_guid']);
-            }
-            if (\array_key_exists('os', $data)) {
-                $object->setOs($data['os']);
-                unset($data['os']);
-            }
-            if (\array_key_exists('install_type', $data)) {
-                $object->setInstallType($data['install_type']);
-                unset($data['install_type']);
-            }
-            if (\array_key_exists('created', $data)) {
-                $object->setCreated($data['created']);
-                unset($data['created']);
-            }
-            if (\array_key_exists('modified', $data)) {
-                $object->setModified($data['modified']);
-                unset($data['modified']);
-            }
-            if (\array_key_exists('brand_guid', $data)) {
-                $object->setBrandGuid($data['brand_guid']);
-                unset($data['brand_guid']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
+        $object = new \Bitly\Model\DeeplinkRule();
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('guid') && null !== $object->getGuid()) {
-                $data['guid'] = $object->getGuid();
+        if (\array_key_exists('guid', $data)) {
+            $object->setGuid($data['guid']);
+            unset($data['guid']);
+        }
+        if (\array_key_exists('bitlink', $data)) {
+            $object->setBitlink($data['bitlink']);
+            unset($data['bitlink']);
+        }
+        if (\array_key_exists('app_uri_path', $data)) {
+            $object->setAppUriPath($data['app_uri_path']);
+            unset($data['app_uri_path']);
+        }
+        if (\array_key_exists('install_url', $data)) {
+            $object->setInstallUrl($data['install_url']);
+            unset($data['install_url']);
+        }
+        if (\array_key_exists('app_guid', $data)) {
+            $object->setAppGuid($data['app_guid']);
+            unset($data['app_guid']);
+        }
+        if (\array_key_exists('os', $data)) {
+            $object->setOs($data['os']);
+            unset($data['os']);
+        }
+        if (\array_key_exists('install_type', $data)) {
+            $object->setInstallType($data['install_type']);
+            unset($data['install_type']);
+        }
+        if (\array_key_exists('created', $data)) {
+            $object->setCreated($data['created']);
+            unset($data['created']);
+        }
+        if (\array_key_exists('modified', $data)) {
+            $object->setModified($data['modified']);
+            unset($data['modified']);
+        }
+        if (\array_key_exists('brand_guid', $data)) {
+            $object->setBrandGuid($data['brand_guid']);
+            unset($data['brand_guid']);
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value;
             }
-            if ($object->isInitialized('bitlink') && null !== $object->getBitlink()) {
-                $data['bitlink'] = $object->getBitlink();
-            }
-            if ($object->isInitialized('appUriPath') && null !== $object->getAppUriPath()) {
-                $data['app_uri_path'] = $object->getAppUriPath();
-            }
-            if ($object->isInitialized('installUrl') && null !== $object->getInstallUrl()) {
-                $data['install_url'] = $object->getInstallUrl();
-            }
-            if ($object->isInitialized('appGuid') && null !== $object->getAppGuid()) {
-                $data['app_guid'] = $object->getAppGuid();
-            }
-            if ($object->isInitialized('os') && null !== $object->getOs()) {
-                $data['os'] = $object->getOs();
-            }
-            if ($object->isInitialized('installType') && null !== $object->getInstallType()) {
-                $data['install_type'] = $object->getInstallType();
-            }
-            if ($object->isInitialized('created') && null !== $object->getCreated()) {
-                $data['created'] = $object->getCreated();
-            }
-            if ($object->isInitialized('modified') && null !== $object->getModified()) {
-                $data['modified'] = $object->getModified();
-            }
-            if ($object->isInitialized('brandGuid') && null !== $object->getBrandGuid()) {
-                $data['brand_guid'] = $object->getBrandGuid();
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\DeeplinkRule::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('guid') && null !== $data->getGuid()) {
+            $dataArray['guid'] = $data->getGuid();
         }
+        if ($data->isInitialized('bitlink') && null !== $data->getBitlink()) {
+            $dataArray['bitlink'] = $data->getBitlink();
+        }
+        if ($data->isInitialized('appUriPath') && null !== $data->getAppUriPath()) {
+            $dataArray['app_uri_path'] = $data->getAppUriPath();
+        }
+        if ($data->isInitialized('installUrl') && null !== $data->getInstallUrl()) {
+            $dataArray['install_url'] = $data->getInstallUrl();
+        }
+        if ($data->isInitialized('appGuid') && null !== $data->getAppGuid()) {
+            $dataArray['app_guid'] = $data->getAppGuid();
+        }
+        if ($data->isInitialized('os') && null !== $data->getOs()) {
+            $dataArray['os'] = $data->getOs();
+        }
+        if ($data->isInitialized('installType') && null !== $data->getInstallType()) {
+            $dataArray['install_type'] = $data->getInstallType();
+        }
+        if ($data->isInitialized('created') && null !== $data->getCreated()) {
+            $dataArray['created'] = $data->getCreated();
+        }
+        if ($data->isInitialized('modified') && null !== $data->getModified()) {
+            $dataArray['modified'] = $data->getModified();
+        }
+        if ($data->isInitialized('brandGuid') && null !== $data->getBrandGuid()) {
+            $dataArray['brand_guid'] = $data->getBrandGuid();
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\DeeplinkRule::class => false];
     }
 }

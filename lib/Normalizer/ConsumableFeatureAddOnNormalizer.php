@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,217 +20,110 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class ConsumableFeatureAddOnNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class ConsumableFeatureAddOnNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\ConsumableFeatureAddOn::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\ConsumableFeatureAddOn::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\ConsumableFeatureAddOn();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('created', $data)) {
-                $object->setCreated($data['created']);
-                unset($data['created']);
-            }
-            if (\array_key_exists('modified', $data)) {
-                $object->setModified($data['modified']);
-                unset($data['modified']);
-            }
-            if (\array_key_exists('start_date', $data)) {
-                $object->setStartDate($data['start_date']);
-                unset($data['start_date']);
-            }
-            if (\array_key_exists('end_date', $data)) {
-                $object->setEndDate($data['end_date']);
-                unset($data['end_date']);
-            }
-            if (\array_key_exists('feature_name', $data)) {
-                $object->setFeatureName($data['feature_name']);
-                unset($data['feature_name']);
-            }
-            if (\array_key_exists('quantity', $data)) {
-                $object->setQuantity($data['quantity']);
-                unset($data['quantity']);
-            }
-            if (\array_key_exists('is_active', $data)) {
-                $object->setIsActive($data['is_active']);
-                unset($data['is_active']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('created') && null !== $object->getCreated()) {
-                $data['created'] = $object->getCreated();
-            }
-            if ($object->isInitialized('modified') && null !== $object->getModified()) {
-                $data['modified'] = $object->getModified();
-            }
-            if ($object->isInitialized('startDate') && null !== $object->getStartDate()) {
-                $data['start_date'] = $object->getStartDate();
-            }
-            if ($object->isInitialized('endDate') && null !== $object->getEndDate()) {
-                $data['end_date'] = $object->getEndDate();
-            }
-            if ($object->isInitialized('featureName') && null !== $object->getFeatureName()) {
-                $data['feature_name'] = $object->getFeatureName();
-            }
-            if ($object->isInitialized('quantity') && null !== $object->getQuantity()) {
-                $data['quantity'] = $object->getQuantity();
-            }
-            if ($object->isInitialized('isActive') && null !== $object->getIsActive()) {
-                $data['is_active'] = $object->getIsActive();
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\ConsumableFeatureAddOn::class => false];
-        }
+        return $type === \Bitly\Model\ConsumableFeatureAddOn::class;
     }
-} else {
-    class ConsumableFeatureAddOnNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\ConsumableFeatureAddOn::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\ConsumableFeatureAddOn::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\ConsumableFeatureAddOn::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\ConsumableFeatureAddOn();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('created', $data)) {
-                $object->setCreated($data['created']);
-                unset($data['created']);
-            }
-            if (\array_key_exists('modified', $data)) {
-                $object->setModified($data['modified']);
-                unset($data['modified']);
-            }
-            if (\array_key_exists('start_date', $data)) {
-                $object->setStartDate($data['start_date']);
-                unset($data['start_date']);
-            }
-            if (\array_key_exists('end_date', $data)) {
-                $object->setEndDate($data['end_date']);
-                unset($data['end_date']);
-            }
-            if (\array_key_exists('feature_name', $data)) {
-                $object->setFeatureName($data['feature_name']);
-                unset($data['feature_name']);
-            }
-            if (\array_key_exists('quantity', $data)) {
-                $object->setQuantity($data['quantity']);
-                unset($data['quantity']);
-            }
-            if (\array_key_exists('is_active', $data)) {
-                $object->setIsActive($data['is_active']);
-                unset($data['is_active']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
+        $object = new \Bitly\Model\ConsumableFeatureAddOn();
+        if (\array_key_exists('is_active', $data) && \is_int($data['is_active'])) {
+            $data['is_active'] = (bool) $data['is_active'];
+        }
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('created') && null !== $object->getCreated()) {
-                $data['created'] = $object->getCreated();
+        if (\array_key_exists('created', $data)) {
+            $object->setCreated($data['created']);
+            unset($data['created']);
+        }
+        if (\array_key_exists('modified', $data)) {
+            $object->setModified($data['modified']);
+            unset($data['modified']);
+        }
+        if (\array_key_exists('start_date', $data)) {
+            $object->setStartDate($data['start_date']);
+            unset($data['start_date']);
+        }
+        if (\array_key_exists('end_date', $data)) {
+            $object->setEndDate($data['end_date']);
+            unset($data['end_date']);
+        }
+        if (\array_key_exists('feature_name', $data)) {
+            $object->setFeatureName($data['feature_name']);
+            unset($data['feature_name']);
+        }
+        if (\array_key_exists('quantity', $data)) {
+            $object->setQuantity($data['quantity']);
+            unset($data['quantity']);
+        }
+        if (\array_key_exists('is_active', $data)) {
+            $object->setIsActive($data['is_active']);
+            unset($data['is_active']);
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value;
             }
-            if ($object->isInitialized('modified') && null !== $object->getModified()) {
-                $data['modified'] = $object->getModified();
-            }
-            if ($object->isInitialized('startDate') && null !== $object->getStartDate()) {
-                $data['start_date'] = $object->getStartDate();
-            }
-            if ($object->isInitialized('endDate') && null !== $object->getEndDate()) {
-                $data['end_date'] = $object->getEndDate();
-            }
-            if ($object->isInitialized('featureName') && null !== $object->getFeatureName()) {
-                $data['feature_name'] = $object->getFeatureName();
-            }
-            if ($object->isInitialized('quantity') && null !== $object->getQuantity()) {
-                $data['quantity'] = $object->getQuantity();
-            }
-            if ($object->isInitialized('isActive') && null !== $object->getIsActive()) {
-                $data['is_active'] = $object->getIsActive();
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\ConsumableFeatureAddOn::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('created') && null !== $data->getCreated()) {
+            $dataArray['created'] = $data->getCreated();
         }
+        if ($data->isInitialized('modified') && null !== $data->getModified()) {
+            $dataArray['modified'] = $data->getModified();
+        }
+        if ($data->isInitialized('startDate') && null !== $data->getStartDate()) {
+            $dataArray['start_date'] = $data->getStartDate();
+        }
+        if ($data->isInitialized('endDate') && null !== $data->getEndDate()) {
+            $dataArray['end_date'] = $data->getEndDate();
+        }
+        if ($data->isInitialized('featureName') && null !== $data->getFeatureName()) {
+            $dataArray['feature_name'] = $data->getFeatureName();
+        }
+        if ($data->isInitialized('quantity') && null !== $data->getQuantity()) {
+            $dataArray['quantity'] = $data->getQuantity();
+        }
+        if ($data->isInitialized('isActive') && null !== $data->getIsActive()) {
+            $dataArray['is_active'] = $data->getIsActive();
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\ConsumableFeatureAddOn::class => false];
     }
 }

@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,247 +20,122 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class BitlinkOverridesNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class BitlinkOverridesNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\BitlinkOverrides::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\BitlinkOverrides::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\BitlinkOverrides();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('references', $data)) {
-                $values = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
-                foreach ($data['references'] as $key => $value) {
-                    $values[$key] = $value;
-                }
-                $object->setReferences($values);
-                unset($data['references']);
-            }
-            if (\array_key_exists('id', $data)) {
-                $object->setId($data['id']);
-                unset($data['id']);
-            }
-            if (\array_key_exists('rules', $data)) {
-                $object->setRules($data['rules']);
-                unset($data['rules']);
-            }
-            if (\array_key_exists('version', $data)) {
-                $object->setVersion($data['version']);
-                unset($data['version']);
-            }
-            if (\array_key_exists('created', $data)) {
-                $object->setCreated($data['created']);
-                unset($data['created']);
-            }
-            if (\array_key_exists('modified', $data)) {
-                $object->setModified($data['modified']);
-                unset($data['modified']);
-            }
-            if (\array_key_exists('link', $data)) {
-                $object->setLink($data['link']);
-                unset($data['link']);
-            }
-            if (\array_key_exists('group_guid', $data)) {
-                $object->setGroupGuid($data['group_guid']);
-                unset($data['group_guid']);
-            }
-            foreach ($data as $key_1 => $value_1) {
-                if (preg_match('/.*/', (string) $key_1)) {
-                    $object[$key_1] = $value_1;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('references') && null !== $object->getReferences()) {
-                $values = [];
-                foreach ($object->getReferences() as $key => $value) {
-                    $values[$key] = $value;
-                }
-                $data['references'] = $values;
-            }
-            if ($object->isInitialized('id') && null !== $object->getId()) {
-                $data['id'] = $object->getId();
-            }
-            if ($object->isInitialized('rules') && null !== $object->getRules()) {
-                $data['rules'] = $object->getRules();
-            }
-            if ($object->isInitialized('version') && null !== $object->getVersion()) {
-                $data['version'] = $object->getVersion();
-            }
-            if ($object->isInitialized('created') && null !== $object->getCreated()) {
-                $data['created'] = $object->getCreated();
-            }
-            if ($object->isInitialized('modified') && null !== $object->getModified()) {
-                $data['modified'] = $object->getModified();
-            }
-            if ($object->isInitialized('link') && null !== $object->getLink()) {
-                $data['link'] = $object->getLink();
-            }
-            if ($object->isInitialized('groupGuid') && null !== $object->getGroupGuid()) {
-                $data['group_guid'] = $object->getGroupGuid();
-            }
-            foreach ($object as $key_1 => $value_1) {
-                if (preg_match('/.*/', (string) $key_1)) {
-                    $data[$key_1] = $value_1;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\BitlinkOverrides::class => false];
-        }
+        return $type === \Bitly\Model\BitlinkOverrides::class;
     }
-} else {
-    class BitlinkOverridesNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\BitlinkOverrides::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\BitlinkOverrides::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\BitlinkOverrides::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\BitlinkOverrides();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('references', $data)) {
-                $values = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
-                foreach ($data['references'] as $key => $value) {
-                    $values[$key] = $value;
-                }
-                $object->setReferences($values);
-                unset($data['references']);
-            }
-            if (\array_key_exists('id', $data)) {
-                $object->setId($data['id']);
-                unset($data['id']);
-            }
-            if (\array_key_exists('rules', $data)) {
-                $object->setRules($data['rules']);
-                unset($data['rules']);
-            }
-            if (\array_key_exists('version', $data)) {
-                $object->setVersion($data['version']);
-                unset($data['version']);
-            }
-            if (\array_key_exists('created', $data)) {
-                $object->setCreated($data['created']);
-                unset($data['created']);
-            }
-            if (\array_key_exists('modified', $data)) {
-                $object->setModified($data['modified']);
-                unset($data['modified']);
-            }
-            if (\array_key_exists('link', $data)) {
-                $object->setLink($data['link']);
-                unset($data['link']);
-            }
-            if (\array_key_exists('group_guid', $data)) {
-                $object->setGroupGuid($data['group_guid']);
-                unset($data['group_guid']);
-            }
-            foreach ($data as $key_1 => $value_1) {
-                if (preg_match('/.*/', (string) $key_1)) {
-                    $object[$key_1] = $value_1;
-                }
-            }
-
+        $object = new \Bitly\Model\BitlinkOverrides();
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('references') && null !== $object->getReferences()) {
-                $values = [];
-                foreach ($object->getReferences() as $key => $value) {
-                    $values[$key] = $value;
-                }
-                $data['references'] = $values;
+        if (\array_key_exists('references', $data)) {
+            $values = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
+            foreach ($data['references'] as $key => $value) {
+                $values[$key] = $value;
             }
-            if ($object->isInitialized('id') && null !== $object->getId()) {
-                $data['id'] = $object->getId();
+            $object->setReferences($values);
+            unset($data['references']);
+        }
+        if (\array_key_exists('id', $data)) {
+            $object->setId($data['id']);
+            unset($data['id']);
+        }
+        if (\array_key_exists('rules', $data)) {
+            $object->setRules($data['rules']);
+            unset($data['rules']);
+        }
+        if (\array_key_exists('version', $data)) {
+            $object->setVersion($data['version']);
+            unset($data['version']);
+        }
+        if (\array_key_exists('created', $data)) {
+            $object->setCreated($data['created']);
+            unset($data['created']);
+        }
+        if (\array_key_exists('modified', $data)) {
+            $object->setModified($data['modified']);
+            unset($data['modified']);
+        }
+        if (\array_key_exists('link', $data)) {
+            $object->setLink($data['link']);
+            unset($data['link']);
+        }
+        if (\array_key_exists('group_guid', $data)) {
+            $object->setGroupGuid($data['group_guid']);
+            unset($data['group_guid']);
+        }
+        foreach ($data as $key_1 => $value_1) {
+            if (preg_match('/.*/', (string) $key_1)) {
+                $object[$key_1] = $value_1;
             }
-            if ($object->isInitialized('rules') && null !== $object->getRules()) {
-                $data['rules'] = $object->getRules();
-            }
-            if ($object->isInitialized('version') && null !== $object->getVersion()) {
-                $data['version'] = $object->getVersion();
-            }
-            if ($object->isInitialized('created') && null !== $object->getCreated()) {
-                $data['created'] = $object->getCreated();
-            }
-            if ($object->isInitialized('modified') && null !== $object->getModified()) {
-                $data['modified'] = $object->getModified();
-            }
-            if ($object->isInitialized('link') && null !== $object->getLink()) {
-                $data['link'] = $object->getLink();
-            }
-            if ($object->isInitialized('groupGuid') && null !== $object->getGroupGuid()) {
-                $data['group_guid'] = $object->getGroupGuid();
-            }
-            foreach ($object as $key_1 => $value_1) {
-                if (preg_match('/.*/', (string) $key_1)) {
-                    $data[$key_1] = $value_1;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\BitlinkOverrides::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('references') && null !== $data->getReferences()) {
+            $values = [];
+            foreach ($data->getReferences() as $key => $value) {
+                $values[$key] = $value;
+            }
+            $dataArray['references'] = $values;
         }
+        if ($data->isInitialized('id') && null !== $data->getId()) {
+            $dataArray['id'] = $data->getId();
+        }
+        if ($data->isInitialized('rules') && null !== $data->getRules()) {
+            $dataArray['rules'] = $data->getRules();
+        }
+        if ($data->isInitialized('version') && null !== $data->getVersion()) {
+            $dataArray['version'] = $data->getVersion();
+        }
+        if ($data->isInitialized('created') && null !== $data->getCreated()) {
+            $dataArray['created'] = $data->getCreated();
+        }
+        if ($data->isInitialized('modified') && null !== $data->getModified()) {
+            $dataArray['modified'] = $data->getModified();
+        }
+        if ($data->isInitialized('link') && null !== $data->getLink()) {
+            $dataArray['link'] = $data->getLink();
+        }
+        if ($data->isInitialized('groupGuid') && null !== $data->getGroupGuid()) {
+            $dataArray['group_guid'] = $data->getGroupGuid();
+        }
+        foreach ($data as $key_1 => $value_1) {
+            if (preg_match('/.*/', (string) $key_1)) {
+                $dataArray[$key_1] = $value_1;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\BitlinkOverrides::class => false];
     }
 }

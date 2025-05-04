@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,331 +20,167 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class ActivityLogNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class ActivityLogNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\ActivityLog::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\ActivityLog::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\ActivityLog();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('action_description', $data)) {
-                $object->setActionDescription($data['action_description']);
-                unset($data['action_description']);
-            }
-            if (\array_key_exists('action_login', $data)) {
-                $object->setActionLogin($data['action_login']);
-                unset($data['action_login']);
-            }
-            if (\array_key_exists('ts', $data)) {
-                $object->setTs($data['ts']);
-                unset($data['ts']);
-            }
-            if (\array_key_exists('user', $data)) {
-                $object->setUser($data['user']);
-                unset($data['user']);
-            }
-            if (\array_key_exists('action', $data)) {
-                $object->setAction($data['action']);
-                unset($data['action']);
-            }
-            if (\array_key_exists('org_guid', $data)) {
-                $object->setOrgGuid($data['org_guid']);
-                unset($data['org_guid']);
-            }
-            if (\array_key_exists('id', $data)) {
-                $object->setId($data['id']);
-                unset($data['id']);
-            }
-            if (\array_key_exists('country_code', $data)) {
-                $object->setCountryCode($data['country_code']);
-                unset($data['country_code']);
-            }
-            if (\array_key_exists('region', $data)) {
-                $object->setRegion($data['region']);
-                unset($data['region']);
-            }
-            if (\array_key_exists('sub_region', $data)) {
-                $object->setSubRegion($data['sub_region']);
-                unset($data['sub_region']);
-            }
-            if (\array_key_exists('city', $data)) {
-                $object->setCity($data['city']);
-                unset($data['city']);
-            }
-            if (\array_key_exists('isp', $data)) {
-                $object->setIsp($data['isp']);
-                unset($data['isp']);
-            }
-            if (\array_key_exists('bitly_admin', $data)) {
-                $object->setBitlyAdmin($data['bitly_admin']);
-                unset($data['bitly_admin']);
-            }
-            if (\array_key_exists('metadata', $data)) {
-                $values = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
-                foreach ($data['metadata'] as $key => $value) {
-                    $values[$key] = $value;
-                }
-                $object->setMetadata($values);
-                unset($data['metadata']);
-            }
-            foreach ($data as $key_1 => $value_1) {
-                if (preg_match('/.*/', (string) $key_1)) {
-                    $object[$key_1] = $value_1;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('actionDescription') && null !== $object->getActionDescription()) {
-                $data['action_description'] = $object->getActionDescription();
-            }
-            if ($object->isInitialized('actionLogin') && null !== $object->getActionLogin()) {
-                $data['action_login'] = $object->getActionLogin();
-            }
-            if ($object->isInitialized('ts') && null !== $object->getTs()) {
-                $data['ts'] = $object->getTs();
-            }
-            if ($object->isInitialized('user') && null !== $object->getUser()) {
-                $data['user'] = $object->getUser();
-            }
-            if ($object->isInitialized('action') && null !== $object->getAction()) {
-                $data['action'] = $object->getAction();
-            }
-            if ($object->isInitialized('orgGuid') && null !== $object->getOrgGuid()) {
-                $data['org_guid'] = $object->getOrgGuid();
-            }
-            if ($object->isInitialized('id') && null !== $object->getId()) {
-                $data['id'] = $object->getId();
-            }
-            if ($object->isInitialized('countryCode') && null !== $object->getCountryCode()) {
-                $data['country_code'] = $object->getCountryCode();
-            }
-            if ($object->isInitialized('region') && null !== $object->getRegion()) {
-                $data['region'] = $object->getRegion();
-            }
-            if ($object->isInitialized('subRegion') && null !== $object->getSubRegion()) {
-                $data['sub_region'] = $object->getSubRegion();
-            }
-            if ($object->isInitialized('city') && null !== $object->getCity()) {
-                $data['city'] = $object->getCity();
-            }
-            if ($object->isInitialized('isp') && null !== $object->getIsp()) {
-                $data['isp'] = $object->getIsp();
-            }
-            if ($object->isInitialized('bitlyAdmin') && null !== $object->getBitlyAdmin()) {
-                $data['bitly_admin'] = $object->getBitlyAdmin();
-            }
-            if ($object->isInitialized('metadata') && null !== $object->getMetadata()) {
-                $values = [];
-                foreach ($object->getMetadata() as $key => $value) {
-                    $values[$key] = $value;
-                }
-                $data['metadata'] = $values;
-            }
-            foreach ($object as $key_1 => $value_1) {
-                if (preg_match('/.*/', (string) $key_1)) {
-                    $data[$key_1] = $value_1;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\ActivityLog::class => false];
-        }
+        return $type === \Bitly\Model\ActivityLog::class;
     }
-} else {
-    class ActivityLogNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\ActivityLog::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\ActivityLog::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\ActivityLog::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\ActivityLog();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('action_description', $data)) {
-                $object->setActionDescription($data['action_description']);
-                unset($data['action_description']);
-            }
-            if (\array_key_exists('action_login', $data)) {
-                $object->setActionLogin($data['action_login']);
-                unset($data['action_login']);
-            }
-            if (\array_key_exists('ts', $data)) {
-                $object->setTs($data['ts']);
-                unset($data['ts']);
-            }
-            if (\array_key_exists('user', $data)) {
-                $object->setUser($data['user']);
-                unset($data['user']);
-            }
-            if (\array_key_exists('action', $data)) {
-                $object->setAction($data['action']);
-                unset($data['action']);
-            }
-            if (\array_key_exists('org_guid', $data)) {
-                $object->setOrgGuid($data['org_guid']);
-                unset($data['org_guid']);
-            }
-            if (\array_key_exists('id', $data)) {
-                $object->setId($data['id']);
-                unset($data['id']);
-            }
-            if (\array_key_exists('country_code', $data)) {
-                $object->setCountryCode($data['country_code']);
-                unset($data['country_code']);
-            }
-            if (\array_key_exists('region', $data)) {
-                $object->setRegion($data['region']);
-                unset($data['region']);
-            }
-            if (\array_key_exists('sub_region', $data)) {
-                $object->setSubRegion($data['sub_region']);
-                unset($data['sub_region']);
-            }
-            if (\array_key_exists('city', $data)) {
-                $object->setCity($data['city']);
-                unset($data['city']);
-            }
-            if (\array_key_exists('isp', $data)) {
-                $object->setIsp($data['isp']);
-                unset($data['isp']);
-            }
-            if (\array_key_exists('bitly_admin', $data)) {
-                $object->setBitlyAdmin($data['bitly_admin']);
-                unset($data['bitly_admin']);
-            }
-            if (\array_key_exists('metadata', $data)) {
-                $values = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
-                foreach ($data['metadata'] as $key => $value) {
-                    $values[$key] = $value;
-                }
-                $object->setMetadata($values);
-                unset($data['metadata']);
-            }
-            foreach ($data as $key_1 => $value_1) {
-                if (preg_match('/.*/', (string) $key_1)) {
-                    $object[$key_1] = $value_1;
-                }
-            }
-
+        $object = new \Bitly\Model\ActivityLog();
+        if (\array_key_exists('bitly_admin', $data) && \is_int($data['bitly_admin'])) {
+            $data['bitly_admin'] = (bool) $data['bitly_admin'];
+        }
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('actionDescription') && null !== $object->getActionDescription()) {
-                $data['action_description'] = $object->getActionDescription();
+        if (\array_key_exists('action_description', $data)) {
+            $object->setActionDescription($data['action_description']);
+            unset($data['action_description']);
+        }
+        if (\array_key_exists('action_login', $data)) {
+            $object->setActionLogin($data['action_login']);
+            unset($data['action_login']);
+        }
+        if (\array_key_exists('ts', $data)) {
+            $object->setTs($data['ts']);
+            unset($data['ts']);
+        }
+        if (\array_key_exists('user', $data)) {
+            $object->setUser($data['user']);
+            unset($data['user']);
+        }
+        if (\array_key_exists('action', $data)) {
+            $object->setAction($data['action']);
+            unset($data['action']);
+        }
+        if (\array_key_exists('org_guid', $data)) {
+            $object->setOrgGuid($data['org_guid']);
+            unset($data['org_guid']);
+        }
+        if (\array_key_exists('id', $data)) {
+            $object->setId($data['id']);
+            unset($data['id']);
+        }
+        if (\array_key_exists('country_code', $data)) {
+            $object->setCountryCode($data['country_code']);
+            unset($data['country_code']);
+        }
+        if (\array_key_exists('region', $data)) {
+            $object->setRegion($data['region']);
+            unset($data['region']);
+        }
+        if (\array_key_exists('sub_region', $data)) {
+            $object->setSubRegion($data['sub_region']);
+            unset($data['sub_region']);
+        }
+        if (\array_key_exists('city', $data)) {
+            $object->setCity($data['city']);
+            unset($data['city']);
+        }
+        if (\array_key_exists('isp', $data)) {
+            $object->setIsp($data['isp']);
+            unset($data['isp']);
+        }
+        if (\array_key_exists('bitly_admin', $data)) {
+            $object->setBitlyAdmin($data['bitly_admin']);
+            unset($data['bitly_admin']);
+        }
+        if (\array_key_exists('metadata', $data)) {
+            $values = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
+            foreach ($data['metadata'] as $key => $value) {
+                $values[$key] = $value;
             }
-            if ($object->isInitialized('actionLogin') && null !== $object->getActionLogin()) {
-                $data['action_login'] = $object->getActionLogin();
+            $object->setMetadata($values);
+            unset($data['metadata']);
+        }
+        foreach ($data as $key_1 => $value_1) {
+            if (preg_match('/.*/', (string) $key_1)) {
+                $object[$key_1] = $value_1;
             }
-            if ($object->isInitialized('ts') && null !== $object->getTs()) {
-                $data['ts'] = $object->getTs();
-            }
-            if ($object->isInitialized('user') && null !== $object->getUser()) {
-                $data['user'] = $object->getUser();
-            }
-            if ($object->isInitialized('action') && null !== $object->getAction()) {
-                $data['action'] = $object->getAction();
-            }
-            if ($object->isInitialized('orgGuid') && null !== $object->getOrgGuid()) {
-                $data['org_guid'] = $object->getOrgGuid();
-            }
-            if ($object->isInitialized('id') && null !== $object->getId()) {
-                $data['id'] = $object->getId();
-            }
-            if ($object->isInitialized('countryCode') && null !== $object->getCountryCode()) {
-                $data['country_code'] = $object->getCountryCode();
-            }
-            if ($object->isInitialized('region') && null !== $object->getRegion()) {
-                $data['region'] = $object->getRegion();
-            }
-            if ($object->isInitialized('subRegion') && null !== $object->getSubRegion()) {
-                $data['sub_region'] = $object->getSubRegion();
-            }
-            if ($object->isInitialized('city') && null !== $object->getCity()) {
-                $data['city'] = $object->getCity();
-            }
-            if ($object->isInitialized('isp') && null !== $object->getIsp()) {
-                $data['isp'] = $object->getIsp();
-            }
-            if ($object->isInitialized('bitlyAdmin') && null !== $object->getBitlyAdmin()) {
-                $data['bitly_admin'] = $object->getBitlyAdmin();
-            }
-            if ($object->isInitialized('metadata') && null !== $object->getMetadata()) {
-                $values = [];
-                foreach ($object->getMetadata() as $key => $value) {
-                    $values[$key] = $value;
-                }
-                $data['metadata'] = $values;
-            }
-            foreach ($object as $key_1 => $value_1) {
-                if (preg_match('/.*/', (string) $key_1)) {
-                    $data[$key_1] = $value_1;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\ActivityLog::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('actionDescription') && null !== $data->getActionDescription()) {
+            $dataArray['action_description'] = $data->getActionDescription();
         }
+        if ($data->isInitialized('actionLogin') && null !== $data->getActionLogin()) {
+            $dataArray['action_login'] = $data->getActionLogin();
+        }
+        if ($data->isInitialized('ts') && null !== $data->getTs()) {
+            $dataArray['ts'] = $data->getTs();
+        }
+        if ($data->isInitialized('user') && null !== $data->getUser()) {
+            $dataArray['user'] = $data->getUser();
+        }
+        if ($data->isInitialized('action') && null !== $data->getAction()) {
+            $dataArray['action'] = $data->getAction();
+        }
+        if ($data->isInitialized('orgGuid') && null !== $data->getOrgGuid()) {
+            $dataArray['org_guid'] = $data->getOrgGuid();
+        }
+        if ($data->isInitialized('id') && null !== $data->getId()) {
+            $dataArray['id'] = $data->getId();
+        }
+        if ($data->isInitialized('countryCode') && null !== $data->getCountryCode()) {
+            $dataArray['country_code'] = $data->getCountryCode();
+        }
+        if ($data->isInitialized('region') && null !== $data->getRegion()) {
+            $dataArray['region'] = $data->getRegion();
+        }
+        if ($data->isInitialized('subRegion') && null !== $data->getSubRegion()) {
+            $dataArray['sub_region'] = $data->getSubRegion();
+        }
+        if ($data->isInitialized('city') && null !== $data->getCity()) {
+            $dataArray['city'] = $data->getCity();
+        }
+        if ($data->isInitialized('isp') && null !== $data->getIsp()) {
+            $dataArray['isp'] = $data->getIsp();
+        }
+        if ($data->isInitialized('bitlyAdmin') && null !== $data->getBitlyAdmin()) {
+            $dataArray['bitly_admin'] = $data->getBitlyAdmin();
+        }
+        if ($data->isInitialized('metadata') && null !== $data->getMetadata()) {
+            $values = [];
+            foreach ($data->getMetadata() as $key => $value) {
+                $values[$key] = $value;
+            }
+            $dataArray['metadata'] = $values;
+        }
+        foreach ($data as $key_1 => $value_1) {
+            if (preg_match('/.*/', (string) $key_1)) {
+                $dataArray[$key_1] = $value_1;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\ActivityLog::class => false];
     }
 }

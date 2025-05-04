@@ -921,23 +921,6 @@ class Client extends Runtime\Client\Client
     }
 
     /**
-     * Retrieves logo images associated with QR codes by group.
-     *
-     * @param string $groupGuid A GUID for a Bitly group
-     * @param string $fetch     Fetch mode to use (can be OBJECT or RESPONSE)
-     *
-     * @return Model\QRLogoImagesResponse|\Psr\Http\Message\ResponseInterface|null
-     *
-     * @throws Exception\GetQRLogoImagesByGroupBadRequestException
-     * @throws Exception\GetQRLogoImagesByGroupForbiddenException
-     * @throws Exception\GetQRLogoImagesByGroupInternalServerErrorException
-     */
-    public function getQRLogoImagesByGroup(string $groupGuid, string $fetch = self::FETCH_OBJECT)
-    {
-        return $this->executeEndpoint(new Endpoint\GetQRLogoImagesByGroup($groupGuid), $fetch);
-    }
-
-    /**
      * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
      *
      * @return Model\Organizations|\Psr\Http\Message\ResponseInterface|null
@@ -1471,6 +1454,26 @@ class Client extends Runtime\Client\Client
     }
 
     /**
+     * Delete a QR Code that has not been redirected and is not for a custom link. Also deletes the associated link (if applicable).
+     *
+     * @param string $qrcodeId The QR Code ID
+     * @param string $fetch    Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\PublicDeleteQRCodeResponse|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\DeleteQRCodeBadRequestException
+     * @throws Exception\DeleteQRCodeForbiddenException
+     * @throws Exception\DeleteQRCodeNotFoundException
+     * @throws Exception\DeleteQRCodeGoneException
+     * @throws Exception\DeleteQRCodeTooManyRequestsException
+     * @throws Exception\DeleteQRCodeInternalServerErrorException
+     */
+    public function deleteQRCode(string $qrcodeId, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\DeleteQRCode($qrcodeId), $fetch);
+    }
+
+    /**
      * Gets the QR code with a matching id.
      *
      * @param string $qrcodeId The QR Code ID
@@ -1515,10 +1518,16 @@ class Client extends Runtime\Client\Client
      * @param string $groupGuid       A GUID for a Bitly group
      * @param array  $queryParameters {
      *
-     * @var string $has_render_customizations a filter value if the QRCode has any render customizations (like color or shape changes)
-     * @var string $archived a filter value if resource is archived or hidden
+     * @var string $has_render_customizations Whether or not QRCode has any render customizations (like color or shape changes)
      * @var int    $size The quantity of items to be be returned
-     * @var string $search_after Token used to search next batch of qr codes, only use response from API as input value.
+     * @var string $search_after token used to search next batch of qr codes, only use response from API as input value
+     * @var string $query The value that you would like to search
+     * @var int    $created_before Timestamp as an integer unix epoch (seconds only)
+     * @var int    $created_after Timestamp as an integer unix epoch (seconds only)
+     * @var string $archived Whether or not to include archived resources
+     * @var array  $creating_login Filter by the login of the authenticated user that created the QR Code
+     * @var array  $qrc_type
+     * @var string $is_gs1 a filter value if the resource is a GS1 QR code
      *             }
      *
      * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)

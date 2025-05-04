@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,175 +20,86 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class MetricsColumnNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class MetricsColumnNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\MetricsColumn::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\MetricsColumn::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\MetricsColumn();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('unix_from', $data)) {
-                $object->setUnixFrom($data['unix_from']);
-                unset($data['unix_from']);
-            }
-            if (\array_key_exists('unix_to', $data)) {
-                $object->setUnixTo($data['unix_to']);
-                unset($data['unix_to']);
-            }
-            if (\array_key_exists('csv_header_prefix', $data)) {
-                $object->setCsvHeaderPrefix($data['csv_header_prefix']);
-                unset($data['csv_header_prefix']);
-            }
-            if (\array_key_exists('minimum_count', $data)) {
-                $object->setMinimumCount($data['minimum_count']);
-                unset($data['minimum_count']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('unixFrom') && null !== $object->getUnixFrom()) {
-                $data['unix_from'] = $object->getUnixFrom();
-            }
-            if ($object->isInitialized('unixTo') && null !== $object->getUnixTo()) {
-                $data['unix_to'] = $object->getUnixTo();
-            }
-            if ($object->isInitialized('csvHeaderPrefix') && null !== $object->getCsvHeaderPrefix()) {
-                $data['csv_header_prefix'] = $object->getCsvHeaderPrefix();
-            }
-            if ($object->isInitialized('minimumCount') && null !== $object->getMinimumCount()) {
-                $data['minimum_count'] = $object->getMinimumCount();
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\MetricsColumn::class => false];
-        }
+        return $type === \Bitly\Model\MetricsColumn::class;
     }
-} else {
-    class MetricsColumnNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\MetricsColumn::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\MetricsColumn::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\MetricsColumn::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\MetricsColumn();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('unix_from', $data)) {
-                $object->setUnixFrom($data['unix_from']);
-                unset($data['unix_from']);
-            }
-            if (\array_key_exists('unix_to', $data)) {
-                $object->setUnixTo($data['unix_to']);
-                unset($data['unix_to']);
-            }
-            if (\array_key_exists('csv_header_prefix', $data)) {
-                $object->setCsvHeaderPrefix($data['csv_header_prefix']);
-                unset($data['csv_header_prefix']);
-            }
-            if (\array_key_exists('minimum_count', $data)) {
-                $object->setMinimumCount($data['minimum_count']);
-                unset($data['minimum_count']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
+        $object = new \Bitly\Model\MetricsColumn();
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('unixFrom') && null !== $object->getUnixFrom()) {
-                $data['unix_from'] = $object->getUnixFrom();
+        if (\array_key_exists('unix_from', $data)) {
+            $object->setUnixFrom($data['unix_from']);
+            unset($data['unix_from']);
+        }
+        if (\array_key_exists('unix_to', $data)) {
+            $object->setUnixTo($data['unix_to']);
+            unset($data['unix_to']);
+        }
+        if (\array_key_exists('csv_header_prefix', $data)) {
+            $object->setCsvHeaderPrefix($data['csv_header_prefix']);
+            unset($data['csv_header_prefix']);
+        }
+        if (\array_key_exists('minimum_count', $data)) {
+            $object->setMinimumCount($data['minimum_count']);
+            unset($data['minimum_count']);
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value;
             }
-            if ($object->isInitialized('unixTo') && null !== $object->getUnixTo()) {
-                $data['unix_to'] = $object->getUnixTo();
-            }
-            if ($object->isInitialized('csvHeaderPrefix') && null !== $object->getCsvHeaderPrefix()) {
-                $data['csv_header_prefix'] = $object->getCsvHeaderPrefix();
-            }
-            if ($object->isInitialized('minimumCount') && null !== $object->getMinimumCount()) {
-                $data['minimum_count'] = $object->getMinimumCount();
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\MetricsColumn::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('unixFrom') && null !== $data->getUnixFrom()) {
+            $dataArray['unix_from'] = $data->getUnixFrom();
         }
+        if ($data->isInitialized('unixTo') && null !== $data->getUnixTo()) {
+            $dataArray['unix_to'] = $data->getUnixTo();
+        }
+        if ($data->isInitialized('csvHeaderPrefix') && null !== $data->getCsvHeaderPrefix()) {
+            $dataArray['csv_header_prefix'] = $data->getCsvHeaderPrefix();
+        }
+        if ($data->isInitialized('minimumCount') && null !== $data->getMinimumCount()) {
+            $dataArray['minimum_count'] = $data->getMinimumCount();
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\MetricsColumn::class => false];
     }
 }

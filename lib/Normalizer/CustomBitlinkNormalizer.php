@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,193 +20,95 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class CustomBitlinkNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class CustomBitlinkNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\CustomBitlink::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\CustomBitlink::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\CustomBitlink();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('custom_bitlink', $data)) {
-                $object->setCustomBitlink($data['custom_bitlink']);
-                unset($data['custom_bitlink']);
-            }
-            if (\array_key_exists('bitlink', $data)) {
-                $values = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
-                foreach ($data['bitlink'] as $key => $value) {
-                    $values[$key] = $value;
-                }
-                $object->setBitlink($values);
-                unset($data['bitlink']);
-            }
-            if (\array_key_exists('bitlink_history', $data)) {
-                $values_1 = [];
-                foreach ($data['bitlink_history'] as $value_1) {
-                    $values_1[] = $this->denormalizer->denormalize($value_1, \Bitly\Model\CustomBitlinkHistory::class, 'json', $context);
-                }
-                $object->setBitlinkHistory($values_1);
-                unset($data['bitlink_history']);
-            }
-            foreach ($data as $key_1 => $value_2) {
-                if (preg_match('/.*/', (string) $key_1)) {
-                    $object[$key_1] = $value_2;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('customBitlink') && null !== $object->getCustomBitlink()) {
-                $data['custom_bitlink'] = $object->getCustomBitlink();
-            }
-            if ($object->isInitialized('bitlink') && null !== $object->getBitlink()) {
-                $values = [];
-                foreach ($object->getBitlink() as $key => $value) {
-                    $values[$key] = $value;
-                }
-                $data['bitlink'] = $values;
-            }
-            if ($object->isInitialized('bitlinkHistory') && null !== $object->getBitlinkHistory()) {
-                $values_1 = [];
-                foreach ($object->getBitlinkHistory() as $value_1) {
-                    $values_1[] = $this->normalizer->normalize($value_1, 'json', $context);
-                }
-                $data['bitlink_history'] = $values_1;
-            }
-            foreach ($object as $key_1 => $value_2) {
-                if (preg_match('/.*/', (string) $key_1)) {
-                    $data[$key_1] = $value_2;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\CustomBitlink::class => false];
-        }
+        return $type === \Bitly\Model\CustomBitlink::class;
     }
-} else {
-    class CustomBitlinkNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\CustomBitlink::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\CustomBitlink::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\CustomBitlink::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\CustomBitlink();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('custom_bitlink', $data)) {
-                $object->setCustomBitlink($data['custom_bitlink']);
-                unset($data['custom_bitlink']);
-            }
-            if (\array_key_exists('bitlink', $data)) {
-                $values = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
-                foreach ($data['bitlink'] as $key => $value) {
-                    $values[$key] = $value;
-                }
-                $object->setBitlink($values);
-                unset($data['bitlink']);
-            }
-            if (\array_key_exists('bitlink_history', $data)) {
-                $values_1 = [];
-                foreach ($data['bitlink_history'] as $value_1) {
-                    $values_1[] = $this->denormalizer->denormalize($value_1, \Bitly\Model\CustomBitlinkHistory::class, 'json', $context);
-                }
-                $object->setBitlinkHistory($values_1);
-                unset($data['bitlink_history']);
-            }
-            foreach ($data as $key_1 => $value_2) {
-                if (preg_match('/.*/', (string) $key_1)) {
-                    $object[$key_1] = $value_2;
-                }
-            }
-
+        $object = new \Bitly\Model\CustomBitlink();
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('customBitlink') && null !== $object->getCustomBitlink()) {
-                $data['custom_bitlink'] = $object->getCustomBitlink();
+        if (\array_key_exists('custom_bitlink', $data)) {
+            $object->setCustomBitlink($data['custom_bitlink']);
+            unset($data['custom_bitlink']);
+        }
+        if (\array_key_exists('bitlink', $data)) {
+            $values = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
+            foreach ($data['bitlink'] as $key => $value) {
+                $values[$key] = $value;
             }
-            if ($object->isInitialized('bitlink') && null !== $object->getBitlink()) {
-                $values = [];
-                foreach ($object->getBitlink() as $key => $value) {
-                    $values[$key] = $value;
-                }
-                $data['bitlink'] = $values;
+            $object->setBitlink($values);
+            unset($data['bitlink']);
+        }
+        if (\array_key_exists('bitlink_history', $data)) {
+            $values_1 = [];
+            foreach ($data['bitlink_history'] as $value_1) {
+                $values_1[] = $this->denormalizer->denormalize($value_1, \Bitly\Model\CustomBitlinkHistory::class, 'json', $context);
             }
-            if ($object->isInitialized('bitlinkHistory') && null !== $object->getBitlinkHistory()) {
-                $values_1 = [];
-                foreach ($object->getBitlinkHistory() as $value_1) {
-                    $values_1[] = $this->normalizer->normalize($value_1, 'json', $context);
-                }
-                $data['bitlink_history'] = $values_1;
+            $object->setBitlinkHistory($values_1);
+            unset($data['bitlink_history']);
+        }
+        foreach ($data as $key_1 => $value_2) {
+            if (preg_match('/.*/', (string) $key_1)) {
+                $object[$key_1] = $value_2;
             }
-            foreach ($object as $key_1 => $value_2) {
-                if (preg_match('/.*/', (string) $key_1)) {
-                    $data[$key_1] = $value_2;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\CustomBitlink::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('customBitlink') && null !== $data->getCustomBitlink()) {
+            $dataArray['custom_bitlink'] = $data->getCustomBitlink();
         }
+        if ($data->isInitialized('bitlink') && null !== $data->getBitlink()) {
+            $values = [];
+            foreach ($data->getBitlink() as $key => $value) {
+                $values[$key] = $value;
+            }
+            $dataArray['bitlink'] = $values;
+        }
+        if ($data->isInitialized('bitlinkHistory') && null !== $data->getBitlinkHistory()) {
+            $values_1 = [];
+            foreach ($data->getBitlinkHistory() as $value_1) {
+                $values_1[] = $this->normalizer->normalize($value_1, 'json', $context);
+            }
+            $dataArray['bitlink_history'] = $values_1;
+        }
+        foreach ($data as $key_1 => $value_2) {
+            if (preg_match('/.*/', (string) $key_1)) {
+                $dataArray[$key_1] = $value_2;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\CustomBitlink::class => false];
     }
 }

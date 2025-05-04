@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,301 +20,149 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class DeeplinkAppNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class DeeplinkAppNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\DeeplinkApp::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\DeeplinkApp::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\DeeplinkApp();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('guid', $data)) {
-                $object->setGuid($data['guid']);
-                unset($data['guid']);
-            }
-            if (\array_key_exists('organization_guid', $data)) {
-                $object->setOrganizationGuid($data['organization_guid']);
-                unset($data['organization_guid']);
-            }
-            if (\array_key_exists('third_party_app_id', $data)) {
-                $object->setThirdPartyAppId($data['third_party_app_id']);
-                unset($data['third_party_app_id']);
-            }
-            if (\array_key_exists('scheme', $data)) {
-                $object->setScheme($data['scheme']);
-                unset($data['scheme']);
-            }
-            if (\array_key_exists('name', $data)) {
-                $object->setName($data['name']);
-                unset($data['name']);
-            }
-            if (\array_key_exists('icon_url', $data)) {
-                $object->setIconUrl($data['icon_url']);
-                unset($data['icon_url']);
-            }
-            if (\array_key_exists('install_url', $data)) {
-                $object->setInstallUrl($data['install_url']);
-                unset($data['install_url']);
-            }
-            if (\array_key_exists('os', $data)) {
-                $object->setOs($data['os']);
-                unset($data['os']);
-            }
-            if (\array_key_exists('modified_ts', $data)) {
-                $object->setModifiedTs($data['modified_ts']);
-                unset($data['modified_ts']);
-            }
-            if (\array_key_exists('created_ts', $data)) {
-                $object->setCreatedTs($data['created_ts']);
-                unset($data['created_ts']);
-            }
-            if (\array_key_exists('legacy_app_id', $data)) {
-                $object->setLegacyAppId($data['legacy_app_id']);
-                unset($data['legacy_app_id']);
-            }
-            if (\array_key_exists('apple_app_entitlement_id', $data)) {
-                $object->setAppleAppEntitlementId($data['apple_app_entitlement_id']);
-                unset($data['apple_app_entitlement_id']);
-            }
-            if (\array_key_exists('android_sha256', $data)) {
-                $values = [];
-                foreach ($data['android_sha256'] as $value) {
-                    $values[] = $value;
-                }
-                $object->setAndroidSha256($values);
-                unset($data['android_sha256']);
-            }
-            foreach ($data as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_1;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('guid') && null !== $object->getGuid()) {
-                $data['guid'] = $object->getGuid();
-            }
-            if ($object->isInitialized('organizationGuid') && null !== $object->getOrganizationGuid()) {
-                $data['organization_guid'] = $object->getOrganizationGuid();
-            }
-            $data['third_party_app_id'] = $object->getThirdPartyAppId();
-            if ($object->isInitialized('scheme') && null !== $object->getScheme()) {
-                $data['scheme'] = $object->getScheme();
-            }
-            $data['name'] = $object->getName();
-            if ($object->isInitialized('iconUrl') && null !== $object->getIconUrl()) {
-                $data['icon_url'] = $object->getIconUrl();
-            }
-            $data['install_url'] = $object->getInstallUrl();
-            $data['os'] = $object->getOs();
-            if ($object->isInitialized('modifiedTs') && null !== $object->getModifiedTs()) {
-                $data['modified_ts'] = $object->getModifiedTs();
-            }
-            if ($object->isInitialized('createdTs') && null !== $object->getCreatedTs()) {
-                $data['created_ts'] = $object->getCreatedTs();
-            }
-            if ($object->isInitialized('legacyAppId') && null !== $object->getLegacyAppId()) {
-                $data['legacy_app_id'] = $object->getLegacyAppId();
-            }
-            if ($object->isInitialized('appleAppEntitlementId') && null !== $object->getAppleAppEntitlementId()) {
-                $data['apple_app_entitlement_id'] = $object->getAppleAppEntitlementId();
-            }
-            if ($object->isInitialized('androidSha256') && null !== $object->getAndroidSha256()) {
-                $values = [];
-                foreach ($object->getAndroidSha256() as $value) {
-                    $values[] = $value;
-                }
-                $data['android_sha256'] = $values;
-            }
-            foreach ($object as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_1;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\DeeplinkApp::class => false];
-        }
+        return $type === \Bitly\Model\DeeplinkApp::class;
     }
-} else {
-    class DeeplinkAppNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\DeeplinkApp::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\DeeplinkApp::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\DeeplinkApp::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\DeeplinkApp();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('guid', $data)) {
-                $object->setGuid($data['guid']);
-                unset($data['guid']);
-            }
-            if (\array_key_exists('organization_guid', $data)) {
-                $object->setOrganizationGuid($data['organization_guid']);
-                unset($data['organization_guid']);
-            }
-            if (\array_key_exists('third_party_app_id', $data)) {
-                $object->setThirdPartyAppId($data['third_party_app_id']);
-                unset($data['third_party_app_id']);
-            }
-            if (\array_key_exists('scheme', $data)) {
-                $object->setScheme($data['scheme']);
-                unset($data['scheme']);
-            }
-            if (\array_key_exists('name', $data)) {
-                $object->setName($data['name']);
-                unset($data['name']);
-            }
-            if (\array_key_exists('icon_url', $data)) {
-                $object->setIconUrl($data['icon_url']);
-                unset($data['icon_url']);
-            }
-            if (\array_key_exists('install_url', $data)) {
-                $object->setInstallUrl($data['install_url']);
-                unset($data['install_url']);
-            }
-            if (\array_key_exists('os', $data)) {
-                $object->setOs($data['os']);
-                unset($data['os']);
-            }
-            if (\array_key_exists('modified_ts', $data)) {
-                $object->setModifiedTs($data['modified_ts']);
-                unset($data['modified_ts']);
-            }
-            if (\array_key_exists('created_ts', $data)) {
-                $object->setCreatedTs($data['created_ts']);
-                unset($data['created_ts']);
-            }
-            if (\array_key_exists('legacy_app_id', $data)) {
-                $object->setLegacyAppId($data['legacy_app_id']);
-                unset($data['legacy_app_id']);
-            }
-            if (\array_key_exists('apple_app_entitlement_id', $data)) {
-                $object->setAppleAppEntitlementId($data['apple_app_entitlement_id']);
-                unset($data['apple_app_entitlement_id']);
-            }
-            if (\array_key_exists('android_sha256', $data)) {
-                $values = [];
-                foreach ($data['android_sha256'] as $value) {
-                    $values[] = $value;
-                }
-                $object->setAndroidSha256($values);
-                unset($data['android_sha256']);
-            }
-            foreach ($data as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_1;
-                }
-            }
-
+        $object = new \Bitly\Model\DeeplinkApp();
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('guid') && null !== $object->getGuid()) {
-                $data['guid'] = $object->getGuid();
+        if (\array_key_exists('guid', $data)) {
+            $object->setGuid($data['guid']);
+            unset($data['guid']);
+        }
+        if (\array_key_exists('organization_guid', $data)) {
+            $object->setOrganizationGuid($data['organization_guid']);
+            unset($data['organization_guid']);
+        }
+        if (\array_key_exists('third_party_app_id', $data)) {
+            $object->setThirdPartyAppId($data['third_party_app_id']);
+            unset($data['third_party_app_id']);
+        }
+        if (\array_key_exists('scheme', $data)) {
+            $object->setScheme($data['scheme']);
+            unset($data['scheme']);
+        }
+        if (\array_key_exists('name', $data)) {
+            $object->setName($data['name']);
+            unset($data['name']);
+        }
+        if (\array_key_exists('icon_url', $data)) {
+            $object->setIconUrl($data['icon_url']);
+            unset($data['icon_url']);
+        }
+        if (\array_key_exists('install_url', $data)) {
+            $object->setInstallUrl($data['install_url']);
+            unset($data['install_url']);
+        }
+        if (\array_key_exists('os', $data)) {
+            $object->setOs($data['os']);
+            unset($data['os']);
+        }
+        if (\array_key_exists('modified_ts', $data)) {
+            $object->setModifiedTs($data['modified_ts']);
+            unset($data['modified_ts']);
+        }
+        if (\array_key_exists('created_ts', $data)) {
+            $object->setCreatedTs($data['created_ts']);
+            unset($data['created_ts']);
+        }
+        if (\array_key_exists('legacy_app_id', $data)) {
+            $object->setLegacyAppId($data['legacy_app_id']);
+            unset($data['legacy_app_id']);
+        }
+        if (\array_key_exists('apple_app_entitlement_id', $data)) {
+            $object->setAppleAppEntitlementId($data['apple_app_entitlement_id']);
+            unset($data['apple_app_entitlement_id']);
+        }
+        if (\array_key_exists('android_sha256', $data)) {
+            $values = [];
+            foreach ($data['android_sha256'] as $value) {
+                $values[] = $value;
             }
-            if ($object->isInitialized('organizationGuid') && null !== $object->getOrganizationGuid()) {
-                $data['organization_guid'] = $object->getOrganizationGuid();
+            $object->setAndroidSha256($values);
+            unset($data['android_sha256']);
+        }
+        foreach ($data as $key => $value_1) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value_1;
             }
-            $data['third_party_app_id'] = $object->getThirdPartyAppId();
-            if ($object->isInitialized('scheme') && null !== $object->getScheme()) {
-                $data['scheme'] = $object->getScheme();
-            }
-            $data['name'] = $object->getName();
-            if ($object->isInitialized('iconUrl') && null !== $object->getIconUrl()) {
-                $data['icon_url'] = $object->getIconUrl();
-            }
-            $data['install_url'] = $object->getInstallUrl();
-            $data['os'] = $object->getOs();
-            if ($object->isInitialized('modifiedTs') && null !== $object->getModifiedTs()) {
-                $data['modified_ts'] = $object->getModifiedTs();
-            }
-            if ($object->isInitialized('createdTs') && null !== $object->getCreatedTs()) {
-                $data['created_ts'] = $object->getCreatedTs();
-            }
-            if ($object->isInitialized('legacyAppId') && null !== $object->getLegacyAppId()) {
-                $data['legacy_app_id'] = $object->getLegacyAppId();
-            }
-            if ($object->isInitialized('appleAppEntitlementId') && null !== $object->getAppleAppEntitlementId()) {
-                $data['apple_app_entitlement_id'] = $object->getAppleAppEntitlementId();
-            }
-            if ($object->isInitialized('androidSha256') && null !== $object->getAndroidSha256()) {
-                $values = [];
-                foreach ($object->getAndroidSha256() as $value) {
-                    $values[] = $value;
-                }
-                $data['android_sha256'] = $values;
-            }
-            foreach ($object as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_1;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\DeeplinkApp::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('guid') && null !== $data->getGuid()) {
+            $dataArray['guid'] = $data->getGuid();
         }
+        if ($data->isInitialized('organizationGuid') && null !== $data->getOrganizationGuid()) {
+            $dataArray['organization_guid'] = $data->getOrganizationGuid();
+        }
+        $dataArray['third_party_app_id'] = $data->getThirdPartyAppId();
+        if ($data->isInitialized('scheme') && null !== $data->getScheme()) {
+            $dataArray['scheme'] = $data->getScheme();
+        }
+        $dataArray['name'] = $data->getName();
+        if ($data->isInitialized('iconUrl') && null !== $data->getIconUrl()) {
+            $dataArray['icon_url'] = $data->getIconUrl();
+        }
+        $dataArray['install_url'] = $data->getInstallUrl();
+        $dataArray['os'] = $data->getOs();
+        if ($data->isInitialized('modifiedTs') && null !== $data->getModifiedTs()) {
+            $dataArray['modified_ts'] = $data->getModifiedTs();
+        }
+        if ($data->isInitialized('createdTs') && null !== $data->getCreatedTs()) {
+            $dataArray['created_ts'] = $data->getCreatedTs();
+        }
+        if ($data->isInitialized('legacyAppId') && null !== $data->getLegacyAppId()) {
+            $dataArray['legacy_app_id'] = $data->getLegacyAppId();
+        }
+        if ($data->isInitialized('appleAppEntitlementId') && null !== $data->getAppleAppEntitlementId()) {
+            $dataArray['apple_app_entitlement_id'] = $data->getAppleAppEntitlementId();
+        }
+        if ($data->isInitialized('androidSha256') && null !== $data->getAndroidSha256()) {
+            $values = [];
+            foreach ($data->getAndroidSha256() as $value) {
+                $values[] = $value;
+            }
+            $dataArray['android_sha256'] = $values;
+        }
+        foreach ($data as $key => $value_1) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value_1;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\DeeplinkApp::class => false];
     }
 }

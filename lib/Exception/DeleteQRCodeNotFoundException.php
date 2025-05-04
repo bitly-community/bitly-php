@@ -10,27 +10,27 @@ declare(strict_types=1);
 
 namespace Bitly\Exception;
 
-class GetQRLogoImagesByGroupForbiddenException extends ForbiddenException
+class DeleteQRCodeNotFoundException extends NotFoundException
 {
     /**
-     * @var \Bitly\Model\Forbidden
+     * @var \Bitly\Model\NotFound
      */
-    private $forbidden;
+    private $notFound;
     /**
      * @var \Psr\Http\Message\ResponseInterface
      */
     private $response;
 
-    public function __construct(\Bitly\Model\Forbidden $forbidden, \Psr\Http\Message\ResponseInterface $response)
+    public function __construct(\Bitly\Model\NotFound $notFound, \Psr\Http\Message\ResponseInterface $response)
     {
-        parent::__construct('FORBIDDEN');
-        $this->forbidden = $forbidden;
+        parent::__construct('NOT_FOUND');
+        $this->notFound = $notFound;
         $this->response = $response;
     }
 
-    public function getForbidden(): \Bitly\Model\Forbidden
+    public function getNotFound(): \Bitly\Model\NotFound
     {
-        return $this->forbidden;
+        return $this->notFound;
     }
 
     public function getResponse(): \Psr\Http\Message\ResponseInterface

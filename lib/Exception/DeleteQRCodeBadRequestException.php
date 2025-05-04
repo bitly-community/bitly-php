@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace Bitly\Exception;
 
-class GetQRLogoImagesByGroupBadRequestException extends BadRequestException
+class DeleteQRCodeBadRequestException extends BadRequestException
 {
     /**
      * @var \Bitly\Model\BadRequest

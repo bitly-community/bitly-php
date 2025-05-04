@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,309 +20,159 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class BitlinkHistoryNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class BitlinkHistoryNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\BitlinkHistory::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\BitlinkHistory::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\BitlinkHistory();
-            if (\array_key_exists('version', $data) && \is_int($data['version'])) {
-                $data['version'] = (float) $data['version'];
-            }
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('references', $data)) {
-                $values = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
-                foreach ($data['references'] as $key => $value) {
-                    $values[$key] = $value;
-                }
-                $object->setReferences($values);
-                unset($data['references']);
-            }
-            if (\array_key_exists('id', $data)) {
-                $object->setId($data['id']);
-                unset($data['id']);
-            }
-            if (\array_key_exists('group_guid', $data)) {
-                $object->setGroupGuid($data['group_guid']);
-                unset($data['group_guid']);
-            }
-            if (\array_key_exists('target_bitlink_id', $data)) {
-                $object->setTargetBitlinkId($data['target_bitlink_id']);
-                unset($data['target_bitlink_id']);
-            }
-            if (\array_key_exists('hash', $data)) {
-                $object->setHash($data['hash']);
-                unset($data['hash']);
-            }
-            if (\array_key_exists('login', $data)) {
-                $object->setLogin($data['login']);
-                unset($data['login']);
-            }
-            if (\array_key_exists('long_url', $data)) {
-                $object->setLongUrl($data['long_url']);
-                unset($data['long_url']);
-            }
-            if (\array_key_exists('created_at', $data)) {
-                $object->setCreatedAt($data['created_at']);
-                unset($data['created_at']);
-            }
-            if (\array_key_exists('deactivated_at', $data)) {
-                $object->setDeactivatedAt($data['deactivated_at']);
-                unset($data['deactivated_at']);
-            }
-            if (\array_key_exists('is_active', $data)) {
-                $object->setIsActive($data['is_active']);
-                unset($data['is_active']);
-            }
-            if (\array_key_exists('is_deleted', $data)) {
-                $object->setIsDeleted($data['is_deleted']);
-                unset($data['is_deleted']);
-            }
-            if (\array_key_exists('version', $data)) {
-                $object->setVersion($data['version']);
-                unset($data['version']);
-            }
-            foreach ($data as $key_1 => $value_1) {
-                if (preg_match('/.*/', (string) $key_1)) {
-                    $object[$key_1] = $value_1;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('references') && null !== $object->getReferences()) {
-                $values = [];
-                foreach ($object->getReferences() as $key => $value) {
-                    $values[$key] = $value;
-                }
-                $data['references'] = $values;
-            }
-            if ($object->isInitialized('id') && null !== $object->getId()) {
-                $data['id'] = $object->getId();
-            }
-            if ($object->isInitialized('groupGuid') && null !== $object->getGroupGuid()) {
-                $data['group_guid'] = $object->getGroupGuid();
-            }
-            if ($object->isInitialized('targetBitlinkId') && null !== $object->getTargetBitlinkId()) {
-                $data['target_bitlink_id'] = $object->getTargetBitlinkId();
-            }
-            if ($object->isInitialized('hash') && null !== $object->getHash()) {
-                $data['hash'] = $object->getHash();
-            }
-            if ($object->isInitialized('login') && null !== $object->getLogin()) {
-                $data['login'] = $object->getLogin();
-            }
-            if ($object->isInitialized('longUrl') && null !== $object->getLongUrl()) {
-                $data['long_url'] = $object->getLongUrl();
-            }
-            if ($object->isInitialized('createdAt') && null !== $object->getCreatedAt()) {
-                $data['created_at'] = $object->getCreatedAt();
-            }
-            if ($object->isInitialized('deactivatedAt') && null !== $object->getDeactivatedAt()) {
-                $data['deactivated_at'] = $object->getDeactivatedAt();
-            }
-            if ($object->isInitialized('isActive') && null !== $object->getIsActive()) {
-                $data['is_active'] = $object->getIsActive();
-            }
-            if ($object->isInitialized('isDeleted') && null !== $object->getIsDeleted()) {
-                $data['is_deleted'] = $object->getIsDeleted();
-            }
-            if ($object->isInitialized('version') && null !== $object->getVersion()) {
-                $data['version'] = $object->getVersion();
-            }
-            foreach ($object as $key_1 => $value_1) {
-                if (preg_match('/.*/', (string) $key_1)) {
-                    $data[$key_1] = $value_1;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\BitlinkHistory::class => false];
-        }
+        return $type === \Bitly\Model\BitlinkHistory::class;
     }
-} else {
-    class BitlinkHistoryNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\BitlinkHistory::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\BitlinkHistory::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\BitlinkHistory::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\BitlinkHistory();
-            if (\array_key_exists('version', $data) && \is_int($data['version'])) {
-                $data['version'] = (float) $data['version'];
-            }
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('references', $data)) {
-                $values = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
-                foreach ($data['references'] as $key => $value) {
-                    $values[$key] = $value;
-                }
-                $object->setReferences($values);
-                unset($data['references']);
-            }
-            if (\array_key_exists('id', $data)) {
-                $object->setId($data['id']);
-                unset($data['id']);
-            }
-            if (\array_key_exists('group_guid', $data)) {
-                $object->setGroupGuid($data['group_guid']);
-                unset($data['group_guid']);
-            }
-            if (\array_key_exists('target_bitlink_id', $data)) {
-                $object->setTargetBitlinkId($data['target_bitlink_id']);
-                unset($data['target_bitlink_id']);
-            }
-            if (\array_key_exists('hash', $data)) {
-                $object->setHash($data['hash']);
-                unset($data['hash']);
-            }
-            if (\array_key_exists('login', $data)) {
-                $object->setLogin($data['login']);
-                unset($data['login']);
-            }
-            if (\array_key_exists('long_url', $data)) {
-                $object->setLongUrl($data['long_url']);
-                unset($data['long_url']);
-            }
-            if (\array_key_exists('created_at', $data)) {
-                $object->setCreatedAt($data['created_at']);
-                unset($data['created_at']);
-            }
-            if (\array_key_exists('deactivated_at', $data)) {
-                $object->setDeactivatedAt($data['deactivated_at']);
-                unset($data['deactivated_at']);
-            }
-            if (\array_key_exists('is_active', $data)) {
-                $object->setIsActive($data['is_active']);
-                unset($data['is_active']);
-            }
-            if (\array_key_exists('is_deleted', $data)) {
-                $object->setIsDeleted($data['is_deleted']);
-                unset($data['is_deleted']);
-            }
-            if (\array_key_exists('version', $data)) {
-                $object->setVersion($data['version']);
-                unset($data['version']);
-            }
-            foreach ($data as $key_1 => $value_1) {
-                if (preg_match('/.*/', (string) $key_1)) {
-                    $object[$key_1] = $value_1;
-                }
-            }
-
+        $object = new \Bitly\Model\BitlinkHistory();
+        if (\array_key_exists('version', $data) && \is_int($data['version'])) {
+            $data['version'] = (float) $data['version'];
+        }
+        if (\array_key_exists('is_active', $data) && \is_int($data['is_active'])) {
+            $data['is_active'] = (bool) $data['is_active'];
+        }
+        if (\array_key_exists('is_deleted', $data) && \is_int($data['is_deleted'])) {
+            $data['is_deleted'] = (bool) $data['is_deleted'];
+        }
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('references') && null !== $object->getReferences()) {
-                $values = [];
-                foreach ($object->getReferences() as $key => $value) {
-                    $values[$key] = $value;
-                }
-                $data['references'] = $values;
+        if (\array_key_exists('references', $data)) {
+            $values = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
+            foreach ($data['references'] as $key => $value) {
+                $values[$key] = $value;
             }
-            if ($object->isInitialized('id') && null !== $object->getId()) {
-                $data['id'] = $object->getId();
+            $object->setReferences($values);
+            unset($data['references']);
+        }
+        if (\array_key_exists('id', $data)) {
+            $object->setId($data['id']);
+            unset($data['id']);
+        }
+        if (\array_key_exists('group_guid', $data)) {
+            $object->setGroupGuid($data['group_guid']);
+            unset($data['group_guid']);
+        }
+        if (\array_key_exists('target_bitlink_id', $data)) {
+            $object->setTargetBitlinkId($data['target_bitlink_id']);
+            unset($data['target_bitlink_id']);
+        }
+        if (\array_key_exists('hash', $data)) {
+            $object->setHash($data['hash']);
+            unset($data['hash']);
+        }
+        if (\array_key_exists('login', $data)) {
+            $object->setLogin($data['login']);
+            unset($data['login']);
+        }
+        if (\array_key_exists('long_url', $data)) {
+            $object->setLongUrl($data['long_url']);
+            unset($data['long_url']);
+        }
+        if (\array_key_exists('created_at', $data)) {
+            $object->setCreatedAt($data['created_at']);
+            unset($data['created_at']);
+        }
+        if (\array_key_exists('deactivated_at', $data)) {
+            $object->setDeactivatedAt($data['deactivated_at']);
+            unset($data['deactivated_at']);
+        }
+        if (\array_key_exists('is_active', $data)) {
+            $object->setIsActive($data['is_active']);
+            unset($data['is_active']);
+        }
+        if (\array_key_exists('is_deleted', $data)) {
+            $object->setIsDeleted($data['is_deleted']);
+            unset($data['is_deleted']);
+        }
+        if (\array_key_exists('version', $data)) {
+            $object->setVersion($data['version']);
+            unset($data['version']);
+        }
+        foreach ($data as $key_1 => $value_1) {
+            if (preg_match('/.*/', (string) $key_1)) {
+                $object[$key_1] = $value_1;
             }
-            if ($object->isInitialized('groupGuid') && null !== $object->getGroupGuid()) {
-                $data['group_guid'] = $object->getGroupGuid();
-            }
-            if ($object->isInitialized('targetBitlinkId') && null !== $object->getTargetBitlinkId()) {
-                $data['target_bitlink_id'] = $object->getTargetBitlinkId();
-            }
-            if ($object->isInitialized('hash') && null !== $object->getHash()) {
-                $data['hash'] = $object->getHash();
-            }
-            if ($object->isInitialized('login') && null !== $object->getLogin()) {
-                $data['login'] = $object->getLogin();
-            }
-            if ($object->isInitialized('longUrl') && null !== $object->getLongUrl()) {
-                $data['long_url'] = $object->getLongUrl();
-            }
-            if ($object->isInitialized('createdAt') && null !== $object->getCreatedAt()) {
-                $data['created_at'] = $object->getCreatedAt();
-            }
-            if ($object->isInitialized('deactivatedAt') && null !== $object->getDeactivatedAt()) {
-                $data['deactivated_at'] = $object->getDeactivatedAt();
-            }
-            if ($object->isInitialized('isActive') && null !== $object->getIsActive()) {
-                $data['is_active'] = $object->getIsActive();
-            }
-            if ($object->isInitialized('isDeleted') && null !== $object->getIsDeleted()) {
-                $data['is_deleted'] = $object->getIsDeleted();
-            }
-            if ($object->isInitialized('version') && null !== $object->getVersion()) {
-                $data['version'] = $object->getVersion();
-            }
-            foreach ($object as $key_1 => $value_1) {
-                if (preg_match('/.*/', (string) $key_1)) {
-                    $data[$key_1] = $value_1;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\BitlinkHistory::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('references') && null !== $data->getReferences()) {
+            $values = [];
+            foreach ($data->getReferences() as $key => $value) {
+                $values[$key] = $value;
+            }
+            $dataArray['references'] = $values;
         }
+        if ($data->isInitialized('id') && null !== $data->getId()) {
+            $dataArray['id'] = $data->getId();
+        }
+        if ($data->isInitialized('groupGuid') && null !== $data->getGroupGuid()) {
+            $dataArray['group_guid'] = $data->getGroupGuid();
+        }
+        if ($data->isInitialized('targetBitlinkId') && null !== $data->getTargetBitlinkId()) {
+            $dataArray['target_bitlink_id'] = $data->getTargetBitlinkId();
+        }
+        if ($data->isInitialized('hash') && null !== $data->getHash()) {
+            $dataArray['hash'] = $data->getHash();
+        }
+        if ($data->isInitialized('login') && null !== $data->getLogin()) {
+            $dataArray['login'] = $data->getLogin();
+        }
+        if ($data->isInitialized('longUrl') && null !== $data->getLongUrl()) {
+            $dataArray['long_url'] = $data->getLongUrl();
+        }
+        if ($data->isInitialized('createdAt') && null !== $data->getCreatedAt()) {
+            $dataArray['created_at'] = $data->getCreatedAt();
+        }
+        if ($data->isInitialized('deactivatedAt') && null !== $data->getDeactivatedAt()) {
+            $dataArray['deactivated_at'] = $data->getDeactivatedAt();
+        }
+        if ($data->isInitialized('isActive') && null !== $data->getIsActive()) {
+            $dataArray['is_active'] = $data->getIsActive();
+        }
+        if ($data->isInitialized('isDeleted') && null !== $data->getIsDeleted()) {
+            $dataArray['is_deleted'] = $data->getIsDeleted();
+        }
+        if ($data->isInitialized('version') && null !== $data->getVersion()) {
+            $dataArray['version'] = $data->getVersion();
+        }
+        foreach ($data as $key_1 => $value_1) {
+            if (preg_match('/.*/', (string) $key_1)) {
+                $dataArray[$key_1] = $value_1;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\BitlinkHistory::class => false];
     }
 }

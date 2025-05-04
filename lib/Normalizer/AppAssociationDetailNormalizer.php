@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,175 +20,89 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class AppAssociationDetailNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class AppAssociationDetailNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\AppAssociationDetail::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\AppAssociationDetail::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\AppAssociationDetail();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('app_guid', $data)) {
-                $object->setAppGuid($data['app_guid']);
-                unset($data['app_guid']);
-            }
-            if (\array_key_exists('priority', $data)) {
-                $object->setPriority($data['priority']);
-                unset($data['priority']);
-            }
-            if (\array_key_exists('os', $data)) {
-                $object->setOs($data['os']);
-                unset($data['os']);
-            }
-            if (\array_key_exists('fallback', $data)) {
-                $object->setFallback($data['fallback']);
-                unset($data['fallback']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('appGuid') && null !== $object->getAppGuid()) {
-                $data['app_guid'] = $object->getAppGuid();
-            }
-            if ($object->isInitialized('priority') && null !== $object->getPriority()) {
-                $data['priority'] = $object->getPriority();
-            }
-            if ($object->isInitialized('os') && null !== $object->getOs()) {
-                $data['os'] = $object->getOs();
-            }
-            if ($object->isInitialized('fallback') && null !== $object->getFallback()) {
-                $data['fallback'] = $object->getFallback();
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\AppAssociationDetail::class => false];
-        }
+        return $type === \Bitly\Model\AppAssociationDetail::class;
     }
-} else {
-    class AppAssociationDetailNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\AppAssociationDetail::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\AppAssociationDetail::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\AppAssociationDetail::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\AppAssociationDetail();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('app_guid', $data)) {
-                $object->setAppGuid($data['app_guid']);
-                unset($data['app_guid']);
-            }
-            if (\array_key_exists('priority', $data)) {
-                $object->setPriority($data['priority']);
-                unset($data['priority']);
-            }
-            if (\array_key_exists('os', $data)) {
-                $object->setOs($data['os']);
-                unset($data['os']);
-            }
-            if (\array_key_exists('fallback', $data)) {
-                $object->setFallback($data['fallback']);
-                unset($data['fallback']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
+        $object = new \Bitly\Model\AppAssociationDetail();
+        if (\array_key_exists('fallback', $data) && \is_int($data['fallback'])) {
+            $data['fallback'] = (bool) $data['fallback'];
+        }
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('appGuid') && null !== $object->getAppGuid()) {
-                $data['app_guid'] = $object->getAppGuid();
+        if (\array_key_exists('app_guid', $data)) {
+            $object->setAppGuid($data['app_guid']);
+            unset($data['app_guid']);
+        }
+        if (\array_key_exists('priority', $data)) {
+            $object->setPriority($data['priority']);
+            unset($data['priority']);
+        }
+        if (\array_key_exists('os', $data)) {
+            $object->setOs($data['os']);
+            unset($data['os']);
+        }
+        if (\array_key_exists('fallback', $data)) {
+            $object->setFallback($data['fallback']);
+            unset($data['fallback']);
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value;
             }
-            if ($object->isInitialized('priority') && null !== $object->getPriority()) {
-                $data['priority'] = $object->getPriority();
-            }
-            if ($object->isInitialized('os') && null !== $object->getOs()) {
-                $data['os'] = $object->getOs();
-            }
-            if ($object->isInitialized('fallback') && null !== $object->getFallback()) {
-                $data['fallback'] = $object->getFallback();
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\AppAssociationDetail::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('appGuid') && null !== $data->getAppGuid()) {
+            $dataArray['app_guid'] = $data->getAppGuid();
         }
+        if ($data->isInitialized('priority') && null !== $data->getPriority()) {
+            $dataArray['priority'] = $data->getPriority();
+        }
+        if ($data->isInitialized('os') && null !== $data->getOs()) {
+            $dataArray['os'] = $data->getOs();
+        }
+        if ($data->isInitialized('fallback') && null !== $data->getFallback()) {
+            $dataArray['fallback'] = $data->getFallback();
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\AppAssociationDetail::class => false];
     }
 }

@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,191 +20,94 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class CreateUserBodyNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class CreateUserBodyNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\CreateUserBody::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\CreateUserBody::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\CreateUserBody();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('login', $data)) {
-                $object->setLogin($data['login']);
-                unset($data['login']);
-            }
-            if (\array_key_exists('name', $data)) {
-                $object->setName($data['name']);
-                unset($data['name']);
-            }
-            if (\array_key_exists('email', $data)) {
-                $object->setEmail($data['email']);
-                unset($data['email']);
-            }
-            if (\array_key_exists('full_name', $data)) {
-                $object->setFullName($data['full_name']);
-                unset($data['full_name']);
-            }
-            if (\array_key_exists('invite_token', $data)) {
-                $object->setInviteToken($data['invite_token']);
-                unset($data['invite_token']);
-            }
-            if (\array_key_exists('campaign_source', $data)) {
-                $object->setCampaignSource($data['campaign_source']);
-                unset($data['campaign_source']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            $data['login'] = $object->getLogin();
-            $data['name'] = $object->getName();
-            $data['email'] = $object->getEmail();
-            if ($object->isInitialized('fullName') && null !== $object->getFullName()) {
-                $data['full_name'] = $object->getFullName();
-            }
-            if ($object->isInitialized('inviteToken') && null !== $object->getInviteToken()) {
-                $data['invite_token'] = $object->getInviteToken();
-            }
-            if ($object->isInitialized('campaignSource') && null !== $object->getCampaignSource()) {
-                $data['campaign_source'] = $object->getCampaignSource();
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\CreateUserBody::class => false];
-        }
+        return $type === \Bitly\Model\CreateUserBody::class;
     }
-} else {
-    class CreateUserBodyNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\CreateUserBody::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\CreateUserBody::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\CreateUserBody::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\CreateUserBody();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('login', $data)) {
-                $object->setLogin($data['login']);
-                unset($data['login']);
-            }
-            if (\array_key_exists('name', $data)) {
-                $object->setName($data['name']);
-                unset($data['name']);
-            }
-            if (\array_key_exists('email', $data)) {
-                $object->setEmail($data['email']);
-                unset($data['email']);
-            }
-            if (\array_key_exists('full_name', $data)) {
-                $object->setFullName($data['full_name']);
-                unset($data['full_name']);
-            }
-            if (\array_key_exists('invite_token', $data)) {
-                $object->setInviteToken($data['invite_token']);
-                unset($data['invite_token']);
-            }
-            if (\array_key_exists('campaign_source', $data)) {
-                $object->setCampaignSource($data['campaign_source']);
-                unset($data['campaign_source']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
+        $object = new \Bitly\Model\CreateUserBody();
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            $data['login'] = $object->getLogin();
-            $data['name'] = $object->getName();
-            $data['email'] = $object->getEmail();
-            if ($object->isInitialized('fullName') && null !== $object->getFullName()) {
-                $data['full_name'] = $object->getFullName();
+        if (\array_key_exists('login', $data)) {
+            $object->setLogin($data['login']);
+            unset($data['login']);
+        }
+        if (\array_key_exists('name', $data)) {
+            $object->setName($data['name']);
+            unset($data['name']);
+        }
+        if (\array_key_exists('email', $data)) {
+            $object->setEmail($data['email']);
+            unset($data['email']);
+        }
+        if (\array_key_exists('full_name', $data)) {
+            $object->setFullName($data['full_name']);
+            unset($data['full_name']);
+        }
+        if (\array_key_exists('invite_token', $data)) {
+            $object->setInviteToken($data['invite_token']);
+            unset($data['invite_token']);
+        }
+        if (\array_key_exists('campaign_source', $data)) {
+            $object->setCampaignSource($data['campaign_source']);
+            unset($data['campaign_source']);
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value;
             }
-            if ($object->isInitialized('inviteToken') && null !== $object->getInviteToken()) {
-                $data['invite_token'] = $object->getInviteToken();
-            }
-            if ($object->isInitialized('campaignSource') && null !== $object->getCampaignSource()) {
-                $data['campaign_source'] = $object->getCampaignSource();
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\CreateUserBody::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        $dataArray['login'] = $data->getLogin();
+        $dataArray['name'] = $data->getName();
+        $dataArray['email'] = $data->getEmail();
+        if ($data->isInitialized('fullName') && null !== $data->getFullName()) {
+            $dataArray['full_name'] = $data->getFullName();
         }
+        if ($data->isInitialized('inviteToken') && null !== $data->getInviteToken()) {
+            $dataArray['invite_token'] = $data->getInviteToken();
+        }
+        if ($data->isInitialized('campaignSource') && null !== $data->getCampaignSource()) {
+            $dataArray['campaign_source'] = $data->getCampaignSource();
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\CreateUserBody::class => false];
     }
 }

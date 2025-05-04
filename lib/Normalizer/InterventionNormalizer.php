@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,219 +20,108 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class InterventionNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class InterventionNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\Intervention::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\Intervention::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\Intervention();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('guid', $data)) {
-                $object->setGuid($data['guid']);
-                unset($data['guid']);
-            }
-            if (\array_key_exists('login', $data)) {
-                $object->setLogin($data['login']);
-                unset($data['login']);
-            }
-            if (\array_key_exists('org_guid', $data)) {
-                $object->setOrgGuid($data['org_guid']);
-                unset($data['org_guid']);
-            }
-            if (\array_key_exists('intervention_action', $data)) {
-                $object->setInterventionAction($data['intervention_action']);
-                unset($data['intervention_action']);
-            }
-            if (\array_key_exists('intervention_date', $data)) {
-                $object->setInterventionDate($data['intervention_date']);
-                unset($data['intervention_date']);
-            }
-            if (\array_key_exists('interventions_offered', $data)) {
-                $values = [];
-                foreach ($data['interventions_offered'] as $value) {
-                    $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\InterventionsOffered::class, 'json', $context);
-                }
-                $object->setInterventionsOffered($values);
-                unset($data['interventions_offered']);
-            }
-            foreach ($data as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_1;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('guid') && null !== $object->getGuid()) {
-                $data['guid'] = $object->getGuid();
-            }
-            if ($object->isInitialized('login') && null !== $object->getLogin()) {
-                $data['login'] = $object->getLogin();
-            }
-            if ($object->isInitialized('orgGuid') && null !== $object->getOrgGuid()) {
-                $data['org_guid'] = $object->getOrgGuid();
-            }
-            if ($object->isInitialized('interventionAction') && null !== $object->getInterventionAction()) {
-                $data['intervention_action'] = $object->getInterventionAction();
-            }
-            if ($object->isInitialized('interventionDate') && null !== $object->getInterventionDate()) {
-                $data['intervention_date'] = $object->getInterventionDate();
-            }
-            if ($object->isInitialized('interventionsOffered') && null !== $object->getInterventionsOffered()) {
-                $values = [];
-                foreach ($object->getInterventionsOffered() as $value) {
-                    $values[] = $this->normalizer->normalize($value, 'json', $context);
-                }
-                $data['interventions_offered'] = $values;
-            }
-            foreach ($object as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_1;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\Intervention::class => false];
-        }
+        return $type === \Bitly\Model\Intervention::class;
     }
-} else {
-    class InterventionNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\Intervention::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\Intervention::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\Intervention::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\Intervention();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('guid', $data)) {
-                $object->setGuid($data['guid']);
-                unset($data['guid']);
-            }
-            if (\array_key_exists('login', $data)) {
-                $object->setLogin($data['login']);
-                unset($data['login']);
-            }
-            if (\array_key_exists('org_guid', $data)) {
-                $object->setOrgGuid($data['org_guid']);
-                unset($data['org_guid']);
-            }
-            if (\array_key_exists('intervention_action', $data)) {
-                $object->setInterventionAction($data['intervention_action']);
-                unset($data['intervention_action']);
-            }
-            if (\array_key_exists('intervention_date', $data)) {
-                $object->setInterventionDate($data['intervention_date']);
-                unset($data['intervention_date']);
-            }
-            if (\array_key_exists('interventions_offered', $data)) {
-                $values = [];
-                foreach ($data['interventions_offered'] as $value) {
-                    $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\InterventionsOffered::class, 'json', $context);
-                }
-                $object->setInterventionsOffered($values);
-                unset($data['interventions_offered']);
-            }
-            foreach ($data as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_1;
-                }
-            }
-
+        $object = new \Bitly\Model\Intervention();
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('guid') && null !== $object->getGuid()) {
-                $data['guid'] = $object->getGuid();
+        if (\array_key_exists('guid', $data)) {
+            $object->setGuid($data['guid']);
+            unset($data['guid']);
+        }
+        if (\array_key_exists('login', $data)) {
+            $object->setLogin($data['login']);
+            unset($data['login']);
+        }
+        if (\array_key_exists('org_guid', $data)) {
+            $object->setOrgGuid($data['org_guid']);
+            unset($data['org_guid']);
+        }
+        if (\array_key_exists('intervention_action', $data)) {
+            $object->setInterventionAction($data['intervention_action']);
+            unset($data['intervention_action']);
+        }
+        if (\array_key_exists('intervention_date', $data)) {
+            $object->setInterventionDate($data['intervention_date']);
+            unset($data['intervention_date']);
+        }
+        if (\array_key_exists('interventions_offered', $data)) {
+            $values = [];
+            foreach ($data['interventions_offered'] as $value) {
+                $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\InterventionsOffered::class, 'json', $context);
             }
-            if ($object->isInitialized('login') && null !== $object->getLogin()) {
-                $data['login'] = $object->getLogin();
+            $object->setInterventionsOffered($values);
+            unset($data['interventions_offered']);
+        }
+        foreach ($data as $key => $value_1) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value_1;
             }
-            if ($object->isInitialized('orgGuid') && null !== $object->getOrgGuid()) {
-                $data['org_guid'] = $object->getOrgGuid();
-            }
-            if ($object->isInitialized('interventionAction') && null !== $object->getInterventionAction()) {
-                $data['intervention_action'] = $object->getInterventionAction();
-            }
-            if ($object->isInitialized('interventionDate') && null !== $object->getInterventionDate()) {
-                $data['intervention_date'] = $object->getInterventionDate();
-            }
-            if ($object->isInitialized('interventionsOffered') && null !== $object->getInterventionsOffered()) {
-                $values = [];
-                foreach ($object->getInterventionsOffered() as $value) {
-                    $values[] = $this->normalizer->normalize($value, 'json', $context);
-                }
-                $data['interventions_offered'] = $values;
-            }
-            foreach ($object as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_1;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\Intervention::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('guid') && null !== $data->getGuid()) {
+            $dataArray['guid'] = $data->getGuid();
         }
+        if ($data->isInitialized('login') && null !== $data->getLogin()) {
+            $dataArray['login'] = $data->getLogin();
+        }
+        if ($data->isInitialized('orgGuid') && null !== $data->getOrgGuid()) {
+            $dataArray['org_guid'] = $data->getOrgGuid();
+        }
+        if ($data->isInitialized('interventionAction') && null !== $data->getInterventionAction()) {
+            $dataArray['intervention_action'] = $data->getInterventionAction();
+        }
+        if ($data->isInitialized('interventionDate') && null !== $data->getInterventionDate()) {
+            $dataArray['intervention_date'] = $data->getInterventionDate();
+        }
+        if ($data->isInitialized('interventionsOffered') && null !== $data->getInterventionsOffered()) {
+            $values = [];
+            foreach ($data->getInterventionsOffered() as $value) {
+                $values[] = $this->normalizer->normalize($value, 'json', $context);
+            }
+            $dataArray['interventions_offered'] = $values;
+        }
+        foreach ($data as $key => $value_1) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value_1;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\Intervention::class => false];
     }
 }

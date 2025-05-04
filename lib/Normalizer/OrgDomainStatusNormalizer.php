@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,161 +20,85 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class OrgDomainStatusNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class OrgDomainStatusNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\OrgDomainStatus::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\OrgDomainStatus::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\OrgDomainStatus();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('domain', $data)) {
-                $object->setDomain($data['domain']);
-                unset($data['domain']);
-            }
-            if (\array_key_exists('is_active', $data)) {
-                $object->setIsActive($data['is_active']);
-                unset($data['is_active']);
-            }
-            if (\array_key_exists('is_verified', $data)) {
-                $object->setIsVerified($data['is_verified']);
-                unset($data['is_verified']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('domain') && null !== $object->getDomain()) {
-                $data['domain'] = $object->getDomain();
-            }
-            if ($object->isInitialized('isActive') && null !== $object->getIsActive()) {
-                $data['is_active'] = $object->getIsActive();
-            }
-            if ($object->isInitialized('isVerified') && null !== $object->getIsVerified()) {
-                $data['is_verified'] = $object->getIsVerified();
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\OrgDomainStatus::class => false];
-        }
+        return $type === \Bitly\Model\OrgDomainStatus::class;
     }
-} else {
-    class OrgDomainStatusNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\OrgDomainStatus::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\OrgDomainStatus::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\OrgDomainStatus::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\OrgDomainStatus();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('domain', $data)) {
-                $object->setDomain($data['domain']);
-                unset($data['domain']);
-            }
-            if (\array_key_exists('is_active', $data)) {
-                $object->setIsActive($data['is_active']);
-                unset($data['is_active']);
-            }
-            if (\array_key_exists('is_verified', $data)) {
-                $object->setIsVerified($data['is_verified']);
-                unset($data['is_verified']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
+        $object = new \Bitly\Model\OrgDomainStatus();
+        if (\array_key_exists('is_active', $data) && \is_int($data['is_active'])) {
+            $data['is_active'] = (bool) $data['is_active'];
+        }
+        if (\array_key_exists('is_verified', $data) && \is_int($data['is_verified'])) {
+            $data['is_verified'] = (bool) $data['is_verified'];
+        }
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('domain') && null !== $object->getDomain()) {
-                $data['domain'] = $object->getDomain();
+        if (\array_key_exists('domain', $data)) {
+            $object->setDomain($data['domain']);
+            unset($data['domain']);
+        }
+        if (\array_key_exists('is_active', $data)) {
+            $object->setIsActive($data['is_active']);
+            unset($data['is_active']);
+        }
+        if (\array_key_exists('is_verified', $data)) {
+            $object->setIsVerified($data['is_verified']);
+            unset($data['is_verified']);
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value;
             }
-            if ($object->isInitialized('isActive') && null !== $object->getIsActive()) {
-                $data['is_active'] = $object->getIsActive();
-            }
-            if ($object->isInitialized('isVerified') && null !== $object->getIsVerified()) {
-                $data['is_verified'] = $object->getIsVerified();
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\OrgDomainStatus::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('domain') && null !== $data->getDomain()) {
+            $dataArray['domain'] = $data->getDomain();
         }
+        if ($data->isInitialized('isActive') && null !== $data->getIsActive()) {
+            $dataArray['is_active'] = $data->getIsActive();
+        }
+        if ($data->isInitialized('isVerified') && null !== $data->getIsVerified()) {
+            $dataArray['is_verified'] = $data->getIsVerified();
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\OrgDomainStatus::class => false];
     }
 }

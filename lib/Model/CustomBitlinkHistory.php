@@ -24,10 +24,6 @@ class CustomBitlinkHistory extends \ArrayObject
     /**
      * @var string
      */
-    protected $uuid;
-    /**
-     * @var string
-     */
     protected $groupGuid;
     /**
      * @var string
@@ -65,19 +61,6 @@ class CustomBitlinkHistory extends \ArrayObject
      * @var bool
      */
     protected $isActive;
-
-    public function getUuid(): string
-    {
-        return $this->uuid;
-    }
-
-    public function setUuid(string $uuid): self
-    {
-        $this->initialized['uuid'] = true;
-        $this->uuid = $uuid;
-
-        return $this;
-    }
 
     public function getGroupGuid(): string
     {

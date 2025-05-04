@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,243 +20,126 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class WebhookCreateNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class WebhookCreateNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\WebhookCreate::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\WebhookCreate::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\WebhookCreate();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('is_active', $data)) {
-                $object->setIsActive($data['is_active']);
-                unset($data['is_active']);
-            }
-            if (\array_key_exists('organization_guid', $data)) {
-                $object->setOrganizationGuid($data['organization_guid']);
-                unset($data['organization_guid']);
-            }
-            if (\array_key_exists('group_guid', $data)) {
-                $object->setGroupGuid($data['group_guid']);
-                unset($data['group_guid']);
-            }
-            if (\array_key_exists('name', $data)) {
-                $object->setName($data['name']);
-                unset($data['name']);
-            }
-            if (\array_key_exists('event', $data)) {
-                $object->setEvent($data['event']);
-                unset($data['event']);
-            }
-            if (\array_key_exists('url', $data)) {
-                $object->setUrl($data['url']);
-                unset($data['url']);
-            }
-            if (\array_key_exists('oauth_url', $data)) {
-                $object->setOauthUrl($data['oauth_url']);
-                unset($data['oauth_url']);
-            }
-            if (\array_key_exists('client_id', $data)) {
-                $object->setClientId($data['client_id']);
-                unset($data['client_id']);
-            }
-            if (\array_key_exists('client_secret', $data)) {
-                $object->setClientSecret($data['client_secret']);
-                unset($data['client_secret']);
-            }
-            if (\array_key_exists('fetch_tags', $data)) {
-                $object->setFetchTags($data['fetch_tags']);
-                unset($data['fetch_tags']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('isActive') && null !== $object->getIsActive()) {
-                $data['is_active'] = $object->getIsActive();
-            }
-            $data['organization_guid'] = $object->getOrganizationGuid();
-            if ($object->isInitialized('groupGuid') && null !== $object->getGroupGuid()) {
-                $data['group_guid'] = $object->getGroupGuid();
-            }
-            $data['name'] = $object->getName();
-            $data['event'] = $object->getEvent();
-            $data['url'] = $object->getUrl();
-            if ($object->isInitialized('oauthUrl') && null !== $object->getOauthUrl()) {
-                $data['oauth_url'] = $object->getOauthUrl();
-            }
-            if ($object->isInitialized('clientId') && null !== $object->getClientId()) {
-                $data['client_id'] = $object->getClientId();
-            }
-            if ($object->isInitialized('clientSecret') && null !== $object->getClientSecret()) {
-                $data['client_secret'] = $object->getClientSecret();
-            }
-            if ($object->isInitialized('fetchTags') && null !== $object->getFetchTags()) {
-                $data['fetch_tags'] = $object->getFetchTags();
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\WebhookCreate::class => false];
-        }
+        return $type === \Bitly\Model\WebhookCreate::class;
     }
-} else {
-    class WebhookCreateNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\WebhookCreate::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\WebhookCreate::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\WebhookCreate::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\WebhookCreate();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('is_active', $data)) {
-                $object->setIsActive($data['is_active']);
-                unset($data['is_active']);
-            }
-            if (\array_key_exists('organization_guid', $data)) {
-                $object->setOrganizationGuid($data['organization_guid']);
-                unset($data['organization_guid']);
-            }
-            if (\array_key_exists('group_guid', $data)) {
-                $object->setGroupGuid($data['group_guid']);
-                unset($data['group_guid']);
-            }
-            if (\array_key_exists('name', $data)) {
-                $object->setName($data['name']);
-                unset($data['name']);
-            }
-            if (\array_key_exists('event', $data)) {
-                $object->setEvent($data['event']);
-                unset($data['event']);
-            }
-            if (\array_key_exists('url', $data)) {
-                $object->setUrl($data['url']);
-                unset($data['url']);
-            }
-            if (\array_key_exists('oauth_url', $data)) {
-                $object->setOauthUrl($data['oauth_url']);
-                unset($data['oauth_url']);
-            }
-            if (\array_key_exists('client_id', $data)) {
-                $object->setClientId($data['client_id']);
-                unset($data['client_id']);
-            }
-            if (\array_key_exists('client_secret', $data)) {
-                $object->setClientSecret($data['client_secret']);
-                unset($data['client_secret']);
-            }
-            if (\array_key_exists('fetch_tags', $data)) {
-                $object->setFetchTags($data['fetch_tags']);
-                unset($data['fetch_tags']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
+        $object = new \Bitly\Model\WebhookCreate();
+        if (\array_key_exists('is_active', $data) && \is_int($data['is_active'])) {
+            $data['is_active'] = (bool) $data['is_active'];
+        }
+        if (\array_key_exists('fetch_tags', $data) && \is_int($data['fetch_tags'])) {
+            $data['fetch_tags'] = (bool) $data['fetch_tags'];
+        }
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('isActive') && null !== $object->getIsActive()) {
-                $data['is_active'] = $object->getIsActive();
+        if (\array_key_exists('is_active', $data)) {
+            $object->setIsActive($data['is_active']);
+            unset($data['is_active']);
+        }
+        if (\array_key_exists('organization_guid', $data)) {
+            $object->setOrganizationGuid($data['organization_guid']);
+            unset($data['organization_guid']);
+        }
+        if (\array_key_exists('group_guid', $data)) {
+            $object->setGroupGuid($data['group_guid']);
+            unset($data['group_guid']);
+        }
+        if (\array_key_exists('name', $data)) {
+            $object->setName($data['name']);
+            unset($data['name']);
+        }
+        if (\array_key_exists('event', $data)) {
+            $object->setEvent($data['event']);
+            unset($data['event']);
+        }
+        if (\array_key_exists('url', $data)) {
+            $object->setUrl($data['url']);
+            unset($data['url']);
+        }
+        if (\array_key_exists('oauth_url', $data)) {
+            $object->setOauthUrl($data['oauth_url']);
+            unset($data['oauth_url']);
+        }
+        if (\array_key_exists('client_id', $data)) {
+            $object->setClientId($data['client_id']);
+            unset($data['client_id']);
+        }
+        if (\array_key_exists('client_secret', $data)) {
+            $object->setClientSecret($data['client_secret']);
+            unset($data['client_secret']);
+        }
+        if (\array_key_exists('fetch_tags', $data)) {
+            $object->setFetchTags($data['fetch_tags']);
+            unset($data['fetch_tags']);
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value;
             }
-            $data['organization_guid'] = $object->getOrganizationGuid();
-            if ($object->isInitialized('groupGuid') && null !== $object->getGroupGuid()) {
-                $data['group_guid'] = $object->getGroupGuid();
-            }
-            $data['name'] = $object->getName();
-            $data['event'] = $object->getEvent();
-            $data['url'] = $object->getUrl();
-            if ($object->isInitialized('oauthUrl') && null !== $object->getOauthUrl()) {
-                $data['oauth_url'] = $object->getOauthUrl();
-            }
-            if ($object->isInitialized('clientId') && null !== $object->getClientId()) {
-                $data['client_id'] = $object->getClientId();
-            }
-            if ($object->isInitialized('clientSecret') && null !== $object->getClientSecret()) {
-                $data['client_secret'] = $object->getClientSecret();
-            }
-            if ($object->isInitialized('fetchTags') && null !== $object->getFetchTags()) {
-                $data['fetch_tags'] = $object->getFetchTags();
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\WebhookCreate::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('isActive') && null !== $data->getIsActive()) {
+            $dataArray['is_active'] = $data->getIsActive();
         }
+        $dataArray['organization_guid'] = $data->getOrganizationGuid();
+        if ($data->isInitialized('groupGuid') && null !== $data->getGroupGuid()) {
+            $dataArray['group_guid'] = $data->getGroupGuid();
+        }
+        $dataArray['name'] = $data->getName();
+        $dataArray['event'] = $data->getEvent();
+        $dataArray['url'] = $data->getUrl();
+        if ($data->isInitialized('oauthUrl') && null !== $data->getOauthUrl()) {
+            $dataArray['oauth_url'] = $data->getOauthUrl();
+        }
+        if ($data->isInitialized('clientId') && null !== $data->getClientId()) {
+            $dataArray['client_id'] = $data->getClientId();
+        }
+        if ($data->isInitialized('clientSecret') && null !== $data->getClientSecret()) {
+            $dataArray['client_secret'] = $data->getClientSecret();
+        }
+        if ($data->isInitialized('fetchTags') && null !== $data->getFetchTags()) {
+            $dataArray['fetch_tags'] = $data->getFetchTags();
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\WebhookCreate::class => false];
     }
 }

@@ -48,6 +48,10 @@ class Tier extends \ArrayObject
     /**
      * @var string
      */
+    protected $priceId;
+    /**
+     * @var string
+     */
     protected $displayIcon;
     /**
      * @var bool
@@ -152,6 +156,19 @@ class Tier extends \ArrayObject
     {
         $this->initialized['price'] = true;
         $this->price = $price;
+
+        return $this;
+    }
+
+    public function getPriceId(): string
+    {
+        return $this->priceId;
+    }
+
+    public function setPriceId(string $priceId): self
+    {
+        $this->initialized['priceId'] = true;
+        $this->priceId = $priceId;
 
         return $this;
     }

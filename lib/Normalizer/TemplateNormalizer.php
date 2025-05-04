@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,291 +20,150 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class TemplateNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class TemplateNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\Template::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\Template::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\Template();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('template_guid', $data)) {
-                $object->setTemplateGuid($data['template_guid']);
-                unset($data['template_guid']);
-            }
-            if (\array_key_exists('content', $data)) {
-                $object->setContent($this->denormalizer->denormalize($data['content'], \Bitly\Model\BitlySiteContent::class, 'json', $context));
-                unset($data['content']);
-            }
-            if (\array_key_exists('appearance', $data)) {
-                $object->setAppearance($this->denormalizer->denormalize($data['appearance'], \Bitly\Model\BitlySiteAppearance::class, 'json', $context));
-                unset($data['appearance']);
-            }
-            if (\array_key_exists('blocks', $data)) {
-                $values = [];
-                foreach ($data['blocks'] as $value) {
-                    $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\SiteBlock::class, 'json', $context);
-                }
-                $object->setBlocks($values);
-                unset($data['blocks']);
-            }
-            if (\array_key_exists('status', $data)) {
-                $object->setStatus($data['status']);
-                unset($data['status']);
-            }
-            if (\array_key_exists('categories', $data)) {
-                $values_1 = [];
-                foreach ($data['categories'] as $value_1) {
-                    $values_1[] = $value_1;
-                }
-                $object->setCategories($values_1);
-                unset($data['categories']);
-            }
-            if (\array_key_exists('created', $data)) {
-                $object->setCreated($data['created']);
-                unset($data['created']);
-            }
-            if (\array_key_exists('modified', $data)) {
-                $object->setModified($data['modified']);
-                unset($data['modified']);
-            }
-            if (\array_key_exists('is_active', $data)) {
-                $object->setIsActive($data['is_active']);
-                unset($data['is_active']);
-            }
-            if (\array_key_exists('is_paid', $data)) {
-                $object->setIsPaid($data['is_paid']);
-                unset($data['is_paid']);
-            }
-            foreach ($data as $key => $value_2) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_2;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('templateGuid') && null !== $object->getTemplateGuid()) {
-                $data['template_guid'] = $object->getTemplateGuid();
-            }
-            if ($object->isInitialized('content') && null !== $object->getContent()) {
-                $data['content'] = $this->normalizer->normalize($object->getContent(), 'json', $context);
-            }
-            if ($object->isInitialized('appearance') && null !== $object->getAppearance()) {
-                $data['appearance'] = $this->normalizer->normalize($object->getAppearance(), 'json', $context);
-            }
-            if ($object->isInitialized('blocks') && null !== $object->getBlocks()) {
-                $values = [];
-                foreach ($object->getBlocks() as $value) {
-                    $values[] = $this->normalizer->normalize($value, 'json', $context);
-                }
-                $data['blocks'] = $values;
-            }
-            if ($object->isInitialized('status') && null !== $object->getStatus()) {
-                $data['status'] = $object->getStatus();
-            }
-            if ($object->isInitialized('categories') && null !== $object->getCategories()) {
-                $values_1 = [];
-                foreach ($object->getCategories() as $value_1) {
-                    $values_1[] = $value_1;
-                }
-                $data['categories'] = $values_1;
-            }
-            if ($object->isInitialized('created') && null !== $object->getCreated()) {
-                $data['created'] = $object->getCreated();
-            }
-            if ($object->isInitialized('modified') && null !== $object->getModified()) {
-                $data['modified'] = $object->getModified();
-            }
-            if ($object->isInitialized('isActive') && null !== $object->getIsActive()) {
-                $data['is_active'] = $object->getIsActive();
-            }
-            if ($object->isInitialized('isPaid') && null !== $object->getIsPaid()) {
-                $data['is_paid'] = $object->getIsPaid();
-            }
-            foreach ($object as $key => $value_2) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_2;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\Template::class => false];
-        }
+        return $type === \Bitly\Model\Template::class;
     }
-} else {
-    class TemplateNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\Template::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\Template::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\Template::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\Template();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('template_guid', $data)) {
-                $object->setTemplateGuid($data['template_guid']);
-                unset($data['template_guid']);
-            }
-            if (\array_key_exists('content', $data)) {
-                $object->setContent($this->denormalizer->denormalize($data['content'], \Bitly\Model\BitlySiteContent::class, 'json', $context));
-                unset($data['content']);
-            }
-            if (\array_key_exists('appearance', $data)) {
-                $object->setAppearance($this->denormalizer->denormalize($data['appearance'], \Bitly\Model\BitlySiteAppearance::class, 'json', $context));
-                unset($data['appearance']);
-            }
-            if (\array_key_exists('blocks', $data)) {
-                $values = [];
-                foreach ($data['blocks'] as $value) {
-                    $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\SiteBlock::class, 'json', $context);
-                }
-                $object->setBlocks($values);
-                unset($data['blocks']);
-            }
-            if (\array_key_exists('status', $data)) {
-                $object->setStatus($data['status']);
-                unset($data['status']);
-            }
-            if (\array_key_exists('categories', $data)) {
-                $values_1 = [];
-                foreach ($data['categories'] as $value_1) {
-                    $values_1[] = $value_1;
-                }
-                $object->setCategories($values_1);
-                unset($data['categories']);
-            }
-            if (\array_key_exists('created', $data)) {
-                $object->setCreated($data['created']);
-                unset($data['created']);
-            }
-            if (\array_key_exists('modified', $data)) {
-                $object->setModified($data['modified']);
-                unset($data['modified']);
-            }
-            if (\array_key_exists('is_active', $data)) {
-                $object->setIsActive($data['is_active']);
-                unset($data['is_active']);
-            }
-            if (\array_key_exists('is_paid', $data)) {
-                $object->setIsPaid($data['is_paid']);
-                unset($data['is_paid']);
-            }
-            foreach ($data as $key => $value_2) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_2;
-                }
-            }
-
+        $object = new \Bitly\Model\Template();
+        if (\array_key_exists('is_active', $data) && \is_int($data['is_active'])) {
+            $data['is_active'] = (bool) $data['is_active'];
+        }
+        if (\array_key_exists('is_paid', $data) && \is_int($data['is_paid'])) {
+            $data['is_paid'] = (bool) $data['is_paid'];
+        }
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('templateGuid') && null !== $object->getTemplateGuid()) {
-                $data['template_guid'] = $object->getTemplateGuid();
+        if (\array_key_exists('template_guid', $data)) {
+            $object->setTemplateGuid($data['template_guid']);
+            unset($data['template_guid']);
+        }
+        if (\array_key_exists('content', $data)) {
+            $object->setContent($this->denormalizer->denormalize($data['content'], \Bitly\Model\BitlySiteContent::class, 'json', $context));
+            unset($data['content']);
+        }
+        if (\array_key_exists('appearance', $data)) {
+            $object->setAppearance($this->denormalizer->denormalize($data['appearance'], \Bitly\Model\BitlySiteAppearance::class, 'json', $context));
+            unset($data['appearance']);
+        }
+        if (\array_key_exists('blocks', $data)) {
+            $values = [];
+            foreach ($data['blocks'] as $value) {
+                $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\SiteBlock::class, 'json', $context);
             }
-            if ($object->isInitialized('content') && null !== $object->getContent()) {
-                $data['content'] = $this->normalizer->normalize($object->getContent(), 'json', $context);
+            $object->setBlocks($values);
+            unset($data['blocks']);
+        }
+        if (\array_key_exists('status', $data)) {
+            $object->setStatus($data['status']);
+            unset($data['status']);
+        }
+        if (\array_key_exists('categories', $data)) {
+            $values_1 = [];
+            foreach ($data['categories'] as $value_1) {
+                $values_1[] = $value_1;
             }
-            if ($object->isInitialized('appearance') && null !== $object->getAppearance()) {
-                $data['appearance'] = $this->normalizer->normalize($object->getAppearance(), 'json', $context);
+            $object->setCategories($values_1);
+            unset($data['categories']);
+        }
+        if (\array_key_exists('created', $data)) {
+            $object->setCreated($data['created']);
+            unset($data['created']);
+        }
+        if (\array_key_exists('modified', $data)) {
+            $object->setModified($data['modified']);
+            unset($data['modified']);
+        }
+        if (\array_key_exists('is_active', $data)) {
+            $object->setIsActive($data['is_active']);
+            unset($data['is_active']);
+        }
+        if (\array_key_exists('is_paid', $data)) {
+            $object->setIsPaid($data['is_paid']);
+            unset($data['is_paid']);
+        }
+        foreach ($data as $key => $value_2) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value_2;
             }
-            if ($object->isInitialized('blocks') && null !== $object->getBlocks()) {
-                $values = [];
-                foreach ($object->getBlocks() as $value) {
-                    $values[] = $this->normalizer->normalize($value, 'json', $context);
-                }
-                $data['blocks'] = $values;
-            }
-            if ($object->isInitialized('status') && null !== $object->getStatus()) {
-                $data['status'] = $object->getStatus();
-            }
-            if ($object->isInitialized('categories') && null !== $object->getCategories()) {
-                $values_1 = [];
-                foreach ($object->getCategories() as $value_1) {
-                    $values_1[] = $value_1;
-                }
-                $data['categories'] = $values_1;
-            }
-            if ($object->isInitialized('created') && null !== $object->getCreated()) {
-                $data['created'] = $object->getCreated();
-            }
-            if ($object->isInitialized('modified') && null !== $object->getModified()) {
-                $data['modified'] = $object->getModified();
-            }
-            if ($object->isInitialized('isActive') && null !== $object->getIsActive()) {
-                $data['is_active'] = $object->getIsActive();
-            }
-            if ($object->isInitialized('isPaid') && null !== $object->getIsPaid()) {
-                $data['is_paid'] = $object->getIsPaid();
-            }
-            foreach ($object as $key => $value_2) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_2;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\Template::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('templateGuid') && null !== $data->getTemplateGuid()) {
+            $dataArray['template_guid'] = $data->getTemplateGuid();
         }
+        if ($data->isInitialized('content') && null !== $data->getContent()) {
+            $dataArray['content'] = $this->normalizer->normalize($data->getContent(), 'json', $context);
+        }
+        if ($data->isInitialized('appearance') && null !== $data->getAppearance()) {
+            $dataArray['appearance'] = $this->normalizer->normalize($data->getAppearance(), 'json', $context);
+        }
+        if ($data->isInitialized('blocks') && null !== $data->getBlocks()) {
+            $values = [];
+            foreach ($data->getBlocks() as $value) {
+                $values[] = $this->normalizer->normalize($value, 'json', $context);
+            }
+            $dataArray['blocks'] = $values;
+        }
+        if ($data->isInitialized('status') && null !== $data->getStatus()) {
+            $dataArray['status'] = $data->getStatus();
+        }
+        if ($data->isInitialized('categories') && null !== $data->getCategories()) {
+            $values_1 = [];
+            foreach ($data->getCategories() as $value_1) {
+                $values_1[] = $value_1;
+            }
+            $dataArray['categories'] = $values_1;
+        }
+        if ($data->isInitialized('created') && null !== $data->getCreated()) {
+            $dataArray['created'] = $data->getCreated();
+        }
+        if ($data->isInitialized('modified') && null !== $data->getModified()) {
+            $dataArray['modified'] = $data->getModified();
+        }
+        if ($data->isInitialized('isActive') && null !== $data->getIsActive()) {
+            $dataArray['is_active'] = $data->getIsActive();
+        }
+        if ($data->isInitialized('isPaid') && null !== $data->getIsPaid()) {
+            $dataArray['is_paid'] = $data->getIsPaid();
+        }
+        foreach ($data as $key => $value_2) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value_2;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\Template::class => false];
     }
 }

@@ -22,10 +22,16 @@ class ListQRMinimal extends \Bitly\Runtime\Client\BaseEndpoint implements \Bitly
      * @param string $groupGuid       A GUID for a Bitly group
      * @param array  $queryParameters {
      *
-     * @var string $has_render_customizations a filter value if the QRCode has any render customizations (like color or shape changes)
-     * @var string $archived a filter value if resource is archived or hidden
+     * @var string $has_render_customizations Whether or not QRCode has any render customizations (like color or shape changes)
      * @var int    $size The quantity of items to be be returned
-     * @var string $search_after Token used to search next batch of qr codes, only use response from API as input value.
+     * @var string $search_after token used to search next batch of qr codes, only use response from API as input value
+     * @var string $query The value that you would like to search
+     * @var int    $created_before Timestamp as an integer unix epoch (seconds only)
+     * @var int    $created_after Timestamp as an integer unix epoch (seconds only)
+     * @var string $archived Whether or not to include archived resources
+     * @var array  $creating_login Filter by the login of the authenticated user that created the QR Code
+     * @var array  $qrc_type
+     * @var string $is_gs1 a filter value if the resource is a GS1 QR code
      *             }
      */
     public function __construct(string $groupGuid, array $queryParameters = [])
@@ -57,13 +63,19 @@ class ListQRMinimal extends \Bitly\Runtime\Client\BaseEndpoint implements \Bitly
     protected function getQueryOptionsResolver(): \Symfony\Component\OptionsResolver\OptionsResolver
     {
         $optionsResolver = parent::getQueryOptionsResolver();
-        $optionsResolver->setDefined(['has_render_customizations', 'archived', 'size', 'search_after']);
+        $optionsResolver->setDefined(['has_render_customizations', 'size', 'search_after', 'query', 'created_before', 'created_after', 'archived', 'creating_login', 'qrc_type', 'is_gs1']);
         $optionsResolver->setRequired([]);
-        $optionsResolver->setDefaults(['has_render_customizations' => 'both', 'archived' => 'off', 'size' => 50]);
+        $optionsResolver->setDefaults(['has_render_customizations' => 'both', 'size' => 50, 'archived' => 'off', 'qrc_type' => [0 => 'bitlink', 1 => 'long_url'], 'is_gs1' => 'both']);
         $optionsResolver->addAllowedTypes('has_render_customizations', ['string']);
-        $optionsResolver->addAllowedTypes('archived', ['string']);
         $optionsResolver->addAllowedTypes('size', ['int']);
         $optionsResolver->addAllowedTypes('search_after', ['string']);
+        $optionsResolver->addAllowedTypes('query', ['string']);
+        $optionsResolver->addAllowedTypes('created_before', ['int']);
+        $optionsResolver->addAllowedTypes('created_after', ['int']);
+        $optionsResolver->addAllowedTypes('archived', ['string']);
+        $optionsResolver->addAllowedTypes('creating_login', ['array']);
+        $optionsResolver->addAllowedTypes('qrc_type', ['array']);
+        $optionsResolver->addAllowedTypes('is_gs1', ['string']);
 
         return $optionsResolver;
     }

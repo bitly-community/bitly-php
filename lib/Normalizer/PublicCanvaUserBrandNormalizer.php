@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,203 +20,103 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class PublicCanvaUserBrandNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class PublicCanvaUserBrandNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\PublicCanvaUserBrand::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\PublicCanvaUserBrand::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\PublicCanvaUserBrand();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('canva_user_id', $data)) {
-                $object->setCanvaUserId($data['canva_user_id']);
-                unset($data['canva_user_id']);
-            }
-            if (\array_key_exists('canva_brand_id', $data)) {
-                $object->setCanvaBrandId($data['canva_brand_id']);
-                unset($data['canva_brand_id']);
-            }
-            if (\array_key_exists('login', $data)) {
-                $object->setLogin($data['login']);
-                unset($data['login']);
-            }
-            if (\array_key_exists('active', $data)) {
-                $object->setActive($data['active']);
-                unset($data['active']);
-            }
-            if (\array_key_exists('brand_guid', $data)) {
-                $object->setBrandGuid($data['brand_guid']);
-                unset($data['brand_guid']);
-            }
-            if (\array_key_exists('org_guid', $data)) {
-                $object->setOrgGuid($data['org_guid']);
-                unset($data['org_guid']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('canvaUserId') && null !== $object->getCanvaUserId()) {
-                $data['canva_user_id'] = $object->getCanvaUserId();
-            }
-            if ($object->isInitialized('canvaBrandId') && null !== $object->getCanvaBrandId()) {
-                $data['canva_brand_id'] = $object->getCanvaBrandId();
-            }
-            if ($object->isInitialized('login') && null !== $object->getLogin()) {
-                $data['login'] = $object->getLogin();
-            }
-            if ($object->isInitialized('active') && null !== $object->getActive()) {
-                $data['active'] = $object->getActive();
-            }
-            if ($object->isInitialized('brandGuid') && null !== $object->getBrandGuid()) {
-                $data['brand_guid'] = $object->getBrandGuid();
-            }
-            if ($object->isInitialized('orgGuid') && null !== $object->getOrgGuid()) {
-                $data['org_guid'] = $object->getOrgGuid();
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\PublicCanvaUserBrand::class => false];
-        }
+        return $type === \Bitly\Model\PublicCanvaUserBrand::class;
     }
-} else {
-    class PublicCanvaUserBrandNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\PublicCanvaUserBrand::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\PublicCanvaUserBrand::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\PublicCanvaUserBrand::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\PublicCanvaUserBrand();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('canva_user_id', $data)) {
-                $object->setCanvaUserId($data['canva_user_id']);
-                unset($data['canva_user_id']);
-            }
-            if (\array_key_exists('canva_brand_id', $data)) {
-                $object->setCanvaBrandId($data['canva_brand_id']);
-                unset($data['canva_brand_id']);
-            }
-            if (\array_key_exists('login', $data)) {
-                $object->setLogin($data['login']);
-                unset($data['login']);
-            }
-            if (\array_key_exists('active', $data)) {
-                $object->setActive($data['active']);
-                unset($data['active']);
-            }
-            if (\array_key_exists('brand_guid', $data)) {
-                $object->setBrandGuid($data['brand_guid']);
-                unset($data['brand_guid']);
-            }
-            if (\array_key_exists('org_guid', $data)) {
-                $object->setOrgGuid($data['org_guid']);
-                unset($data['org_guid']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
+        $object = new \Bitly\Model\PublicCanvaUserBrand();
+        if (\array_key_exists('active', $data) && \is_int($data['active'])) {
+            $data['active'] = (bool) $data['active'];
+        }
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('canvaUserId') && null !== $object->getCanvaUserId()) {
-                $data['canva_user_id'] = $object->getCanvaUserId();
+        if (\array_key_exists('canva_user_id', $data)) {
+            $object->setCanvaUserId($data['canva_user_id']);
+            unset($data['canva_user_id']);
+        }
+        if (\array_key_exists('canva_brand_id', $data)) {
+            $object->setCanvaBrandId($data['canva_brand_id']);
+            unset($data['canva_brand_id']);
+        }
+        if (\array_key_exists('login', $data)) {
+            $object->setLogin($data['login']);
+            unset($data['login']);
+        }
+        if (\array_key_exists('active', $data)) {
+            $object->setActive($data['active']);
+            unset($data['active']);
+        }
+        if (\array_key_exists('brand_guid', $data)) {
+            $object->setBrandGuid($data['brand_guid']);
+            unset($data['brand_guid']);
+        }
+        if (\array_key_exists('org_guid', $data)) {
+            $object->setOrgGuid($data['org_guid']);
+            unset($data['org_guid']);
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value;
             }
-            if ($object->isInitialized('canvaBrandId') && null !== $object->getCanvaBrandId()) {
-                $data['canva_brand_id'] = $object->getCanvaBrandId();
-            }
-            if ($object->isInitialized('login') && null !== $object->getLogin()) {
-                $data['login'] = $object->getLogin();
-            }
-            if ($object->isInitialized('active') && null !== $object->getActive()) {
-                $data['active'] = $object->getActive();
-            }
-            if ($object->isInitialized('brandGuid') && null !== $object->getBrandGuid()) {
-                $data['brand_guid'] = $object->getBrandGuid();
-            }
-            if ($object->isInitialized('orgGuid') && null !== $object->getOrgGuid()) {
-                $data['org_guid'] = $object->getOrgGuid();
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\PublicCanvaUserBrand::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('canvaUserId') && null !== $data->getCanvaUserId()) {
+            $dataArray['canva_user_id'] = $data->getCanvaUserId();
         }
+        if ($data->isInitialized('canvaBrandId') && null !== $data->getCanvaBrandId()) {
+            $dataArray['canva_brand_id'] = $data->getCanvaBrandId();
+        }
+        if ($data->isInitialized('login') && null !== $data->getLogin()) {
+            $dataArray['login'] = $data->getLogin();
+        }
+        if ($data->isInitialized('active') && null !== $data->getActive()) {
+            $dataArray['active'] = $data->getActive();
+        }
+        if ($data->isInitialized('brandGuid') && null !== $data->getBrandGuid()) {
+            $dataArray['brand_guid'] = $data->getBrandGuid();
+        }
+        if ($data->isInitialized('orgGuid') && null !== $data->getOrgGuid()) {
+            $dataArray['org_guid'] = $data->getOrgGuid();
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\PublicCanvaUserBrand::class => false];
     }
 }

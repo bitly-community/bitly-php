@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,175 +20,86 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class ExpandedBitlinkNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class ExpandedBitlinkNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\ExpandedBitlink::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\ExpandedBitlink::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\ExpandedBitlink();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('link', $data)) {
-                $object->setLink($data['link']);
-                unset($data['link']);
-            }
-            if (\array_key_exists('id', $data)) {
-                $object->setId($data['id']);
-                unset($data['id']);
-            }
-            if (\array_key_exists('long_url', $data)) {
-                $object->setLongUrl($data['long_url']);
-                unset($data['long_url']);
-            }
-            if (\array_key_exists('created_at', $data)) {
-                $object->setCreatedAt($data['created_at']);
-                unset($data['created_at']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('link') && null !== $object->getLink()) {
-                $data['link'] = $object->getLink();
-            }
-            if ($object->isInitialized('id') && null !== $object->getId()) {
-                $data['id'] = $object->getId();
-            }
-            if ($object->isInitialized('longUrl') && null !== $object->getLongUrl()) {
-                $data['long_url'] = $object->getLongUrl();
-            }
-            if ($object->isInitialized('createdAt') && null !== $object->getCreatedAt()) {
-                $data['created_at'] = $object->getCreatedAt();
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\ExpandedBitlink::class => false];
-        }
+        return $type === \Bitly\Model\ExpandedBitlink::class;
     }
-} else {
-    class ExpandedBitlinkNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\ExpandedBitlink::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\ExpandedBitlink::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\ExpandedBitlink::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\ExpandedBitlink();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('link', $data)) {
-                $object->setLink($data['link']);
-                unset($data['link']);
-            }
-            if (\array_key_exists('id', $data)) {
-                $object->setId($data['id']);
-                unset($data['id']);
-            }
-            if (\array_key_exists('long_url', $data)) {
-                $object->setLongUrl($data['long_url']);
-                unset($data['long_url']);
-            }
-            if (\array_key_exists('created_at', $data)) {
-                $object->setCreatedAt($data['created_at']);
-                unset($data['created_at']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
+        $object = new \Bitly\Model\ExpandedBitlink();
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('link') && null !== $object->getLink()) {
-                $data['link'] = $object->getLink();
+        if (\array_key_exists('link', $data)) {
+            $object->setLink($data['link']);
+            unset($data['link']);
+        }
+        if (\array_key_exists('id', $data)) {
+            $object->setId($data['id']);
+            unset($data['id']);
+        }
+        if (\array_key_exists('long_url', $data)) {
+            $object->setLongUrl($data['long_url']);
+            unset($data['long_url']);
+        }
+        if (\array_key_exists('created_at', $data)) {
+            $object->setCreatedAt($data['created_at']);
+            unset($data['created_at']);
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value;
             }
-            if ($object->isInitialized('id') && null !== $object->getId()) {
-                $data['id'] = $object->getId();
-            }
-            if ($object->isInitialized('longUrl') && null !== $object->getLongUrl()) {
-                $data['long_url'] = $object->getLongUrl();
-            }
-            if ($object->isInitialized('createdAt') && null !== $object->getCreatedAt()) {
-                $data['created_at'] = $object->getCreatedAt();
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\ExpandedBitlink::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('link') && null !== $data->getLink()) {
+            $dataArray['link'] = $data->getLink();
         }
+        if ($data->isInitialized('id') && null !== $data->getId()) {
+            $dataArray['id'] = $data->getId();
+        }
+        if ($data->isInitialized('longUrl') && null !== $data->getLongUrl()) {
+            $dataArray['long_url'] = $data->getLongUrl();
+        }
+        if ($data->isInitialized('createdAt') && null !== $data->getCreatedAt()) {
+            $dataArray['created_at'] = $data->getCreatedAt();
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\ExpandedBitlink::class => false];
     }
 }

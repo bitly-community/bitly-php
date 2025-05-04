@@ -33,6 +33,10 @@ class YoutubeVideoRequest extends \ArrayObject
      * @var string
      */
     protected $linkTitle;
+    /**
+     * @var string
+     */
+    protected $domain;
 
     public function getVideoUrl(): string
     {
@@ -69,6 +73,19 @@ class YoutubeVideoRequest extends \ArrayObject
     {
         $this->initialized['linkTitle'] = true;
         $this->linkTitle = $linkTitle;
+
+        return $this;
+    }
+
+    public function getDomain(): string
+    {
+        return $this->domain;
+    }
+
+    public function setDomain(string $domain): self
+    {
+        $this->initialized['domain'] = true;
+        $this->domain = $domain;
 
         return $this;
     }
