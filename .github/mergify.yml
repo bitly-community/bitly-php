@@ -3,9 +3,7 @@ pull_request_rules:
     conditions:
       - author=dependabot[bot]
       - check-success=build
-      - check-success=commitlint
-      - check-success=dependabot
-      - 'title~=^build\(deps-dev\): '
+      - 'check-success~=^test'
     actions:
       merge:
-        method: merge
+        method: squash
