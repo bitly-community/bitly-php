@@ -49,6 +49,10 @@ class BulkUpload extends \ArrayObject
      * @var string
      */
     protected $created;
+    /**
+     * @var string
+     */
+    protected $uploadType;
 
     public function getOrgGuid(): string
     {
@@ -137,6 +141,19 @@ class BulkUpload extends \ArrayObject
     {
         $this->initialized['created'] = true;
         $this->created = $created;
+
+        return $this;
+    }
+
+    public function getUploadType(): string
+    {
+        return $this->uploadType;
+    }
+
+    public function setUploadType(string $uploadType): self
+    {
+        $this->initialized['uploadType'] = true;
+        $this->uploadType = $uploadType;
 
         return $this;
     }

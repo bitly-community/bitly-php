@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,205 +20,104 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class DomainDNSNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class DomainDNSNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\DomainDNS::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\DomainDNS::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\DomainDNS();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('domain', $data)) {
-                $object->setDomain($data['domain']);
-                unset($data['domain']);
-            }
-            if (\array_key_exists('dns_provider', $data)) {
-                $object->setDnsProvider($data['dns_provider']);
-                unset($data['dns_provider']);
-            }
-            if (\array_key_exists('type', $data)) {
-                $object->setType($data['type']);
-                unset($data['type']);
-            }
-            if (\array_key_exists('records', $data)) {
-                $values = [];
-                foreach ($data['records'] as $value) {
-                    $values[] = $value;
-                }
-                $object->setRecords($values);
-                unset($data['records']);
-            }
-            if (\array_key_exists('records_valid', $data)) {
-                $object->setRecordsValid($data['records_valid']);
-                unset($data['records_valid']);
-            }
-            foreach ($data as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_1;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('domain') && null !== $object->getDomain()) {
-                $data['domain'] = $object->getDomain();
-            }
-            if ($object->isInitialized('dnsProvider') && null !== $object->getDnsProvider()) {
-                $data['dns_provider'] = $object->getDnsProvider();
-            }
-            if ($object->isInitialized('type') && null !== $object->getType()) {
-                $data['type'] = $object->getType();
-            }
-            if ($object->isInitialized('records') && null !== $object->getRecords()) {
-                $values = [];
-                foreach ($object->getRecords() as $value) {
-                    $values[] = $value;
-                }
-                $data['records'] = $values;
-            }
-            if ($object->isInitialized('recordsValid') && null !== $object->getRecordsValid()) {
-                $data['records_valid'] = $object->getRecordsValid();
-            }
-            foreach ($object as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_1;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\DomainDNS::class => false];
-        }
+        return $type === \Bitly\Model\DomainDNS::class;
     }
-} else {
-    class DomainDNSNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\DomainDNS::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\DomainDNS::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\DomainDNS::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\DomainDNS();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('domain', $data)) {
-                $object->setDomain($data['domain']);
-                unset($data['domain']);
-            }
-            if (\array_key_exists('dns_provider', $data)) {
-                $object->setDnsProvider($data['dns_provider']);
-                unset($data['dns_provider']);
-            }
-            if (\array_key_exists('type', $data)) {
-                $object->setType($data['type']);
-                unset($data['type']);
-            }
-            if (\array_key_exists('records', $data)) {
-                $values = [];
-                foreach ($data['records'] as $value) {
-                    $values[] = $value;
-                }
-                $object->setRecords($values);
-                unset($data['records']);
-            }
-            if (\array_key_exists('records_valid', $data)) {
-                $object->setRecordsValid($data['records_valid']);
-                unset($data['records_valid']);
-            }
-            foreach ($data as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_1;
-                }
-            }
-
+        $object = new \Bitly\Model\DomainDNS();
+        if (\array_key_exists('records_valid', $data) && \is_int($data['records_valid'])) {
+            $data['records_valid'] = (bool) $data['records_valid'];
+        }
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('domain') && null !== $object->getDomain()) {
-                $data['domain'] = $object->getDomain();
+        if (\array_key_exists('domain', $data)) {
+            $object->setDomain($data['domain']);
+            unset($data['domain']);
+        }
+        if (\array_key_exists('dns_provider', $data)) {
+            $object->setDnsProvider($data['dns_provider']);
+            unset($data['dns_provider']);
+        }
+        if (\array_key_exists('type', $data)) {
+            $object->setType($data['type']);
+            unset($data['type']);
+        }
+        if (\array_key_exists('records', $data)) {
+            $values = [];
+            foreach ($data['records'] as $value) {
+                $values[] = $value;
             }
-            if ($object->isInitialized('dnsProvider') && null !== $object->getDnsProvider()) {
-                $data['dns_provider'] = $object->getDnsProvider();
+            $object->setRecords($values);
+            unset($data['records']);
+        }
+        if (\array_key_exists('records_valid', $data)) {
+            $object->setRecordsValid($data['records_valid']);
+            unset($data['records_valid']);
+        }
+        foreach ($data as $key => $value_1) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value_1;
             }
-            if ($object->isInitialized('type') && null !== $object->getType()) {
-                $data['type'] = $object->getType();
-            }
-            if ($object->isInitialized('records') && null !== $object->getRecords()) {
-                $values = [];
-                foreach ($object->getRecords() as $value) {
-                    $values[] = $value;
-                }
-                $data['records'] = $values;
-            }
-            if ($object->isInitialized('recordsValid') && null !== $object->getRecordsValid()) {
-                $data['records_valid'] = $object->getRecordsValid();
-            }
-            foreach ($object as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_1;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\DomainDNS::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('domain') && null !== $data->getDomain()) {
+            $dataArray['domain'] = $data->getDomain();
         }
+        if ($data->isInitialized('dnsProvider') && null !== $data->getDnsProvider()) {
+            $dataArray['dns_provider'] = $data->getDnsProvider();
+        }
+        if ($data->isInitialized('type') && null !== $data->getType()) {
+            $dataArray['type'] = $data->getType();
+        }
+        if ($data->isInitialized('records') && null !== $data->getRecords()) {
+            $values = [];
+            foreach ($data->getRecords() as $value) {
+                $values[] = $value;
+            }
+            $dataArray['records'] = $values;
+        }
+        if ($data->isInitialized('recordsValid') && null !== $data->getRecordsValid()) {
+            $dataArray['records_valid'] = $data->getRecordsValid();
+        }
+        foreach ($data as $key => $value_1) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value_1;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\DomainDNS::class => false];
     }
 }

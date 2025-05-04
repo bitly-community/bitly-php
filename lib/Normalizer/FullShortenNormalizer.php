@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,231 +20,114 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class FullShortenNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class FullShortenNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\FullShorten::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\FullShorten::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\FullShorten();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('long_url', $data)) {
-                $object->setLongUrl($data['long_url']);
-                unset($data['long_url']);
-            }
-            if (\array_key_exists('domain', $data)) {
-                $object->setDomain($data['domain']);
-                unset($data['domain']);
-            }
-            if (\array_key_exists('group_guid', $data)) {
-                $object->setGroupGuid($data['group_guid']);
-                unset($data['group_guid']);
-            }
-            if (\array_key_exists('title', $data)) {
-                $object->setTitle($data['title']);
-                unset($data['title']);
-            }
-            if (\array_key_exists('tags', $data)) {
-                $values = [];
-                foreach ($data['tags'] as $value) {
-                    $values[] = $value;
-                }
-                $object->setTags($values);
-                unset($data['tags']);
-            }
-            if (\array_key_exists('deeplinks', $data)) {
-                $values_1 = [];
-                foreach ($data['deeplinks'] as $value_1) {
-                    $values_1[] = $this->denormalizer->denormalize($value_1, \Bitly\Model\Deeplink::class, 'json', $context);
-                }
-                $object->setDeeplinks($values_1);
-                unset($data['deeplinks']);
-            }
-            foreach ($data as $key => $value_2) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_2;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            $data['long_url'] = $object->getLongUrl();
-            if ($object->isInitialized('domain') && null !== $object->getDomain()) {
-                $data['domain'] = $object->getDomain();
-            }
-            if ($object->isInitialized('groupGuid') && null !== $object->getGroupGuid()) {
-                $data['group_guid'] = $object->getGroupGuid();
-            }
-            if ($object->isInitialized('title') && null !== $object->getTitle()) {
-                $data['title'] = $object->getTitle();
-            }
-            if ($object->isInitialized('tags') && null !== $object->getTags()) {
-                $values = [];
-                foreach ($object->getTags() as $value) {
-                    $values[] = $value;
-                }
-                $data['tags'] = $values;
-            }
-            if ($object->isInitialized('deeplinks') && null !== $object->getDeeplinks()) {
-                $values_1 = [];
-                foreach ($object->getDeeplinks() as $value_1) {
-                    $values_1[] = $this->normalizer->normalize($value_1, 'json', $context);
-                }
-                $data['deeplinks'] = $values_1;
-            }
-            foreach ($object as $key => $value_2) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_2;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\FullShorten::class => false];
-        }
+        return $type === \Bitly\Model\FullShorten::class;
     }
-} else {
-    class FullShortenNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\FullShorten::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\FullShorten::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\FullShorten::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\FullShorten();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('long_url', $data)) {
-                $object->setLongUrl($data['long_url']);
-                unset($data['long_url']);
-            }
-            if (\array_key_exists('domain', $data)) {
-                $object->setDomain($data['domain']);
-                unset($data['domain']);
-            }
-            if (\array_key_exists('group_guid', $data)) {
-                $object->setGroupGuid($data['group_guid']);
-                unset($data['group_guid']);
-            }
-            if (\array_key_exists('title', $data)) {
-                $object->setTitle($data['title']);
-                unset($data['title']);
-            }
-            if (\array_key_exists('tags', $data)) {
-                $values = [];
-                foreach ($data['tags'] as $value) {
-                    $values[] = $value;
-                }
-                $object->setTags($values);
-                unset($data['tags']);
-            }
-            if (\array_key_exists('deeplinks', $data)) {
-                $values_1 = [];
-                foreach ($data['deeplinks'] as $value_1) {
-                    $values_1[] = $this->denormalizer->denormalize($value_1, \Bitly\Model\Deeplink::class, 'json', $context);
-                }
-                $object->setDeeplinks($values_1);
-                unset($data['deeplinks']);
-            }
-            foreach ($data as $key => $value_2) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_2;
-                }
-            }
-
+        $object = new \Bitly\Model\FullShorten();
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            $data['long_url'] = $object->getLongUrl();
-            if ($object->isInitialized('domain') && null !== $object->getDomain()) {
-                $data['domain'] = $object->getDomain();
+        if (\array_key_exists('long_url', $data)) {
+            $object->setLongUrl($data['long_url']);
+            unset($data['long_url']);
+        }
+        if (\array_key_exists('domain', $data)) {
+            $object->setDomain($data['domain']);
+            unset($data['domain']);
+        }
+        if (\array_key_exists('group_guid', $data)) {
+            $object->setGroupGuid($data['group_guid']);
+            unset($data['group_guid']);
+        }
+        if (\array_key_exists('title', $data)) {
+            $object->setTitle($data['title']);
+            unset($data['title']);
+        }
+        if (\array_key_exists('tags', $data)) {
+            $values = [];
+            foreach ($data['tags'] as $value) {
+                $values[] = $value;
             }
-            if ($object->isInitialized('groupGuid') && null !== $object->getGroupGuid()) {
-                $data['group_guid'] = $object->getGroupGuid();
+            $object->setTags($values);
+            unset($data['tags']);
+        }
+        if (\array_key_exists('deeplinks', $data)) {
+            $values_1 = [];
+            foreach ($data['deeplinks'] as $value_1) {
+                $values_1[] = $this->denormalizer->denormalize($value_1, \Bitly\Model\Deeplink::class, 'json', $context);
             }
-            if ($object->isInitialized('title') && null !== $object->getTitle()) {
-                $data['title'] = $object->getTitle();
+            $object->setDeeplinks($values_1);
+            unset($data['deeplinks']);
+        }
+        foreach ($data as $key => $value_2) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value_2;
             }
-            if ($object->isInitialized('tags') && null !== $object->getTags()) {
-                $values = [];
-                foreach ($object->getTags() as $value) {
-                    $values[] = $value;
-                }
-                $data['tags'] = $values;
-            }
-            if ($object->isInitialized('deeplinks') && null !== $object->getDeeplinks()) {
-                $values_1 = [];
-                foreach ($object->getDeeplinks() as $value_1) {
-                    $values_1[] = $this->normalizer->normalize($value_1, 'json', $context);
-                }
-                $data['deeplinks'] = $values_1;
-            }
-            foreach ($object as $key => $value_2) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_2;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\FullShorten::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        $dataArray['long_url'] = $data->getLongUrl();
+        if ($data->isInitialized('domain') && null !== $data->getDomain()) {
+            $dataArray['domain'] = $data->getDomain();
         }
+        if ($data->isInitialized('groupGuid') && null !== $data->getGroupGuid()) {
+            $dataArray['group_guid'] = $data->getGroupGuid();
+        }
+        if ($data->isInitialized('title') && null !== $data->getTitle()) {
+            $dataArray['title'] = $data->getTitle();
+        }
+        if ($data->isInitialized('tags') && null !== $data->getTags()) {
+            $values = [];
+            foreach ($data->getTags() as $value) {
+                $values[] = $value;
+            }
+            $dataArray['tags'] = $values;
+        }
+        if ($data->isInitialized('deeplinks') && null !== $data->getDeeplinks()) {
+            $values_1 = [];
+            foreach ($data->getDeeplinks() as $value_1) {
+                $values_1[] = $this->normalizer->normalize($value_1, 'json', $context);
+            }
+            $dataArray['deeplinks'] = $values_1;
+        }
+        foreach ($data as $key => $value_2) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value_2;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\FullShorten::class => false];
     }
 }

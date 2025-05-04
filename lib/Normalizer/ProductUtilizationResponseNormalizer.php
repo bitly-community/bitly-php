@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,189 +20,108 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class ProductUtilizationResponseNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class ProductUtilizationResponseNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\ProductUtilizationResponse::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\ProductUtilizationResponse::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\ProductUtilizationResponse();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('link_created', $data)) {
-                $object->setLinkCreated($data['link_created']);
-                unset($data['link_created']);
-            }
-            if (\array_key_exists('qr_code_created', $data)) {
-                $object->setQrCodeCreated($data['qr_code_created']);
-                unset($data['qr_code_created']);
-            }
-            if (\array_key_exists('lib_created', $data)) {
-                $object->setLibCreated($data['lib_created']);
-                unset($data['lib_created']);
-            }
-            if (\array_key_exists('analytics_dashboard_created', $data)) {
-                $object->setAnalyticsDashboardCreated($data['analytics_dashboard_created']);
-                unset($data['analytics_dashboard_created']);
-            }
-            if (\array_key_exists('custom_domain_created', $data)) {
-                $object->setCustomDomainCreated($data['custom_domain_created']);
-                unset($data['custom_domain_created']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('linkCreated') && null !== $object->getLinkCreated()) {
-                $data['link_created'] = $object->getLinkCreated();
-            }
-            if ($object->isInitialized('qrCodeCreated') && null !== $object->getQrCodeCreated()) {
-                $data['qr_code_created'] = $object->getQrCodeCreated();
-            }
-            if ($object->isInitialized('libCreated') && null !== $object->getLibCreated()) {
-                $data['lib_created'] = $object->getLibCreated();
-            }
-            if ($object->isInitialized('analyticsDashboardCreated') && null !== $object->getAnalyticsDashboardCreated()) {
-                $data['analytics_dashboard_created'] = $object->getAnalyticsDashboardCreated();
-            }
-            if ($object->isInitialized('customDomainCreated') && null !== $object->getCustomDomainCreated()) {
-                $data['custom_domain_created'] = $object->getCustomDomainCreated();
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\ProductUtilizationResponse::class => false];
-        }
+        return $type === \Bitly\Model\ProductUtilizationResponse::class;
     }
-} else {
-    class ProductUtilizationResponseNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\ProductUtilizationResponse::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\ProductUtilizationResponse::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\ProductUtilizationResponse::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\ProductUtilizationResponse();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('link_created', $data)) {
-                $object->setLinkCreated($data['link_created']);
-                unset($data['link_created']);
-            }
-            if (\array_key_exists('qr_code_created', $data)) {
-                $object->setQrCodeCreated($data['qr_code_created']);
-                unset($data['qr_code_created']);
-            }
-            if (\array_key_exists('lib_created', $data)) {
-                $object->setLibCreated($data['lib_created']);
-                unset($data['lib_created']);
-            }
-            if (\array_key_exists('analytics_dashboard_created', $data)) {
-                $object->setAnalyticsDashboardCreated($data['analytics_dashboard_created']);
-                unset($data['analytics_dashboard_created']);
-            }
-            if (\array_key_exists('custom_domain_created', $data)) {
-                $object->setCustomDomainCreated($data['custom_domain_created']);
-                unset($data['custom_domain_created']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
+        $object = new \Bitly\Model\ProductUtilizationResponse();
+        if (\array_key_exists('link_created', $data) && \is_int($data['link_created'])) {
+            $data['link_created'] = (bool) $data['link_created'];
+        }
+        if (\array_key_exists('qr_code_created', $data) && \is_int($data['qr_code_created'])) {
+            $data['qr_code_created'] = (bool) $data['qr_code_created'];
+        }
+        if (\array_key_exists('lib_created', $data) && \is_int($data['lib_created'])) {
+            $data['lib_created'] = (bool) $data['lib_created'];
+        }
+        if (\array_key_exists('analytics_dashboard_created', $data) && \is_int($data['analytics_dashboard_created'])) {
+            $data['analytics_dashboard_created'] = (bool) $data['analytics_dashboard_created'];
+        }
+        if (\array_key_exists('custom_domain_created', $data) && \is_int($data['custom_domain_created'])) {
+            $data['custom_domain_created'] = (bool) $data['custom_domain_created'];
+        }
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('linkCreated') && null !== $object->getLinkCreated()) {
-                $data['link_created'] = $object->getLinkCreated();
+        if (\array_key_exists('link_created', $data)) {
+            $object->setLinkCreated($data['link_created']);
+            unset($data['link_created']);
+        }
+        if (\array_key_exists('qr_code_created', $data)) {
+            $object->setQrCodeCreated($data['qr_code_created']);
+            unset($data['qr_code_created']);
+        }
+        if (\array_key_exists('lib_created', $data)) {
+            $object->setLibCreated($data['lib_created']);
+            unset($data['lib_created']);
+        }
+        if (\array_key_exists('analytics_dashboard_created', $data)) {
+            $object->setAnalyticsDashboardCreated($data['analytics_dashboard_created']);
+            unset($data['analytics_dashboard_created']);
+        }
+        if (\array_key_exists('custom_domain_created', $data)) {
+            $object->setCustomDomainCreated($data['custom_domain_created']);
+            unset($data['custom_domain_created']);
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value;
             }
-            if ($object->isInitialized('qrCodeCreated') && null !== $object->getQrCodeCreated()) {
-                $data['qr_code_created'] = $object->getQrCodeCreated();
-            }
-            if ($object->isInitialized('libCreated') && null !== $object->getLibCreated()) {
-                $data['lib_created'] = $object->getLibCreated();
-            }
-            if ($object->isInitialized('analyticsDashboardCreated') && null !== $object->getAnalyticsDashboardCreated()) {
-                $data['analytics_dashboard_created'] = $object->getAnalyticsDashboardCreated();
-            }
-            if ($object->isInitialized('customDomainCreated') && null !== $object->getCustomDomainCreated()) {
-                $data['custom_domain_created'] = $object->getCustomDomainCreated();
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\ProductUtilizationResponse::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('linkCreated') && null !== $data->getLinkCreated()) {
+            $dataArray['link_created'] = $data->getLinkCreated();
         }
+        if ($data->isInitialized('qrCodeCreated') && null !== $data->getQrCodeCreated()) {
+            $dataArray['qr_code_created'] = $data->getQrCodeCreated();
+        }
+        if ($data->isInitialized('libCreated') && null !== $data->getLibCreated()) {
+            $dataArray['lib_created'] = $data->getLibCreated();
+        }
+        if ($data->isInitialized('analyticsDashboardCreated') && null !== $data->getAnalyticsDashboardCreated()) {
+            $dataArray['analytics_dashboard_created'] = $data->getAnalyticsDashboardCreated();
+        }
+        if ($data->isInitialized('customDomainCreated') && null !== $data->getCustomDomainCreated()) {
+            $dataArray['custom_domain_created'] = $data->getCustomDomainCreated();
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\ProductUtilizationResponse::class => false];
     }
 }

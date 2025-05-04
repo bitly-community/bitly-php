@@ -69,6 +69,10 @@ class Launchpad extends \ArrayObject
      * @var string
      */
     protected $scheme;
+    /**
+     * @var string
+     */
+    protected $qrCodeId;
 
     public function getLaunchpadId(): string
     {
@@ -234,6 +238,19 @@ class Launchpad extends \ArrayObject
     {
         $this->initialized['scheme'] = true;
         $this->scheme = $scheme;
+
+        return $this;
+    }
+
+    public function getQrCodeId(): string
+    {
+        return $this->qrCodeId;
+    }
+
+    public function setQrCodeId(string $qrCodeId): self
+    {
+        $this->initialized['qrCodeId'] = true;
+        $this->qrCodeId = $qrCodeId;
 
         return $this;
     }

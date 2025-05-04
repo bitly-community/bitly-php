@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,277 +20,137 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class SubscriptionDiscountNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class SubscriptionDiscountNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\SubscriptionDiscount::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\SubscriptionDiscount::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\SubscriptionDiscount();
-            if (\array_key_exists('up_to_periods', $data) && \is_int($data['up_to_periods'])) {
-                $data['up_to_periods'] = (float) $data['up_to_periods'];
-            }
-            if (\array_key_exists('discount_amount', $data) && \is_int($data['discount_amount'])) {
-                $data['discount_amount'] = (float) $data['discount_amount'];
-            }
-            if (\array_key_exists('discount_percentage', $data) && \is_int($data['discount_percentage'])) {
-                $data['discount_percentage'] = (float) $data['discount_percentage'];
-            }
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('billing_period', $data)) {
-                $object->setBillingPeriod($data['billing_period']);
-                unset($data['billing_period']);
-            }
-            if (\array_key_exists('effective_end_date', $data)) {
-                $object->setEffectiveEndDate($data['effective_end_date']);
-                unset($data['effective_end_date']);
-            }
-            if (\array_key_exists('effective_start_date', $data)) {
-                $object->setEffectiveStartDate($data['effective_start_date']);
-                unset($data['effective_start_date']);
-            }
-            if (\array_key_exists('up_to_periods_type', $data)) {
-                $object->setUpToPeriodsType($data['up_to_periods_type']);
-                unset($data['up_to_periods_type']);
-            }
-            if (\array_key_exists('product_rate_plan_charge_id', $data)) {
-                $object->setProductRatePlanChargeId($data['product_rate_plan_charge_id']);
-                unset($data['product_rate_plan_charge_id']);
-            }
-            if (\array_key_exists('model', $data)) {
-                $object->setModel($data['model']);
-                unset($data['model']);
-            }
-            if (\array_key_exists('end_date_condition', $data)) {
-                $object->setEndDateCondition($data['end_date_condition']);
-                unset($data['end_date_condition']);
-            }
-            if (\array_key_exists('up_to_periods', $data)) {
-                $object->setUpToPeriods($data['up_to_periods']);
-                unset($data['up_to_periods']);
-            }
-            if (\array_key_exists('discount_amount', $data)) {
-                $object->setDiscountAmount($data['discount_amount']);
-                unset($data['discount_amount']);
-            }
-            if (\array_key_exists('discount_percentage', $data)) {
-                $object->setDiscountPercentage($data['discount_percentage']);
-                unset($data['discount_percentage']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('billingPeriod') && null !== $object->getBillingPeriod()) {
-                $data['billing_period'] = $object->getBillingPeriod();
-            }
-            if ($object->isInitialized('effectiveEndDate') && null !== $object->getEffectiveEndDate()) {
-                $data['effective_end_date'] = $object->getEffectiveEndDate();
-            }
-            if ($object->isInitialized('effectiveStartDate') && null !== $object->getEffectiveStartDate()) {
-                $data['effective_start_date'] = $object->getEffectiveStartDate();
-            }
-            if ($object->isInitialized('upToPeriodsType') && null !== $object->getUpToPeriodsType()) {
-                $data['up_to_periods_type'] = $object->getUpToPeriodsType();
-            }
-            if ($object->isInitialized('productRatePlanChargeId') && null !== $object->getProductRatePlanChargeId()) {
-                $data['product_rate_plan_charge_id'] = $object->getProductRatePlanChargeId();
-            }
-            if ($object->isInitialized('model') && null !== $object->getModel()) {
-                $data['model'] = $object->getModel();
-            }
-            if ($object->isInitialized('endDateCondition') && null !== $object->getEndDateCondition()) {
-                $data['end_date_condition'] = $object->getEndDateCondition();
-            }
-            if ($object->isInitialized('upToPeriods') && null !== $object->getUpToPeriods()) {
-                $data['up_to_periods'] = $object->getUpToPeriods();
-            }
-            if ($object->isInitialized('discountAmount') && null !== $object->getDiscountAmount()) {
-                $data['discount_amount'] = $object->getDiscountAmount();
-            }
-            if ($object->isInitialized('discountPercentage') && null !== $object->getDiscountPercentage()) {
-                $data['discount_percentage'] = $object->getDiscountPercentage();
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\SubscriptionDiscount::class => false];
-        }
+        return $type === \Bitly\Model\SubscriptionDiscount::class;
     }
-} else {
-    class SubscriptionDiscountNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\SubscriptionDiscount::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\SubscriptionDiscount::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\SubscriptionDiscount::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\SubscriptionDiscount();
-            if (\array_key_exists('up_to_periods', $data) && \is_int($data['up_to_periods'])) {
-                $data['up_to_periods'] = (float) $data['up_to_periods'];
-            }
-            if (\array_key_exists('discount_amount', $data) && \is_int($data['discount_amount'])) {
-                $data['discount_amount'] = (float) $data['discount_amount'];
-            }
-            if (\array_key_exists('discount_percentage', $data) && \is_int($data['discount_percentage'])) {
-                $data['discount_percentage'] = (float) $data['discount_percentage'];
-            }
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('billing_period', $data)) {
-                $object->setBillingPeriod($data['billing_period']);
-                unset($data['billing_period']);
-            }
-            if (\array_key_exists('effective_end_date', $data)) {
-                $object->setEffectiveEndDate($data['effective_end_date']);
-                unset($data['effective_end_date']);
-            }
-            if (\array_key_exists('effective_start_date', $data)) {
-                $object->setEffectiveStartDate($data['effective_start_date']);
-                unset($data['effective_start_date']);
-            }
-            if (\array_key_exists('up_to_periods_type', $data)) {
-                $object->setUpToPeriodsType($data['up_to_periods_type']);
-                unset($data['up_to_periods_type']);
-            }
-            if (\array_key_exists('product_rate_plan_charge_id', $data)) {
-                $object->setProductRatePlanChargeId($data['product_rate_plan_charge_id']);
-                unset($data['product_rate_plan_charge_id']);
-            }
-            if (\array_key_exists('model', $data)) {
-                $object->setModel($data['model']);
-                unset($data['model']);
-            }
-            if (\array_key_exists('end_date_condition', $data)) {
-                $object->setEndDateCondition($data['end_date_condition']);
-                unset($data['end_date_condition']);
-            }
-            if (\array_key_exists('up_to_periods', $data)) {
-                $object->setUpToPeriods($data['up_to_periods']);
-                unset($data['up_to_periods']);
-            }
-            if (\array_key_exists('discount_amount', $data)) {
-                $object->setDiscountAmount($data['discount_amount']);
-                unset($data['discount_amount']);
-            }
-            if (\array_key_exists('discount_percentage', $data)) {
-                $object->setDiscountPercentage($data['discount_percentage']);
-                unset($data['discount_percentage']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
+        $object = new \Bitly\Model\SubscriptionDiscount();
+        if (\array_key_exists('up_to_periods', $data) && \is_int($data['up_to_periods'])) {
+            $data['up_to_periods'] = (float) $data['up_to_periods'];
+        }
+        if (\array_key_exists('discount_amount', $data) && \is_int($data['discount_amount'])) {
+            $data['discount_amount'] = (float) $data['discount_amount'];
+        }
+        if (\array_key_exists('discount_percentage', $data) && \is_int($data['discount_percentage'])) {
+            $data['discount_percentage'] = (float) $data['discount_percentage'];
+        }
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('billingPeriod') && null !== $object->getBillingPeriod()) {
-                $data['billing_period'] = $object->getBillingPeriod();
+        if (\array_key_exists('billing_period', $data)) {
+            $object->setBillingPeriod($data['billing_period']);
+            unset($data['billing_period']);
+        }
+        if (\array_key_exists('effective_end_date', $data)) {
+            $object->setEffectiveEndDate($data['effective_end_date']);
+            unset($data['effective_end_date']);
+        }
+        if (\array_key_exists('effective_start_date', $data)) {
+            $object->setEffectiveStartDate($data['effective_start_date']);
+            unset($data['effective_start_date']);
+        }
+        if (\array_key_exists('up_to_periods_type', $data)) {
+            $object->setUpToPeriodsType($data['up_to_periods_type']);
+            unset($data['up_to_periods_type']);
+        }
+        if (\array_key_exists('product_rate_plan_charge_id', $data)) {
+            $object->setProductRatePlanChargeId($data['product_rate_plan_charge_id']);
+            unset($data['product_rate_plan_charge_id']);
+        }
+        if (\array_key_exists('model', $data)) {
+            $object->setModel($data['model']);
+            unset($data['model']);
+        }
+        if (\array_key_exists('end_date_condition', $data)) {
+            $object->setEndDateCondition($data['end_date_condition']);
+            unset($data['end_date_condition']);
+        }
+        if (\array_key_exists('up_to_periods', $data)) {
+            $object->setUpToPeriods($data['up_to_periods']);
+            unset($data['up_to_periods']);
+        }
+        if (\array_key_exists('discount_amount', $data)) {
+            $object->setDiscountAmount($data['discount_amount']);
+            unset($data['discount_amount']);
+        }
+        if (\array_key_exists('discount_percentage', $data)) {
+            $object->setDiscountPercentage($data['discount_percentage']);
+            unset($data['discount_percentage']);
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value;
             }
-            if ($object->isInitialized('effectiveEndDate') && null !== $object->getEffectiveEndDate()) {
-                $data['effective_end_date'] = $object->getEffectiveEndDate();
-            }
-            if ($object->isInitialized('effectiveStartDate') && null !== $object->getEffectiveStartDate()) {
-                $data['effective_start_date'] = $object->getEffectiveStartDate();
-            }
-            if ($object->isInitialized('upToPeriodsType') && null !== $object->getUpToPeriodsType()) {
-                $data['up_to_periods_type'] = $object->getUpToPeriodsType();
-            }
-            if ($object->isInitialized('productRatePlanChargeId') && null !== $object->getProductRatePlanChargeId()) {
-                $data['product_rate_plan_charge_id'] = $object->getProductRatePlanChargeId();
-            }
-            if ($object->isInitialized('model') && null !== $object->getModel()) {
-                $data['model'] = $object->getModel();
-            }
-            if ($object->isInitialized('endDateCondition') && null !== $object->getEndDateCondition()) {
-                $data['end_date_condition'] = $object->getEndDateCondition();
-            }
-            if ($object->isInitialized('upToPeriods') && null !== $object->getUpToPeriods()) {
-                $data['up_to_periods'] = $object->getUpToPeriods();
-            }
-            if ($object->isInitialized('discountAmount') && null !== $object->getDiscountAmount()) {
-                $data['discount_amount'] = $object->getDiscountAmount();
-            }
-            if ($object->isInitialized('discountPercentage') && null !== $object->getDiscountPercentage()) {
-                $data['discount_percentage'] = $object->getDiscountPercentage();
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\SubscriptionDiscount::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('billingPeriod') && null !== $data->getBillingPeriod()) {
+            $dataArray['billing_period'] = $data->getBillingPeriod();
         }
+        if ($data->isInitialized('effectiveEndDate') && null !== $data->getEffectiveEndDate()) {
+            $dataArray['effective_end_date'] = $data->getEffectiveEndDate();
+        }
+        if ($data->isInitialized('effectiveStartDate') && null !== $data->getEffectiveStartDate()) {
+            $dataArray['effective_start_date'] = $data->getEffectiveStartDate();
+        }
+        if ($data->isInitialized('upToPeriodsType') && null !== $data->getUpToPeriodsType()) {
+            $dataArray['up_to_periods_type'] = $data->getUpToPeriodsType();
+        }
+        if ($data->isInitialized('productRatePlanChargeId') && null !== $data->getProductRatePlanChargeId()) {
+            $dataArray['product_rate_plan_charge_id'] = $data->getProductRatePlanChargeId();
+        }
+        if ($data->isInitialized('model') && null !== $data->getModel()) {
+            $dataArray['model'] = $data->getModel();
+        }
+        if ($data->isInitialized('endDateCondition') && null !== $data->getEndDateCondition()) {
+            $dataArray['end_date_condition'] = $data->getEndDateCondition();
+        }
+        if ($data->isInitialized('upToPeriods') && null !== $data->getUpToPeriods()) {
+            $dataArray['up_to_periods'] = $data->getUpToPeriods();
+        }
+        if ($data->isInitialized('discountAmount') && null !== $data->getDiscountAmount()) {
+            $dataArray['discount_amount'] = $data->getDiscountAmount();
+        }
+        if ($data->isInitialized('discountPercentage') && null !== $data->getDiscountPercentage()) {
+            $dataArray['discount_percentage'] = $data->getDiscountPercentage();
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\SubscriptionDiscount::class => false];
     }
 }

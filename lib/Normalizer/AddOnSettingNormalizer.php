@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,209 +20,103 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class AddOnSettingNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class AddOnSettingNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\AddOnSetting::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\AddOnSetting::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\AddOnSetting();
-            if (\array_key_exists('price', $data) && \is_int($data['price'])) {
-                $data['price'] = (float) $data['price'];
-            }
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('feature_name', $data)) {
-                $object->setFeatureName($data['feature_name']);
-                unset($data['feature_name']);
-            }
-            if (\array_key_exists('limit', $data)) {
-                $object->setLimit($data['limit']);
-                unset($data['limit']);
-            }
-            if (\array_key_exists('product', $data)) {
-                $object->setProduct($data['product']);
-                unset($data['product']);
-            }
-            if (\array_key_exists('incr', $data)) {
-                $object->setIncr($data['incr']);
-                unset($data['incr']);
-            }
-            if (\array_key_exists('price', $data)) {
-                $object->setPrice($data['price']);
-                unset($data['price']);
-            }
-            if (\array_key_exists('price_map', $data)) {
-                $object->setPriceMap($this->denormalizer->denormalize($data['price_map'], \Bitly\Model\PriceMap::class, 'json', $context));
-                unset($data['price_map']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('featureName') && null !== $object->getFeatureName()) {
-                $data['feature_name'] = $object->getFeatureName();
-            }
-            if ($object->isInitialized('limit') && null !== $object->getLimit()) {
-                $data['limit'] = $object->getLimit();
-            }
-            if ($object->isInitialized('product') && null !== $object->getProduct()) {
-                $data['product'] = $object->getProduct();
-            }
-            if ($object->isInitialized('incr') && null !== $object->getIncr()) {
-                $data['incr'] = $object->getIncr();
-            }
-            if ($object->isInitialized('price') && null !== $object->getPrice()) {
-                $data['price'] = $object->getPrice();
-            }
-            if ($object->isInitialized('priceMap') && null !== $object->getPriceMap()) {
-                $data['price_map'] = $this->normalizer->normalize($object->getPriceMap(), 'json', $context);
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\AddOnSetting::class => false];
-        }
+        return $type === \Bitly\Model\AddOnSetting::class;
     }
-} else {
-    class AddOnSettingNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\AddOnSetting::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\AddOnSetting::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\AddOnSetting::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\AddOnSetting();
-            if (\array_key_exists('price', $data) && \is_int($data['price'])) {
-                $data['price'] = (float) $data['price'];
-            }
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('feature_name', $data)) {
-                $object->setFeatureName($data['feature_name']);
-                unset($data['feature_name']);
-            }
-            if (\array_key_exists('limit', $data)) {
-                $object->setLimit($data['limit']);
-                unset($data['limit']);
-            }
-            if (\array_key_exists('product', $data)) {
-                $object->setProduct($data['product']);
-                unset($data['product']);
-            }
-            if (\array_key_exists('incr', $data)) {
-                $object->setIncr($data['incr']);
-                unset($data['incr']);
-            }
-            if (\array_key_exists('price', $data)) {
-                $object->setPrice($data['price']);
-                unset($data['price']);
-            }
-            if (\array_key_exists('price_map', $data)) {
-                $object->setPriceMap($this->denormalizer->denormalize($data['price_map'], \Bitly\Model\PriceMap::class, 'json', $context));
-                unset($data['price_map']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
+        $object = new \Bitly\Model\AddOnSetting();
+        if (\array_key_exists('price', $data) && \is_int($data['price'])) {
+            $data['price'] = (float) $data['price'];
+        }
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('featureName') && null !== $object->getFeatureName()) {
-                $data['feature_name'] = $object->getFeatureName();
+        if (\array_key_exists('feature_name', $data)) {
+            $object->setFeatureName($data['feature_name']);
+            unset($data['feature_name']);
+        }
+        if (\array_key_exists('limit', $data)) {
+            $object->setLimit($data['limit']);
+            unset($data['limit']);
+        }
+        if (\array_key_exists('product', $data)) {
+            $object->setProduct($data['product']);
+            unset($data['product']);
+        }
+        if (\array_key_exists('incr', $data)) {
+            $object->setIncr($data['incr']);
+            unset($data['incr']);
+        }
+        if (\array_key_exists('price', $data)) {
+            $object->setPrice($data['price']);
+            unset($data['price']);
+        }
+        if (\array_key_exists('price_map', $data)) {
+            $object->setPriceMap($this->denormalizer->denormalize($data['price_map'], \Bitly\Model\PriceMap::class, 'json', $context));
+            unset($data['price_map']);
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value;
             }
-            if ($object->isInitialized('limit') && null !== $object->getLimit()) {
-                $data['limit'] = $object->getLimit();
-            }
-            if ($object->isInitialized('product') && null !== $object->getProduct()) {
-                $data['product'] = $object->getProduct();
-            }
-            if ($object->isInitialized('incr') && null !== $object->getIncr()) {
-                $data['incr'] = $object->getIncr();
-            }
-            if ($object->isInitialized('price') && null !== $object->getPrice()) {
-                $data['price'] = $object->getPrice();
-            }
-            if ($object->isInitialized('priceMap') && null !== $object->getPriceMap()) {
-                $data['price_map'] = $this->normalizer->normalize($object->getPriceMap(), 'json', $context);
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\AddOnSetting::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('featureName') && null !== $data->getFeatureName()) {
+            $dataArray['feature_name'] = $data->getFeatureName();
         }
+        if ($data->isInitialized('limit') && null !== $data->getLimit()) {
+            $dataArray['limit'] = $data->getLimit();
+        }
+        if ($data->isInitialized('product') && null !== $data->getProduct()) {
+            $dataArray['product'] = $data->getProduct();
+        }
+        if ($data->isInitialized('incr') && null !== $data->getIncr()) {
+            $dataArray['incr'] = $data->getIncr();
+        }
+        if ($data->isInitialized('price') && null !== $data->getPrice()) {
+            $dataArray['price'] = $data->getPrice();
+        }
+        if ($data->isInitialized('priceMap') && null !== $data->getPriceMap()) {
+            $dataArray['price_map'] = $this->normalizer->normalize($data->getPriceMap(), 'json', $context);
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\AddOnSetting::class => false];
     }
 }

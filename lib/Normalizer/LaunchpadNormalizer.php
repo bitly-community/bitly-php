@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,315 +20,169 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class LaunchpadNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class LaunchpadNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\Launchpad::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\Launchpad::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\Launchpad();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('launchpad_id', $data)) {
-                $object->setLaunchpadId($data['launchpad_id']);
-                unset($data['launchpad_id']);
-            }
-            if (\array_key_exists('draft_id', $data)) {
-                $object->setDraftId($data['draft_id']);
-                unset($data['draft_id']);
-            }
-            if (\array_key_exists('is_edited', $data)) {
-                $object->setIsEdited($data['is_edited']);
-                unset($data['is_edited']);
-            }
-            if (\array_key_exists('domain', $data)) {
-                $object->setDomain($data['domain']);
-                unset($data['domain']);
-            }
-            if (\array_key_exists('keyword', $data)) {
-                $object->setKeyword($data['keyword']);
-                unset($data['keyword']);
-            }
-            if (\array_key_exists('uri', $data)) {
-                $object->setUri($data['uri']);
-                unset($data['uri']);
-            }
-            if (\array_key_exists('is_active', $data)) {
-                $object->setIsActive($data['is_active']);
-                unset($data['is_active']);
-            }
-            if (\array_key_exists('launchpad_appearance', $data)) {
-                $object->setLaunchpadAppearance($this->denormalizer->denormalize($data['launchpad_appearance'], \Bitly\Model\LaunchpadAppearance::class, 'json', $context));
-                unset($data['launchpad_appearance']);
-            }
-            if (\array_key_exists('images', $data)) {
-                $object->setImages($this->denormalizer->denormalize($data['images'], \Bitly\Model\LaunchpadImages::class, 'json', $context));
-                unset($data['images']);
-            }
-            if (\array_key_exists('buttons', $data)) {
-                $values = [];
-                foreach ($data['buttons'] as $value) {
-                    $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\LaunchpadButton::class, 'json', $context);
-                }
-                $object->setButtons($values);
-                unset($data['buttons']);
-            }
-            if (\array_key_exists('socials', $data)) {
-                $values_1 = [];
-                foreach ($data['socials'] as $value_1) {
-                    $values_1[] = $this->denormalizer->denormalize($value_1, \Bitly\Model\LaunchpadSocial::class, 'json', $context);
-                }
-                $object->setSocials($values_1);
-                unset($data['socials']);
-            }
-            if (\array_key_exists('scheme', $data)) {
-                $object->setScheme($data['scheme']);
-                unset($data['scheme']);
-            }
-            foreach ($data as $key => $value_2) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_2;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('launchpadId') && null !== $object->getLaunchpadId()) {
-                $data['launchpad_id'] = $object->getLaunchpadId();
-            }
-            if ($object->isInitialized('draftId') && null !== $object->getDraftId()) {
-                $data['draft_id'] = $object->getDraftId();
-            }
-            if ($object->isInitialized('isEdited') && null !== $object->getIsEdited()) {
-                $data['is_edited'] = $object->getIsEdited();
-            }
-            if ($object->isInitialized('domain') && null !== $object->getDomain()) {
-                $data['domain'] = $object->getDomain();
-            }
-            if ($object->isInitialized('keyword') && null !== $object->getKeyword()) {
-                $data['keyword'] = $object->getKeyword();
-            }
-            if ($object->isInitialized('uri') && null !== $object->getUri()) {
-                $data['uri'] = $object->getUri();
-            }
-            $data['is_active'] = $object->getIsActive();
-            if ($object->isInitialized('launchpadAppearance') && null !== $object->getLaunchpadAppearance()) {
-                $data['launchpad_appearance'] = $this->normalizer->normalize($object->getLaunchpadAppearance(), 'json', $context);
-            }
-            if ($object->isInitialized('images') && null !== $object->getImages()) {
-                $data['images'] = $this->normalizer->normalize($object->getImages(), 'json', $context);
-            }
-            if ($object->isInitialized('buttons') && null !== $object->getButtons()) {
-                $values = [];
-                foreach ($object->getButtons() as $value) {
-                    $values[] = $this->normalizer->normalize($value, 'json', $context);
-                }
-                $data['buttons'] = $values;
-            }
-            if ($object->isInitialized('socials') && null !== $object->getSocials()) {
-                $values_1 = [];
-                foreach ($object->getSocials() as $value_1) {
-                    $values_1[] = $this->normalizer->normalize($value_1, 'json', $context);
-                }
-                $data['socials'] = $values_1;
-            }
-            if ($object->isInitialized('scheme') && null !== $object->getScheme()) {
-                $data['scheme'] = $object->getScheme();
-            }
-            foreach ($object as $key => $value_2) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_2;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\Launchpad::class => false];
-        }
+        return $type === \Bitly\Model\Launchpad::class;
     }
-} else {
-    class LaunchpadNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\Launchpad::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\Launchpad::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\Launchpad::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\Launchpad();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('launchpad_id', $data)) {
-                $object->setLaunchpadId($data['launchpad_id']);
-                unset($data['launchpad_id']);
-            }
-            if (\array_key_exists('draft_id', $data)) {
-                $object->setDraftId($data['draft_id']);
-                unset($data['draft_id']);
-            }
-            if (\array_key_exists('is_edited', $data)) {
-                $object->setIsEdited($data['is_edited']);
-                unset($data['is_edited']);
-            }
-            if (\array_key_exists('domain', $data)) {
-                $object->setDomain($data['domain']);
-                unset($data['domain']);
-            }
-            if (\array_key_exists('keyword', $data)) {
-                $object->setKeyword($data['keyword']);
-                unset($data['keyword']);
-            }
-            if (\array_key_exists('uri', $data)) {
-                $object->setUri($data['uri']);
-                unset($data['uri']);
-            }
-            if (\array_key_exists('is_active', $data)) {
-                $object->setIsActive($data['is_active']);
-                unset($data['is_active']);
-            }
-            if (\array_key_exists('launchpad_appearance', $data)) {
-                $object->setLaunchpadAppearance($this->denormalizer->denormalize($data['launchpad_appearance'], \Bitly\Model\LaunchpadAppearance::class, 'json', $context));
-                unset($data['launchpad_appearance']);
-            }
-            if (\array_key_exists('images', $data)) {
-                $object->setImages($this->denormalizer->denormalize($data['images'], \Bitly\Model\LaunchpadImages::class, 'json', $context));
-                unset($data['images']);
-            }
-            if (\array_key_exists('buttons', $data)) {
-                $values = [];
-                foreach ($data['buttons'] as $value) {
-                    $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\LaunchpadButton::class, 'json', $context);
-                }
-                $object->setButtons($values);
-                unset($data['buttons']);
-            }
-            if (\array_key_exists('socials', $data)) {
-                $values_1 = [];
-                foreach ($data['socials'] as $value_1) {
-                    $values_1[] = $this->denormalizer->denormalize($value_1, \Bitly\Model\LaunchpadSocial::class, 'json', $context);
-                }
-                $object->setSocials($values_1);
-                unset($data['socials']);
-            }
-            if (\array_key_exists('scheme', $data)) {
-                $object->setScheme($data['scheme']);
-                unset($data['scheme']);
-            }
-            foreach ($data as $key => $value_2) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_2;
-                }
-            }
-
+        $object = new \Bitly\Model\Launchpad();
+        if (\array_key_exists('is_edited', $data) && \is_int($data['is_edited'])) {
+            $data['is_edited'] = (bool) $data['is_edited'];
+        }
+        if (\array_key_exists('is_active', $data) && \is_int($data['is_active'])) {
+            $data['is_active'] = (bool) $data['is_active'];
+        }
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('launchpadId') && null !== $object->getLaunchpadId()) {
-                $data['launchpad_id'] = $object->getLaunchpadId();
+        if (\array_key_exists('launchpad_id', $data)) {
+            $object->setLaunchpadId($data['launchpad_id']);
+            unset($data['launchpad_id']);
+        }
+        if (\array_key_exists('draft_id', $data)) {
+            $object->setDraftId($data['draft_id']);
+            unset($data['draft_id']);
+        }
+        if (\array_key_exists('is_edited', $data)) {
+            $object->setIsEdited($data['is_edited']);
+            unset($data['is_edited']);
+        }
+        if (\array_key_exists('domain', $data)) {
+            $object->setDomain($data['domain']);
+            unset($data['domain']);
+        }
+        if (\array_key_exists('keyword', $data)) {
+            $object->setKeyword($data['keyword']);
+            unset($data['keyword']);
+        }
+        if (\array_key_exists('uri', $data)) {
+            $object->setUri($data['uri']);
+            unset($data['uri']);
+        }
+        if (\array_key_exists('is_active', $data)) {
+            $object->setIsActive($data['is_active']);
+            unset($data['is_active']);
+        }
+        if (\array_key_exists('launchpad_appearance', $data)) {
+            $object->setLaunchpadAppearance($this->denormalizer->denormalize($data['launchpad_appearance'], \Bitly\Model\LaunchpadAppearance::class, 'json', $context));
+            unset($data['launchpad_appearance']);
+        }
+        if (\array_key_exists('images', $data)) {
+            $object->setImages($this->denormalizer->denormalize($data['images'], \Bitly\Model\LaunchpadImages::class, 'json', $context));
+            unset($data['images']);
+        }
+        if (\array_key_exists('buttons', $data)) {
+            $values = [];
+            foreach ($data['buttons'] as $value) {
+                $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\LaunchpadButton::class, 'json', $context);
             }
-            if ($object->isInitialized('draftId') && null !== $object->getDraftId()) {
-                $data['draft_id'] = $object->getDraftId();
+            $object->setButtons($values);
+            unset($data['buttons']);
+        }
+        if (\array_key_exists('socials', $data)) {
+            $values_1 = [];
+            foreach ($data['socials'] as $value_1) {
+                $values_1[] = $this->denormalizer->denormalize($value_1, \Bitly\Model\LaunchpadSocial::class, 'json', $context);
             }
-            if ($object->isInitialized('isEdited') && null !== $object->getIsEdited()) {
-                $data['is_edited'] = $object->getIsEdited();
+            $object->setSocials($values_1);
+            unset($data['socials']);
+        }
+        if (\array_key_exists('scheme', $data)) {
+            $object->setScheme($data['scheme']);
+            unset($data['scheme']);
+        }
+        if (\array_key_exists('qr_code_id', $data)) {
+            $object->setQrCodeId($data['qr_code_id']);
+            unset($data['qr_code_id']);
+        }
+        foreach ($data as $key => $value_2) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value_2;
             }
-            if ($object->isInitialized('domain') && null !== $object->getDomain()) {
-                $data['domain'] = $object->getDomain();
-            }
-            if ($object->isInitialized('keyword') && null !== $object->getKeyword()) {
-                $data['keyword'] = $object->getKeyword();
-            }
-            if ($object->isInitialized('uri') && null !== $object->getUri()) {
-                $data['uri'] = $object->getUri();
-            }
-            $data['is_active'] = $object->getIsActive();
-            if ($object->isInitialized('launchpadAppearance') && null !== $object->getLaunchpadAppearance()) {
-                $data['launchpad_appearance'] = $this->normalizer->normalize($object->getLaunchpadAppearance(), 'json', $context);
-            }
-            if ($object->isInitialized('images') && null !== $object->getImages()) {
-                $data['images'] = $this->normalizer->normalize($object->getImages(), 'json', $context);
-            }
-            if ($object->isInitialized('buttons') && null !== $object->getButtons()) {
-                $values = [];
-                foreach ($object->getButtons() as $value) {
-                    $values[] = $this->normalizer->normalize($value, 'json', $context);
-                }
-                $data['buttons'] = $values;
-            }
-            if ($object->isInitialized('socials') && null !== $object->getSocials()) {
-                $values_1 = [];
-                foreach ($object->getSocials() as $value_1) {
-                    $values_1[] = $this->normalizer->normalize($value_1, 'json', $context);
-                }
-                $data['socials'] = $values_1;
-            }
-            if ($object->isInitialized('scheme') && null !== $object->getScheme()) {
-                $data['scheme'] = $object->getScheme();
-            }
-            foreach ($object as $key => $value_2) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_2;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\Launchpad::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('launchpadId') && null !== $data->getLaunchpadId()) {
+            $dataArray['launchpad_id'] = $data->getLaunchpadId();
         }
+        if ($data->isInitialized('draftId') && null !== $data->getDraftId()) {
+            $dataArray['draft_id'] = $data->getDraftId();
+        }
+        if ($data->isInitialized('isEdited') && null !== $data->getIsEdited()) {
+            $dataArray['is_edited'] = $data->getIsEdited();
+        }
+        if ($data->isInitialized('domain') && null !== $data->getDomain()) {
+            $dataArray['domain'] = $data->getDomain();
+        }
+        if ($data->isInitialized('keyword') && null !== $data->getKeyword()) {
+            $dataArray['keyword'] = $data->getKeyword();
+        }
+        if ($data->isInitialized('uri') && null !== $data->getUri()) {
+            $dataArray['uri'] = $data->getUri();
+        }
+        $dataArray['is_active'] = $data->getIsActive();
+        if ($data->isInitialized('launchpadAppearance') && null !== $data->getLaunchpadAppearance()) {
+            $dataArray['launchpad_appearance'] = $this->normalizer->normalize($data->getLaunchpadAppearance(), 'json', $context);
+        }
+        if ($data->isInitialized('images') && null !== $data->getImages()) {
+            $dataArray['images'] = $this->normalizer->normalize($data->getImages(), 'json', $context);
+        }
+        if ($data->isInitialized('buttons') && null !== $data->getButtons()) {
+            $values = [];
+            foreach ($data->getButtons() as $value) {
+                $values[] = $this->normalizer->normalize($value, 'json', $context);
+            }
+            $dataArray['buttons'] = $values;
+        }
+        if ($data->isInitialized('socials') && null !== $data->getSocials()) {
+            $values_1 = [];
+            foreach ($data->getSocials() as $value_1) {
+                $values_1[] = $this->normalizer->normalize($value_1, 'json', $context);
+            }
+            $dataArray['socials'] = $values_1;
+        }
+        if ($data->isInitialized('scheme') && null !== $data->getScheme()) {
+            $dataArray['scheme'] = $data->getScheme();
+        }
+        if ($data->isInitialized('qrCodeId') && null !== $data->getQrCodeId()) {
+            $dataArray['qr_code_id'] = $data->getQrCodeId();
+        }
+        foreach ($data as $key => $value_2) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value_2;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\Launchpad::class => false];
     }
 }

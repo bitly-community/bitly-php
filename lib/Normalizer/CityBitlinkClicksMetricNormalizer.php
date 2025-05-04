@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,189 +20,93 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class CityBitlinkClicksMetricNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class CityBitlinkClicksMetricNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\CityBitlinkClicksMetric::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\CityBitlinkClicksMetric::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\CityBitlinkClicksMetric();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('bitlink_clicks', $data)) {
-                $object->setBitlinkClicks($data['bitlink_clicks']);
-                unset($data['bitlink_clicks']);
-            }
-            if (\array_key_exists('city', $data)) {
-                $object->setCity($data['city']);
-                unset($data['city']);
-            }
-            if (\array_key_exists('subregion', $data)) {
-                $object->setSubregion($data['subregion']);
-                unset($data['subregion']);
-            }
-            if (\array_key_exists('region', $data)) {
-                $object->setRegion($data['region']);
-                unset($data['region']);
-            }
-            if (\array_key_exists('country', $data)) {
-                $object->setCountry($data['country']);
-                unset($data['country']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('bitlinkClicks') && null !== $object->getBitlinkClicks()) {
-                $data['bitlink_clicks'] = $object->getBitlinkClicks();
-            }
-            if ($object->isInitialized('city') && null !== $object->getCity()) {
-                $data['city'] = $object->getCity();
-            }
-            if ($object->isInitialized('subregion') && null !== $object->getSubregion()) {
-                $data['subregion'] = $object->getSubregion();
-            }
-            if ($object->isInitialized('region') && null !== $object->getRegion()) {
-                $data['region'] = $object->getRegion();
-            }
-            if ($object->isInitialized('country') && null !== $object->getCountry()) {
-                $data['country'] = $object->getCountry();
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\CityBitlinkClicksMetric::class => false];
-        }
+        return $type === \Bitly\Model\CityBitlinkClicksMetric::class;
     }
-} else {
-    class CityBitlinkClicksMetricNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\CityBitlinkClicksMetric::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\CityBitlinkClicksMetric::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\CityBitlinkClicksMetric::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\CityBitlinkClicksMetric();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('bitlink_clicks', $data)) {
-                $object->setBitlinkClicks($data['bitlink_clicks']);
-                unset($data['bitlink_clicks']);
-            }
-            if (\array_key_exists('city', $data)) {
-                $object->setCity($data['city']);
-                unset($data['city']);
-            }
-            if (\array_key_exists('subregion', $data)) {
-                $object->setSubregion($data['subregion']);
-                unset($data['subregion']);
-            }
-            if (\array_key_exists('region', $data)) {
-                $object->setRegion($data['region']);
-                unset($data['region']);
-            }
-            if (\array_key_exists('country', $data)) {
-                $object->setCountry($data['country']);
-                unset($data['country']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
+        $object = new \Bitly\Model\CityBitlinkClicksMetric();
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('bitlinkClicks') && null !== $object->getBitlinkClicks()) {
-                $data['bitlink_clicks'] = $object->getBitlinkClicks();
+        if (\array_key_exists('bitlink_clicks', $data)) {
+            $object->setBitlinkClicks($data['bitlink_clicks']);
+            unset($data['bitlink_clicks']);
+        }
+        if (\array_key_exists('city', $data)) {
+            $object->setCity($data['city']);
+            unset($data['city']);
+        }
+        if (\array_key_exists('subregion', $data)) {
+            $object->setSubregion($data['subregion']);
+            unset($data['subregion']);
+        }
+        if (\array_key_exists('region', $data)) {
+            $object->setRegion($data['region']);
+            unset($data['region']);
+        }
+        if (\array_key_exists('country', $data)) {
+            $object->setCountry($data['country']);
+            unset($data['country']);
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value;
             }
-            if ($object->isInitialized('city') && null !== $object->getCity()) {
-                $data['city'] = $object->getCity();
-            }
-            if ($object->isInitialized('subregion') && null !== $object->getSubregion()) {
-                $data['subregion'] = $object->getSubregion();
-            }
-            if ($object->isInitialized('region') && null !== $object->getRegion()) {
-                $data['region'] = $object->getRegion();
-            }
-            if ($object->isInitialized('country') && null !== $object->getCountry()) {
-                $data['country'] = $object->getCountry();
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\CityBitlinkClicksMetric::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('bitlinkClicks') && null !== $data->getBitlinkClicks()) {
+            $dataArray['bitlink_clicks'] = $data->getBitlinkClicks();
         }
+        if ($data->isInitialized('city') && null !== $data->getCity()) {
+            $dataArray['city'] = $data->getCity();
+        }
+        if ($data->isInitialized('subregion') && null !== $data->getSubregion()) {
+            $dataArray['subregion'] = $data->getSubregion();
+        }
+        if ($data->isInitialized('region') && null !== $data->getRegion()) {
+            $dataArray['region'] = $data->getRegion();
+        }
+        if ($data->isInitialized('country') && null !== $data->getCountry()) {
+            $dataArray['country'] = $data->getCountry();
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\CityBitlinkClicksMetric::class => false];
     }
 }

@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace Bitly\Exception;
 
-class GetQRLogoImagesByGroupInternalServerErrorException extends InternalServerErrorException
+class DeleteQRCodeInternalServerErrorException extends InternalServerErrorException
 {
     /**
      * @var \Bitly\Model\InternalError

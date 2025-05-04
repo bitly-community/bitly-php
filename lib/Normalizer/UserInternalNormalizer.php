@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,243 +20,129 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class UserInternalNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class UserInternalNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\UserInternal::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\UserInternal::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\UserInternal();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('login', $data)) {
-                $object->setLogin($data['login']);
-                unset($data['login']);
-            }
-            if (\array_key_exists('name', $data)) {
-                $object->setName($data['name']);
-                unset($data['name']);
-            }
-            if (\array_key_exists('is_active', $data)) {
-                $object->setIsActive($data['is_active']);
-                unset($data['is_active']);
-            }
-            if (\array_key_exists('created', $data)) {
-                $object->setCreated($data['created']);
-                unset($data['created']);
-            }
-            if (\array_key_exists('modified', $data)) {
-                $object->setModified($data['modified']);
-                unset($data['modified']);
-            }
-            if (\array_key_exists('is_sso_user', $data)) {
-                $object->setIsSsoUser($data['is_sso_user']);
-                unset($data['is_sso_user']);
-            }
-            if (\array_key_exists('emails', $data)) {
-                $values = [];
-                foreach ($data['emails'] as $value) {
-                    $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\Email::class, 'json', $context);
-                }
-                $object->setEmails($values);
-                unset($data['emails']);
-            }
-            if (\array_key_exists('is_2fa_enabled', $data)) {
-                $object->setIs2faEnabled($data['is_2fa_enabled']);
-                unset($data['is_2fa_enabled']);
-            }
-            if (\array_key_exists('default_group_guid', $data)) {
-                $object->setDefaultGroupGuid($data['default_group_guid']);
-                unset($data['default_group_guid']);
-            }
-            if (\array_key_exists('role_name', $data)) {
-                $object->setRoleName($data['role_name']);
-                unset($data['role_name']);
-            }
-            foreach ($data as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_1;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            $data['login'] = $object->getLogin();
-            $data['name'] = $object->getName();
-            $data['is_active'] = $object->getIsActive();
-            $data['created'] = $object->getCreated();
-            $data['modified'] = $object->getModified();
-            $data['is_sso_user'] = $object->getIsSsoUser();
-            $values = [];
-            foreach ($object->getEmails() as $value) {
-                $values[] = $this->normalizer->normalize($value, 'json', $context);
-            }
-            $data['emails'] = $values;
-            $data['is_2fa_enabled'] = $object->getIs2faEnabled();
-            if ($object->isInitialized('defaultGroupGuid') && null !== $object->getDefaultGroupGuid()) {
-                $data['default_group_guid'] = $object->getDefaultGroupGuid();
-            }
-            if ($object->isInitialized('roleName') && null !== $object->getRoleName()) {
-                $data['role_name'] = $object->getRoleName();
-            }
-            foreach ($object as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_1;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\UserInternal::class => false];
-        }
+        return $type === \Bitly\Model\UserInternal::class;
     }
-} else {
-    class UserInternalNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\UserInternal::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\UserInternal::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\UserInternal::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\UserInternal();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('login', $data)) {
-                $object->setLogin($data['login']);
-                unset($data['login']);
-            }
-            if (\array_key_exists('name', $data)) {
-                $object->setName($data['name']);
-                unset($data['name']);
-            }
-            if (\array_key_exists('is_active', $data)) {
-                $object->setIsActive($data['is_active']);
-                unset($data['is_active']);
-            }
-            if (\array_key_exists('created', $data)) {
-                $object->setCreated($data['created']);
-                unset($data['created']);
-            }
-            if (\array_key_exists('modified', $data)) {
-                $object->setModified($data['modified']);
-                unset($data['modified']);
-            }
-            if (\array_key_exists('is_sso_user', $data)) {
-                $object->setIsSsoUser($data['is_sso_user']);
-                unset($data['is_sso_user']);
-            }
-            if (\array_key_exists('emails', $data)) {
-                $values = [];
-                foreach ($data['emails'] as $value) {
-                    $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\Email::class, 'json', $context);
-                }
-                $object->setEmails($values);
-                unset($data['emails']);
-            }
-            if (\array_key_exists('is_2fa_enabled', $data)) {
-                $object->setIs2faEnabled($data['is_2fa_enabled']);
-                unset($data['is_2fa_enabled']);
-            }
-            if (\array_key_exists('default_group_guid', $data)) {
-                $object->setDefaultGroupGuid($data['default_group_guid']);
-                unset($data['default_group_guid']);
-            }
-            if (\array_key_exists('role_name', $data)) {
-                $object->setRoleName($data['role_name']);
-                unset($data['role_name']);
-            }
-            foreach ($data as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_1;
-                }
-            }
-
+        $object = new \Bitly\Model\UserInternal();
+        if (\array_key_exists('is_active', $data) && \is_int($data['is_active'])) {
+            $data['is_active'] = (bool) $data['is_active'];
+        }
+        if (\array_key_exists('is_sso_user', $data) && \is_int($data['is_sso_user'])) {
+            $data['is_sso_user'] = (bool) $data['is_sso_user'];
+        }
+        if (\array_key_exists('is_2fa_enabled', $data) && \is_int($data['is_2fa_enabled'])) {
+            $data['is_2fa_enabled'] = (bool) $data['is_2fa_enabled'];
+        }
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            $data['login'] = $object->getLogin();
-            $data['name'] = $object->getName();
-            $data['is_active'] = $object->getIsActive();
-            $data['created'] = $object->getCreated();
-            $data['modified'] = $object->getModified();
-            $data['is_sso_user'] = $object->getIsSsoUser();
+        if (\array_key_exists('login', $data)) {
+            $object->setLogin($data['login']);
+            unset($data['login']);
+        }
+        if (\array_key_exists('name', $data)) {
+            $object->setName($data['name']);
+            unset($data['name']);
+        }
+        if (\array_key_exists('is_active', $data)) {
+            $object->setIsActive($data['is_active']);
+            unset($data['is_active']);
+        }
+        if (\array_key_exists('created', $data)) {
+            $object->setCreated($data['created']);
+            unset($data['created']);
+        }
+        if (\array_key_exists('modified', $data)) {
+            $object->setModified($data['modified']);
+            unset($data['modified']);
+        }
+        if (\array_key_exists('is_sso_user', $data)) {
+            $object->setIsSsoUser($data['is_sso_user']);
+            unset($data['is_sso_user']);
+        }
+        if (\array_key_exists('emails', $data)) {
             $values = [];
-            foreach ($object->getEmails() as $value) {
-                $values[] = $this->normalizer->normalize($value, 'json', $context);
+            foreach ($data['emails'] as $value) {
+                $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\Email::class, 'json', $context);
             }
-            $data['emails'] = $values;
-            $data['is_2fa_enabled'] = $object->getIs2faEnabled();
-            if ($object->isInitialized('defaultGroupGuid') && null !== $object->getDefaultGroupGuid()) {
-                $data['default_group_guid'] = $object->getDefaultGroupGuid();
+            $object->setEmails($values);
+            unset($data['emails']);
+        }
+        if (\array_key_exists('is_2fa_enabled', $data)) {
+            $object->setIs2faEnabled($data['is_2fa_enabled']);
+            unset($data['is_2fa_enabled']);
+        }
+        if (\array_key_exists('default_group_guid', $data)) {
+            $object->setDefaultGroupGuid($data['default_group_guid']);
+            unset($data['default_group_guid']);
+        }
+        if (\array_key_exists('role_name', $data)) {
+            $object->setRoleName($data['role_name']);
+            unset($data['role_name']);
+        }
+        foreach ($data as $key => $value_1) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value_1;
             }
-            if ($object->isInitialized('roleName') && null !== $object->getRoleName()) {
-                $data['role_name'] = $object->getRoleName();
-            }
-            foreach ($object as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_1;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\UserInternal::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        $dataArray['login'] = $data->getLogin();
+        $dataArray['name'] = $data->getName();
+        $dataArray['is_active'] = $data->getIsActive();
+        $dataArray['created'] = $data->getCreated();
+        $dataArray['modified'] = $data->getModified();
+        $dataArray['is_sso_user'] = $data->getIsSsoUser();
+        $values = [];
+        foreach ($data->getEmails() as $value) {
+            $values[] = $this->normalizer->normalize($value, 'json', $context);
         }
+        $dataArray['emails'] = $values;
+        $dataArray['is_2fa_enabled'] = $data->getIs2faEnabled();
+        if ($data->isInitialized('defaultGroupGuid') && null !== $data->getDefaultGroupGuid()) {
+            $dataArray['default_group_guid'] = $data->getDefaultGroupGuid();
+        }
+        if ($data->isInitialized('roleName') && null !== $data->getRoleName()) {
+            $dataArray['role_name'] = $data->getRoleName();
+        }
+        foreach ($data as $key => $value_1) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value_1;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\UserInternal::class => false];
     }
 }

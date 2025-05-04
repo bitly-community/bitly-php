@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,193 +20,95 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class PlanLimitsNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class PlanLimitsNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\PlanLimits::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\PlanLimits::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\PlanLimits();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('references', $data)) {
-                $values = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
-                foreach ($data['references'] as $key => $value) {
-                    $values[$key] = $value;
-                }
-                $object->setReferences($values);
-                unset($data['references']);
-            }
-            if (\array_key_exists('organization_guid', $data)) {
-                $object->setOrganizationGuid($data['organization_guid']);
-                unset($data['organization_guid']);
-            }
-            if (\array_key_exists('plan_limits', $data)) {
-                $values_1 = [];
-                foreach ($data['plan_limits'] as $value_1) {
-                    $values_1[] = $this->denormalizer->denormalize($value_1, \Bitly\Model\PlanLimit::class, 'json', $context);
-                }
-                $object->setPlanLimits($values_1);
-                unset($data['plan_limits']);
-            }
-            foreach ($data as $key_1 => $value_2) {
-                if (preg_match('/.*/', (string) $key_1)) {
-                    $object[$key_1] = $value_2;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('references') && null !== $object->getReferences()) {
-                $values = [];
-                foreach ($object->getReferences() as $key => $value) {
-                    $values[$key] = $value;
-                }
-                $data['references'] = $values;
-            }
-            if ($object->isInitialized('organizationGuid') && null !== $object->getOrganizationGuid()) {
-                $data['organization_guid'] = $object->getOrganizationGuid();
-            }
-            if ($object->isInitialized('planLimits') && null !== $object->getPlanLimits()) {
-                $values_1 = [];
-                foreach ($object->getPlanLimits() as $value_1) {
-                    $values_1[] = $this->normalizer->normalize($value_1, 'json', $context);
-                }
-                $data['plan_limits'] = $values_1;
-            }
-            foreach ($object as $key_1 => $value_2) {
-                if (preg_match('/.*/', (string) $key_1)) {
-                    $data[$key_1] = $value_2;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\PlanLimits::class => false];
-        }
+        return $type === \Bitly\Model\PlanLimits::class;
     }
-} else {
-    class PlanLimitsNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\PlanLimits::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\PlanLimits::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\PlanLimits::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\PlanLimits();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('references', $data)) {
-                $values = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
-                foreach ($data['references'] as $key => $value) {
-                    $values[$key] = $value;
-                }
-                $object->setReferences($values);
-                unset($data['references']);
-            }
-            if (\array_key_exists('organization_guid', $data)) {
-                $object->setOrganizationGuid($data['organization_guid']);
-                unset($data['organization_guid']);
-            }
-            if (\array_key_exists('plan_limits', $data)) {
-                $values_1 = [];
-                foreach ($data['plan_limits'] as $value_1) {
-                    $values_1[] = $this->denormalizer->denormalize($value_1, \Bitly\Model\PlanLimit::class, 'json', $context);
-                }
-                $object->setPlanLimits($values_1);
-                unset($data['plan_limits']);
-            }
-            foreach ($data as $key_1 => $value_2) {
-                if (preg_match('/.*/', (string) $key_1)) {
-                    $object[$key_1] = $value_2;
-                }
-            }
-
+        $object = new \Bitly\Model\PlanLimits();
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('references') && null !== $object->getReferences()) {
-                $values = [];
-                foreach ($object->getReferences() as $key => $value) {
-                    $values[$key] = $value;
-                }
-                $data['references'] = $values;
+        if (\array_key_exists('references', $data)) {
+            $values = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
+            foreach ($data['references'] as $key => $value) {
+                $values[$key] = $value;
             }
-            if ($object->isInitialized('organizationGuid') && null !== $object->getOrganizationGuid()) {
-                $data['organization_guid'] = $object->getOrganizationGuid();
+            $object->setReferences($values);
+            unset($data['references']);
+        }
+        if (\array_key_exists('organization_guid', $data)) {
+            $object->setOrganizationGuid($data['organization_guid']);
+            unset($data['organization_guid']);
+        }
+        if (\array_key_exists('plan_limits', $data)) {
+            $values_1 = [];
+            foreach ($data['plan_limits'] as $value_1) {
+                $values_1[] = $this->denormalizer->denormalize($value_1, \Bitly\Model\PlanLimit::class, 'json', $context);
             }
-            if ($object->isInitialized('planLimits') && null !== $object->getPlanLimits()) {
-                $values_1 = [];
-                foreach ($object->getPlanLimits() as $value_1) {
-                    $values_1[] = $this->normalizer->normalize($value_1, 'json', $context);
-                }
-                $data['plan_limits'] = $values_1;
+            $object->setPlanLimits($values_1);
+            unset($data['plan_limits']);
+        }
+        foreach ($data as $key_1 => $value_2) {
+            if (preg_match('/.*/', (string) $key_1)) {
+                $object[$key_1] = $value_2;
             }
-            foreach ($object as $key_1 => $value_2) {
-                if (preg_match('/.*/', (string) $key_1)) {
-                    $data[$key_1] = $value_2;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\PlanLimits::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('references') && null !== $data->getReferences()) {
+            $values = [];
+            foreach ($data->getReferences() as $key => $value) {
+                $values[$key] = $value;
+            }
+            $dataArray['references'] = $values;
         }
+        if ($data->isInitialized('organizationGuid') && null !== $data->getOrganizationGuid()) {
+            $dataArray['organization_guid'] = $data->getOrganizationGuid();
+        }
+        if ($data->isInitialized('planLimits') && null !== $data->getPlanLimits()) {
+            $values_1 = [];
+            foreach ($data->getPlanLimits() as $value_1) {
+                $values_1[] = $this->normalizer->normalize($value_1, 'json', $context);
+            }
+            $dataArray['plan_limits'] = $values_1;
+        }
+        foreach ($data as $key_1 => $value_2) {
+            if (preg_match('/.*/', (string) $key_1)) {
+                $dataArray[$key_1] = $value_2;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\PlanLimits::class => false];
     }
 }

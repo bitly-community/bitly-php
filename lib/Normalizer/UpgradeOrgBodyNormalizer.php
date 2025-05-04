@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,259 +20,128 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class UpgradeOrgBodyNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class UpgradeOrgBodyNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\UpgradeOrgBody::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\UpgradeOrgBody::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\UpgradeOrgBody();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('org_guid', $data)) {
-                $object->setOrgGuid($data['org_guid']);
-                unset($data['org_guid']);
-            }
-            if (\array_key_exists('payment_method_id', $data)) {
-                $object->setPaymentMethodId($data['payment_method_id']);
-                unset($data['payment_method_id']);
-            }
-            if (\array_key_exists('currency', $data)) {
-                $object->setCurrency($data['currency']);
-                unset($data['currency']);
-            }
-            if (\array_key_exists('payment_provider', $data)) {
-                $object->setPaymentProvider($data['payment_provider']);
-                unset($data['payment_provider']);
-            }
-            if (\array_key_exists('rate_plan_name', $data)) {
-                $object->setRatePlanName($data['rate_plan_name']);
-                unset($data['rate_plan_name']);
-            }
-            if (\array_key_exists('company_name', $data)) {
-                $object->setCompanyName($data['company_name']);
-                unset($data['company_name']);
-            }
-            if (\array_key_exists('tax_id', $data)) {
-                $object->setTaxId($data['tax_id']);
-                unset($data['tax_id']);
-            }
-            if (\array_key_exists('promo_code', $data)) {
-                $object->setPromoCode($data['promo_code']);
-                unset($data['promo_code']);
-            }
-            if (\array_key_exists('billing_info', $data)) {
-                $object->setBillingInfo($this->denormalizer->denormalize($data['billing_info'], \Bitly\Model\BillingInfo::class, 'json', $context));
-                unset($data['billing_info']);
-            }
-            if (\array_key_exists('contact_info', $data)) {
-                $object->setContactInfo($this->denormalizer->denormalize($data['contact_info'], \Bitly\Model\BillingInfo::class, 'json', $context));
-                unset($data['contact_info']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('orgGuid') && null !== $object->getOrgGuid()) {
-                $data['org_guid'] = $object->getOrgGuid();
-            }
-            if ($object->isInitialized('paymentMethodId') && null !== $object->getPaymentMethodId()) {
-                $data['payment_method_id'] = $object->getPaymentMethodId();
-            }
-            if ($object->isInitialized('currency') && null !== $object->getCurrency()) {
-                $data['currency'] = $object->getCurrency();
-            }
-            if ($object->isInitialized('paymentProvider') && null !== $object->getPaymentProvider()) {
-                $data['payment_provider'] = $object->getPaymentProvider();
-            }
-            if ($object->isInitialized('ratePlanName') && null !== $object->getRatePlanName()) {
-                $data['rate_plan_name'] = $object->getRatePlanName();
-            }
-            if ($object->isInitialized('companyName') && null !== $object->getCompanyName()) {
-                $data['company_name'] = $object->getCompanyName();
-            }
-            if ($object->isInitialized('taxId') && null !== $object->getTaxId()) {
-                $data['tax_id'] = $object->getTaxId();
-            }
-            if ($object->isInitialized('promoCode') && null !== $object->getPromoCode()) {
-                $data['promo_code'] = $object->getPromoCode();
-            }
-            if ($object->isInitialized('billingInfo') && null !== $object->getBillingInfo()) {
-                $data['billing_info'] = $this->normalizer->normalize($object->getBillingInfo(), 'json', $context);
-            }
-            if ($object->isInitialized('contactInfo') && null !== $object->getContactInfo()) {
-                $data['contact_info'] = $this->normalizer->normalize($object->getContactInfo(), 'json', $context);
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\UpgradeOrgBody::class => false];
-        }
+        return $type === \Bitly\Model\UpgradeOrgBody::class;
     }
-} else {
-    class UpgradeOrgBodyNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\UpgradeOrgBody::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\UpgradeOrgBody::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\UpgradeOrgBody::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\UpgradeOrgBody();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('org_guid', $data)) {
-                $object->setOrgGuid($data['org_guid']);
-                unset($data['org_guid']);
-            }
-            if (\array_key_exists('payment_method_id', $data)) {
-                $object->setPaymentMethodId($data['payment_method_id']);
-                unset($data['payment_method_id']);
-            }
-            if (\array_key_exists('currency', $data)) {
-                $object->setCurrency($data['currency']);
-                unset($data['currency']);
-            }
-            if (\array_key_exists('payment_provider', $data)) {
-                $object->setPaymentProvider($data['payment_provider']);
-                unset($data['payment_provider']);
-            }
-            if (\array_key_exists('rate_plan_name', $data)) {
-                $object->setRatePlanName($data['rate_plan_name']);
-                unset($data['rate_plan_name']);
-            }
-            if (\array_key_exists('company_name', $data)) {
-                $object->setCompanyName($data['company_name']);
-                unset($data['company_name']);
-            }
-            if (\array_key_exists('tax_id', $data)) {
-                $object->setTaxId($data['tax_id']);
-                unset($data['tax_id']);
-            }
-            if (\array_key_exists('promo_code', $data)) {
-                $object->setPromoCode($data['promo_code']);
-                unset($data['promo_code']);
-            }
-            if (\array_key_exists('billing_info', $data)) {
-                $object->setBillingInfo($this->denormalizer->denormalize($data['billing_info'], \Bitly\Model\BillingInfo::class, 'json', $context));
-                unset($data['billing_info']);
-            }
-            if (\array_key_exists('contact_info', $data)) {
-                $object->setContactInfo($this->denormalizer->denormalize($data['contact_info'], \Bitly\Model\BillingInfo::class, 'json', $context));
-                unset($data['contact_info']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
+        $object = new \Bitly\Model\UpgradeOrgBody();
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('orgGuid') && null !== $object->getOrgGuid()) {
-                $data['org_guid'] = $object->getOrgGuid();
+        if (\array_key_exists('org_guid', $data)) {
+            $object->setOrgGuid($data['org_guid']);
+            unset($data['org_guid']);
+        }
+        if (\array_key_exists('payment_method_id', $data)) {
+            $object->setPaymentMethodId($data['payment_method_id']);
+            unset($data['payment_method_id']);
+        }
+        if (\array_key_exists('currency', $data)) {
+            $object->setCurrency($data['currency']);
+            unset($data['currency']);
+        }
+        if (\array_key_exists('payment_provider', $data)) {
+            $object->setPaymentProvider($data['payment_provider']);
+            unset($data['payment_provider']);
+        }
+        if (\array_key_exists('rate_plan_name', $data)) {
+            $object->setRatePlanName($data['rate_plan_name']);
+            unset($data['rate_plan_name']);
+        }
+        if (\array_key_exists('company_name', $data)) {
+            $object->setCompanyName($data['company_name']);
+            unset($data['company_name']);
+        }
+        if (\array_key_exists('tax_id', $data)) {
+            $object->setTaxId($data['tax_id']);
+            unset($data['tax_id']);
+        }
+        if (\array_key_exists('promo_code', $data)) {
+            $object->setPromoCode($data['promo_code']);
+            unset($data['promo_code']);
+        }
+        if (\array_key_exists('billing_info', $data)) {
+            $object->setBillingInfo($this->denormalizer->denormalize($data['billing_info'], \Bitly\Model\BillingInfo::class, 'json', $context));
+            unset($data['billing_info']);
+        }
+        if (\array_key_exists('contact_info', $data)) {
+            $object->setContactInfo($this->denormalizer->denormalize($data['contact_info'], \Bitly\Model\BillingInfo::class, 'json', $context));
+            unset($data['contact_info']);
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value;
             }
-            if ($object->isInitialized('paymentMethodId') && null !== $object->getPaymentMethodId()) {
-                $data['payment_method_id'] = $object->getPaymentMethodId();
-            }
-            if ($object->isInitialized('currency') && null !== $object->getCurrency()) {
-                $data['currency'] = $object->getCurrency();
-            }
-            if ($object->isInitialized('paymentProvider') && null !== $object->getPaymentProvider()) {
-                $data['payment_provider'] = $object->getPaymentProvider();
-            }
-            if ($object->isInitialized('ratePlanName') && null !== $object->getRatePlanName()) {
-                $data['rate_plan_name'] = $object->getRatePlanName();
-            }
-            if ($object->isInitialized('companyName') && null !== $object->getCompanyName()) {
-                $data['company_name'] = $object->getCompanyName();
-            }
-            if ($object->isInitialized('taxId') && null !== $object->getTaxId()) {
-                $data['tax_id'] = $object->getTaxId();
-            }
-            if ($object->isInitialized('promoCode') && null !== $object->getPromoCode()) {
-                $data['promo_code'] = $object->getPromoCode();
-            }
-            if ($object->isInitialized('billingInfo') && null !== $object->getBillingInfo()) {
-                $data['billing_info'] = $this->normalizer->normalize($object->getBillingInfo(), 'json', $context);
-            }
-            if ($object->isInitialized('contactInfo') && null !== $object->getContactInfo()) {
-                $data['contact_info'] = $this->normalizer->normalize($object->getContactInfo(), 'json', $context);
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\UpgradeOrgBody::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('orgGuid') && null !== $data->getOrgGuid()) {
+            $dataArray['org_guid'] = $data->getOrgGuid();
         }
+        if ($data->isInitialized('paymentMethodId') && null !== $data->getPaymentMethodId()) {
+            $dataArray['payment_method_id'] = $data->getPaymentMethodId();
+        }
+        if ($data->isInitialized('currency') && null !== $data->getCurrency()) {
+            $dataArray['currency'] = $data->getCurrency();
+        }
+        if ($data->isInitialized('paymentProvider') && null !== $data->getPaymentProvider()) {
+            $dataArray['payment_provider'] = $data->getPaymentProvider();
+        }
+        if ($data->isInitialized('ratePlanName') && null !== $data->getRatePlanName()) {
+            $dataArray['rate_plan_name'] = $data->getRatePlanName();
+        }
+        if ($data->isInitialized('companyName') && null !== $data->getCompanyName()) {
+            $dataArray['company_name'] = $data->getCompanyName();
+        }
+        if ($data->isInitialized('taxId') && null !== $data->getTaxId()) {
+            $dataArray['tax_id'] = $data->getTaxId();
+        }
+        if ($data->isInitialized('promoCode') && null !== $data->getPromoCode()) {
+            $dataArray['promo_code'] = $data->getPromoCode();
+        }
+        if ($data->isInitialized('billingInfo') && null !== $data->getBillingInfo()) {
+            $dataArray['billing_info'] = $this->normalizer->normalize($data->getBillingInfo(), 'json', $context);
+        }
+        if ($data->isInitialized('contactInfo') && null !== $data->getContactInfo()) {
+            $dataArray['contact_info'] = $this->normalizer->normalize($data->getContactInfo(), 'json', $context);
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\UpgradeOrgBody::class => false];
     }
 }

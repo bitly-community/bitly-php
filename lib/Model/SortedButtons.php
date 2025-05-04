@@ -22,10 +22,6 @@ class SortedButtons extends \ArrayObject
         return array_key_exists($property, $this->initialized);
     }
     /**
-     * @var MetricsParams
-     */
-    protected $params;
-    /**
      * @var string
      */
     protected $info;
@@ -41,19 +37,6 @@ class SortedButtons extends \ArrayObject
      * @var list<SortedButtonsPageViewsItem>
      */
     protected $pageViews;
-
-    public function getParams(): MetricsParams
-    {
-        return $this->params;
-    }
-
-    public function setParams(MetricsParams $params): self
-    {
-        $this->initialized['params'] = true;
-        $this->params = $params;
-
-        return $this;
-    }
 
     public function getInfo(): string
     {

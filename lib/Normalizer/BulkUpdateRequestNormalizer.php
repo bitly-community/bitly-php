@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,233 +20,118 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class BulkUpdateRequestNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class BulkUpdateRequestNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\BulkUpdateRequest::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\BulkUpdateRequest::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\BulkUpdateRequest();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('action', $data)) {
-                $object->setAction($data['action']);
-                unset($data['action']);
-            }
-            if (\array_key_exists('archive', $data)) {
-                $object->setArchive($data['archive']);
-                unset($data['archive']);
-            }
-            if (\array_key_exists('add_tags', $data)) {
-                $values = [];
-                foreach ($data['add_tags'] as $value) {
-                    $values[] = $value;
-                }
-                $object->setAddTags($values);
-                unset($data['add_tags']);
-            }
-            if (\array_key_exists('remove_tags', $data)) {
-                $values_1 = [];
-                foreach ($data['remove_tags'] as $value_1) {
-                    $values_1[] = $value_1;
-                }
-                $object->setRemoveTags($values_1);
-                unset($data['remove_tags']);
-            }
-            if (\array_key_exists('links', $data)) {
-                $values_2 = [];
-                foreach ($data['links'] as $value_2) {
-                    $values_2[] = $value_2;
-                }
-                $object->setLinks($values_2);
-                unset($data['links']);
-            }
-            foreach ($data as $key => $value_3) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_3;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            $data['action'] = $object->getAction();
-            if ($object->isInitialized('archive') && null !== $object->getArchive()) {
-                $data['archive'] = $object->getArchive();
-            }
-            if ($object->isInitialized('addTags') && null !== $object->getAddTags()) {
-                $values = [];
-                foreach ($object->getAddTags() as $value) {
-                    $values[] = $value;
-                }
-                $data['add_tags'] = $values;
-            }
-            if ($object->isInitialized('removeTags') && null !== $object->getRemoveTags()) {
-                $values_1 = [];
-                foreach ($object->getRemoveTags() as $value_1) {
-                    $values_1[] = $value_1;
-                }
-                $data['remove_tags'] = $values_1;
-            }
-            if ($object->isInitialized('links') && null !== $object->getLinks()) {
-                $values_2 = [];
-                foreach ($object->getLinks() as $value_2) {
-                    $values_2[] = $value_2;
-                }
-                $data['links'] = $values_2;
-            }
-            foreach ($object as $key => $value_3) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_3;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\BulkUpdateRequest::class => false];
-        }
+        return $type === \Bitly\Model\BulkUpdateRequest::class;
     }
-} else {
-    class BulkUpdateRequestNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\BulkUpdateRequest::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\BulkUpdateRequest::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\BulkUpdateRequest::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\BulkUpdateRequest();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('action', $data)) {
-                $object->setAction($data['action']);
-                unset($data['action']);
-            }
-            if (\array_key_exists('archive', $data)) {
-                $object->setArchive($data['archive']);
-                unset($data['archive']);
-            }
-            if (\array_key_exists('add_tags', $data)) {
-                $values = [];
-                foreach ($data['add_tags'] as $value) {
-                    $values[] = $value;
-                }
-                $object->setAddTags($values);
-                unset($data['add_tags']);
-            }
-            if (\array_key_exists('remove_tags', $data)) {
-                $values_1 = [];
-                foreach ($data['remove_tags'] as $value_1) {
-                    $values_1[] = $value_1;
-                }
-                $object->setRemoveTags($values_1);
-                unset($data['remove_tags']);
-            }
-            if (\array_key_exists('links', $data)) {
-                $values_2 = [];
-                foreach ($data['links'] as $value_2) {
-                    $values_2[] = $value_2;
-                }
-                $object->setLinks($values_2);
-                unset($data['links']);
-            }
-            foreach ($data as $key => $value_3) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_3;
-                }
-            }
-
+        $object = new \Bitly\Model\BulkUpdateRequest();
+        if (\array_key_exists('archive', $data) && \is_int($data['archive'])) {
+            $data['archive'] = (bool) $data['archive'];
+        }
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            $data['action'] = $object->getAction();
-            if ($object->isInitialized('archive') && null !== $object->getArchive()) {
-                $data['archive'] = $object->getArchive();
+        if (\array_key_exists('action', $data)) {
+            $object->setAction($data['action']);
+            unset($data['action']);
+        }
+        if (\array_key_exists('archive', $data)) {
+            $object->setArchive($data['archive']);
+            unset($data['archive']);
+        }
+        if (\array_key_exists('add_tags', $data)) {
+            $values = [];
+            foreach ($data['add_tags'] as $value) {
+                $values[] = $value;
             }
-            if ($object->isInitialized('addTags') && null !== $object->getAddTags()) {
-                $values = [];
-                foreach ($object->getAddTags() as $value) {
-                    $values[] = $value;
-                }
-                $data['add_tags'] = $values;
+            $object->setAddTags($values);
+            unset($data['add_tags']);
+        }
+        if (\array_key_exists('remove_tags', $data)) {
+            $values_1 = [];
+            foreach ($data['remove_tags'] as $value_1) {
+                $values_1[] = $value_1;
             }
-            if ($object->isInitialized('removeTags') && null !== $object->getRemoveTags()) {
-                $values_1 = [];
-                foreach ($object->getRemoveTags() as $value_1) {
-                    $values_1[] = $value_1;
-                }
-                $data['remove_tags'] = $values_1;
+            $object->setRemoveTags($values_1);
+            unset($data['remove_tags']);
+        }
+        if (\array_key_exists('links', $data)) {
+            $values_2 = [];
+            foreach ($data['links'] as $value_2) {
+                $values_2[] = $value_2;
             }
-            if ($object->isInitialized('links') && null !== $object->getLinks()) {
-                $values_2 = [];
-                foreach ($object->getLinks() as $value_2) {
-                    $values_2[] = $value_2;
-                }
-                $data['links'] = $values_2;
+            $object->setLinks($values_2);
+            unset($data['links']);
+        }
+        foreach ($data as $key => $value_3) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value_3;
             }
-            foreach ($object as $key => $value_3) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_3;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\BulkUpdateRequest::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        $dataArray['action'] = $data->getAction();
+        if ($data->isInitialized('archive') && null !== $data->getArchive()) {
+            $dataArray['archive'] = $data->getArchive();
         }
+        if ($data->isInitialized('addTags') && null !== $data->getAddTags()) {
+            $values = [];
+            foreach ($data->getAddTags() as $value) {
+                $values[] = $value;
+            }
+            $dataArray['add_tags'] = $values;
+        }
+        if ($data->isInitialized('removeTags') && null !== $data->getRemoveTags()) {
+            $values_1 = [];
+            foreach ($data->getRemoveTags() as $value_1) {
+                $values_1[] = $value_1;
+            }
+            $dataArray['remove_tags'] = $values_1;
+        }
+        if ($data->isInitialized('links') && null !== $data->getLinks()) {
+            $values_2 = [];
+            foreach ($data->getLinks() as $value_2) {
+                $values_2[] = $value_2;
+            }
+            $dataArray['links'] = $values_2;
+        }
+        foreach ($data as $key => $value_3) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value_3;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\BulkUpdateRequest::class => false];
     }
 }

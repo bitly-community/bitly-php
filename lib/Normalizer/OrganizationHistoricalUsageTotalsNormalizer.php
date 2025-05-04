@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,175 +20,86 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class OrganizationHistoricalUsageTotalsNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class OrganizationHistoricalUsageTotalsNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\OrganizationHistoricalUsageTotals::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\OrganizationHistoricalUsageTotals::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\OrganizationHistoricalUsageTotals();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('org_guid', $data)) {
-                $object->setOrgGuid($data['org_guid']);
-                unset($data['org_guid']);
-            }
-            if (\array_key_exists('start_date', $data)) {
-                $object->setStartDate($data['start_date']);
-                unset($data['start_date']);
-            }
-            if (\array_key_exists('end_date', $data)) {
-                $object->setEndDate($data['end_date']);
-                unset($data['end_date']);
-            }
-            if (\array_key_exists('groups_historical_usage_totals', $data)) {
-                $values = [];
-                foreach ($data['groups_historical_usage_totals'] as $value) {
-                    $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\GroupHistoricalUsageTotals::class, 'json', $context);
-                }
-                $object->setGroupsHistoricalUsageTotals($values);
-                unset($data['groups_historical_usage_totals']);
-            }
-            foreach ($data as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_1;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            $data['org_guid'] = $object->getOrgGuid();
-            $data['start_date'] = $object->getStartDate();
-            $data['end_date'] = $object->getEndDate();
-            $values = [];
-            foreach ($object->getGroupsHistoricalUsageTotals() as $value) {
-                $values[] = $this->normalizer->normalize($value, 'json', $context);
-            }
-            $data['groups_historical_usage_totals'] = $values;
-            foreach ($object as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_1;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\OrganizationHistoricalUsageTotals::class => false];
-        }
+        return $type === \Bitly\Model\OrganizationHistoricalUsageTotals::class;
     }
-} else {
-    class OrganizationHistoricalUsageTotalsNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\OrganizationHistoricalUsageTotals::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\OrganizationHistoricalUsageTotals::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\OrganizationHistoricalUsageTotals::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\OrganizationHistoricalUsageTotals();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('org_guid', $data)) {
-                $object->setOrgGuid($data['org_guid']);
-                unset($data['org_guid']);
-            }
-            if (\array_key_exists('start_date', $data)) {
-                $object->setStartDate($data['start_date']);
-                unset($data['start_date']);
-            }
-            if (\array_key_exists('end_date', $data)) {
-                $object->setEndDate($data['end_date']);
-                unset($data['end_date']);
-            }
-            if (\array_key_exists('groups_historical_usage_totals', $data)) {
-                $values = [];
-                foreach ($data['groups_historical_usage_totals'] as $value) {
-                    $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\GroupHistoricalUsageTotals::class, 'json', $context);
-                }
-                $object->setGroupsHistoricalUsageTotals($values);
-                unset($data['groups_historical_usage_totals']);
-            }
-            foreach ($data as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_1;
-                }
-            }
-
+        $object = new \Bitly\Model\OrganizationHistoricalUsageTotals();
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            $data['org_guid'] = $object->getOrgGuid();
-            $data['start_date'] = $object->getStartDate();
-            $data['end_date'] = $object->getEndDate();
+        if (\array_key_exists('org_guid', $data)) {
+            $object->setOrgGuid($data['org_guid']);
+            unset($data['org_guid']);
+        }
+        if (\array_key_exists('start_date', $data)) {
+            $object->setStartDate($data['start_date']);
+            unset($data['start_date']);
+        }
+        if (\array_key_exists('end_date', $data)) {
+            $object->setEndDate($data['end_date']);
+            unset($data['end_date']);
+        }
+        if (\array_key_exists('groups_historical_usage_totals', $data)) {
             $values = [];
-            foreach ($object->getGroupsHistoricalUsageTotals() as $value) {
-                $values[] = $this->normalizer->normalize($value, 'json', $context);
+            foreach ($data['groups_historical_usage_totals'] as $value) {
+                $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\GroupHistoricalUsageTotals::class, 'json', $context);
             }
-            $data['groups_historical_usage_totals'] = $values;
-            foreach ($object as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_1;
-                }
+            $object->setGroupsHistoricalUsageTotals($values);
+            unset($data['groups_historical_usage_totals']);
+        }
+        foreach ($data as $key => $value_1) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value_1;
             }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\OrganizationHistoricalUsageTotals::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        $dataArray['org_guid'] = $data->getOrgGuid();
+        $dataArray['start_date'] = $data->getStartDate();
+        $dataArray['end_date'] = $data->getEndDate();
+        $values = [];
+        foreach ($data->getGroupsHistoricalUsageTotals() as $value) {
+            $values[] = $this->normalizer->normalize($value, 'json', $context);
         }
+        $dataArray['groups_historical_usage_totals'] = $values;
+        foreach ($data as $key => $value_1) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value_1;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\OrganizationHistoricalUsageTotals::class => false];
     }
 }

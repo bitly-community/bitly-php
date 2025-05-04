@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,399 +20,201 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class BitlySiteHeaderAppearanceNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class BitlySiteHeaderAppearanceNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\BitlySiteHeaderAppearance::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\BitlySiteHeaderAppearance::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\BitlySiteHeaderAppearance();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('banner_type', $data)) {
-                $object->setBannerType($data['banner_type']);
-                unset($data['banner_type']);
-            }
-            if (\array_key_exists('profile_image_size', $data)) {
-                $object->setProfileImageSize($data['profile_image_size']);
-                unset($data['profile_image_size']);
-            }
-            if (\array_key_exists('profile_image_shape', $data)) {
-                $object->setProfileImageShape($data['profile_image_shape']);
-                unset($data['profile_image_shape']);
-            }
-            if (\array_key_exists('profile_image_border_size', $data)) {
-                $object->setProfileImageBorderSize($data['profile_image_border_size']);
-                unset($data['profile_image_border_size']);
-            }
-            if (\array_key_exists('profile_image_type', $data)) {
-                $object->setProfileImageType($data['profile_image_type']);
-                unset($data['profile_image_type']);
-            }
-            if (\array_key_exists('profile_image_location', $data)) {
-                $object->setProfileImageLocation($data['profile_image_location']);
-                unset($data['profile_image_location']);
-            }
-            if (\array_key_exists('profile_image_overflow', $data)) {
-                $object->setProfileImageOverflow($data['profile_image_overflow']);
-                unset($data['profile_image_overflow']);
-            }
-            if (\array_key_exists('text_location', $data)) {
-                $object->setTextLocation($data['text_location']);
-                unset($data['text_location']);
-            }
-            if (\array_key_exists('title_size', $data)) {
-                $object->setTitleSize($data['title_size']);
-                unset($data['title_size']);
-            }
-            if (\array_key_exists('title_alignment', $data)) {
-                $object->setTitleAlignment($data['title_alignment']);
-                unset($data['title_alignment']);
-            }
-            if (\array_key_exists('title_weight', $data)) {
-                $object->setTitleWeight($data['title_weight']);
-                unset($data['title_weight']);
-            }
-            if (\array_key_exists('title_border_type', $data)) {
-                $object->setTitleBorderType($data['title_border_type']);
-                unset($data['title_border_type']);
-            }
-            if (\array_key_exists('description_size', $data)) {
-                $object->setDescriptionSize($data['description_size']);
-                unset($data['description_size']);
-            }
-            if (\array_key_exists('description_alignment', $data)) {
-                $object->setDescriptionAlignment($data['description_alignment']);
-                unset($data['description_alignment']);
-            }
-            if (\array_key_exists('description_weight', $data)) {
-                $object->setDescriptionWeight($data['description_weight']);
-                unset($data['description_weight']);
-            }
-            if (\array_key_exists('description_border_type', $data)) {
-                $object->setDescriptionBorderType($data['description_border_type']);
-                unset($data['description_border_type']);
-            }
-            if (\array_key_exists('header_background_color', $data)) {
-                $object->setHeaderBackgroundColor($data['header_background_color']);
-                unset($data['header_background_color']);
-            }
-            if (\array_key_exists('banner_image_url', $data)) {
-                $object->setBannerImageUrl($data['banner_image_url']);
-                unset($data['banner_image_url']);
-            }
-            if (\array_key_exists('header_style_preference', $data)) {
-                $object->setHeaderStylePreference($data['header_style_preference']);
-                unset($data['header_style_preference']);
-            }
-            if (\array_key_exists('banner_image_alignment', $data)) {
-                $object->setBannerImageAlignment($data['banner_image_alignment']);
-                unset($data['banner_image_alignment']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('bannerType') && null !== $object->getBannerType()) {
-                $data['banner_type'] = $object->getBannerType();
-            }
-            if ($object->isInitialized('profileImageSize') && null !== $object->getProfileImageSize()) {
-                $data['profile_image_size'] = $object->getProfileImageSize();
-            }
-            if ($object->isInitialized('profileImageShape') && null !== $object->getProfileImageShape()) {
-                $data['profile_image_shape'] = $object->getProfileImageShape();
-            }
-            if ($object->isInitialized('profileImageBorderSize') && null !== $object->getProfileImageBorderSize()) {
-                $data['profile_image_border_size'] = $object->getProfileImageBorderSize();
-            }
-            if ($object->isInitialized('profileImageType') && null !== $object->getProfileImageType()) {
-                $data['profile_image_type'] = $object->getProfileImageType();
-            }
-            if ($object->isInitialized('profileImageLocation') && null !== $object->getProfileImageLocation()) {
-                $data['profile_image_location'] = $object->getProfileImageLocation();
-            }
-            if ($object->isInitialized('profileImageOverflow') && null !== $object->getProfileImageOverflow()) {
-                $data['profile_image_overflow'] = $object->getProfileImageOverflow();
-            }
-            if ($object->isInitialized('textLocation') && null !== $object->getTextLocation()) {
-                $data['text_location'] = $object->getTextLocation();
-            }
-            if ($object->isInitialized('titleSize') && null !== $object->getTitleSize()) {
-                $data['title_size'] = $object->getTitleSize();
-            }
-            if ($object->isInitialized('titleAlignment') && null !== $object->getTitleAlignment()) {
-                $data['title_alignment'] = $object->getTitleAlignment();
-            }
-            if ($object->isInitialized('titleWeight') && null !== $object->getTitleWeight()) {
-                $data['title_weight'] = $object->getTitleWeight();
-            }
-            if ($object->isInitialized('titleBorderType') && null !== $object->getTitleBorderType()) {
-                $data['title_border_type'] = $object->getTitleBorderType();
-            }
-            if ($object->isInitialized('descriptionSize') && null !== $object->getDescriptionSize()) {
-                $data['description_size'] = $object->getDescriptionSize();
-            }
-            if ($object->isInitialized('descriptionAlignment') && null !== $object->getDescriptionAlignment()) {
-                $data['description_alignment'] = $object->getDescriptionAlignment();
-            }
-            if ($object->isInitialized('descriptionWeight') && null !== $object->getDescriptionWeight()) {
-                $data['description_weight'] = $object->getDescriptionWeight();
-            }
-            if ($object->isInitialized('descriptionBorderType') && null !== $object->getDescriptionBorderType()) {
-                $data['description_border_type'] = $object->getDescriptionBorderType();
-            }
-            if ($object->isInitialized('headerBackgroundColor') && null !== $object->getHeaderBackgroundColor()) {
-                $data['header_background_color'] = $object->getHeaderBackgroundColor();
-            }
-            if ($object->isInitialized('bannerImageUrl') && null !== $object->getBannerImageUrl()) {
-                $data['banner_image_url'] = $object->getBannerImageUrl();
-            }
-            if ($object->isInitialized('headerStylePreference') && null !== $object->getHeaderStylePreference()) {
-                $data['header_style_preference'] = $object->getHeaderStylePreference();
-            }
-            if ($object->isInitialized('bannerImageAlignment') && null !== $object->getBannerImageAlignment()) {
-                $data['banner_image_alignment'] = $object->getBannerImageAlignment();
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\BitlySiteHeaderAppearance::class => false];
-        }
+        return $type === \Bitly\Model\BitlySiteHeaderAppearance::class;
     }
-} else {
-    class BitlySiteHeaderAppearanceNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\BitlySiteHeaderAppearance::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\BitlySiteHeaderAppearance::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\BitlySiteHeaderAppearance::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\BitlySiteHeaderAppearance();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('banner_type', $data)) {
-                $object->setBannerType($data['banner_type']);
-                unset($data['banner_type']);
-            }
-            if (\array_key_exists('profile_image_size', $data)) {
-                $object->setProfileImageSize($data['profile_image_size']);
-                unset($data['profile_image_size']);
-            }
-            if (\array_key_exists('profile_image_shape', $data)) {
-                $object->setProfileImageShape($data['profile_image_shape']);
-                unset($data['profile_image_shape']);
-            }
-            if (\array_key_exists('profile_image_border_size', $data)) {
-                $object->setProfileImageBorderSize($data['profile_image_border_size']);
-                unset($data['profile_image_border_size']);
-            }
-            if (\array_key_exists('profile_image_type', $data)) {
-                $object->setProfileImageType($data['profile_image_type']);
-                unset($data['profile_image_type']);
-            }
-            if (\array_key_exists('profile_image_location', $data)) {
-                $object->setProfileImageLocation($data['profile_image_location']);
-                unset($data['profile_image_location']);
-            }
-            if (\array_key_exists('profile_image_overflow', $data)) {
-                $object->setProfileImageOverflow($data['profile_image_overflow']);
-                unset($data['profile_image_overflow']);
-            }
-            if (\array_key_exists('text_location', $data)) {
-                $object->setTextLocation($data['text_location']);
-                unset($data['text_location']);
-            }
-            if (\array_key_exists('title_size', $data)) {
-                $object->setTitleSize($data['title_size']);
-                unset($data['title_size']);
-            }
-            if (\array_key_exists('title_alignment', $data)) {
-                $object->setTitleAlignment($data['title_alignment']);
-                unset($data['title_alignment']);
-            }
-            if (\array_key_exists('title_weight', $data)) {
-                $object->setTitleWeight($data['title_weight']);
-                unset($data['title_weight']);
-            }
-            if (\array_key_exists('title_border_type', $data)) {
-                $object->setTitleBorderType($data['title_border_type']);
-                unset($data['title_border_type']);
-            }
-            if (\array_key_exists('description_size', $data)) {
-                $object->setDescriptionSize($data['description_size']);
-                unset($data['description_size']);
-            }
-            if (\array_key_exists('description_alignment', $data)) {
-                $object->setDescriptionAlignment($data['description_alignment']);
-                unset($data['description_alignment']);
-            }
-            if (\array_key_exists('description_weight', $data)) {
-                $object->setDescriptionWeight($data['description_weight']);
-                unset($data['description_weight']);
-            }
-            if (\array_key_exists('description_border_type', $data)) {
-                $object->setDescriptionBorderType($data['description_border_type']);
-                unset($data['description_border_type']);
-            }
-            if (\array_key_exists('header_background_color', $data)) {
-                $object->setHeaderBackgroundColor($data['header_background_color']);
-                unset($data['header_background_color']);
-            }
-            if (\array_key_exists('banner_image_url', $data)) {
-                $object->setBannerImageUrl($data['banner_image_url']);
-                unset($data['banner_image_url']);
-            }
-            if (\array_key_exists('header_style_preference', $data)) {
-                $object->setHeaderStylePreference($data['header_style_preference']);
-                unset($data['header_style_preference']);
-            }
-            if (\array_key_exists('banner_image_alignment', $data)) {
-                $object->setBannerImageAlignment($data['banner_image_alignment']);
-                unset($data['banner_image_alignment']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
+        $object = new \Bitly\Model\BitlySiteHeaderAppearance();
+        if (\array_key_exists('profile_image_overflow', $data) && \is_int($data['profile_image_overflow'])) {
+            $data['profile_image_overflow'] = (bool) $data['profile_image_overflow'];
+        }
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('bannerType') && null !== $object->getBannerType()) {
-                $data['banner_type'] = $object->getBannerType();
+        if (\array_key_exists('banner_type', $data)) {
+            $object->setBannerType($data['banner_type']);
+            unset($data['banner_type']);
+        }
+        if (\array_key_exists('profile_image_size', $data)) {
+            $object->setProfileImageSize($data['profile_image_size']);
+            unset($data['profile_image_size']);
+        }
+        if (\array_key_exists('profile_image_shape', $data)) {
+            $object->setProfileImageShape($data['profile_image_shape']);
+            unset($data['profile_image_shape']);
+        }
+        if (\array_key_exists('profile_image_border_size', $data)) {
+            $object->setProfileImageBorderSize($data['profile_image_border_size']);
+            unset($data['profile_image_border_size']);
+        }
+        if (\array_key_exists('profile_image_type', $data)) {
+            $object->setProfileImageType($data['profile_image_type']);
+            unset($data['profile_image_type']);
+        }
+        if (\array_key_exists('profile_image_location', $data)) {
+            $object->setProfileImageLocation($data['profile_image_location']);
+            unset($data['profile_image_location']);
+        }
+        if (\array_key_exists('profile_image_overflow', $data)) {
+            $object->setProfileImageOverflow($data['profile_image_overflow']);
+            unset($data['profile_image_overflow']);
+        }
+        if (\array_key_exists('text_location', $data)) {
+            $object->setTextLocation($data['text_location']);
+            unset($data['text_location']);
+        }
+        if (\array_key_exists('title_size', $data)) {
+            $object->setTitleSize($data['title_size']);
+            unset($data['title_size']);
+        }
+        if (\array_key_exists('title_alignment', $data)) {
+            $object->setTitleAlignment($data['title_alignment']);
+            unset($data['title_alignment']);
+        }
+        if (\array_key_exists('title_weight', $data)) {
+            $object->setTitleWeight($data['title_weight']);
+            unset($data['title_weight']);
+        }
+        if (\array_key_exists('title_border_type', $data)) {
+            $object->setTitleBorderType($data['title_border_type']);
+            unset($data['title_border_type']);
+        }
+        if (\array_key_exists('description_size', $data)) {
+            $object->setDescriptionSize($data['description_size']);
+            unset($data['description_size']);
+        }
+        if (\array_key_exists('description_alignment', $data)) {
+            $object->setDescriptionAlignment($data['description_alignment']);
+            unset($data['description_alignment']);
+        }
+        if (\array_key_exists('description_weight', $data)) {
+            $object->setDescriptionWeight($data['description_weight']);
+            unset($data['description_weight']);
+        }
+        if (\array_key_exists('description_border_type', $data)) {
+            $object->setDescriptionBorderType($data['description_border_type']);
+            unset($data['description_border_type']);
+        }
+        if (\array_key_exists('header_background_color', $data)) {
+            $object->setHeaderBackgroundColor($data['header_background_color']);
+            unset($data['header_background_color']);
+        }
+        if (\array_key_exists('banner_image_url', $data)) {
+            $object->setBannerImageUrl($data['banner_image_url']);
+            unset($data['banner_image_url']);
+        }
+        if (\array_key_exists('header_style_preference', $data)) {
+            $object->setHeaderStylePreference($data['header_style_preference']);
+            unset($data['header_style_preference']);
+        }
+        if (\array_key_exists('banner_image_alignment', $data)) {
+            $object->setBannerImageAlignment($data['banner_image_alignment']);
+            unset($data['banner_image_alignment']);
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value;
             }
-            if ($object->isInitialized('profileImageSize') && null !== $object->getProfileImageSize()) {
-                $data['profile_image_size'] = $object->getProfileImageSize();
-            }
-            if ($object->isInitialized('profileImageShape') && null !== $object->getProfileImageShape()) {
-                $data['profile_image_shape'] = $object->getProfileImageShape();
-            }
-            if ($object->isInitialized('profileImageBorderSize') && null !== $object->getProfileImageBorderSize()) {
-                $data['profile_image_border_size'] = $object->getProfileImageBorderSize();
-            }
-            if ($object->isInitialized('profileImageType') && null !== $object->getProfileImageType()) {
-                $data['profile_image_type'] = $object->getProfileImageType();
-            }
-            if ($object->isInitialized('profileImageLocation') && null !== $object->getProfileImageLocation()) {
-                $data['profile_image_location'] = $object->getProfileImageLocation();
-            }
-            if ($object->isInitialized('profileImageOverflow') && null !== $object->getProfileImageOverflow()) {
-                $data['profile_image_overflow'] = $object->getProfileImageOverflow();
-            }
-            if ($object->isInitialized('textLocation') && null !== $object->getTextLocation()) {
-                $data['text_location'] = $object->getTextLocation();
-            }
-            if ($object->isInitialized('titleSize') && null !== $object->getTitleSize()) {
-                $data['title_size'] = $object->getTitleSize();
-            }
-            if ($object->isInitialized('titleAlignment') && null !== $object->getTitleAlignment()) {
-                $data['title_alignment'] = $object->getTitleAlignment();
-            }
-            if ($object->isInitialized('titleWeight') && null !== $object->getTitleWeight()) {
-                $data['title_weight'] = $object->getTitleWeight();
-            }
-            if ($object->isInitialized('titleBorderType') && null !== $object->getTitleBorderType()) {
-                $data['title_border_type'] = $object->getTitleBorderType();
-            }
-            if ($object->isInitialized('descriptionSize') && null !== $object->getDescriptionSize()) {
-                $data['description_size'] = $object->getDescriptionSize();
-            }
-            if ($object->isInitialized('descriptionAlignment') && null !== $object->getDescriptionAlignment()) {
-                $data['description_alignment'] = $object->getDescriptionAlignment();
-            }
-            if ($object->isInitialized('descriptionWeight') && null !== $object->getDescriptionWeight()) {
-                $data['description_weight'] = $object->getDescriptionWeight();
-            }
-            if ($object->isInitialized('descriptionBorderType') && null !== $object->getDescriptionBorderType()) {
-                $data['description_border_type'] = $object->getDescriptionBorderType();
-            }
-            if ($object->isInitialized('headerBackgroundColor') && null !== $object->getHeaderBackgroundColor()) {
-                $data['header_background_color'] = $object->getHeaderBackgroundColor();
-            }
-            if ($object->isInitialized('bannerImageUrl') && null !== $object->getBannerImageUrl()) {
-                $data['banner_image_url'] = $object->getBannerImageUrl();
-            }
-            if ($object->isInitialized('headerStylePreference') && null !== $object->getHeaderStylePreference()) {
-                $data['header_style_preference'] = $object->getHeaderStylePreference();
-            }
-            if ($object->isInitialized('bannerImageAlignment') && null !== $object->getBannerImageAlignment()) {
-                $data['banner_image_alignment'] = $object->getBannerImageAlignment();
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\BitlySiteHeaderAppearance::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('bannerType') && null !== $data->getBannerType()) {
+            $dataArray['banner_type'] = $data->getBannerType();
         }
+        if ($data->isInitialized('profileImageSize') && null !== $data->getProfileImageSize()) {
+            $dataArray['profile_image_size'] = $data->getProfileImageSize();
+        }
+        if ($data->isInitialized('profileImageShape') && null !== $data->getProfileImageShape()) {
+            $dataArray['profile_image_shape'] = $data->getProfileImageShape();
+        }
+        if ($data->isInitialized('profileImageBorderSize') && null !== $data->getProfileImageBorderSize()) {
+            $dataArray['profile_image_border_size'] = $data->getProfileImageBorderSize();
+        }
+        if ($data->isInitialized('profileImageType') && null !== $data->getProfileImageType()) {
+            $dataArray['profile_image_type'] = $data->getProfileImageType();
+        }
+        if ($data->isInitialized('profileImageLocation') && null !== $data->getProfileImageLocation()) {
+            $dataArray['profile_image_location'] = $data->getProfileImageLocation();
+        }
+        if ($data->isInitialized('profileImageOverflow') && null !== $data->getProfileImageOverflow()) {
+            $dataArray['profile_image_overflow'] = $data->getProfileImageOverflow();
+        }
+        if ($data->isInitialized('textLocation') && null !== $data->getTextLocation()) {
+            $dataArray['text_location'] = $data->getTextLocation();
+        }
+        if ($data->isInitialized('titleSize') && null !== $data->getTitleSize()) {
+            $dataArray['title_size'] = $data->getTitleSize();
+        }
+        if ($data->isInitialized('titleAlignment') && null !== $data->getTitleAlignment()) {
+            $dataArray['title_alignment'] = $data->getTitleAlignment();
+        }
+        if ($data->isInitialized('titleWeight') && null !== $data->getTitleWeight()) {
+            $dataArray['title_weight'] = $data->getTitleWeight();
+        }
+        if ($data->isInitialized('titleBorderType') && null !== $data->getTitleBorderType()) {
+            $dataArray['title_border_type'] = $data->getTitleBorderType();
+        }
+        if ($data->isInitialized('descriptionSize') && null !== $data->getDescriptionSize()) {
+            $dataArray['description_size'] = $data->getDescriptionSize();
+        }
+        if ($data->isInitialized('descriptionAlignment') && null !== $data->getDescriptionAlignment()) {
+            $dataArray['description_alignment'] = $data->getDescriptionAlignment();
+        }
+        if ($data->isInitialized('descriptionWeight') && null !== $data->getDescriptionWeight()) {
+            $dataArray['description_weight'] = $data->getDescriptionWeight();
+        }
+        if ($data->isInitialized('descriptionBorderType') && null !== $data->getDescriptionBorderType()) {
+            $dataArray['description_border_type'] = $data->getDescriptionBorderType();
+        }
+        if ($data->isInitialized('headerBackgroundColor') && null !== $data->getHeaderBackgroundColor()) {
+            $dataArray['header_background_color'] = $data->getHeaderBackgroundColor();
+        }
+        if ($data->isInitialized('bannerImageUrl') && null !== $data->getBannerImageUrl()) {
+            $dataArray['banner_image_url'] = $data->getBannerImageUrl();
+        }
+        if ($data->isInitialized('headerStylePreference') && null !== $data->getHeaderStylePreference()) {
+            $dataArray['header_style_preference'] = $data->getHeaderStylePreference();
+        }
+        if ($data->isInitialized('bannerImageAlignment') && null !== $data->getBannerImageAlignment()) {
+            $dataArray['banner_image_alignment'] = $data->getBannerImageAlignment();
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\BitlySiteHeaderAppearance::class => false];
     }
 }

@@ -38,6 +38,10 @@ class BillingAccount extends \ArrayObject
      */
     protected $currency;
     /**
+     * @var string
+     */
+    protected $billingProvider;
+    /**
      * ISO timestamp.
      *
      * @var string
@@ -138,6 +142,19 @@ class BillingAccount extends \ArrayObject
     {
         $this->initialized['currency'] = true;
         $this->currency = $currency;
+
+        return $this;
+    }
+
+    public function getBillingProvider(): string
+    {
+        return $this->billingProvider;
+    }
+
+    public function setBillingProvider(string $billingProvider): self
+    {
+        $this->initialized['billingProvider'] = true;
+        $this->billingProvider = $billingProvider;
 
         return $this;
     }

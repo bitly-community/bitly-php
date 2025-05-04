@@ -28,43 +28,15 @@ class UserOnboardingSurvey extends \ArrayObject
     /**
      * @var string
      */
-    protected $teamType;
+    protected $orgGuid;
+    /**
+     * @var SurveyResponse
+     */
+    protected $surveyResponse;
     /**
      * @var string
      */
-    protected $firstName;
-    /**
-     * @var string
-     */
-    protected $lastName;
-    /**
-     * @var list<string>
-     */
-    protected $useCases;
-    /**
-     * @var list<string>
-     */
-    protected $useCasesOther;
-    /**
-     * @var string
-     */
-    protected $organizationName;
-    /**
-     * @var string
-     */
-    protected $jobTitle;
-    /**
-     * @var string
-     */
-    protected $department;
-    /**
-     * @var string
-     */
-    protected $departmentOther;
-    /**
-     * @var string
-     */
-    protected $companySize;
+    protected $surveyStatus;
     /**
      * @var float
      */
@@ -91,144 +63,41 @@ class UserOnboardingSurvey extends \ArrayObject
         return $this;
     }
 
-    public function getTeamType(): string
+    public function getOrgGuid(): string
     {
-        return $this->teamType;
+        return $this->orgGuid;
     }
 
-    public function setTeamType(string $teamType): self
+    public function setOrgGuid(string $orgGuid): self
     {
-        $this->initialized['teamType'] = true;
-        $this->teamType = $teamType;
+        $this->initialized['orgGuid'] = true;
+        $this->orgGuid = $orgGuid;
 
         return $this;
     }
 
-    public function getFirstName(): string
+    public function getSurveyResponse(): SurveyResponse
     {
-        return $this->firstName;
+        return $this->surveyResponse;
     }
 
-    public function setFirstName(string $firstName): self
+    public function setSurveyResponse(SurveyResponse $surveyResponse): self
     {
-        $this->initialized['firstName'] = true;
-        $this->firstName = $firstName;
+        $this->initialized['surveyResponse'] = true;
+        $this->surveyResponse = $surveyResponse;
 
         return $this;
     }
 
-    public function getLastName(): string
+    public function getSurveyStatus(): string
     {
-        return $this->lastName;
+        return $this->surveyStatus;
     }
 
-    public function setLastName(string $lastName): self
+    public function setSurveyStatus(string $surveyStatus): self
     {
-        $this->initialized['lastName'] = true;
-        $this->lastName = $lastName;
-
-        return $this;
-    }
-
-    /**
-     * @return list<string>
-     */
-    public function getUseCases(): array
-    {
-        return $this->useCases;
-    }
-
-    /**
-     * @param list<string> $useCases
-     */
-    public function setUseCases(array $useCases): self
-    {
-        $this->initialized['useCases'] = true;
-        $this->useCases = $useCases;
-
-        return $this;
-    }
-
-    /**
-     * @return list<string>
-     */
-    public function getUseCasesOther(): array
-    {
-        return $this->useCasesOther;
-    }
-
-    /**
-     * @param list<string> $useCasesOther
-     */
-    public function setUseCasesOther(array $useCasesOther): self
-    {
-        $this->initialized['useCasesOther'] = true;
-        $this->useCasesOther = $useCasesOther;
-
-        return $this;
-    }
-
-    public function getOrganizationName(): string
-    {
-        return $this->organizationName;
-    }
-
-    public function setOrganizationName(string $organizationName): self
-    {
-        $this->initialized['organizationName'] = true;
-        $this->organizationName = $organizationName;
-
-        return $this;
-    }
-
-    public function getJobTitle(): string
-    {
-        return $this->jobTitle;
-    }
-
-    public function setJobTitle(string $jobTitle): self
-    {
-        $this->initialized['jobTitle'] = true;
-        $this->jobTitle = $jobTitle;
-
-        return $this;
-    }
-
-    public function getDepartment(): string
-    {
-        return $this->department;
-    }
-
-    public function setDepartment(string $department): self
-    {
-        $this->initialized['department'] = true;
-        $this->department = $department;
-
-        return $this;
-    }
-
-    public function getDepartmentOther(): string
-    {
-        return $this->departmentOther;
-    }
-
-    public function setDepartmentOther(string $departmentOther): self
-    {
-        $this->initialized['departmentOther'] = true;
-        $this->departmentOther = $departmentOther;
-
-        return $this;
-    }
-
-    public function getCompanySize(): string
-    {
-        return $this->companySize;
-    }
-
-    public function setCompanySize(string $companySize): self
-    {
-        $this->initialized['companySize'] = true;
-        $this->companySize = $companySize;
+        $this->initialized['surveyStatus'] = true;
+        $this->surveyStatus = $surveyStatus;
 
         return $this;
     }

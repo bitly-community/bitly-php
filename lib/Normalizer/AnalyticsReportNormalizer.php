@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,259 +20,131 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class AnalyticsReportNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class AnalyticsReportNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\AnalyticsReport::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\AnalyticsReport::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\AnalyticsReport();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('report_guid', $data)) {
-                $object->setReportGuid($data['report_guid']);
-                unset($data['report_guid']);
-            }
-            if (\array_key_exists('login', $data)) {
-                $object->setLogin($data['login']);
-                unset($data['login']);
-            }
-            if (\array_key_exists('group_guid', $data)) {
-                $object->setGroupGuid($data['group_guid']);
-                unset($data['group_guid']);
-            }
-            if (\array_key_exists('last_modified_by', $data)) {
-                $object->setLastModifiedBy($data['last_modified_by']);
-                unset($data['last_modified_by']);
-            }
-            if (\array_key_exists('user_full_name', $data)) {
-                $object->setUserFullName($data['user_full_name']);
-                unset($data['user_full_name']);
-            }
-            if (\array_key_exists('created', $data)) {
-                $object->setCreated($data['created']);
-                unset($data['created']);
-            }
-            if (\array_key_exists('modified', $data)) {
-                $object->setModified($data['modified']);
-                unset($data['modified']);
-            }
-            if (\array_key_exists('is_active', $data)) {
-                $object->setIsActive($data['is_active']);
-                unset($data['is_active']);
-            }
-            if (\array_key_exists('report_type', $data)) {
-                $object->setReportType($data['report_type']);
-                unset($data['report_type']);
-            }
-            if (\array_key_exists('settings', $data)) {
-                $object->setSettings($this->denormalizer->denormalize($data['settings'], \Bitly\Model\ReportSettings::class, 'json', $context));
-                unset($data['settings']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('reportGuid') && null !== $object->getReportGuid()) {
-                $data['report_guid'] = $object->getReportGuid();
-            }
-            if ($object->isInitialized('login') && null !== $object->getLogin()) {
-                $data['login'] = $object->getLogin();
-            }
-            if ($object->isInitialized('groupGuid') && null !== $object->getGroupGuid()) {
-                $data['group_guid'] = $object->getGroupGuid();
-            }
-            if ($object->isInitialized('lastModifiedBy') && null !== $object->getLastModifiedBy()) {
-                $data['last_modified_by'] = $object->getLastModifiedBy();
-            }
-            if ($object->isInitialized('userFullName') && null !== $object->getUserFullName()) {
-                $data['user_full_name'] = $object->getUserFullName();
-            }
-            if ($object->isInitialized('created') && null !== $object->getCreated()) {
-                $data['created'] = $object->getCreated();
-            }
-            if ($object->isInitialized('modified') && null !== $object->getModified()) {
-                $data['modified'] = $object->getModified();
-            }
-            if ($object->isInitialized('isActive') && null !== $object->getIsActive()) {
-                $data['is_active'] = $object->getIsActive();
-            }
-            if ($object->isInitialized('reportType') && null !== $object->getReportType()) {
-                $data['report_type'] = $object->getReportType();
-            }
-            if ($object->isInitialized('settings') && null !== $object->getSettings()) {
-                $data['settings'] = $this->normalizer->normalize($object->getSettings(), 'json', $context);
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\AnalyticsReport::class => false];
-        }
+        return $type === \Bitly\Model\AnalyticsReport::class;
     }
-} else {
-    class AnalyticsReportNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\AnalyticsReport::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\AnalyticsReport::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\AnalyticsReport::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\AnalyticsReport();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('report_guid', $data)) {
-                $object->setReportGuid($data['report_guid']);
-                unset($data['report_guid']);
-            }
-            if (\array_key_exists('login', $data)) {
-                $object->setLogin($data['login']);
-                unset($data['login']);
-            }
-            if (\array_key_exists('group_guid', $data)) {
-                $object->setGroupGuid($data['group_guid']);
-                unset($data['group_guid']);
-            }
-            if (\array_key_exists('last_modified_by', $data)) {
-                $object->setLastModifiedBy($data['last_modified_by']);
-                unset($data['last_modified_by']);
-            }
-            if (\array_key_exists('user_full_name', $data)) {
-                $object->setUserFullName($data['user_full_name']);
-                unset($data['user_full_name']);
-            }
-            if (\array_key_exists('created', $data)) {
-                $object->setCreated($data['created']);
-                unset($data['created']);
-            }
-            if (\array_key_exists('modified', $data)) {
-                $object->setModified($data['modified']);
-                unset($data['modified']);
-            }
-            if (\array_key_exists('is_active', $data)) {
-                $object->setIsActive($data['is_active']);
-                unset($data['is_active']);
-            }
-            if (\array_key_exists('report_type', $data)) {
-                $object->setReportType($data['report_type']);
-                unset($data['report_type']);
-            }
-            if (\array_key_exists('settings', $data)) {
-                $object->setSettings($this->denormalizer->denormalize($data['settings'], \Bitly\Model\ReportSettings::class, 'json', $context));
-                unset($data['settings']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
+        $object = new \Bitly\Model\AnalyticsReport();
+        if (\array_key_exists('is_active', $data) && \is_int($data['is_active'])) {
+            $data['is_active'] = (bool) $data['is_active'];
+        }
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('reportGuid') && null !== $object->getReportGuid()) {
-                $data['report_guid'] = $object->getReportGuid();
+        if (\array_key_exists('report_guid', $data)) {
+            $object->setReportGuid($data['report_guid']);
+            unset($data['report_guid']);
+        }
+        if (\array_key_exists('login', $data)) {
+            $object->setLogin($data['login']);
+            unset($data['login']);
+        }
+        if (\array_key_exists('group_guid', $data)) {
+            $object->setGroupGuid($data['group_guid']);
+            unset($data['group_guid']);
+        }
+        if (\array_key_exists('last_modified_by', $data)) {
+            $object->setLastModifiedBy($data['last_modified_by']);
+            unset($data['last_modified_by']);
+        }
+        if (\array_key_exists('user_full_name', $data)) {
+            $object->setUserFullName($data['user_full_name']);
+            unset($data['user_full_name']);
+        }
+        if (\array_key_exists('created', $data)) {
+            $object->setCreated($data['created']);
+            unset($data['created']);
+        }
+        if (\array_key_exists('modified', $data)) {
+            $object->setModified($data['modified']);
+            unset($data['modified']);
+        }
+        if (\array_key_exists('is_active', $data)) {
+            $object->setIsActive($data['is_active']);
+            unset($data['is_active']);
+        }
+        if (\array_key_exists('report_type', $data)) {
+            $object->setReportType($data['report_type']);
+            unset($data['report_type']);
+        }
+        if (\array_key_exists('settings', $data)) {
+            $object->setSettings($this->denormalizer->denormalize($data['settings'], \Bitly\Model\ReportSettings::class, 'json', $context));
+            unset($data['settings']);
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value;
             }
-            if ($object->isInitialized('login') && null !== $object->getLogin()) {
-                $data['login'] = $object->getLogin();
-            }
-            if ($object->isInitialized('groupGuid') && null !== $object->getGroupGuid()) {
-                $data['group_guid'] = $object->getGroupGuid();
-            }
-            if ($object->isInitialized('lastModifiedBy') && null !== $object->getLastModifiedBy()) {
-                $data['last_modified_by'] = $object->getLastModifiedBy();
-            }
-            if ($object->isInitialized('userFullName') && null !== $object->getUserFullName()) {
-                $data['user_full_name'] = $object->getUserFullName();
-            }
-            if ($object->isInitialized('created') && null !== $object->getCreated()) {
-                $data['created'] = $object->getCreated();
-            }
-            if ($object->isInitialized('modified') && null !== $object->getModified()) {
-                $data['modified'] = $object->getModified();
-            }
-            if ($object->isInitialized('isActive') && null !== $object->getIsActive()) {
-                $data['is_active'] = $object->getIsActive();
-            }
-            if ($object->isInitialized('reportType') && null !== $object->getReportType()) {
-                $data['report_type'] = $object->getReportType();
-            }
-            if ($object->isInitialized('settings') && null !== $object->getSettings()) {
-                $data['settings'] = $this->normalizer->normalize($object->getSettings(), 'json', $context);
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\AnalyticsReport::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('reportGuid') && null !== $data->getReportGuid()) {
+            $dataArray['report_guid'] = $data->getReportGuid();
         }
+        if ($data->isInitialized('login') && null !== $data->getLogin()) {
+            $dataArray['login'] = $data->getLogin();
+        }
+        if ($data->isInitialized('groupGuid') && null !== $data->getGroupGuid()) {
+            $dataArray['group_guid'] = $data->getGroupGuid();
+        }
+        if ($data->isInitialized('lastModifiedBy') && null !== $data->getLastModifiedBy()) {
+            $dataArray['last_modified_by'] = $data->getLastModifiedBy();
+        }
+        if ($data->isInitialized('userFullName') && null !== $data->getUserFullName()) {
+            $dataArray['user_full_name'] = $data->getUserFullName();
+        }
+        if ($data->isInitialized('created') && null !== $data->getCreated()) {
+            $dataArray['created'] = $data->getCreated();
+        }
+        if ($data->isInitialized('modified') && null !== $data->getModified()) {
+            $dataArray['modified'] = $data->getModified();
+        }
+        if ($data->isInitialized('isActive') && null !== $data->getIsActive()) {
+            $dataArray['is_active'] = $data->getIsActive();
+        }
+        if ($data->isInitialized('reportType') && null !== $data->getReportType()) {
+            $dataArray['report_type'] = $data->getReportType();
+        }
+        if ($data->isInitialized('settings') && null !== $data->getSettings()) {
+            $dataArray['settings'] = $this->normalizer->normalize($data->getSettings(), 'json', $context);
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\AnalyticsReport::class => false];
     }
 }

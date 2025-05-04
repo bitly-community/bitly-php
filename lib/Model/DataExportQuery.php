@@ -74,7 +74,7 @@ class DataExportQuery extends \ArrayObject
      */
     protected $isGs1;
     /**
-     * @var string
+     * @var list<string>
      */
     protected $qrcTypes;
     /**
@@ -297,12 +297,18 @@ class DataExportQuery extends \ArrayObject
         return $this;
     }
 
-    public function getQrcTypes(): string
+    /**
+     * @return list<string>
+     */
+    public function getQrcTypes(): array
     {
         return $this->qrcTypes;
     }
 
-    public function setQrcTypes(string $qrcTypes): self
+    /**
+     * @param list<string> $qrcTypes
+     */
+    public function setQrcTypes(array $qrcTypes): self
     {
         $this->initialized['qrcTypes'] = true;
         $this->qrcTypes = $qrcTypes;

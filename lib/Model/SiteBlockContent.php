@@ -57,6 +57,42 @@ class SiteBlockContent extends \ArrayObject
      * @var string
      */
     protected $channelUrl;
+    /**
+     * @var string
+     */
+    protected $digitalBusinessCardId;
+    /**
+     * @var string
+     */
+    protected $layout;
+    /**
+     * @var string
+     */
+    protected $firstName;
+    /**
+     * @var string
+     */
+    protected $lastName;
+    /**
+     * @var string
+     */
+    protected $jobTitle;
+    /**
+     * @var string
+     */
+    protected $company;
+    /**
+     * @var string
+     */
+    protected $pronouns;
+    /**
+     * @var list<DigitalBusinessCardContact>
+     */
+    protected $contacts;
+    /**
+     * @var bool
+     */
+    protected $downloadEnabled;
 
     public function getLinkTitle(): string
     {
@@ -171,6 +207,129 @@ class SiteBlockContent extends \ArrayObject
     {
         $this->initialized['channelUrl'] = true;
         $this->channelUrl = $channelUrl;
+
+        return $this;
+    }
+
+    public function getDigitalBusinessCardId(): string
+    {
+        return $this->digitalBusinessCardId;
+    }
+
+    public function setDigitalBusinessCardId(string $digitalBusinessCardId): self
+    {
+        $this->initialized['digitalBusinessCardId'] = true;
+        $this->digitalBusinessCardId = $digitalBusinessCardId;
+
+        return $this;
+    }
+
+    public function getLayout(): string
+    {
+        return $this->layout;
+    }
+
+    public function setLayout(string $layout): self
+    {
+        $this->initialized['layout'] = true;
+        $this->layout = $layout;
+
+        return $this;
+    }
+
+    public function getFirstName(): string
+    {
+        return $this->firstName;
+    }
+
+    public function setFirstName(string $firstName): self
+    {
+        $this->initialized['firstName'] = true;
+        $this->firstName = $firstName;
+
+        return $this;
+    }
+
+    public function getLastName(): string
+    {
+        return $this->lastName;
+    }
+
+    public function setLastName(string $lastName): self
+    {
+        $this->initialized['lastName'] = true;
+        $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    public function getJobTitle(): string
+    {
+        return $this->jobTitle;
+    }
+
+    public function setJobTitle(string $jobTitle): self
+    {
+        $this->initialized['jobTitle'] = true;
+        $this->jobTitle = $jobTitle;
+
+        return $this;
+    }
+
+    public function getCompany(): string
+    {
+        return $this->company;
+    }
+
+    public function setCompany(string $company): self
+    {
+        $this->initialized['company'] = true;
+        $this->company = $company;
+
+        return $this;
+    }
+
+    public function getPronouns(): string
+    {
+        return $this->pronouns;
+    }
+
+    public function setPronouns(string $pronouns): self
+    {
+        $this->initialized['pronouns'] = true;
+        $this->pronouns = $pronouns;
+
+        return $this;
+    }
+
+    /**
+     * @return list<DigitalBusinessCardContact>
+     */
+    public function getContacts(): array
+    {
+        return $this->contacts;
+    }
+
+    /**
+     * @param list<DigitalBusinessCardContact> $contacts
+     */
+    public function setContacts(array $contacts): self
+    {
+        $this->initialized['contacts'] = true;
+        $this->contacts = $contacts;
+
+        return $this;
+    }
+
+    public function getDownloadEnabled(): bool
+    {
+        return $this->downloadEnabled;
+    }
+
+    public function setDownloadEnabled(bool $downloadEnabled): self
+    {
+        $this->initialized['downloadEnabled'] = true;
+        $this->downloadEnabled = $downloadEnabled;
 
         return $this;
     }

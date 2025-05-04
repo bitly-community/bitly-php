@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,353 +20,110 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class UserOnboardingSurveyNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class UserOnboardingSurveyNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\UserOnboardingSurvey::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\UserOnboardingSurvey::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\UserOnboardingSurvey();
-            if (\array_key_exists('version', $data) && \is_int($data['version'])) {
-                $data['version'] = (float) $data['version'];
-            }
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('login', $data)) {
-                $object->setLogin($data['login']);
-                unset($data['login']);
-            }
-            if (\array_key_exists('team_type', $data)) {
-                $object->setTeamType($data['team_type']);
-                unset($data['team_type']);
-            }
-            if (\array_key_exists('first_name', $data)) {
-                $object->setFirstName($data['first_name']);
-                unset($data['first_name']);
-            }
-            if (\array_key_exists('last_name', $data)) {
-                $object->setLastName($data['last_name']);
-                unset($data['last_name']);
-            }
-            if (\array_key_exists('use_cases', $data)) {
-                $values = [];
-                foreach ($data['use_cases'] as $value) {
-                    $values[] = $value;
-                }
-                $object->setUseCases($values);
-                unset($data['use_cases']);
-            }
-            if (\array_key_exists('use_cases_other', $data)) {
-                $values_1 = [];
-                foreach ($data['use_cases_other'] as $value_1) {
-                    $values_1[] = $value_1;
-                }
-                $object->setUseCasesOther($values_1);
-                unset($data['use_cases_other']);
-            }
-            if (\array_key_exists('organization_name', $data)) {
-                $object->setOrganizationName($data['organization_name']);
-                unset($data['organization_name']);
-            }
-            if (\array_key_exists('job_title', $data)) {
-                $object->setJobTitle($data['job_title']);
-                unset($data['job_title']);
-            }
-            if (\array_key_exists('department', $data)) {
-                $object->setDepartment($data['department']);
-                unset($data['department']);
-            }
-            if (\array_key_exists('department_other', $data)) {
-                $object->setDepartmentOther($data['department_other']);
-                unset($data['department_other']);
-            }
-            if (\array_key_exists('company_size', $data)) {
-                $object->setCompanySize($data['company_size']);
-                unset($data['company_size']);
-            }
-            if (\array_key_exists('version', $data)) {
-                $object->setVersion($data['version']);
-                unset($data['version']);
-            }
-            if (\array_key_exists('created', $data)) {
-                $object->setCreated($data['created']);
-                unset($data['created']);
-            }
-            if (\array_key_exists('modified', $data)) {
-                $object->setModified($data['modified']);
-                unset($data['modified']);
-            }
-            foreach ($data as $key => $value_2) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_2;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('login') && null !== $object->getLogin()) {
-                $data['login'] = $object->getLogin();
-            }
-            if ($object->isInitialized('teamType') && null !== $object->getTeamType()) {
-                $data['team_type'] = $object->getTeamType();
-            }
-            if ($object->isInitialized('firstName') && null !== $object->getFirstName()) {
-                $data['first_name'] = $object->getFirstName();
-            }
-            if ($object->isInitialized('lastName') && null !== $object->getLastName()) {
-                $data['last_name'] = $object->getLastName();
-            }
-            if ($object->isInitialized('useCases') && null !== $object->getUseCases()) {
-                $values = [];
-                foreach ($object->getUseCases() as $value) {
-                    $values[] = $value;
-                }
-                $data['use_cases'] = $values;
-            }
-            if ($object->isInitialized('useCasesOther') && null !== $object->getUseCasesOther()) {
-                $values_1 = [];
-                foreach ($object->getUseCasesOther() as $value_1) {
-                    $values_1[] = $value_1;
-                }
-                $data['use_cases_other'] = $values_1;
-            }
-            if ($object->isInitialized('organizationName') && null !== $object->getOrganizationName()) {
-                $data['organization_name'] = $object->getOrganizationName();
-            }
-            if ($object->isInitialized('jobTitle') && null !== $object->getJobTitle()) {
-                $data['job_title'] = $object->getJobTitle();
-            }
-            if ($object->isInitialized('department') && null !== $object->getDepartment()) {
-                $data['department'] = $object->getDepartment();
-            }
-            if ($object->isInitialized('departmentOther') && null !== $object->getDepartmentOther()) {
-                $data['department_other'] = $object->getDepartmentOther();
-            }
-            if ($object->isInitialized('companySize') && null !== $object->getCompanySize()) {
-                $data['company_size'] = $object->getCompanySize();
-            }
-            if ($object->isInitialized('version') && null !== $object->getVersion()) {
-                $data['version'] = $object->getVersion();
-            }
-            if ($object->isInitialized('created') && null !== $object->getCreated()) {
-                $data['created'] = $object->getCreated();
-            }
-            if ($object->isInitialized('modified') && null !== $object->getModified()) {
-                $data['modified'] = $object->getModified();
-            }
-            foreach ($object as $key => $value_2) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_2;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\UserOnboardingSurvey::class => false];
-        }
+        return $type === \Bitly\Model\UserOnboardingSurvey::class;
     }
-} else {
-    class UserOnboardingSurveyNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\UserOnboardingSurvey::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\UserOnboardingSurvey::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\UserOnboardingSurvey::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\UserOnboardingSurvey();
-            if (\array_key_exists('version', $data) && \is_int($data['version'])) {
-                $data['version'] = (float) $data['version'];
-            }
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('login', $data)) {
-                $object->setLogin($data['login']);
-                unset($data['login']);
-            }
-            if (\array_key_exists('team_type', $data)) {
-                $object->setTeamType($data['team_type']);
-                unset($data['team_type']);
-            }
-            if (\array_key_exists('first_name', $data)) {
-                $object->setFirstName($data['first_name']);
-                unset($data['first_name']);
-            }
-            if (\array_key_exists('last_name', $data)) {
-                $object->setLastName($data['last_name']);
-                unset($data['last_name']);
-            }
-            if (\array_key_exists('use_cases', $data)) {
-                $values = [];
-                foreach ($data['use_cases'] as $value) {
-                    $values[] = $value;
-                }
-                $object->setUseCases($values);
-                unset($data['use_cases']);
-            }
-            if (\array_key_exists('use_cases_other', $data)) {
-                $values_1 = [];
-                foreach ($data['use_cases_other'] as $value_1) {
-                    $values_1[] = $value_1;
-                }
-                $object->setUseCasesOther($values_1);
-                unset($data['use_cases_other']);
-            }
-            if (\array_key_exists('organization_name', $data)) {
-                $object->setOrganizationName($data['organization_name']);
-                unset($data['organization_name']);
-            }
-            if (\array_key_exists('job_title', $data)) {
-                $object->setJobTitle($data['job_title']);
-                unset($data['job_title']);
-            }
-            if (\array_key_exists('department', $data)) {
-                $object->setDepartment($data['department']);
-                unset($data['department']);
-            }
-            if (\array_key_exists('department_other', $data)) {
-                $object->setDepartmentOther($data['department_other']);
-                unset($data['department_other']);
-            }
-            if (\array_key_exists('company_size', $data)) {
-                $object->setCompanySize($data['company_size']);
-                unset($data['company_size']);
-            }
-            if (\array_key_exists('version', $data)) {
-                $object->setVersion($data['version']);
-                unset($data['version']);
-            }
-            if (\array_key_exists('created', $data)) {
-                $object->setCreated($data['created']);
-                unset($data['created']);
-            }
-            if (\array_key_exists('modified', $data)) {
-                $object->setModified($data['modified']);
-                unset($data['modified']);
-            }
-            foreach ($data as $key => $value_2) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_2;
-                }
-            }
-
+        $object = new \Bitly\Model\UserOnboardingSurvey();
+        if (\array_key_exists('version', $data) && \is_int($data['version'])) {
+            $data['version'] = (float) $data['version'];
+        }
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('login') && null !== $object->getLogin()) {
-                $data['login'] = $object->getLogin();
+        if (\array_key_exists('login', $data)) {
+            $object->setLogin($data['login']);
+            unset($data['login']);
+        }
+        if (\array_key_exists('org_guid', $data)) {
+            $object->setOrgGuid($data['org_guid']);
+            unset($data['org_guid']);
+        }
+        if (\array_key_exists('survey_response', $data)) {
+            $object->setSurveyResponse($this->denormalizer->denormalize($data['survey_response'], \Bitly\Model\SurveyResponse::class, 'json', $context));
+            unset($data['survey_response']);
+        }
+        if (\array_key_exists('survey_status', $data)) {
+            $object->setSurveyStatus($data['survey_status']);
+            unset($data['survey_status']);
+        }
+        if (\array_key_exists('version', $data)) {
+            $object->setVersion($data['version']);
+            unset($data['version']);
+        }
+        if (\array_key_exists('created', $data)) {
+            $object->setCreated($data['created']);
+            unset($data['created']);
+        }
+        if (\array_key_exists('modified', $data)) {
+            $object->setModified($data['modified']);
+            unset($data['modified']);
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value;
             }
-            if ($object->isInitialized('teamType') && null !== $object->getTeamType()) {
-                $data['team_type'] = $object->getTeamType();
-            }
-            if ($object->isInitialized('firstName') && null !== $object->getFirstName()) {
-                $data['first_name'] = $object->getFirstName();
-            }
-            if ($object->isInitialized('lastName') && null !== $object->getLastName()) {
-                $data['last_name'] = $object->getLastName();
-            }
-            if ($object->isInitialized('useCases') && null !== $object->getUseCases()) {
-                $values = [];
-                foreach ($object->getUseCases() as $value) {
-                    $values[] = $value;
-                }
-                $data['use_cases'] = $values;
-            }
-            if ($object->isInitialized('useCasesOther') && null !== $object->getUseCasesOther()) {
-                $values_1 = [];
-                foreach ($object->getUseCasesOther() as $value_1) {
-                    $values_1[] = $value_1;
-                }
-                $data['use_cases_other'] = $values_1;
-            }
-            if ($object->isInitialized('organizationName') && null !== $object->getOrganizationName()) {
-                $data['organization_name'] = $object->getOrganizationName();
-            }
-            if ($object->isInitialized('jobTitle') && null !== $object->getJobTitle()) {
-                $data['job_title'] = $object->getJobTitle();
-            }
-            if ($object->isInitialized('department') && null !== $object->getDepartment()) {
-                $data['department'] = $object->getDepartment();
-            }
-            if ($object->isInitialized('departmentOther') && null !== $object->getDepartmentOther()) {
-                $data['department_other'] = $object->getDepartmentOther();
-            }
-            if ($object->isInitialized('companySize') && null !== $object->getCompanySize()) {
-                $data['company_size'] = $object->getCompanySize();
-            }
-            if ($object->isInitialized('version') && null !== $object->getVersion()) {
-                $data['version'] = $object->getVersion();
-            }
-            if ($object->isInitialized('created') && null !== $object->getCreated()) {
-                $data['created'] = $object->getCreated();
-            }
-            if ($object->isInitialized('modified') && null !== $object->getModified()) {
-                $data['modified'] = $object->getModified();
-            }
-            foreach ($object as $key => $value_2) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_2;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\UserOnboardingSurvey::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('login') && null !== $data->getLogin()) {
+            $dataArray['login'] = $data->getLogin();
         }
+        if ($data->isInitialized('orgGuid') && null !== $data->getOrgGuid()) {
+            $dataArray['org_guid'] = $data->getOrgGuid();
+        }
+        if ($data->isInitialized('surveyResponse') && null !== $data->getSurveyResponse()) {
+            $dataArray['survey_response'] = $this->normalizer->normalize($data->getSurveyResponse(), 'json', $context);
+        }
+        if ($data->isInitialized('surveyStatus') && null !== $data->getSurveyStatus()) {
+            $dataArray['survey_status'] = $data->getSurveyStatus();
+        }
+        if ($data->isInitialized('version') && null !== $data->getVersion()) {
+            $dataArray['version'] = $data->getVersion();
+        }
+        if ($data->isInitialized('created') && null !== $data->getCreated()) {
+            $dataArray['created'] = $data->getCreated();
+        }
+        if ($data->isInitialized('modified') && null !== $data->getModified()) {
+            $dataArray['modified'] = $data->getModified();
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\UserOnboardingSurvey::class => false];
     }
 }

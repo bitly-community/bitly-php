@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,205 +20,101 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class DeviceMetricsNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class DeviceMetricsNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\DeviceMetrics::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\DeviceMetrics::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\DeviceMetrics();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('unit', $data)) {
-                $object->setUnit($data['unit']);
-                unset($data['unit']);
-            }
-            if (\array_key_exists('units', $data)) {
-                $object->setUnits($data['units']);
-                unset($data['units']);
-            }
-            if (\array_key_exists('facet', $data)) {
-                $object->setFacet($data['facet']);
-                unset($data['facet']);
-            }
-            if (\array_key_exists('unit_reference', $data)) {
-                $object->setUnitReference($data['unit_reference']);
-                unset($data['unit_reference']);
-            }
-            if (\array_key_exists('metrics', $data)) {
-                $values = [];
-                foreach ($data['metrics'] as $value) {
-                    $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\DeviceMetric::class, 'json', $context);
-                }
-                $object->setMetrics($values);
-                unset($data['metrics']);
-            }
-            foreach ($data as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_1;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('unit') && null !== $object->getUnit()) {
-                $data['unit'] = $object->getUnit();
-            }
-            if ($object->isInitialized('units') && null !== $object->getUnits()) {
-                $data['units'] = $object->getUnits();
-            }
-            if ($object->isInitialized('facet') && null !== $object->getFacet()) {
-                $data['facet'] = $object->getFacet();
-            }
-            if ($object->isInitialized('unitReference') && null !== $object->getUnitReference()) {
-                $data['unit_reference'] = $object->getUnitReference();
-            }
-            if ($object->isInitialized('metrics') && null !== $object->getMetrics()) {
-                $values = [];
-                foreach ($object->getMetrics() as $value) {
-                    $values[] = $this->normalizer->normalize($value, 'json', $context);
-                }
-                $data['metrics'] = $values;
-            }
-            foreach ($object as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_1;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\DeviceMetrics::class => false];
-        }
+        return $type === \Bitly\Model\DeviceMetrics::class;
     }
-} else {
-    class DeviceMetricsNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\DeviceMetrics::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\DeviceMetrics::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\DeviceMetrics::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\DeviceMetrics();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('unit', $data)) {
-                $object->setUnit($data['unit']);
-                unset($data['unit']);
-            }
-            if (\array_key_exists('units', $data)) {
-                $object->setUnits($data['units']);
-                unset($data['units']);
-            }
-            if (\array_key_exists('facet', $data)) {
-                $object->setFacet($data['facet']);
-                unset($data['facet']);
-            }
-            if (\array_key_exists('unit_reference', $data)) {
-                $object->setUnitReference($data['unit_reference']);
-                unset($data['unit_reference']);
-            }
-            if (\array_key_exists('metrics', $data)) {
-                $values = [];
-                foreach ($data['metrics'] as $value) {
-                    $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\DeviceMetric::class, 'json', $context);
-                }
-                $object->setMetrics($values);
-                unset($data['metrics']);
-            }
-            foreach ($data as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_1;
-                }
-            }
-
+        $object = new \Bitly\Model\DeviceMetrics();
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('unit') && null !== $object->getUnit()) {
-                $data['unit'] = $object->getUnit();
+        if (\array_key_exists('unit', $data)) {
+            $object->setUnit($data['unit']);
+            unset($data['unit']);
+        }
+        if (\array_key_exists('units', $data)) {
+            $object->setUnits($data['units']);
+            unset($data['units']);
+        }
+        if (\array_key_exists('facet', $data)) {
+            $object->setFacet($data['facet']);
+            unset($data['facet']);
+        }
+        if (\array_key_exists('unit_reference', $data)) {
+            $object->setUnitReference($data['unit_reference']);
+            unset($data['unit_reference']);
+        }
+        if (\array_key_exists('metrics', $data)) {
+            $values = [];
+            foreach ($data['metrics'] as $value) {
+                $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\DeviceMetric::class, 'json', $context);
             }
-            if ($object->isInitialized('units') && null !== $object->getUnits()) {
-                $data['units'] = $object->getUnits();
+            $object->setMetrics($values);
+            unset($data['metrics']);
+        }
+        foreach ($data as $key => $value_1) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value_1;
             }
-            if ($object->isInitialized('facet') && null !== $object->getFacet()) {
-                $data['facet'] = $object->getFacet();
-            }
-            if ($object->isInitialized('unitReference') && null !== $object->getUnitReference()) {
-                $data['unit_reference'] = $object->getUnitReference();
-            }
-            if ($object->isInitialized('metrics') && null !== $object->getMetrics()) {
-                $values = [];
-                foreach ($object->getMetrics() as $value) {
-                    $values[] = $this->normalizer->normalize($value, 'json', $context);
-                }
-                $data['metrics'] = $values;
-            }
-            foreach ($object as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_1;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\DeviceMetrics::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('unit') && null !== $data->getUnit()) {
+            $dataArray['unit'] = $data->getUnit();
         }
+        if ($data->isInitialized('units') && null !== $data->getUnits()) {
+            $dataArray['units'] = $data->getUnits();
+        }
+        if ($data->isInitialized('facet') && null !== $data->getFacet()) {
+            $dataArray['facet'] = $data->getFacet();
+        }
+        if ($data->isInitialized('unitReference') && null !== $data->getUnitReference()) {
+            $dataArray['unit_reference'] = $data->getUnitReference();
+        }
+        if ($data->isInitialized('metrics') && null !== $data->getMetrics()) {
+            $values = [];
+            foreach ($data->getMetrics() as $value) {
+                $values[] = $this->normalizer->normalize($value, 'json', $context);
+            }
+            $dataArray['metrics'] = $values;
+        }
+        foreach ($data as $key => $value_1) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value_1;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\DeviceMetrics::class => false];
     }
 }

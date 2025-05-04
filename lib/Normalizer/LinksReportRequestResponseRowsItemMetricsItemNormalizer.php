@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,175 +20,86 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class LinksReportRequestResponseRowsItemMetricsItemNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class LinksReportRequestResponseRowsItemMetricsItemNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\LinksReportRequestResponseRowsItemMetricsItem::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\LinksReportRequestResponseRowsItemMetricsItem::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\LinksReportRequestResponseRowsItemMetricsItem();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('from', $data)) {
-                $object->setFrom($data['from']);
-                unset($data['from']);
-            }
-            if (\array_key_exists('to', $data)) {
-                $object->setTo($data['to']);
-                unset($data['to']);
-            }
-            if (\array_key_exists('count', $data)) {
-                $object->setCount($data['count']);
-                unset($data['count']);
-            }
-            if (\array_key_exists('csv_header_prefix', $data)) {
-                $object->setCsvHeaderPrefix($data['csv_header_prefix']);
-                unset($data['csv_header_prefix']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('from') && null !== $object->getFrom()) {
-                $data['from'] = $object->getFrom();
-            }
-            if ($object->isInitialized('to') && null !== $object->getTo()) {
-                $data['to'] = $object->getTo();
-            }
-            if ($object->isInitialized('count') && null !== $object->getCount()) {
-                $data['count'] = $object->getCount();
-            }
-            if ($object->isInitialized('csvHeaderPrefix') && null !== $object->getCsvHeaderPrefix()) {
-                $data['csv_header_prefix'] = $object->getCsvHeaderPrefix();
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\LinksReportRequestResponseRowsItemMetricsItem::class => false];
-        }
+        return $type === \Bitly\Model\LinksReportRequestResponseRowsItemMetricsItem::class;
     }
-} else {
-    class LinksReportRequestResponseRowsItemMetricsItemNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\LinksReportRequestResponseRowsItemMetricsItem::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\LinksReportRequestResponseRowsItemMetricsItem::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\LinksReportRequestResponseRowsItemMetricsItem::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\LinksReportRequestResponseRowsItemMetricsItem();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('from', $data)) {
-                $object->setFrom($data['from']);
-                unset($data['from']);
-            }
-            if (\array_key_exists('to', $data)) {
-                $object->setTo($data['to']);
-                unset($data['to']);
-            }
-            if (\array_key_exists('count', $data)) {
-                $object->setCount($data['count']);
-                unset($data['count']);
-            }
-            if (\array_key_exists('csv_header_prefix', $data)) {
-                $object->setCsvHeaderPrefix($data['csv_header_prefix']);
-                unset($data['csv_header_prefix']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
+        $object = new \Bitly\Model\LinksReportRequestResponseRowsItemMetricsItem();
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('from') && null !== $object->getFrom()) {
-                $data['from'] = $object->getFrom();
+        if (\array_key_exists('from', $data)) {
+            $object->setFrom($data['from']);
+            unset($data['from']);
+        }
+        if (\array_key_exists('to', $data)) {
+            $object->setTo($data['to']);
+            unset($data['to']);
+        }
+        if (\array_key_exists('count', $data)) {
+            $object->setCount($data['count']);
+            unset($data['count']);
+        }
+        if (\array_key_exists('csv_header_prefix', $data)) {
+            $object->setCsvHeaderPrefix($data['csv_header_prefix']);
+            unset($data['csv_header_prefix']);
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value;
             }
-            if ($object->isInitialized('to') && null !== $object->getTo()) {
-                $data['to'] = $object->getTo();
-            }
-            if ($object->isInitialized('count') && null !== $object->getCount()) {
-                $data['count'] = $object->getCount();
-            }
-            if ($object->isInitialized('csvHeaderPrefix') && null !== $object->getCsvHeaderPrefix()) {
-                $data['csv_header_prefix'] = $object->getCsvHeaderPrefix();
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\LinksReportRequestResponseRowsItemMetricsItem::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('from') && null !== $data->getFrom()) {
+            $dataArray['from'] = $data->getFrom();
         }
+        if ($data->isInitialized('to') && null !== $data->getTo()) {
+            $dataArray['to'] = $data->getTo();
+        }
+        if ($data->isInitialized('count') && null !== $data->getCount()) {
+            $dataArray['count'] = $data->getCount();
+        }
+        if ($data->isInitialized('csvHeaderPrefix') && null !== $data->getCsvHeaderPrefix()) {
+            $dataArray['csv_header_prefix'] = $data->getCsvHeaderPrefix();
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\LinksReportRequestResponseRowsItemMetricsItem::class => false];
     }
 }

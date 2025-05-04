@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,303 +20,153 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class QRCodeDetailsNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class QRCodeDetailsNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\QRCodeDetails::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\QRCodeDetails::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\QRCodeDetails();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('qrcode_id', $data)) {
-                $object->setQrcodeId($data['qrcode_id']);
-                unset($data['qrcode_id']);
-            }
-            if (\array_key_exists('group_guid', $data)) {
-                $object->setGroupGuid($data['group_guid']);
-                unset($data['group_guid']);
-            }
-            if (\array_key_exists('title', $data)) {
-                $object->setTitle($data['title']);
-                unset($data['title']);
-            }
-            if (\array_key_exists('gs1', $data)) {
-                $object->setGs1($this->denormalizer->denormalize($data['gs1'], \Bitly\Model\GS1Metadata::class, 'json', $context));
-                unset($data['gs1']);
-            }
-            if (\array_key_exists('render_customizations', $data)) {
-                $object->setRenderCustomizations($this->denormalizer->denormalize($data['render_customizations'], \Bitly\Model\QRCodeCustomizationsPublic::class, 'json', $context));
-                unset($data['render_customizations']);
-            }
-            if (\array_key_exists('qr_code_type', $data)) {
-                $object->setQrCodeType($data['qr_code_type']);
-                unset($data['qr_code_type']);
-            }
-            if (\array_key_exists('bitlink_id', $data)) {
-                $object->setBitlinkId($data['bitlink_id']);
-                unset($data['bitlink_id']);
-            }
-            if (\array_key_exists('long_urls', $data)) {
-                $values = [];
-                foreach ($data['long_urls'] as $value) {
-                    $values[] = $value;
-                }
-                $object->setLongUrls($values);
-                unset($data['long_urls']);
-            }
-            if (\array_key_exists('serialized_content', $data)) {
-                $object->setSerializedContent($data['serialized_content']);
-                unset($data['serialized_content']);
-            }
-            if (\array_key_exists('archived', $data)) {
-                $object->setArchived($data['archived']);
-                unset($data['archived']);
-            }
-            if (\array_key_exists('created', $data)) {
-                $object->setCreated($data['created']);
-                unset($data['created']);
-            }
-            if (\array_key_exists('modified', $data)) {
-                $object->setModified($data['modified']);
-                unset($data['modified']);
-            }
-            foreach ($data as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_1;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('qrcodeId') && null !== $object->getQrcodeId()) {
-                $data['qrcode_id'] = $object->getQrcodeId();
-            }
-            if ($object->isInitialized('groupGuid') && null !== $object->getGroupGuid()) {
-                $data['group_guid'] = $object->getGroupGuid();
-            }
-            if ($object->isInitialized('title') && null !== $object->getTitle()) {
-                $data['title'] = $object->getTitle();
-            }
-            if ($object->isInitialized('gs1') && null !== $object->getGs1()) {
-                $data['gs1'] = $this->normalizer->normalize($object->getGs1(), 'json', $context);
-            }
-            if ($object->isInitialized('renderCustomizations') && null !== $object->getRenderCustomizations()) {
-                $data['render_customizations'] = $this->normalizer->normalize($object->getRenderCustomizations(), 'json', $context);
-            }
-            if ($object->isInitialized('qrCodeType') && null !== $object->getQrCodeType()) {
-                $data['qr_code_type'] = $object->getQrCodeType();
-            }
-            if ($object->isInitialized('bitlinkId') && null !== $object->getBitlinkId()) {
-                $data['bitlink_id'] = $object->getBitlinkId();
-            }
-            if ($object->isInitialized('longUrls') && null !== $object->getLongUrls()) {
-                $values = [];
-                foreach ($object->getLongUrls() as $value) {
-                    $values[] = $value;
-                }
-                $data['long_urls'] = $values;
-            }
-            if ($object->isInitialized('serializedContent') && null !== $object->getSerializedContent()) {
-                $data['serialized_content'] = $object->getSerializedContent();
-            }
-            if ($object->isInitialized('archived') && null !== $object->getArchived()) {
-                $data['archived'] = $object->getArchived();
-            }
-            if ($object->isInitialized('created') && null !== $object->getCreated()) {
-                $data['created'] = $object->getCreated();
-            }
-            if ($object->isInitialized('modified') && null !== $object->getModified()) {
-                $data['modified'] = $object->getModified();
-            }
-            foreach ($object as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_1;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\QRCodeDetails::class => false];
-        }
+        return $type === \Bitly\Model\QRCodeDetails::class;
     }
-} else {
-    class QRCodeDetailsNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\QRCodeDetails::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\QRCodeDetails::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\QRCodeDetails::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\QRCodeDetails();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('qrcode_id', $data)) {
-                $object->setQrcodeId($data['qrcode_id']);
-                unset($data['qrcode_id']);
-            }
-            if (\array_key_exists('group_guid', $data)) {
-                $object->setGroupGuid($data['group_guid']);
-                unset($data['group_guid']);
-            }
-            if (\array_key_exists('title', $data)) {
-                $object->setTitle($data['title']);
-                unset($data['title']);
-            }
-            if (\array_key_exists('gs1', $data)) {
-                $object->setGs1($this->denormalizer->denormalize($data['gs1'], \Bitly\Model\GS1Metadata::class, 'json', $context));
-                unset($data['gs1']);
-            }
-            if (\array_key_exists('render_customizations', $data)) {
-                $object->setRenderCustomizations($this->denormalizer->denormalize($data['render_customizations'], \Bitly\Model\QRCodeCustomizationsPublic::class, 'json', $context));
-                unset($data['render_customizations']);
-            }
-            if (\array_key_exists('qr_code_type', $data)) {
-                $object->setQrCodeType($data['qr_code_type']);
-                unset($data['qr_code_type']);
-            }
-            if (\array_key_exists('bitlink_id', $data)) {
-                $object->setBitlinkId($data['bitlink_id']);
-                unset($data['bitlink_id']);
-            }
-            if (\array_key_exists('long_urls', $data)) {
-                $values = [];
-                foreach ($data['long_urls'] as $value) {
-                    $values[] = $value;
-                }
-                $object->setLongUrls($values);
-                unset($data['long_urls']);
-            }
-            if (\array_key_exists('serialized_content', $data)) {
-                $object->setSerializedContent($data['serialized_content']);
-                unset($data['serialized_content']);
-            }
-            if (\array_key_exists('archived', $data)) {
-                $object->setArchived($data['archived']);
-                unset($data['archived']);
-            }
-            if (\array_key_exists('created', $data)) {
-                $object->setCreated($data['created']);
-                unset($data['created']);
-            }
-            if (\array_key_exists('modified', $data)) {
-                $object->setModified($data['modified']);
-                unset($data['modified']);
-            }
-            foreach ($data as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_1;
-                }
-            }
-
+        $object = new \Bitly\Model\QRCodeDetails();
+        if (\array_key_exists('archived', $data) && \is_int($data['archived'])) {
+            $data['archived'] = (bool) $data['archived'];
+        }
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('qrcodeId') && null !== $object->getQrcodeId()) {
-                $data['qrcode_id'] = $object->getQrcodeId();
+        if (\array_key_exists('qrcode_id', $data)) {
+            $object->setQrcodeId($data['qrcode_id']);
+            unset($data['qrcode_id']);
+        }
+        if (\array_key_exists('group_guid', $data)) {
+            $object->setGroupGuid($data['group_guid']);
+            unset($data['group_guid']);
+        }
+        if (\array_key_exists('title', $data)) {
+            $object->setTitle($data['title']);
+            unset($data['title']);
+        }
+        if (\array_key_exists('gs1', $data)) {
+            $object->setGs1($this->denormalizer->denormalize($data['gs1'], \Bitly\Model\GS1Metadata::class, 'json', $context));
+            unset($data['gs1']);
+        }
+        if (\array_key_exists('render_customizations', $data)) {
+            $object->setRenderCustomizations($this->denormalizer->denormalize($data['render_customizations'], \Bitly\Model\QRCodeCustomizationsPublic::class, 'json', $context));
+            unset($data['render_customizations']);
+        }
+        if (\array_key_exists('qr_code_type', $data)) {
+            $object->setQrCodeType($data['qr_code_type']);
+            unset($data['qr_code_type']);
+        }
+        if (\array_key_exists('bitlink_id', $data)) {
+            $object->setBitlinkId($data['bitlink_id']);
+            unset($data['bitlink_id']);
+        }
+        if (\array_key_exists('long_urls', $data)) {
+            $values = [];
+            foreach ($data['long_urls'] as $value) {
+                $values[] = $value;
             }
-            if ($object->isInitialized('groupGuid') && null !== $object->getGroupGuid()) {
-                $data['group_guid'] = $object->getGroupGuid();
+            $object->setLongUrls($values);
+            unset($data['long_urls']);
+        }
+        if (\array_key_exists('serialized_content', $data)) {
+            $object->setSerializedContent($data['serialized_content']);
+            unset($data['serialized_content']);
+        }
+        if (\array_key_exists('archived', $data)) {
+            $object->setArchived($data['archived']);
+            unset($data['archived']);
+        }
+        if (\array_key_exists('created', $data)) {
+            $object->setCreated($data['created']);
+            unset($data['created']);
+        }
+        if (\array_key_exists('modified', $data)) {
+            $object->setModified($data['modified']);
+            unset($data['modified']);
+        }
+        foreach ($data as $key => $value_1) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value_1;
             }
-            if ($object->isInitialized('title') && null !== $object->getTitle()) {
-                $data['title'] = $object->getTitle();
-            }
-            if ($object->isInitialized('gs1') && null !== $object->getGs1()) {
-                $data['gs1'] = $this->normalizer->normalize($object->getGs1(), 'json', $context);
-            }
-            if ($object->isInitialized('renderCustomizations') && null !== $object->getRenderCustomizations()) {
-                $data['render_customizations'] = $this->normalizer->normalize($object->getRenderCustomizations(), 'json', $context);
-            }
-            if ($object->isInitialized('qrCodeType') && null !== $object->getQrCodeType()) {
-                $data['qr_code_type'] = $object->getQrCodeType();
-            }
-            if ($object->isInitialized('bitlinkId') && null !== $object->getBitlinkId()) {
-                $data['bitlink_id'] = $object->getBitlinkId();
-            }
-            if ($object->isInitialized('longUrls') && null !== $object->getLongUrls()) {
-                $values = [];
-                foreach ($object->getLongUrls() as $value) {
-                    $values[] = $value;
-                }
-                $data['long_urls'] = $values;
-            }
-            if ($object->isInitialized('serializedContent') && null !== $object->getSerializedContent()) {
-                $data['serialized_content'] = $object->getSerializedContent();
-            }
-            if ($object->isInitialized('archived') && null !== $object->getArchived()) {
-                $data['archived'] = $object->getArchived();
-            }
-            if ($object->isInitialized('created') && null !== $object->getCreated()) {
-                $data['created'] = $object->getCreated();
-            }
-            if ($object->isInitialized('modified') && null !== $object->getModified()) {
-                $data['modified'] = $object->getModified();
-            }
-            foreach ($object as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_1;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\QRCodeDetails::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('qrcodeId') && null !== $data->getQrcodeId()) {
+            $dataArray['qrcode_id'] = $data->getQrcodeId();
         }
+        if ($data->isInitialized('groupGuid') && null !== $data->getGroupGuid()) {
+            $dataArray['group_guid'] = $data->getGroupGuid();
+        }
+        if ($data->isInitialized('title') && null !== $data->getTitle()) {
+            $dataArray['title'] = $data->getTitle();
+        }
+        if ($data->isInitialized('gs1') && null !== $data->getGs1()) {
+            $dataArray['gs1'] = $this->normalizer->normalize($data->getGs1(), 'json', $context);
+        }
+        if ($data->isInitialized('renderCustomizations') && null !== $data->getRenderCustomizations()) {
+            $dataArray['render_customizations'] = $this->normalizer->normalize($data->getRenderCustomizations(), 'json', $context);
+        }
+        if ($data->isInitialized('qrCodeType') && null !== $data->getQrCodeType()) {
+            $dataArray['qr_code_type'] = $data->getQrCodeType();
+        }
+        if ($data->isInitialized('bitlinkId') && null !== $data->getBitlinkId()) {
+            $dataArray['bitlink_id'] = $data->getBitlinkId();
+        }
+        if ($data->isInitialized('longUrls') && null !== $data->getLongUrls()) {
+            $values = [];
+            foreach ($data->getLongUrls() as $value) {
+                $values[] = $value;
+            }
+            $dataArray['long_urls'] = $values;
+        }
+        if ($data->isInitialized('serializedContent') && null !== $data->getSerializedContent()) {
+            $dataArray['serialized_content'] = $data->getSerializedContent();
+        }
+        if ($data->isInitialized('archived') && null !== $data->getArchived()) {
+            $dataArray['archived'] = $data->getArchived();
+        }
+        if ($data->isInitialized('created') && null !== $data->getCreated()) {
+            $dataArray['created'] = $data->getCreated();
+        }
+        if ($data->isInitialized('modified') && null !== $data->getModified()) {
+            $dataArray['modified'] = $data->getModified();
+        }
+        foreach ($data as $key => $value_1) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value_1;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\QRCodeDetails::class => false];
     }
 }

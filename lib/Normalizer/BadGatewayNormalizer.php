@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,191 +20,94 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class BadGatewayNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class BadGatewayNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\BadGateway::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\BadGateway::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\BadGateway();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('message', $data)) {
-                $object->setMessage($data['message']);
-                unset($data['message']);
-            }
-            if (\array_key_exists('description', $data)) {
-                $object->setDescription($data['description']);
-                unset($data['description']);
-            }
-            if (\array_key_exists('resource', $data)) {
-                $object->setResource($data['resource']);
-                unset($data['resource']);
-            }
-            if (\array_key_exists('errors', $data)) {
-                $values = [];
-                foreach ($data['errors'] as $value) {
-                    $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\FieldError::class, 'json', $context);
-                }
-                $object->setErrors($values);
-                unset($data['errors']);
-            }
-            foreach ($data as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_1;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('message') && null !== $object->getMessage()) {
-                $data['message'] = $object->getMessage();
-            }
-            if ($object->isInitialized('description') && null !== $object->getDescription()) {
-                $data['description'] = $object->getDescription();
-            }
-            if ($object->isInitialized('resource') && null !== $object->getResource()) {
-                $data['resource'] = $object->getResource();
-            }
-            if ($object->isInitialized('errors') && null !== $object->getErrors()) {
-                $values = [];
-                foreach ($object->getErrors() as $value) {
-                    $values[] = $this->normalizer->normalize($value, 'json', $context);
-                }
-                $data['errors'] = $values;
-            }
-            foreach ($object as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_1;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\BadGateway::class => false];
-        }
+        return $type === \Bitly\Model\BadGateway::class;
     }
-} else {
-    class BadGatewayNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\BadGateway::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\BadGateway::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\BadGateway::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\BadGateway();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('message', $data)) {
-                $object->setMessage($data['message']);
-                unset($data['message']);
-            }
-            if (\array_key_exists('description', $data)) {
-                $object->setDescription($data['description']);
-                unset($data['description']);
-            }
-            if (\array_key_exists('resource', $data)) {
-                $object->setResource($data['resource']);
-                unset($data['resource']);
-            }
-            if (\array_key_exists('errors', $data)) {
-                $values = [];
-                foreach ($data['errors'] as $value) {
-                    $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\FieldError::class, 'json', $context);
-                }
-                $object->setErrors($values);
-                unset($data['errors']);
-            }
-            foreach ($data as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_1;
-                }
-            }
-
+        $object = new \Bitly\Model\BadGateway();
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('message') && null !== $object->getMessage()) {
-                $data['message'] = $object->getMessage();
+        if (\array_key_exists('message', $data)) {
+            $object->setMessage($data['message']);
+            unset($data['message']);
+        }
+        if (\array_key_exists('description', $data)) {
+            $object->setDescription($data['description']);
+            unset($data['description']);
+        }
+        if (\array_key_exists('resource', $data)) {
+            $object->setResource($data['resource']);
+            unset($data['resource']);
+        }
+        if (\array_key_exists('errors', $data)) {
+            $values = [];
+            foreach ($data['errors'] as $value) {
+                $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\FieldError::class, 'json', $context);
             }
-            if ($object->isInitialized('description') && null !== $object->getDescription()) {
-                $data['description'] = $object->getDescription();
+            $object->setErrors($values);
+            unset($data['errors']);
+        }
+        foreach ($data as $key => $value_1) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value_1;
             }
-            if ($object->isInitialized('resource') && null !== $object->getResource()) {
-                $data['resource'] = $object->getResource();
-            }
-            if ($object->isInitialized('errors') && null !== $object->getErrors()) {
-                $values = [];
-                foreach ($object->getErrors() as $value) {
-                    $values[] = $this->normalizer->normalize($value, 'json', $context);
-                }
-                $data['errors'] = $values;
-            }
-            foreach ($object as $key => $value_1) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_1;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\BadGateway::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('message') && null !== $data->getMessage()) {
+            $dataArray['message'] = $data->getMessage();
         }
+        if ($data->isInitialized('description') && null !== $data->getDescription()) {
+            $dataArray['description'] = $data->getDescription();
+        }
+        if ($data->isInitialized('resource') && null !== $data->getResource()) {
+            $dataArray['resource'] = $data->getResource();
+        }
+        if ($data->isInitialized('errors') && null !== $data->getErrors()) {
+            $values = [];
+            foreach ($data->getErrors() as $value) {
+                $values[] = $this->normalizer->normalize($value, 'json', $context);
+            }
+            $dataArray['errors'] = $values;
+        }
+        foreach ($data as $key => $value_1) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value_1;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\BadGateway::class => false];
     }
 }

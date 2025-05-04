@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,203 +20,103 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class OAuthAppWithOwnerLoginNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class OAuthAppWithOwnerLoginNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\OAuthAppWithOwnerLogin::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\OAuthAppWithOwnerLogin::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\OAuthAppWithOwnerLogin();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('name', $data)) {
-                $object->setName($data['name']);
-                unset($data['name']);
-            }
-            if (\array_key_exists('client_id', $data)) {
-                $object->setClientId($data['client_id']);
-                unset($data['client_id']);
-            }
-            if (\array_key_exists('description', $data)) {
-                $object->setDescription($data['description']);
-                unset($data['description']);
-            }
-            if (\array_key_exists('link', $data)) {
-                $object->setLink($data['link']);
-                unset($data['link']);
-            }
-            if (\array_key_exists('owner_login', $data)) {
-                $object->setOwnerLogin($data['owner_login']);
-                unset($data['owner_login']);
-            }
-            if (\array_key_exists('require_oath_pkce', $data)) {
-                $object->setRequireOathPkce($data['require_oath_pkce']);
-                unset($data['require_oath_pkce']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('name') && null !== $object->getName()) {
-                $data['name'] = $object->getName();
-            }
-            if ($object->isInitialized('clientId') && null !== $object->getClientId()) {
-                $data['client_id'] = $object->getClientId();
-            }
-            if ($object->isInitialized('description') && null !== $object->getDescription()) {
-                $data['description'] = $object->getDescription();
-            }
-            if ($object->isInitialized('link') && null !== $object->getLink()) {
-                $data['link'] = $object->getLink();
-            }
-            if ($object->isInitialized('ownerLogin') && null !== $object->getOwnerLogin()) {
-                $data['owner_login'] = $object->getOwnerLogin();
-            }
-            if ($object->isInitialized('requireOathPkce') && null !== $object->getRequireOathPkce()) {
-                $data['require_oath_pkce'] = $object->getRequireOathPkce();
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\OAuthAppWithOwnerLogin::class => false];
-        }
+        return $type === \Bitly\Model\OAuthAppWithOwnerLogin::class;
     }
-} else {
-    class OAuthAppWithOwnerLoginNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\OAuthAppWithOwnerLogin::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\OAuthAppWithOwnerLogin::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\OAuthAppWithOwnerLogin::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\OAuthAppWithOwnerLogin();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('name', $data)) {
-                $object->setName($data['name']);
-                unset($data['name']);
-            }
-            if (\array_key_exists('client_id', $data)) {
-                $object->setClientId($data['client_id']);
-                unset($data['client_id']);
-            }
-            if (\array_key_exists('description', $data)) {
-                $object->setDescription($data['description']);
-                unset($data['description']);
-            }
-            if (\array_key_exists('link', $data)) {
-                $object->setLink($data['link']);
-                unset($data['link']);
-            }
-            if (\array_key_exists('owner_login', $data)) {
-                $object->setOwnerLogin($data['owner_login']);
-                unset($data['owner_login']);
-            }
-            if (\array_key_exists('require_oath_pkce', $data)) {
-                $object->setRequireOathPkce($data['require_oath_pkce']);
-                unset($data['require_oath_pkce']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
+        $object = new \Bitly\Model\OAuthAppWithOwnerLogin();
+        if (\array_key_exists('require_oath_pkce', $data) && \is_int($data['require_oath_pkce'])) {
+            $data['require_oath_pkce'] = (bool) $data['require_oath_pkce'];
+        }
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('name') && null !== $object->getName()) {
-                $data['name'] = $object->getName();
+        if (\array_key_exists('name', $data)) {
+            $object->setName($data['name']);
+            unset($data['name']);
+        }
+        if (\array_key_exists('client_id', $data)) {
+            $object->setClientId($data['client_id']);
+            unset($data['client_id']);
+        }
+        if (\array_key_exists('description', $data)) {
+            $object->setDescription($data['description']);
+            unset($data['description']);
+        }
+        if (\array_key_exists('link', $data)) {
+            $object->setLink($data['link']);
+            unset($data['link']);
+        }
+        if (\array_key_exists('owner_login', $data)) {
+            $object->setOwnerLogin($data['owner_login']);
+            unset($data['owner_login']);
+        }
+        if (\array_key_exists('require_oath_pkce', $data)) {
+            $object->setRequireOathPkce($data['require_oath_pkce']);
+            unset($data['require_oath_pkce']);
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value;
             }
-            if ($object->isInitialized('clientId') && null !== $object->getClientId()) {
-                $data['client_id'] = $object->getClientId();
-            }
-            if ($object->isInitialized('description') && null !== $object->getDescription()) {
-                $data['description'] = $object->getDescription();
-            }
-            if ($object->isInitialized('link') && null !== $object->getLink()) {
-                $data['link'] = $object->getLink();
-            }
-            if ($object->isInitialized('ownerLogin') && null !== $object->getOwnerLogin()) {
-                $data['owner_login'] = $object->getOwnerLogin();
-            }
-            if ($object->isInitialized('requireOathPkce') && null !== $object->getRequireOathPkce()) {
-                $data['require_oath_pkce'] = $object->getRequireOathPkce();
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\OAuthAppWithOwnerLogin::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('name') && null !== $data->getName()) {
+            $dataArray['name'] = $data->getName();
         }
+        if ($data->isInitialized('clientId') && null !== $data->getClientId()) {
+            $dataArray['client_id'] = $data->getClientId();
+        }
+        if ($data->isInitialized('description') && null !== $data->getDescription()) {
+            $dataArray['description'] = $data->getDescription();
+        }
+        if ($data->isInitialized('link') && null !== $data->getLink()) {
+            $dataArray['link'] = $data->getLink();
+        }
+        if ($data->isInitialized('ownerLogin') && null !== $data->getOwnerLogin()) {
+            $dataArray['owner_login'] = $data->getOwnerLogin();
+        }
+        if ($data->isInitialized('requireOathPkce') && null !== $data->getRequireOathPkce()) {
+            $dataArray['require_oath_pkce'] = $data->getRequireOathPkce();
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\OAuthAppWithOwnerLogin::class => false];
     }
 }

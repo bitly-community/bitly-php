@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,203 +20,106 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class DomainRegistrarInfoNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class DomainRegistrarInfoNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\DomainRegistrarInfo::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\DomainRegistrarInfo::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\DomainRegistrarInfo();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('domain', $data)) {
-                $object->setDomain($data['domain']);
-                unset($data['domain']);
-            }
-            if (\array_key_exists('status', $data)) {
-                $object->setStatus($data['status']);
-                unset($data['status']);
-            }
-            if (\array_key_exists('renew_auto', $data)) {
-                $object->setRenewAuto($data['renew_auto']);
-                unset($data['renew_auto']);
-            }
-            if (\array_key_exists('renew_deadline', $data)) {
-                $object->setRenewDeadline($data['renew_deadline']);
-                unset($data['renew_deadline']);
-            }
-            if (\array_key_exists('expires', $data)) {
-                $object->setExpires($data['expires']);
-                unset($data['expires']);
-            }
-            if (\array_key_exists('expiration_protected', $data)) {
-                $object->setExpirationProtected($data['expiration_protected']);
-                unset($data['expiration_protected']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('domain') && null !== $object->getDomain()) {
-                $data['domain'] = $object->getDomain();
-            }
-            if ($object->isInitialized('status') && null !== $object->getStatus()) {
-                $data['status'] = $object->getStatus();
-            }
-            if ($object->isInitialized('renewAuto') && null !== $object->getRenewAuto()) {
-                $data['renew_auto'] = $object->getRenewAuto();
-            }
-            if ($object->isInitialized('renewDeadline') && null !== $object->getRenewDeadline()) {
-                $data['renew_deadline'] = $object->getRenewDeadline();
-            }
-            if ($object->isInitialized('expires') && null !== $object->getExpires()) {
-                $data['expires'] = $object->getExpires();
-            }
-            if ($object->isInitialized('expirationProtected') && null !== $object->getExpirationProtected()) {
-                $data['expiration_protected'] = $object->getExpirationProtected();
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\DomainRegistrarInfo::class => false];
-        }
+        return $type === \Bitly\Model\DomainRegistrarInfo::class;
     }
-} else {
-    class DomainRegistrarInfoNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\DomainRegistrarInfo::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\DomainRegistrarInfo::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\DomainRegistrarInfo::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\DomainRegistrarInfo();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('domain', $data)) {
-                $object->setDomain($data['domain']);
-                unset($data['domain']);
-            }
-            if (\array_key_exists('status', $data)) {
-                $object->setStatus($data['status']);
-                unset($data['status']);
-            }
-            if (\array_key_exists('renew_auto', $data)) {
-                $object->setRenewAuto($data['renew_auto']);
-                unset($data['renew_auto']);
-            }
-            if (\array_key_exists('renew_deadline', $data)) {
-                $object->setRenewDeadline($data['renew_deadline']);
-                unset($data['renew_deadline']);
-            }
-            if (\array_key_exists('expires', $data)) {
-                $object->setExpires($data['expires']);
-                unset($data['expires']);
-            }
-            if (\array_key_exists('expiration_protected', $data)) {
-                $object->setExpirationProtected($data['expiration_protected']);
-                unset($data['expiration_protected']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
+        $object = new \Bitly\Model\DomainRegistrarInfo();
+        if (\array_key_exists('renew_auto', $data) && \is_int($data['renew_auto'])) {
+            $data['renew_auto'] = (bool) $data['renew_auto'];
+        }
+        if (\array_key_exists('expiration_protected', $data) && \is_int($data['expiration_protected'])) {
+            $data['expiration_protected'] = (bool) $data['expiration_protected'];
+        }
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('domain') && null !== $object->getDomain()) {
-                $data['domain'] = $object->getDomain();
+        if (\array_key_exists('domain', $data)) {
+            $object->setDomain($data['domain']);
+            unset($data['domain']);
+        }
+        if (\array_key_exists('status', $data)) {
+            $object->setStatus($data['status']);
+            unset($data['status']);
+        }
+        if (\array_key_exists('renew_auto', $data)) {
+            $object->setRenewAuto($data['renew_auto']);
+            unset($data['renew_auto']);
+        }
+        if (\array_key_exists('renew_deadline', $data)) {
+            $object->setRenewDeadline($data['renew_deadline']);
+            unset($data['renew_deadline']);
+        }
+        if (\array_key_exists('expires', $data)) {
+            $object->setExpires($data['expires']);
+            unset($data['expires']);
+        }
+        if (\array_key_exists('expiration_protected', $data)) {
+            $object->setExpirationProtected($data['expiration_protected']);
+            unset($data['expiration_protected']);
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value;
             }
-            if ($object->isInitialized('status') && null !== $object->getStatus()) {
-                $data['status'] = $object->getStatus();
-            }
-            if ($object->isInitialized('renewAuto') && null !== $object->getRenewAuto()) {
-                $data['renew_auto'] = $object->getRenewAuto();
-            }
-            if ($object->isInitialized('renewDeadline') && null !== $object->getRenewDeadline()) {
-                $data['renew_deadline'] = $object->getRenewDeadline();
-            }
-            if ($object->isInitialized('expires') && null !== $object->getExpires()) {
-                $data['expires'] = $object->getExpires();
-            }
-            if ($object->isInitialized('expirationProtected') && null !== $object->getExpirationProtected()) {
-                $data['expiration_protected'] = $object->getExpirationProtected();
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\DomainRegistrarInfo::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('domain') && null !== $data->getDomain()) {
+            $dataArray['domain'] = $data->getDomain();
         }
+        if ($data->isInitialized('status') && null !== $data->getStatus()) {
+            $dataArray['status'] = $data->getStatus();
+        }
+        if ($data->isInitialized('renewAuto') && null !== $data->getRenewAuto()) {
+            $dataArray['renew_auto'] = $data->getRenewAuto();
+        }
+        if ($data->isInitialized('renewDeadline') && null !== $data->getRenewDeadline()) {
+            $dataArray['renew_deadline'] = $data->getRenewDeadline();
+        }
+        if ($data->isInitialized('expires') && null !== $data->getExpires()) {
+            $dataArray['expires'] = $data->getExpires();
+        }
+        if ($data->isInitialized('expirationProtected') && null !== $data->getExpirationProtected()) {
+            $dataArray['expiration_protected'] = $data->getExpirationProtected();
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\DomainRegistrarInfo::class => false];
     }
 }

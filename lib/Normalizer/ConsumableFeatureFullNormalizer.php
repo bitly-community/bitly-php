@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,259 +20,137 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class ConsumableFeatureFullNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class ConsumableFeatureFullNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\ConsumableFeatureFull::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\ConsumableFeatureFull::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\ConsumableFeatureFull();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('created', $data)) {
-                $object->setCreated($data['created']);
-                unset($data['created']);
-            }
-            if (\array_key_exists('modified', $data)) {
-                $object->setModified($data['modified']);
-                unset($data['modified']);
-            }
-            if (\array_key_exists('id', $data)) {
-                $object->setId($data['id']);
-                unset($data['id']);
-            }
-            if (\array_key_exists('name', $data)) {
-                $object->setName($data['name']);
-                unset($data['name']);
-            }
-            if (\array_key_exists('limit', $data)) {
-                $object->setLimit($data['limit']);
-                unset($data['limit']);
-            }
-            if (\array_key_exists('is_tier_default', $data)) {
-                $object->setIsTierDefault($data['is_tier_default']);
-                unset($data['is_tier_default']);
-            }
-            if (\array_key_exists('is_enforced', $data)) {
-                $object->setIsEnforced($data['is_enforced']);
-                unset($data['is_enforced']);
-            }
-            if (\array_key_exists('is_limited', $data)) {
-                $object->setIsLimited($data['is_limited']);
-                unset($data['is_limited']);
-            }
-            if (\array_key_exists('count', $data)) {
-                $object->setCount($data['count']);
-                unset($data['count']);
-            }
-            if (\array_key_exists('add_on_usage', $data)) {
-                $object->setAddOnUsage($this->denormalizer->denormalize($data['add_on_usage'], \Bitly\Model\AddOnUsage::class, 'json', $context));
-                unset($data['add_on_usage']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('created') && null !== $object->getCreated()) {
-                $data['created'] = $object->getCreated();
-            }
-            if ($object->isInitialized('modified') && null !== $object->getModified()) {
-                $data['modified'] = $object->getModified();
-            }
-            if ($object->isInitialized('id') && null !== $object->getId()) {
-                $data['id'] = $object->getId();
-            }
-            if ($object->isInitialized('name') && null !== $object->getName()) {
-                $data['name'] = $object->getName();
-            }
-            if ($object->isInitialized('limit') && null !== $object->getLimit()) {
-                $data['limit'] = $object->getLimit();
-            }
-            if ($object->isInitialized('isTierDefault') && null !== $object->getIsTierDefault()) {
-                $data['is_tier_default'] = $object->getIsTierDefault();
-            }
-            if ($object->isInitialized('isEnforced') && null !== $object->getIsEnforced()) {
-                $data['is_enforced'] = $object->getIsEnforced();
-            }
-            if ($object->isInitialized('isLimited') && null !== $object->getIsLimited()) {
-                $data['is_limited'] = $object->getIsLimited();
-            }
-            if ($object->isInitialized('count') && null !== $object->getCount()) {
-                $data['count'] = $object->getCount();
-            }
-            if ($object->isInitialized('addOnUsage') && null !== $object->getAddOnUsage()) {
-                $data['add_on_usage'] = $this->normalizer->normalize($object->getAddOnUsage(), 'json', $context);
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\ConsumableFeatureFull::class => false];
-        }
+        return $type === \Bitly\Model\ConsumableFeatureFull::class;
     }
-} else {
-    class ConsumableFeatureFullNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\ConsumableFeatureFull::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\ConsumableFeatureFull::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\ConsumableFeatureFull::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\ConsumableFeatureFull();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('created', $data)) {
-                $object->setCreated($data['created']);
-                unset($data['created']);
-            }
-            if (\array_key_exists('modified', $data)) {
-                $object->setModified($data['modified']);
-                unset($data['modified']);
-            }
-            if (\array_key_exists('id', $data)) {
-                $object->setId($data['id']);
-                unset($data['id']);
-            }
-            if (\array_key_exists('name', $data)) {
-                $object->setName($data['name']);
-                unset($data['name']);
-            }
-            if (\array_key_exists('limit', $data)) {
-                $object->setLimit($data['limit']);
-                unset($data['limit']);
-            }
-            if (\array_key_exists('is_tier_default', $data)) {
-                $object->setIsTierDefault($data['is_tier_default']);
-                unset($data['is_tier_default']);
-            }
-            if (\array_key_exists('is_enforced', $data)) {
-                $object->setIsEnforced($data['is_enforced']);
-                unset($data['is_enforced']);
-            }
-            if (\array_key_exists('is_limited', $data)) {
-                $object->setIsLimited($data['is_limited']);
-                unset($data['is_limited']);
-            }
-            if (\array_key_exists('count', $data)) {
-                $object->setCount($data['count']);
-                unset($data['count']);
-            }
-            if (\array_key_exists('add_on_usage', $data)) {
-                $object->setAddOnUsage($this->denormalizer->denormalize($data['add_on_usage'], \Bitly\Model\AddOnUsage::class, 'json', $context));
-                unset($data['add_on_usage']);
-            }
-            foreach ($data as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value;
-                }
-            }
-
+        $object = new \Bitly\Model\ConsumableFeatureFull();
+        if (\array_key_exists('is_tier_default', $data) && \is_int($data['is_tier_default'])) {
+            $data['is_tier_default'] = (bool) $data['is_tier_default'];
+        }
+        if (\array_key_exists('is_enforced', $data) && \is_int($data['is_enforced'])) {
+            $data['is_enforced'] = (bool) $data['is_enforced'];
+        }
+        if (\array_key_exists('is_limited', $data) && \is_int($data['is_limited'])) {
+            $data['is_limited'] = (bool) $data['is_limited'];
+        }
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('created') && null !== $object->getCreated()) {
-                $data['created'] = $object->getCreated();
+        if (\array_key_exists('created', $data)) {
+            $object->setCreated($data['created']);
+            unset($data['created']);
+        }
+        if (\array_key_exists('modified', $data)) {
+            $object->setModified($data['modified']);
+            unset($data['modified']);
+        }
+        if (\array_key_exists('id', $data)) {
+            $object->setId($data['id']);
+            unset($data['id']);
+        }
+        if (\array_key_exists('name', $data)) {
+            $object->setName($data['name']);
+            unset($data['name']);
+        }
+        if (\array_key_exists('limit', $data)) {
+            $object->setLimit($data['limit']);
+            unset($data['limit']);
+        }
+        if (\array_key_exists('is_tier_default', $data)) {
+            $object->setIsTierDefault($data['is_tier_default']);
+            unset($data['is_tier_default']);
+        }
+        if (\array_key_exists('is_enforced', $data)) {
+            $object->setIsEnforced($data['is_enforced']);
+            unset($data['is_enforced']);
+        }
+        if (\array_key_exists('is_limited', $data)) {
+            $object->setIsLimited($data['is_limited']);
+            unset($data['is_limited']);
+        }
+        if (\array_key_exists('count', $data)) {
+            $object->setCount($data['count']);
+            unset($data['count']);
+        }
+        if (\array_key_exists('add_on_usage', $data)) {
+            $object->setAddOnUsage($this->denormalizer->denormalize($data['add_on_usage'], \Bitly\Model\AddOnUsage::class, 'json', $context));
+            unset($data['add_on_usage']);
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value;
             }
-            if ($object->isInitialized('modified') && null !== $object->getModified()) {
-                $data['modified'] = $object->getModified();
-            }
-            if ($object->isInitialized('id') && null !== $object->getId()) {
-                $data['id'] = $object->getId();
-            }
-            if ($object->isInitialized('name') && null !== $object->getName()) {
-                $data['name'] = $object->getName();
-            }
-            if ($object->isInitialized('limit') && null !== $object->getLimit()) {
-                $data['limit'] = $object->getLimit();
-            }
-            if ($object->isInitialized('isTierDefault') && null !== $object->getIsTierDefault()) {
-                $data['is_tier_default'] = $object->getIsTierDefault();
-            }
-            if ($object->isInitialized('isEnforced') && null !== $object->getIsEnforced()) {
-                $data['is_enforced'] = $object->getIsEnforced();
-            }
-            if ($object->isInitialized('isLimited') && null !== $object->getIsLimited()) {
-                $data['is_limited'] = $object->getIsLimited();
-            }
-            if ($object->isInitialized('count') && null !== $object->getCount()) {
-                $data['count'] = $object->getCount();
-            }
-            if ($object->isInitialized('addOnUsage') && null !== $object->getAddOnUsage()) {
-                $data['add_on_usage'] = $this->normalizer->normalize($object->getAddOnUsage(), 'json', $context);
-            }
-            foreach ($object as $key => $value) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value;
-                }
-            }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\ConsumableFeatureFull::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('created') && null !== $data->getCreated()) {
+            $dataArray['created'] = $data->getCreated();
         }
+        if ($data->isInitialized('modified') && null !== $data->getModified()) {
+            $dataArray['modified'] = $data->getModified();
+        }
+        if ($data->isInitialized('id') && null !== $data->getId()) {
+            $dataArray['id'] = $data->getId();
+        }
+        if ($data->isInitialized('name') && null !== $data->getName()) {
+            $dataArray['name'] = $data->getName();
+        }
+        if ($data->isInitialized('limit') && null !== $data->getLimit()) {
+            $dataArray['limit'] = $data->getLimit();
+        }
+        if ($data->isInitialized('isTierDefault') && null !== $data->getIsTierDefault()) {
+            $dataArray['is_tier_default'] = $data->getIsTierDefault();
+        }
+        if ($data->isInitialized('isEnforced') && null !== $data->getIsEnforced()) {
+            $dataArray['is_enforced'] = $data->getIsEnforced();
+        }
+        if ($data->isInitialized('isLimited') && null !== $data->getIsLimited()) {
+            $dataArray['is_limited'] = $data->getIsLimited();
+        }
+        if ($data->isInitialized('count') && null !== $data->getCount()) {
+            $dataArray['count'] = $data->getCount();
+        }
+        if ($data->isInitialized('addOnUsage') && null !== $data->getAddOnUsage()) {
+            $dataArray['add_on_usage'] = $this->normalizer->normalize($data->getAddOnUsage(), 'json', $context);
+        }
+        foreach ($data as $key => $value) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\ConsumableFeatureFull::class => false];
     }
 }

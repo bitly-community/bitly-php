@@ -13,7 +13,6 @@ namespace Bitly\Normalizer;
 use Bitly\Runtime\Normalizer\CheckArray;
 use Bitly\Runtime\Normalizer\ValidatorTrait;
 use Jane\Component\JsonSchemaRuntime\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -21,359 +20,178 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-if (!class_exists(Kernel::class) or (Kernel::MAJOR_VERSION >= 7 or Kernel::MAJOR_VERSION === 6 and Kernel::MINOR_VERSION === 4)) {
-    class QRCodeCustomizationOptionsResponseNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class QRCodeCustomizationOptionsResponseNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+{
+    use DenormalizerAwareTrait;
+    use NormalizerAwareTrait;
+    use CheckArray;
+    use ValidatorTrait;
+
+    public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
-
-        public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\QRCodeCustomizationOptionsResponse::class;
-        }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\QRCodeCustomizationOptionsResponse::class;
-        }
-
-        public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\QRCodeCustomizationOptionsResponse();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('frames', $data)) {
-                $values = [];
-                foreach ($data['frames'] as $value) {
-                    $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\QRCodeFrameResponseItem::class, 'json', $context);
-                }
-                $object->setFrames($values);
-                unset($data['frames']);
-            }
-            if (\array_key_exists('dot_patterns', $data)) {
-                $values_1 = [];
-                foreach ($data['dot_patterns'] as $value_1) {
-                    $values_1[] = $this->denormalizer->denormalize($value_1, \Bitly\Model\QRCodeDotPattern::class, 'json', $context);
-                }
-                $object->setDotPatterns($values_1);
-                unset($data['dot_patterns']);
-            }
-            if (\array_key_exists('corners', $data)) {
-                $values_2 = [];
-                foreach ($data['corners'] as $value_2) {
-                    $values_2[] = $this->denormalizer->denormalize($value_2, \Bitly\Model\QRCodeCornerResponseItem::class, 'json', $context);
-                }
-                $object->setCorners($values_2);
-                unset($data['corners']);
-            }
-            if (\array_key_exists('shapes', $data)) {
-                $values_3 = [];
-                foreach ($data['shapes'] as $value_3) {
-                    $values_3[] = $this->denormalizer->denormalize($value_3, \Bitly\Model\QRCodeShapeItem::class, 'json', $context);
-                }
-                $object->setShapes($values_3);
-                unset($data['shapes']);
-            }
-            if (\array_key_exists('formats', $data)) {
-                $values_4 = [];
-                foreach ($data['formats'] as $value_4) {
-                    $values_4[] = $value_4;
-                }
-                $object->setFormats($values_4);
-                unset($data['formats']);
-            }
-            if (\array_key_exists('dynamic_types', $data)) {
-                $values_5 = [];
-                foreach ($data['dynamic_types'] as $value_5) {
-                    $values_5[] = $this->denormalizer->denormalize($value_5, \Bitly\Model\QRCodeTypeItem::class, 'json', $context);
-                }
-                $object->setDynamicTypes($values_5);
-                unset($data['dynamic_types']);
-            }
-            if (\array_key_exists('static_types', $data)) {
-                $values_6 = [];
-                foreach ($data['static_types'] as $value_6) {
-                    $values_6[] = $this->denormalizer->denormalize($value_6, \Bitly\Model\QRCodeTypeItem::class, 'json', $context);
-                }
-                $object->setStaticTypes($values_6);
-                unset($data['static_types']);
-            }
-            if (\array_key_exists('logos', $data)) {
-                $values_7 = [];
-                foreach ($data['logos'] as $value_7) {
-                    $values_7[] = $this->denormalizer->denormalize($value_7, \Bitly\Model\QRCodeLogoImage::class, 'json', $context);
-                }
-                $object->setLogos($values_7);
-                unset($data['logos']);
-            }
-            foreach ($data as $key => $value_8) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_8;
-                }
-            }
-
-            return $object;
-        }
-
-        public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
-        {
-            $data = [];
-            if ($object->isInitialized('frames') && null !== $object->getFrames()) {
-                $values = [];
-                foreach ($object->getFrames() as $value) {
-                    $values[] = $this->normalizer->normalize($value, 'json', $context);
-                }
-                $data['frames'] = $values;
-            }
-            if ($object->isInitialized('dotPatterns') && null !== $object->getDotPatterns()) {
-                $values_1 = [];
-                foreach ($object->getDotPatterns() as $value_1) {
-                    $values_1[] = $this->normalizer->normalize($value_1, 'json', $context);
-                }
-                $data['dot_patterns'] = $values_1;
-            }
-            if ($object->isInitialized('corners') && null !== $object->getCorners()) {
-                $values_2 = [];
-                foreach ($object->getCorners() as $value_2) {
-                    $values_2[] = $this->normalizer->normalize($value_2, 'json', $context);
-                }
-                $data['corners'] = $values_2;
-            }
-            if ($object->isInitialized('shapes') && null !== $object->getShapes()) {
-                $values_3 = [];
-                foreach ($object->getShapes() as $value_3) {
-                    $values_3[] = $this->normalizer->normalize($value_3, 'json', $context);
-                }
-                $data['shapes'] = $values_3;
-            }
-            if ($object->isInitialized('formats') && null !== $object->getFormats()) {
-                $values_4 = [];
-                foreach ($object->getFormats() as $value_4) {
-                    $values_4[] = $value_4;
-                }
-                $data['formats'] = $values_4;
-            }
-            if ($object->isInitialized('dynamicTypes') && null !== $object->getDynamicTypes()) {
-                $values_5 = [];
-                foreach ($object->getDynamicTypes() as $value_5) {
-                    $values_5[] = $this->normalizer->normalize($value_5, 'json', $context);
-                }
-                $data['dynamic_types'] = $values_5;
-            }
-            if ($object->isInitialized('staticTypes') && null !== $object->getStaticTypes()) {
-                $values_6 = [];
-                foreach ($object->getStaticTypes() as $value_6) {
-                    $values_6[] = $this->normalizer->normalize($value_6, 'json', $context);
-                }
-                $data['static_types'] = $values_6;
-            }
-            if ($object->isInitialized('logos') && null !== $object->getLogos()) {
-                $values_7 = [];
-                foreach ($object->getLogos() as $value_7) {
-                    $values_7[] = $this->normalizer->normalize($value_7, 'json', $context);
-                }
-                $data['logos'] = $values_7;
-            }
-            foreach ($object as $key => $value_8) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_8;
-                }
-            }
-
-            return $data;
-        }
-
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\QRCodeCustomizationOptionsResponse::class => false];
-        }
+        return $type === \Bitly\Model\QRCodeCustomizationOptionsResponse::class;
     }
-} else {
-    class QRCodeCustomizationOptionsResponseNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        use DenormalizerAwareTrait;
-        use NormalizerAwareTrait;
-        use CheckArray;
-        use ValidatorTrait;
+        return is_object($data) && get_class($data) === \Bitly\Model\QRCodeCustomizationOptionsResponse::class;
+    }
 
-        public function supportsDenormalization($data, $type, ?string $format = null, array $context = []): bool
-        {
-            return $type === \Bitly\Model\QRCodeCustomizationOptionsResponse::class;
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
+    {
+        if (isset($data['$ref'])) {
+            return new Reference($data['$ref'], $context['document-origin']);
         }
-
-        public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
-        {
-            return is_object($data) && get_class($data) === \Bitly\Model\QRCodeCustomizationOptionsResponse::class;
+        if (isset($data['$recursiveRef'])) {
+            return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-
-        public function denormalize($data, $type, $format = null, array $context = [])
-        {
-            if (isset($data['$ref'])) {
-                return new Reference($data['$ref'], $context['document-origin']);
-            }
-            if (isset($data['$recursiveRef'])) {
-                return new Reference($data['$recursiveRef'], $context['document-origin']);
-            }
-            $object = new \Bitly\Model\QRCodeCustomizationOptionsResponse();
-            if (null === $data || false === \is_array($data)) {
-                return $object;
-            }
-            if (\array_key_exists('frames', $data)) {
-                $values = [];
-                foreach ($data['frames'] as $value) {
-                    $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\QRCodeFrameResponseItem::class, 'json', $context);
-                }
-                $object->setFrames($values);
-                unset($data['frames']);
-            }
-            if (\array_key_exists('dot_patterns', $data)) {
-                $values_1 = [];
-                foreach ($data['dot_patterns'] as $value_1) {
-                    $values_1[] = $this->denormalizer->denormalize($value_1, \Bitly\Model\QRCodeDotPattern::class, 'json', $context);
-                }
-                $object->setDotPatterns($values_1);
-                unset($data['dot_patterns']);
-            }
-            if (\array_key_exists('corners', $data)) {
-                $values_2 = [];
-                foreach ($data['corners'] as $value_2) {
-                    $values_2[] = $this->denormalizer->denormalize($value_2, \Bitly\Model\QRCodeCornerResponseItem::class, 'json', $context);
-                }
-                $object->setCorners($values_2);
-                unset($data['corners']);
-            }
-            if (\array_key_exists('shapes', $data)) {
-                $values_3 = [];
-                foreach ($data['shapes'] as $value_3) {
-                    $values_3[] = $this->denormalizer->denormalize($value_3, \Bitly\Model\QRCodeShapeItem::class, 'json', $context);
-                }
-                $object->setShapes($values_3);
-                unset($data['shapes']);
-            }
-            if (\array_key_exists('formats', $data)) {
-                $values_4 = [];
-                foreach ($data['formats'] as $value_4) {
-                    $values_4[] = $value_4;
-                }
-                $object->setFormats($values_4);
-                unset($data['formats']);
-            }
-            if (\array_key_exists('dynamic_types', $data)) {
-                $values_5 = [];
-                foreach ($data['dynamic_types'] as $value_5) {
-                    $values_5[] = $this->denormalizer->denormalize($value_5, \Bitly\Model\QRCodeTypeItem::class, 'json', $context);
-                }
-                $object->setDynamicTypes($values_5);
-                unset($data['dynamic_types']);
-            }
-            if (\array_key_exists('static_types', $data)) {
-                $values_6 = [];
-                foreach ($data['static_types'] as $value_6) {
-                    $values_6[] = $this->denormalizer->denormalize($value_6, \Bitly\Model\QRCodeTypeItem::class, 'json', $context);
-                }
-                $object->setStaticTypes($values_6);
-                unset($data['static_types']);
-            }
-            if (\array_key_exists('logos', $data)) {
-                $values_7 = [];
-                foreach ($data['logos'] as $value_7) {
-                    $values_7[] = $this->denormalizer->denormalize($value_7, \Bitly\Model\QRCodeLogoImage::class, 'json', $context);
-                }
-                $object->setLogos($values_7);
-                unset($data['logos']);
-            }
-            foreach ($data as $key => $value_8) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $object[$key] = $value_8;
-                }
-            }
-
+        $object = new \Bitly\Model\QRCodeCustomizationOptionsResponse();
+        if (null === $data || false === \is_array($data)) {
             return $object;
         }
-
-        /**
-         * @return array|string|int|float|bool|\ArrayObject|null
-         */
-        public function normalize($object, $format = null, array $context = [])
-        {
-            $data = [];
-            if ($object->isInitialized('frames') && null !== $object->getFrames()) {
-                $values = [];
-                foreach ($object->getFrames() as $value) {
-                    $values[] = $this->normalizer->normalize($value, 'json', $context);
-                }
-                $data['frames'] = $values;
+        if (\array_key_exists('frames', $data)) {
+            $values = [];
+            foreach ($data['frames'] as $value) {
+                $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\QRCodeFrameResponseItem::class, 'json', $context);
             }
-            if ($object->isInitialized('dotPatterns') && null !== $object->getDotPatterns()) {
-                $values_1 = [];
-                foreach ($object->getDotPatterns() as $value_1) {
-                    $values_1[] = $this->normalizer->normalize($value_1, 'json', $context);
-                }
-                $data['dot_patterns'] = $values_1;
+            $object->setFrames($values);
+            unset($data['frames']);
+        }
+        if (\array_key_exists('dot_patterns', $data)) {
+            $values_1 = [];
+            foreach ($data['dot_patterns'] as $value_1) {
+                $values_1[] = $this->denormalizer->denormalize($value_1, \Bitly\Model\QRCodeDotPattern::class, 'json', $context);
             }
-            if ($object->isInitialized('corners') && null !== $object->getCorners()) {
-                $values_2 = [];
-                foreach ($object->getCorners() as $value_2) {
-                    $values_2[] = $this->normalizer->normalize($value_2, 'json', $context);
-                }
-                $data['corners'] = $values_2;
+            $object->setDotPatterns($values_1);
+            unset($data['dot_patterns']);
+        }
+        if (\array_key_exists('corners', $data)) {
+            $values_2 = [];
+            foreach ($data['corners'] as $value_2) {
+                $values_2[] = $this->denormalizer->denormalize($value_2, \Bitly\Model\QRCodeCornerResponseItem::class, 'json', $context);
             }
-            if ($object->isInitialized('shapes') && null !== $object->getShapes()) {
-                $values_3 = [];
-                foreach ($object->getShapes() as $value_3) {
-                    $values_3[] = $this->normalizer->normalize($value_3, 'json', $context);
-                }
-                $data['shapes'] = $values_3;
+            $object->setCorners($values_2);
+            unset($data['corners']);
+        }
+        if (\array_key_exists('shapes', $data)) {
+            $values_3 = [];
+            foreach ($data['shapes'] as $value_3) {
+                $values_3[] = $this->denormalizer->denormalize($value_3, \Bitly\Model\QRCodeShapeItem::class, 'json', $context);
             }
-            if ($object->isInitialized('formats') && null !== $object->getFormats()) {
-                $values_4 = [];
-                foreach ($object->getFormats() as $value_4) {
-                    $values_4[] = $value_4;
-                }
-                $data['formats'] = $values_4;
+            $object->setShapes($values_3);
+            unset($data['shapes']);
+        }
+        if (\array_key_exists('formats', $data)) {
+            $values_4 = [];
+            foreach ($data['formats'] as $value_4) {
+                $values_4[] = $value_4;
             }
-            if ($object->isInitialized('dynamicTypes') && null !== $object->getDynamicTypes()) {
-                $values_5 = [];
-                foreach ($object->getDynamicTypes() as $value_5) {
-                    $values_5[] = $this->normalizer->normalize($value_5, 'json', $context);
-                }
-                $data['dynamic_types'] = $values_5;
+            $object->setFormats($values_4);
+            unset($data['formats']);
+        }
+        if (\array_key_exists('dynamic_types', $data)) {
+            $values_5 = [];
+            foreach ($data['dynamic_types'] as $value_5) {
+                $values_5[] = $this->denormalizer->denormalize($value_5, \Bitly\Model\QRCodeTypeItem::class, 'json', $context);
             }
-            if ($object->isInitialized('staticTypes') && null !== $object->getStaticTypes()) {
-                $values_6 = [];
-                foreach ($object->getStaticTypes() as $value_6) {
-                    $values_6[] = $this->normalizer->normalize($value_6, 'json', $context);
-                }
-                $data['static_types'] = $values_6;
+            $object->setDynamicTypes($values_5);
+            unset($data['dynamic_types']);
+        }
+        if (\array_key_exists('static_types', $data)) {
+            $values_6 = [];
+            foreach ($data['static_types'] as $value_6) {
+                $values_6[] = $this->denormalizer->denormalize($value_6, \Bitly\Model\QRCodeTypeItem::class, 'json', $context);
             }
-            if ($object->isInitialized('logos') && null !== $object->getLogos()) {
-                $values_7 = [];
-                foreach ($object->getLogos() as $value_7) {
-                    $values_7[] = $this->normalizer->normalize($value_7, 'json', $context);
-                }
-                $data['logos'] = $values_7;
+            $object->setStaticTypes($values_6);
+            unset($data['static_types']);
+        }
+        if (\array_key_exists('logos', $data)) {
+            $values_7 = [];
+            foreach ($data['logos'] as $value_7) {
+                $values_7[] = $this->denormalizer->denormalize($value_7, \Bitly\Model\QRCodeLogoImage::class, 'json', $context);
             }
-            foreach ($object as $key => $value_8) {
-                if (preg_match('/.*/', (string) $key)) {
-                    $data[$key] = $value_8;
-                }
+            $object->setLogos($values_7);
+            unset($data['logos']);
+        }
+        foreach ($data as $key => $value_8) {
+            if (preg_match('/.*/', (string) $key)) {
+                $object[$key] = $value_8;
             }
-
-            return $data;
         }
 
-        public function getSupportedTypes(?string $format = null): array
-        {
-            return [\Bitly\Model\QRCodeCustomizationOptionsResponse::class => false];
+        return $object;
+    }
+
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    {
+        $dataArray = [];
+        if ($data->isInitialized('frames') && null !== $data->getFrames()) {
+            $values = [];
+            foreach ($data->getFrames() as $value) {
+                $values[] = $this->normalizer->normalize($value, 'json', $context);
+            }
+            $dataArray['frames'] = $values;
         }
+        if ($data->isInitialized('dotPatterns') && null !== $data->getDotPatterns()) {
+            $values_1 = [];
+            foreach ($data->getDotPatterns() as $value_1) {
+                $values_1[] = $this->normalizer->normalize($value_1, 'json', $context);
+            }
+            $dataArray['dot_patterns'] = $values_1;
+        }
+        if ($data->isInitialized('corners') && null !== $data->getCorners()) {
+            $values_2 = [];
+            foreach ($data->getCorners() as $value_2) {
+                $values_2[] = $this->normalizer->normalize($value_2, 'json', $context);
+            }
+            $dataArray['corners'] = $values_2;
+        }
+        if ($data->isInitialized('shapes') && null !== $data->getShapes()) {
+            $values_3 = [];
+            foreach ($data->getShapes() as $value_3) {
+                $values_3[] = $this->normalizer->normalize($value_3, 'json', $context);
+            }
+            $dataArray['shapes'] = $values_3;
+        }
+        if ($data->isInitialized('formats') && null !== $data->getFormats()) {
+            $values_4 = [];
+            foreach ($data->getFormats() as $value_4) {
+                $values_4[] = $value_4;
+            }
+            $dataArray['formats'] = $values_4;
+        }
+        if ($data->isInitialized('dynamicTypes') && null !== $data->getDynamicTypes()) {
+            $values_5 = [];
+            foreach ($data->getDynamicTypes() as $value_5) {
+                $values_5[] = $this->normalizer->normalize($value_5, 'json', $context);
+            }
+            $dataArray['dynamic_types'] = $values_5;
+        }
+        if ($data->isInitialized('staticTypes') && null !== $data->getStaticTypes()) {
+            $values_6 = [];
+            foreach ($data->getStaticTypes() as $value_6) {
+                $values_6[] = $this->normalizer->normalize($value_6, 'json', $context);
+            }
+            $dataArray['static_types'] = $values_6;
+        }
+        if ($data->isInitialized('logos') && null !== $data->getLogos()) {
+            $values_7 = [];
+            foreach ($data->getLogos() as $value_7) {
+                $values_7[] = $this->normalizer->normalize($value_7, 'json', $context);
+            }
+            $dataArray['logos'] = $values_7;
+        }
+        foreach ($data as $key => $value_8) {
+            if (preg_match('/.*/', (string) $key)) {
+                $dataArray[$key] = $value_8;
+            }
+        }
+
+        return $dataArray;
+    }
+
+    public function getSupportedTypes(?string $format = null): array
+    {
+        return [\Bitly\Model\QRCodeCustomizationOptionsResponse::class => false];
     }
 }
