@@ -46,6 +46,9 @@ class FullShortenNormalizer implements DenormalizerInterface, NormalizerInterfac
             return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
         $object = new \Bitly\Model\FullShorten();
+        if (\array_key_exists('force_new_link', $data) && \is_int($data['force_new_link'])) {
+            $data['force_new_link'] = (bool) $data['force_new_link'];
+        }
         if (null === $data || false === \is_array($data)) {
             return $object;
         }
@@ -80,6 +83,10 @@ class FullShortenNormalizer implements DenormalizerInterface, NormalizerInterfac
             }
             $object->setDeeplinks($values_1);
             unset($data['deeplinks']);
+        }
+        if (\array_key_exists('force_new_link', $data)) {
+            $object->setForceNewLink($data['force_new_link']);
+            unset($data['force_new_link']);
         }
         foreach ($data as $key => $value_2) {
             if (preg_match('/.*/', (string) $key)) {
@@ -116,6 +123,9 @@ class FullShortenNormalizer implements DenormalizerInterface, NormalizerInterfac
                 $values_1[] = $this->normalizer->normalize($value_1, 'json', $context);
             }
             $dataArray['deeplinks'] = $values_1;
+        }
+        if ($data->isInitialized('forceNewLink') && null !== $data->getForceNewLink()) {
+            $dataArray['force_new_link'] = $data->getForceNewLink();
         }
         foreach ($data as $key => $value_2) {
             if (preg_match('/.*/', (string) $key)) {

@@ -20,7 +20,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class LaunchpadQRCodeNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class ProvisionOrgAccessRequestNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
@@ -29,12 +29,12 @@ class LaunchpadQRCodeNormalizer implements DenormalizerInterface, NormalizerInte
 
     public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        return $type === \Bitly\Model\LaunchpadQRCode::class;
+        return $type === \Bitly\Model\ProvisionOrgAccessRequest::class;
     }
 
     public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        return is_object($data) && get_class($data) === \Bitly\Model\LaunchpadQRCode::class;
+        return is_object($data) && get_class($data) === \Bitly\Model\ProvisionOrgAccessRequest::class;
     }
 
     public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
@@ -45,25 +45,21 @@ class LaunchpadQRCodeNormalizer implements DenormalizerInterface, NormalizerInte
         if (isset($data['$recursiveRef'])) {
             return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-        $object = new \Bitly\Model\LaunchpadQRCode();
+        $object = new \Bitly\Model\ProvisionOrgAccessRequest();
         if (null === $data || false === \is_array($data)) {
             return $object;
         }
-        if (\array_key_exists('link', $data)) {
-            $object->setLink($data['link']);
-            unset($data['link']);
+        if (\array_key_exists('to_tier', $data)) {
+            $object->setToTier($data['to_tier']);
+            unset($data['to_tier']);
         }
-        if (\array_key_exists('launchpad_id', $data)) {
-            $object->setLaunchpadId($data['launchpad_id']);
-            unset($data['launchpad_id']);
+        if (\array_key_exists('stripe_subscription_id', $data)) {
+            $object->setStripeSubscriptionId($data['stripe_subscription_id']);
+            unset($data['stripe_subscription_id']);
         }
-        if (\array_key_exists('qr_code', $data)) {
-            $object->setQrCode($data['qr_code']);
-            unset($data['qr_code']);
-        }
-        if (\array_key_exists('qr_code_id', $data)) {
-            $object->setQrCodeId($data['qr_code_id']);
-            unset($data['qr_code_id']);
+        if (\array_key_exists('stripe_customer_id', $data)) {
+            $object->setStripeCustomerId($data['stripe_customer_id']);
+            unset($data['stripe_customer_id']);
         }
         foreach ($data as $key => $value) {
             if (preg_match('/.*/', (string) $key)) {
@@ -77,17 +73,14 @@ class LaunchpadQRCodeNormalizer implements DenormalizerInterface, NormalizerInte
     public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
     {
         $dataArray = [];
-        if ($data->isInitialized('link') && null !== $data->getLink()) {
-            $dataArray['link'] = $data->getLink();
+        if ($data->isInitialized('toTier') && null !== $data->getToTier()) {
+            $dataArray['to_tier'] = $data->getToTier();
         }
-        if ($data->isInitialized('launchpadId') && null !== $data->getLaunchpadId()) {
-            $dataArray['launchpad_id'] = $data->getLaunchpadId();
+        if ($data->isInitialized('stripeSubscriptionId') && null !== $data->getStripeSubscriptionId()) {
+            $dataArray['stripe_subscription_id'] = $data->getStripeSubscriptionId();
         }
-        if ($data->isInitialized('qrCode') && null !== $data->getQrCode()) {
-            $dataArray['qr_code'] = $data->getQrCode();
-        }
-        if ($data->isInitialized('qrCodeId') && null !== $data->getQrCodeId()) {
-            $dataArray['qr_code_id'] = $data->getQrCodeId();
+        if ($data->isInitialized('stripeCustomerId') && null !== $data->getStripeCustomerId()) {
+            $dataArray['stripe_customer_id'] = $data->getStripeCustomerId();
         }
         foreach ($data as $key => $value) {
             if (preg_match('/.*/', (string) $key)) {
@@ -100,6 +93,6 @@ class LaunchpadQRCodeNormalizer implements DenormalizerInterface, NormalizerInte
 
     public function getSupportedTypes(?string $format = null): array
     {
-        return [\Bitly\Model\LaunchpadQRCode::class => false];
+        return [\Bitly\Model\ProvisionOrgAccessRequest::class => false];
     }
 }

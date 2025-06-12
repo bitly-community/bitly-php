@@ -47,6 +47,10 @@ class FullShorten extends \ArrayObject
      * @var list<Deeplink>
      */
     protected $deeplinks;
+    /**
+     * @var bool
+     */
+    protected $forceNewLink;
 
     public function getLongUrl(): string
     {
@@ -140,6 +144,19 @@ class FullShorten extends \ArrayObject
     {
         $this->initialized['deeplinks'] = true;
         $this->deeplinks = $deeplinks;
+
+        return $this;
+    }
+
+    public function getForceNewLink(): bool
+    {
+        return $this->forceNewLink;
+    }
+
+    public function setForceNewLink(bool $forceNewLink): self
+    {
+        $this->initialized['forceNewLink'] = true;
+        $this->forceNewLink = $forceNewLink;
 
         return $this;
     }

@@ -45,6 +45,10 @@ class UpdateLaunchpad extends \ArrayObject
      * @var LaunchpadAppearance
      */
     protected $launchpadAppearance;
+    /**
+     * @var string
+     */
+    protected $qrCodeId;
 
     public function getLaunchpadId(): string
     {
@@ -120,6 +124,19 @@ class UpdateLaunchpad extends \ArrayObject
     {
         $this->initialized['launchpadAppearance'] = true;
         $this->launchpadAppearance = $launchpadAppearance;
+
+        return $this;
+    }
+
+    public function getQrCodeId(): string
+    {
+        return $this->qrCodeId;
+    }
+
+    public function setQrCodeId(string $qrCodeId): self
+    {
+        $this->initialized['qrCodeId'] = true;
+        $this->qrCodeId = $qrCodeId;
 
         return $this;
     }
