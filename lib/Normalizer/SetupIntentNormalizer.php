@@ -20,7 +20,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class ShortenNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class SetupIntentNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
@@ -29,12 +29,12 @@ class ShortenNormalizer implements DenormalizerInterface, NormalizerInterface, D
 
     public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        return $type === \Bitly\Model\Shorten::class;
+        return $type === \Bitly\Model\SetupIntent::class;
     }
 
     public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        return is_object($data) && get_class($data) === \Bitly\Model\Shorten::class;
+        return is_object($data) && get_class($data) === \Bitly\Model\SetupIntent::class;
     }
 
     public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
@@ -45,28 +45,13 @@ class ShortenNormalizer implements DenormalizerInterface, NormalizerInterface, D
         if (isset($data['$recursiveRef'])) {
             return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-        $object = new \Bitly\Model\Shorten();
-        if (\array_key_exists('force_new_link', $data) && \is_int($data['force_new_link'])) {
-            $data['force_new_link'] = (bool) $data['force_new_link'];
-        }
+        $object = new \Bitly\Model\SetupIntent();
         if (null === $data || false === \is_array($data)) {
             return $object;
         }
-        if (\array_key_exists('long_url', $data)) {
-            $object->setLongUrl($data['long_url']);
-            unset($data['long_url']);
-        }
-        if (\array_key_exists('domain', $data)) {
-            $object->setDomain($data['domain']);
-            unset($data['domain']);
-        }
-        if (\array_key_exists('group_guid', $data)) {
-            $object->setGroupGuid($data['group_guid']);
-            unset($data['group_guid']);
-        }
-        if (\array_key_exists('force_new_link', $data)) {
-            $object->setForceNewLink($data['force_new_link']);
-            unset($data['force_new_link']);
+        if (\array_key_exists('client_secret', $data)) {
+            $object->setClientSecret($data['client_secret']);
+            unset($data['client_secret']);
         }
         foreach ($data as $key => $value) {
             if (preg_match('/.*/', (string) $key)) {
@@ -80,15 +65,8 @@ class ShortenNormalizer implements DenormalizerInterface, NormalizerInterface, D
     public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
     {
         $dataArray = [];
-        $dataArray['long_url'] = $data->getLongUrl();
-        if ($data->isInitialized('domain') && null !== $data->getDomain()) {
-            $dataArray['domain'] = $data->getDomain();
-        }
-        if ($data->isInitialized('groupGuid') && null !== $data->getGroupGuid()) {
-            $dataArray['group_guid'] = $data->getGroupGuid();
-        }
-        if ($data->isInitialized('forceNewLink') && null !== $data->getForceNewLink()) {
-            $dataArray['force_new_link'] = $data->getForceNewLink();
+        if ($data->isInitialized('clientSecret') && null !== $data->getClientSecret()) {
+            $dataArray['client_secret'] = $data->getClientSecret();
         }
         foreach ($data as $key => $value) {
             if (preg_match('/.*/', (string) $key)) {
@@ -101,6 +79,6 @@ class ShortenNormalizer implements DenormalizerInterface, NormalizerInterface, D
 
     public function getSupportedTypes(?string $format = null): array
     {
-        return [\Bitly\Model\Shorten::class => false];
+        return [\Bitly\Model\SetupIntent::class => false];
     }
 }

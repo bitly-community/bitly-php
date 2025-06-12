@@ -76,6 +76,10 @@ class UpdateLaunchpadNormalizer implements DenormalizerInterface, NormalizerInte
             $object->setLaunchpadAppearance($this->denormalizer->denormalize($data['launchpad_appearance'], \Bitly\Model\LaunchpadAppearance::class, 'json', $context));
             unset($data['launchpad_appearance']);
         }
+        if (\array_key_exists('qr_code_id', $data)) {
+            $object->setQrCodeId($data['qr_code_id']);
+            unset($data['qr_code_id']);
+        }
         foreach ($data as $key => $value) {
             if (preg_match('/.*/', (string) $key)) {
                 $object[$key] = $value;
@@ -103,6 +107,9 @@ class UpdateLaunchpadNormalizer implements DenormalizerInterface, NormalizerInte
         $dataArray['is_active'] = $data->getIsActive();
         if ($data->isInitialized('launchpadAppearance') && null !== $data->getLaunchpadAppearance()) {
             $dataArray['launchpad_appearance'] = $this->normalizer->normalize($data->getLaunchpadAppearance(), 'json', $context);
+        }
+        if ($data->isInitialized('qrCodeId') && null !== $data->getQrCodeId()) {
+            $dataArray['qr_code_id'] = $data->getQrCodeId();
         }
         foreach ($data as $key => $value) {
             if (preg_match('/.*/', (string) $key)) {

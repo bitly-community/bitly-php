@@ -43,10 +43,14 @@ class BillingAccount extends \ArrayObject
     protected $billingProvider;
     /**
      * ISO timestamp.
+     */
+    protected $endDate;
+    /**
+     * ISO timestamp.
      *
      * @var string
      */
-    protected $endDate;
+    protected $subscriptionStartDate;
     /**
      * @var string
      */
@@ -162,7 +166,7 @@ class BillingAccount extends \ArrayObject
     /**
      * ISO timestamp.
      */
-    public function getEndDate(): string
+    public function getEndDate()
     {
         return $this->endDate;
     }
@@ -170,10 +174,29 @@ class BillingAccount extends \ArrayObject
     /**
      * ISO timestamp.
      */
-    public function setEndDate(string $endDate): self
+    public function setEndDate($endDate): self
     {
         $this->initialized['endDate'] = true;
         $this->endDate = $endDate;
+
+        return $this;
+    }
+
+    /**
+     * ISO timestamp.
+     */
+    public function getSubscriptionStartDate(): string
+    {
+        return $this->subscriptionStartDate;
+    }
+
+    /**
+     * ISO timestamp.
+     */
+    public function setSubscriptionStartDate(string $subscriptionStartDate): self
+    {
+        $this->initialized['subscriptionStartDate'] = true;
+        $this->subscriptionStartDate = $subscriptionStartDate;
 
         return $this;
     }

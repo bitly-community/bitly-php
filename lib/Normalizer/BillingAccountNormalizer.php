@@ -76,6 +76,10 @@ class BillingAccountNormalizer implements DenormalizerInterface, NormalizerInter
             $object->setEndDate($data['end_date']);
             unset($data['end_date']);
         }
+        if (\array_key_exists('subscription_start_date', $data)) {
+            $object->setSubscriptionStartDate($data['subscription_start_date']);
+            unset($data['subscription_start_date']);
+        }
         if (\array_key_exists('last_four_digits', $data)) {
             $object->setLastFourDigits($data['last_four_digits']);
             unset($data['last_four_digits']);
@@ -153,6 +157,9 @@ class BillingAccountNormalizer implements DenormalizerInterface, NormalizerInter
         }
         if ($data->isInitialized('endDate') && null !== $data->getEndDate()) {
             $dataArray['end_date'] = $data->getEndDate();
+        }
+        if ($data->isInitialized('subscriptionStartDate') && null !== $data->getSubscriptionStartDate()) {
+            $dataArray['subscription_start_date'] = $data->getSubscriptionStartDate();
         }
         if ($data->isInitialized('lastFourDigits') && null !== $data->getLastFourDigits()) {
             $dataArray['last_four_digits'] = $data->getLastFourDigits();

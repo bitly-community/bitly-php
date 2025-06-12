@@ -33,6 +33,10 @@ class Shorten extends \ArrayObject
      * @var string
      */
     protected $groupGuid;
+    /**
+     * @var bool
+     */
+    protected $forceNewLink;
 
     public function getLongUrl(): string
     {
@@ -69,6 +73,19 @@ class Shorten extends \ArrayObject
     {
         $this->initialized['groupGuid'] = true;
         $this->groupGuid = $groupGuid;
+
+        return $this;
+    }
+
+    public function getForceNewLink(): bool
+    {
+        return $this->forceNewLink;
+    }
+
+    public function setForceNewLink(bool $forceNewLink): self
+    {
+        $this->initialized['forceNewLink'] = true;
+        $this->forceNewLink = $forceNewLink;
 
         return $this;
     }
