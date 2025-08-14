@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/bitly-community/bitly-php/compare/v1.2.0...v1.3.0) (2025-08-14)
+
+
+### Features
+
+* **lib:** generate code ([5a7f887](https://github.com/bitly-community/bitly-php/commit/5a7f88701f39236d4b2b1e42a6ae12199e936220))
+
 ## [1.2.0](https://github.com/bitly-community/bitly-php/compare/v1.1.0...v1.2.0) (2025-06-12)
 
 
