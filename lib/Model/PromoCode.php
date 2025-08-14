@@ -30,6 +30,10 @@ class PromoCode extends \ArrayObject
      */
     protected $isValid;
     /**
+     * @var bool
+     */
+    protected $isValidForPlan;
+    /**
      * @var string
      */
     protected $discountType;
@@ -72,6 +76,19 @@ class PromoCode extends \ArrayObject
     {
         $this->initialized['isValid'] = true;
         $this->isValid = $isValid;
+
+        return $this;
+    }
+
+    public function getIsValidForPlan(): bool
+    {
+        return $this->isValidForPlan;
+    }
+
+    public function setIsValidForPlan(bool $isValidForPlan): self
+    {
+        $this->initialized['isValidForPlan'] = true;
+        $this->isValidForPlan = $isValidForPlan;
 
         return $this;
     }

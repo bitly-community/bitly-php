@@ -20,7 +20,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class QRCodeShapeNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class CampaignChannelsNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
@@ -29,12 +29,12 @@ class QRCodeShapeNormalizer implements DenormalizerInterface, NormalizerInterfac
 
     public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        return $type === \Bitly\Model\QRCodeShape::class;
+        return $type === \Bitly\Model\CampaignChannels::class;
     }
 
     public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        return is_object($data) && get_class($data) === \Bitly\Model\QRCodeShape::class;
+        return is_object($data) && get_class($data) === \Bitly\Model\CampaignChannels::class;
     }
 
     public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
@@ -45,32 +45,25 @@ class QRCodeShapeNormalizer implements DenormalizerInterface, NormalizerInterfac
         if (isset($data['$recursiveRef'])) {
             return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-        $object = new \Bitly\Model\QRCodeShape();
-        if (\array_key_exists('content_ratio', $data) && \is_int($data['content_ratio'])) {
-            $data['content_ratio'] = (float) $data['content_ratio'];
-        }
+        $object = new \Bitly\Model\CampaignChannels();
         if (null === $data || false === \is_array($data)) {
             return $object;
         }
-        if (\array_key_exists('id', $data)) {
-            $object->setId($data['id']);
-            unset($data['id']);
+        if (\array_key_exists('channels', $data)) {
+            $values = [];
+            foreach ($data['channels'] as $value) {
+                $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\CampaignChannel::class, 'json', $context);
+            }
+            $object->setChannels($values);
+            unset($data['channels']);
         }
-        if (\array_key_exists('angle', $data)) {
-            $object->setAngle($data['angle']);
-            unset($data['angle']);
+        if (\array_key_exists('total', $data)) {
+            $object->setTotal($data['total']);
+            unset($data['total']);
         }
-        if (\array_key_exists('outline', $data)) {
-            $object->setOutline($data['outline']);
-            unset($data['outline']);
-        }
-        if (\array_key_exists('content_ratio', $data)) {
-            $object->setContentRatio($data['content_ratio']);
-            unset($data['content_ratio']);
-        }
-        foreach ($data as $key => $value) {
+        foreach ($data as $key => $value_1) {
             if (preg_match('/.*/', (string) $key)) {
-                $object[$key] = $value;
+                $object[$key] = $value_1;
             }
         }
 
@@ -80,19 +73,19 @@ class QRCodeShapeNormalizer implements DenormalizerInterface, NormalizerInterfac
     public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
     {
         $dataArray = [];
-        $dataArray['id'] = $data->getId();
-        if ($data->isInitialized('angle') && null !== $data->getAngle()) {
-            $dataArray['angle'] = $data->getAngle();
+        if ($data->isInitialized('channels') && null !== $data->getChannels()) {
+            $values = [];
+            foreach ($data->getChannels() as $value) {
+                $values[] = $this->normalizer->normalize($value, 'json', $context);
+            }
+            $dataArray['channels'] = $values;
         }
-        if ($data->isInitialized('outline') && null !== $data->getOutline()) {
-            $dataArray['outline'] = $data->getOutline();
+        if ($data->isInitialized('total') && null !== $data->getTotal()) {
+            $dataArray['total'] = $data->getTotal();
         }
-        if ($data->isInitialized('contentRatio') && null !== $data->getContentRatio()) {
-            $dataArray['content_ratio'] = $data->getContentRatio();
-        }
-        foreach ($data as $key => $value) {
+        foreach ($data as $key => $value_1) {
             if (preg_match('/.*/', (string) $key)) {
-                $dataArray[$key] = $value;
+                $dataArray[$key] = $value_1;
             }
         }
 
@@ -101,6 +94,6 @@ class QRCodeShapeNormalizer implements DenormalizerInterface, NormalizerInterfac
 
     public function getSupportedTypes(?string $format = null): array
     {
-        return [\Bitly\Model\QRCodeShape::class => false];
+        return [\Bitly\Model\CampaignChannels::class => false];
     }
 }

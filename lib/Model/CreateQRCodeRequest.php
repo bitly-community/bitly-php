@@ -54,12 +54,6 @@ class CreateQRCodeRequest extends \ArrayObject
      */
     protected $dynamicContent;
     /**
-     * An object containing relevant properties for static QR codes, i.e. ones that are NOT linked to a bitlink.
-     *
-     * @var QRCodeStatic
-     */
-    protected $staticContent;
-    /**
      * Determines the image format of the returned QR code.
      *
      * @var string
@@ -170,25 +164,6 @@ class CreateQRCodeRequest extends \ArrayObject
     {
         $this->initialized['dynamicContent'] = true;
         $this->dynamicContent = $dynamicContent;
-
-        return $this;
-    }
-
-    /**
-     * An object containing relevant properties for static QR codes, i.e. ones that are NOT linked to a bitlink.
-     */
-    public function getStaticContent(): QRCodeStatic
-    {
-        return $this->staticContent;
-    }
-
-    /**
-     * An object containing relevant properties for static QR codes, i.e. ones that are NOT linked to a bitlink.
-     */
-    public function setStaticContent(QRCodeStatic $staticContent): self
-    {
-        $this->initialized['staticContent'] = true;
-        $this->staticContent = $staticContent;
 
         return $this;
     }

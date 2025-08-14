@@ -26,10 +26,6 @@ class LinksReportRequestResponseRowsItem extends \ArrayObject
      */
     protected $bitlink;
     /**
-     * @var string
-     */
-    protected $customBitlink;
-    /**
      * @var int
      */
     protected $created;
@@ -59,19 +55,6 @@ class LinksReportRequestResponseRowsItem extends \ArrayObject
     {
         $this->initialized['bitlink'] = true;
         $this->bitlink = $bitlink;
-
-        return $this;
-    }
-
-    public function getCustomBitlink(): string
-    {
-        return $this->customBitlink;
-    }
-
-    public function setCustomBitlink(string $customBitlink): self
-    {
-        $this->initialized['customBitlink'] = true;
-        $this->customBitlink = $customBitlink;
 
         return $this;
     }

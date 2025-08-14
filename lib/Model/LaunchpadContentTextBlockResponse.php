@@ -26,7 +26,7 @@ class LaunchpadContentTextBlockResponse extends \ArrayObject
      */
     protected $content;
     /**
-     * @var TextBlockAppearance
+     * @var TextBlockAppearanceResponse
      */
     protected $appearance;
     /**
@@ -93,12 +93,12 @@ class LaunchpadContentTextBlockResponse extends \ArrayObject
         return $this;
     }
 
-    public function getAppearance(): TextBlockAppearance
+    public function getAppearance(): TextBlockAppearanceResponse
     {
         return $this->appearance;
     }
 
-    public function setAppearance(TextBlockAppearance $appearance): self
+    public function setAppearance(TextBlockAppearanceResponse $appearance): self
     {
         $this->initialized['appearance'] = true;
         $this->appearance = $appearance;

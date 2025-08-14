@@ -138,6 +138,10 @@ class LaunchpadButtonNormalizer implements DenormalizerInterface, NormalizerInte
             $object->setContent($values);
             unset($data['content']);
         }
+        if (\array_key_exists('appearance', $data)) {
+            $object->setAppearance($this->denormalizer->denormalize($data['appearance'], \Bitly\Model\TextBlockAppearanceResponse::class, 'json', $context));
+            unset($data['appearance']);
+        }
         foreach ($data as $key_1 => $value_1) {
             if (preg_match('/.*/', (string) $key_1)) {
                 $object[$key_1] = $value_1;
@@ -210,6 +214,9 @@ class LaunchpadButtonNormalizer implements DenormalizerInterface, NormalizerInte
                 $values[$key] = $value;
             }
             $dataArray['content'] = $values;
+        }
+        if ($data->isInitialized('appearance') && null !== $data->getAppearance()) {
+            $dataArray['appearance'] = $this->normalizer->normalize($data->getAppearance(), 'json', $context);
         }
         foreach ($data as $key_1 => $value_1) {
             if (preg_match('/.*/', (string) $key_1)) {

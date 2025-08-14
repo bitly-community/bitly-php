@@ -82,6 +82,10 @@ class BillingAccount extends \ArrayObject
      */
     protected $companyName;
     /**
+     * @var list<UpcomingSubscription>
+     */
+    protected $upcomingSubscriptions;
+    /**
      * @var BillingInfo
      */
     protected $billingInfo;
@@ -294,6 +298,25 @@ class BillingAccount extends \ArrayObject
     {
         $this->initialized['companyName'] = true;
         $this->companyName = $companyName;
+
+        return $this;
+    }
+
+    /**
+     * @return list<UpcomingSubscription>
+     */
+    public function getUpcomingSubscriptions(): array
+    {
+        return $this->upcomingSubscriptions;
+    }
+
+    /**
+     * @param list<UpcomingSubscription> $upcomingSubscriptions
+     */
+    public function setUpcomingSubscriptions(array $upcomingSubscriptions): self
+    {
+        $this->initialized['upcomingSubscriptions'] = true;
+        $this->upcomingSubscriptions = $upcomingSubscriptions;
 
         return $this;
     }

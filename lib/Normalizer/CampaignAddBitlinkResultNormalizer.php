@@ -20,7 +20,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class AddBitlinkResultNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class CampaignAddBitlinkResultNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
@@ -29,12 +29,12 @@ class AddBitlinkResultNormalizer implements DenormalizerInterface, NormalizerInt
 
     public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        return $type === \Bitly\Model\AddBitlinkResult::class;
+        return $type === \Bitly\Model\CampaignAddBitlinkResult::class;
     }
 
     public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        return is_object($data) && get_class($data) === \Bitly\Model\AddBitlinkResult::class;
+        return is_object($data) && get_class($data) === \Bitly\Model\CampaignAddBitlinkResult::class;
     }
 
     public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
@@ -45,7 +45,7 @@ class AddBitlinkResultNormalizer implements DenormalizerInterface, NormalizerInt
         if (isset($data['$recursiveRef'])) {
             return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-        $object = new \Bitly\Model\AddBitlinkResult();
+        $object = new \Bitly\Model\CampaignAddBitlinkResult();
         if (\array_key_exists('new_channel_bitlink', $data) && \is_int($data['new_channel_bitlink'])) {
             $data['new_channel_bitlink'] = (bool) $data['new_channel_bitlink'];
         }
@@ -56,9 +56,9 @@ class AddBitlinkResultNormalizer implements DenormalizerInterface, NormalizerInt
             $object->setChannelGuid($data['channel_guid']);
             unset($data['channel_guid']);
         }
-        if (\array_key_exists('hash', $data)) {
-            $object->setHash($data['hash']);
-            unset($data['hash']);
+        if (\array_key_exists('bitlink_id', $data)) {
+            $object->setBitlinkId($data['bitlink_id']);
+            unset($data['bitlink_id']);
         }
         if (\array_key_exists('long_url', $data)) {
             $object->setLongUrl($data['long_url']);
@@ -68,21 +68,9 @@ class AddBitlinkResultNormalizer implements DenormalizerInterface, NormalizerInt
             $object->setUrl($data['url']);
             unset($data['url']);
         }
-        if (\array_key_exists('keyword_link', $data)) {
-            $object->setKeywordLink($data['keyword_link']);
-            unset($data['keyword_link']);
-        }
-        if (\array_key_exists('title', $data)) {
-            $object->setTitle($data['title']);
-            unset($data['title']);
-        }
         if (\array_key_exists('new_channel_bitlink', $data)) {
             $object->setNewChannelBitlink($data['new_channel_bitlink']);
             unset($data['new_channel_bitlink']);
-        }
-        if (\array_key_exists('bitlink_created_ts', $data)) {
-            $object->setBitlinkCreatedTs($data['bitlink_created_ts']);
-            unset($data['bitlink_created_ts']);
         }
         if (\array_key_exists('shorten_link_error', $data)) {
             $object->setShortenLinkError($data['shorten_link_error']);
@@ -111,8 +99,8 @@ class AddBitlinkResultNormalizer implements DenormalizerInterface, NormalizerInt
         if ($data->isInitialized('channelGuid') && null !== $data->getChannelGuid()) {
             $dataArray['channel_guid'] = $data->getChannelGuid();
         }
-        if ($data->isInitialized('hash') && null !== $data->getHash()) {
-            $dataArray['hash'] = $data->getHash();
+        if ($data->isInitialized('bitlinkId') && null !== $data->getBitlinkId()) {
+            $dataArray['bitlink_id'] = $data->getBitlinkId();
         }
         if ($data->isInitialized('longUrl') && null !== $data->getLongUrl()) {
             $dataArray['long_url'] = $data->getLongUrl();
@@ -120,17 +108,8 @@ class AddBitlinkResultNormalizer implements DenormalizerInterface, NormalizerInt
         if ($data->isInitialized('url') && null !== $data->getUrl()) {
             $dataArray['url'] = $data->getUrl();
         }
-        if ($data->isInitialized('keywordLink') && null !== $data->getKeywordLink()) {
-            $dataArray['keyword_link'] = $data->getKeywordLink();
-        }
-        if ($data->isInitialized('title') && null !== $data->getTitle()) {
-            $dataArray['title'] = $data->getTitle();
-        }
         if ($data->isInitialized('newChannelBitlink') && null !== $data->getNewChannelBitlink()) {
             $dataArray['new_channel_bitlink'] = $data->getNewChannelBitlink();
-        }
-        if ($data->isInitialized('bitlinkCreatedTs') && null !== $data->getBitlinkCreatedTs()) {
-            $dataArray['bitlink_created_ts'] = $data->getBitlinkCreatedTs();
         }
         if ($data->isInitialized('shortenLinkError') && null !== $data->getShortenLinkError()) {
             $dataArray['shorten_link_error'] = $data->getShortenLinkError();
@@ -152,6 +131,6 @@ class AddBitlinkResultNormalizer implements DenormalizerInterface, NormalizerInt
 
     public function getSupportedTypes(?string $format = null): array
     {
-        return [\Bitly\Model\AddBitlinkResult::class => false];
+        return [\Bitly\Model\CampaignAddBitlinkResult::class => false];
     }
 }

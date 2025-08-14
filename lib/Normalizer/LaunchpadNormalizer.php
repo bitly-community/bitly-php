@@ -115,9 +115,17 @@ class LaunchpadNormalizer implements DenormalizerInterface, NormalizerInterface,
             $object->setQrCodeId($data['qr_code_id']);
             unset($data['qr_code_id']);
         }
-        foreach ($data as $key => $value_2) {
+        if (\array_key_exists('redirects', $data)) {
+            $values_2 = [];
+            foreach ($data['redirects'] as $value_2) {
+                $values_2[] = $this->denormalizer->denormalize($value_2, \Bitly\Model\SiteRedirects::class, 'json', $context);
+            }
+            $object->setRedirects($values_2);
+            unset($data['redirects']);
+        }
+        foreach ($data as $key => $value_3) {
             if (preg_match('/.*/', (string) $key)) {
-                $object[$key] = $value_2;
+                $object[$key] = $value_3;
             }
         }
 
@@ -172,9 +180,16 @@ class LaunchpadNormalizer implements DenormalizerInterface, NormalizerInterface,
         if ($data->isInitialized('qrCodeId') && null !== $data->getQrCodeId()) {
             $dataArray['qr_code_id'] = $data->getQrCodeId();
         }
-        foreach ($data as $key => $value_2) {
+        if ($data->isInitialized('redirects') && null !== $data->getRedirects()) {
+            $values_2 = [];
+            foreach ($data->getRedirects() as $value_2) {
+                $values_2[] = $this->normalizer->normalize($value_2, 'json', $context);
+            }
+            $dataArray['redirects'] = $values_2;
+        }
+        foreach ($data as $key => $value_3) {
             if (preg_match('/.*/', (string) $key)) {
-                $dataArray[$key] = $value_2;
+                $dataArray[$key] = $value_3;
             }
         }
 

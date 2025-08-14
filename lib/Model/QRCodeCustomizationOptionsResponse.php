@@ -40,12 +40,6 @@ class QRCodeCustomizationOptionsResponse extends \ArrayObject
      */
     protected $corners;
     /**
-     * list of shape options.
-     *
-     * @var list<QRCodeShapeItem>
-     */
-    protected $shapes;
-    /**
      * list of image format options.
      *
      * @var list<string>
@@ -135,29 +129,6 @@ class QRCodeCustomizationOptionsResponse extends \ArrayObject
     {
         $this->initialized['corners'] = true;
         $this->corners = $corners;
-
-        return $this;
-    }
-
-    /**
-     * list of shape options.
-     *
-     * @return list<QRCodeShapeItem>
-     */
-    public function getShapes(): array
-    {
-        return $this->shapes;
-    }
-
-    /**
-     * list of shape options.
-     *
-     * @param list<QRCodeShapeItem> $shapes
-     */
-    public function setShapes(array $shapes): self
-    {
-        $this->initialized['shapes'] = true;
-        $this->shapes = $shapes;
 
         return $this;
     }

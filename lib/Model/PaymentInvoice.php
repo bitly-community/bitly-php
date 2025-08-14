@@ -61,6 +61,14 @@ class PaymentInvoice extends \ArrayObject
      * @var string
      */
     protected $description;
+    /**
+     * @var string
+     */
+    protected $invoiceProvider;
+    /**
+     * @var string
+     */
+    protected $invoiceUrl;
 
     public function getInvoiceDate(): string
     {
@@ -194,6 +202,32 @@ class PaymentInvoice extends \ArrayObject
     {
         $this->initialized['description'] = true;
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getInvoiceProvider(): string
+    {
+        return $this->invoiceProvider;
+    }
+
+    public function setInvoiceProvider(string $invoiceProvider): self
+    {
+        $this->initialized['invoiceProvider'] = true;
+        $this->invoiceProvider = $invoiceProvider;
+
+        return $this;
+    }
+
+    public function getInvoiceUrl(): string
+    {
+        return $this->invoiceUrl;
+    }
+
+    public function setInvoiceUrl(string $invoiceUrl): self
+    {
+        $this->initialized['invoiceUrl'] = true;
+        $this->invoiceUrl = $invoiceUrl;
 
         return $this;
     }

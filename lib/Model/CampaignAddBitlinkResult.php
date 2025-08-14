@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace Bitly\Model;
 
-class AddBitlinkResult extends \ArrayObject
+class CampaignAddBitlinkResult extends \ArrayObject
 {
     /**
      * @var array
@@ -28,7 +28,7 @@ class AddBitlinkResult extends \ArrayObject
     /**
      * @var string
      */
-    protected $hash;
+    protected $bitlinkId;
     /**
      * @var string
      */
@@ -38,21 +38,9 @@ class AddBitlinkResult extends \ArrayObject
      */
     protected $url;
     /**
-     * @var string
-     */
-    protected $keywordLink;
-    /**
-     * @var string
-     */
-    protected $title;
-    /**
      * @var bool
      */
     protected $newChannelBitlink;
-    /**
-     * @var int
-     */
-    protected $bitlinkCreatedTs;
     /**
      * @var string
      */
@@ -79,15 +67,15 @@ class AddBitlinkResult extends \ArrayObject
         return $this;
     }
 
-    public function getHash(): string
+    public function getBitlinkId(): string
     {
-        return $this->hash;
+        return $this->bitlinkId;
     }
 
-    public function setHash(string $hash): self
+    public function setBitlinkId(string $bitlinkId): self
     {
-        $this->initialized['hash'] = true;
-        $this->hash = $hash;
+        $this->initialized['bitlinkId'] = true;
+        $this->bitlinkId = $bitlinkId;
 
         return $this;
     }
@@ -118,32 +106,6 @@ class AddBitlinkResult extends \ArrayObject
         return $this;
     }
 
-    public function getKeywordLink(): string
-    {
-        return $this->keywordLink;
-    }
-
-    public function setKeywordLink(string $keywordLink): self
-    {
-        $this->initialized['keywordLink'] = true;
-        $this->keywordLink = $keywordLink;
-
-        return $this;
-    }
-
-    public function getTitle(): string
-    {
-        return $this->title;
-    }
-
-    public function setTitle(string $title): self
-    {
-        $this->initialized['title'] = true;
-        $this->title = $title;
-
-        return $this;
-    }
-
     public function getNewChannelBitlink(): bool
     {
         return $this->newChannelBitlink;
@@ -153,19 +115,6 @@ class AddBitlinkResult extends \ArrayObject
     {
         $this->initialized['newChannelBitlink'] = true;
         $this->newChannelBitlink = $newChannelBitlink;
-
-        return $this;
-    }
-
-    public function getBitlinkCreatedTs(): int
-    {
-        return $this->bitlinkCreatedTs;
-    }
-
-    public function setBitlinkCreatedTs(int $bitlinkCreatedTs): self
-    {
-        $this->initialized['bitlinkCreatedTs'] = true;
-        $this->bitlinkCreatedTs = $bitlinkCreatedTs;
 
         return $this;
     }

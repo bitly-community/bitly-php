@@ -20,7 +20,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class ProvisionOrgAccessRequestNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class TextBlockAppearanceRequestNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
@@ -29,12 +29,12 @@ class ProvisionOrgAccessRequestNormalizer implements DenormalizerInterface, Norm
 
     public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        return $type === \Bitly\Model\ProvisionOrgAccessRequest::class;
+        return $type === \Bitly\Model\TextBlockAppearanceRequest::class;
     }
 
     public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        return is_object($data) && get_class($data) === \Bitly\Model\ProvisionOrgAccessRequest::class;
+        return is_object($data) && get_class($data) === \Bitly\Model\TextBlockAppearanceRequest::class;
     }
 
     public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
@@ -45,21 +45,29 @@ class ProvisionOrgAccessRequestNormalizer implements DenormalizerInterface, Norm
         if (isset($data['$recursiveRef'])) {
             return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-        $object = new \Bitly\Model\ProvisionOrgAccessRequest();
+        $object = new \Bitly\Model\TextBlockAppearanceRequest();
         if (null === $data || false === \is_array($data)) {
             return $object;
         }
-        if (\array_key_exists('to_tier', $data)) {
-            $object->setToTier($data['to_tier']);
-            unset($data['to_tier']);
+        if (\array_key_exists('background_color', $data)) {
+            $object->setBackgroundColor($data['background_color']);
+            unset($data['background_color']);
         }
-        if (\array_key_exists('stripe_subscription_id', $data)) {
-            $object->setStripeSubscriptionId($data['stripe_subscription_id']);
-            unset($data['stripe_subscription_id']);
+        if (\array_key_exists('text_color', $data)) {
+            $object->setTextColor($data['text_color']);
+            unset($data['text_color']);
         }
-        if (\array_key_exists('stripe_customer_id', $data)) {
-            $object->setStripeCustomerId($data['stripe_customer_id']);
-            unset($data['stripe_customer_id']);
+        if (\array_key_exists('alignment', $data)) {
+            $object->setAlignment($data['alignment']);
+            unset($data['alignment']);
+        }
+        if (\array_key_exists('text_block_style', $data)) {
+            $object->setTextBlockStyle($this->denormalizer->denormalize($data['text_block_style'], \Bitly\Model\TextBlockStyle::class, 'json', $context));
+            unset($data['text_block_style']);
+        }
+        if (\array_key_exists('font_size', $data)) {
+            $object->setFontSize($data['font_size']);
+            unset($data['font_size']);
         }
         foreach ($data as $key => $value) {
             if (preg_match('/.*/', (string) $key)) {
@@ -73,14 +81,20 @@ class ProvisionOrgAccessRequestNormalizer implements DenormalizerInterface, Norm
     public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
     {
         $dataArray = [];
-        if ($data->isInitialized('toTier') && null !== $data->getToTier()) {
-            $dataArray['to_tier'] = $data->getToTier();
+        if ($data->isInitialized('backgroundColor') && null !== $data->getBackgroundColor()) {
+            $dataArray['background_color'] = $data->getBackgroundColor();
         }
-        if ($data->isInitialized('stripeSubscriptionId') && null !== $data->getStripeSubscriptionId()) {
-            $dataArray['stripe_subscription_id'] = $data->getStripeSubscriptionId();
+        if ($data->isInitialized('textColor') && null !== $data->getTextColor()) {
+            $dataArray['text_color'] = $data->getTextColor();
         }
-        if ($data->isInitialized('stripeCustomerId') && null !== $data->getStripeCustomerId()) {
-            $dataArray['stripe_customer_id'] = $data->getStripeCustomerId();
+        if ($data->isInitialized('alignment') && null !== $data->getAlignment()) {
+            $dataArray['alignment'] = $data->getAlignment();
+        }
+        if ($data->isInitialized('textBlockStyle') && null !== $data->getTextBlockStyle()) {
+            $dataArray['text_block_style'] = $this->normalizer->normalize($data->getTextBlockStyle(), 'json', $context);
+        }
+        if ($data->isInitialized('fontSize') && null !== $data->getFontSize()) {
+            $dataArray['font_size'] = $data->getFontSize();
         }
         foreach ($data as $key => $value) {
             if (preg_match('/.*/', (string) $key)) {
@@ -93,6 +107,6 @@ class ProvisionOrgAccessRequestNormalizer implements DenormalizerInterface, Norm
 
     public function getSupportedTypes(?string $format = null): array
     {
-        return [\Bitly\Model\ProvisionOrgAccessRequest::class => false];
+        return [\Bitly\Model\TextBlockAppearanceRequest::class => false];
     }
 }

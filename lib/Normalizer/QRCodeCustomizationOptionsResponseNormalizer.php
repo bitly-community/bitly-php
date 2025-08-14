@@ -73,49 +73,41 @@ class QRCodeCustomizationOptionsResponseNormalizer implements DenormalizerInterf
             $object->setCorners($values_2);
             unset($data['corners']);
         }
-        if (\array_key_exists('shapes', $data)) {
-            $values_3 = [];
-            foreach ($data['shapes'] as $value_3) {
-                $values_3[] = $this->denormalizer->denormalize($value_3, \Bitly\Model\QRCodeShapeItem::class, 'json', $context);
-            }
-            $object->setShapes($values_3);
-            unset($data['shapes']);
-        }
         if (\array_key_exists('formats', $data)) {
-            $values_4 = [];
-            foreach ($data['formats'] as $value_4) {
-                $values_4[] = $value_4;
+            $values_3 = [];
+            foreach ($data['formats'] as $value_3) {
+                $values_3[] = $value_3;
             }
-            $object->setFormats($values_4);
+            $object->setFormats($values_3);
             unset($data['formats']);
         }
         if (\array_key_exists('dynamic_types', $data)) {
-            $values_5 = [];
-            foreach ($data['dynamic_types'] as $value_5) {
-                $values_5[] = $this->denormalizer->denormalize($value_5, \Bitly\Model\QRCodeTypeItem::class, 'json', $context);
+            $values_4 = [];
+            foreach ($data['dynamic_types'] as $value_4) {
+                $values_4[] = $this->denormalizer->denormalize($value_4, \Bitly\Model\QRCodeTypeItem::class, 'json', $context);
             }
-            $object->setDynamicTypes($values_5);
+            $object->setDynamicTypes($values_4);
             unset($data['dynamic_types']);
         }
         if (\array_key_exists('static_types', $data)) {
-            $values_6 = [];
-            foreach ($data['static_types'] as $value_6) {
-                $values_6[] = $this->denormalizer->denormalize($value_6, \Bitly\Model\QRCodeTypeItem::class, 'json', $context);
+            $values_5 = [];
+            foreach ($data['static_types'] as $value_5) {
+                $values_5[] = $this->denormalizer->denormalize($value_5, \Bitly\Model\QRCodeTypeItem::class, 'json', $context);
             }
-            $object->setStaticTypes($values_6);
+            $object->setStaticTypes($values_5);
             unset($data['static_types']);
         }
         if (\array_key_exists('logos', $data)) {
-            $values_7 = [];
-            foreach ($data['logos'] as $value_7) {
-                $values_7[] = $this->denormalizer->denormalize($value_7, \Bitly\Model\QRCodeLogoImage::class, 'json', $context);
+            $values_6 = [];
+            foreach ($data['logos'] as $value_6) {
+                $values_6[] = $this->denormalizer->denormalize($value_6, \Bitly\Model\QRCodeLogoImage::class, 'json', $context);
             }
-            $object->setLogos($values_7);
+            $object->setLogos($values_6);
             unset($data['logos']);
         }
-        foreach ($data as $key => $value_8) {
+        foreach ($data as $key => $value_7) {
             if (preg_match('/.*/', (string) $key)) {
-                $object[$key] = $value_8;
+                $object[$key] = $value_7;
             }
         }
 
@@ -146,44 +138,37 @@ class QRCodeCustomizationOptionsResponseNormalizer implements DenormalizerInterf
             }
             $dataArray['corners'] = $values_2;
         }
-        if ($data->isInitialized('shapes') && null !== $data->getShapes()) {
-            $values_3 = [];
-            foreach ($data->getShapes() as $value_3) {
-                $values_3[] = $this->normalizer->normalize($value_3, 'json', $context);
-            }
-            $dataArray['shapes'] = $values_3;
-        }
         if ($data->isInitialized('formats') && null !== $data->getFormats()) {
-            $values_4 = [];
-            foreach ($data->getFormats() as $value_4) {
-                $values_4[] = $value_4;
+            $values_3 = [];
+            foreach ($data->getFormats() as $value_3) {
+                $values_3[] = $value_3;
             }
-            $dataArray['formats'] = $values_4;
+            $dataArray['formats'] = $values_3;
         }
         if ($data->isInitialized('dynamicTypes') && null !== $data->getDynamicTypes()) {
-            $values_5 = [];
-            foreach ($data->getDynamicTypes() as $value_5) {
-                $values_5[] = $this->normalizer->normalize($value_5, 'json', $context);
+            $values_4 = [];
+            foreach ($data->getDynamicTypes() as $value_4) {
+                $values_4[] = $this->normalizer->normalize($value_4, 'json', $context);
             }
-            $dataArray['dynamic_types'] = $values_5;
+            $dataArray['dynamic_types'] = $values_4;
         }
         if ($data->isInitialized('staticTypes') && null !== $data->getStaticTypes()) {
-            $values_6 = [];
-            foreach ($data->getStaticTypes() as $value_6) {
-                $values_6[] = $this->normalizer->normalize($value_6, 'json', $context);
+            $values_5 = [];
+            foreach ($data->getStaticTypes() as $value_5) {
+                $values_5[] = $this->normalizer->normalize($value_5, 'json', $context);
             }
-            $dataArray['static_types'] = $values_6;
+            $dataArray['static_types'] = $values_5;
         }
         if ($data->isInitialized('logos') && null !== $data->getLogos()) {
-            $values_7 = [];
-            foreach ($data->getLogos() as $value_7) {
-                $values_7[] = $this->normalizer->normalize($value_7, 'json', $context);
+            $values_6 = [];
+            foreach ($data->getLogos() as $value_6) {
+                $values_6[] = $this->normalizer->normalize($value_6, 'json', $context);
             }
-            $dataArray['logos'] = $values_7;
+            $dataArray['logos'] = $values_6;
         }
-        foreach ($data as $key => $value_8) {
+        foreach ($data as $key => $value_7) {
             if (preg_match('/.*/', (string) $key)) {
-                $dataArray[$key] = $value_8;
+                $dataArray[$key] = $value_7;
             }
         }
 

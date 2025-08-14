@@ -33,6 +33,10 @@ class DowngradeOrgBody extends \ArrayObject
      * @var string
      */
     protected $termEndDate;
+    /**
+     * @var string
+     */
+    protected $subscriptionNum;
 
     public function getOrgGuid(): string
     {
@@ -69,6 +73,19 @@ class DowngradeOrgBody extends \ArrayObject
     {
         $this->initialized['termEndDate'] = true;
         $this->termEndDate = $termEndDate;
+
+        return $this;
+    }
+
+    public function getSubscriptionNum(): string
+    {
+        return $this->subscriptionNum;
+    }
+
+    public function setSubscriptionNum(string $subscriptionNum): self
+    {
+        $this->initialized['subscriptionNum'] = true;
+        $this->subscriptionNum = $subscriptionNum;
 
         return $this;
     }

@@ -53,10 +53,6 @@ class LinksReportRequestResponseRowsItemNormalizer implements DenormalizerInterf
             $object->setBitlink($data['bitlink']);
             unset($data['bitlink']);
         }
-        if (\array_key_exists('custom_bitlink', $data)) {
-            $object->setCustomBitlink($data['custom_bitlink']);
-            unset($data['custom_bitlink']);
-        }
         if (\array_key_exists('created', $data)) {
             $object->setCreated($data['created']);
             unset($data['created']);
@@ -95,9 +91,6 @@ class LinksReportRequestResponseRowsItemNormalizer implements DenormalizerInterf
         $dataArray = [];
         if ($data->isInitialized('bitlink') && null !== $data->getBitlink()) {
             $dataArray['bitlink'] = $data->getBitlink();
-        }
-        if ($data->isInitialized('customBitlink') && null !== $data->getCustomBitlink()) {
-            $dataArray['custom_bitlink'] = $data->getCustomBitlink();
         }
         if ($data->isInitialized('created') && null !== $data->getCreated()) {
             $dataArray['created'] = $data->getCreated();

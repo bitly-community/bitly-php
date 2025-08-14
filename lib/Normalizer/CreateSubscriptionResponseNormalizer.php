@@ -20,7 +20,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class QRCodeShapeItemNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class CreateSubscriptionResponseNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
@@ -29,12 +29,12 @@ class QRCodeShapeItemNormalizer implements DenormalizerInterface, NormalizerInte
 
     public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        return $type === \Bitly\Model\QRCodeShapeItem::class;
+        return $type === \Bitly\Model\CreateSubscriptionResponse::class;
     }
 
     public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        return is_object($data) && get_class($data) === \Bitly\Model\QRCodeShapeItem::class;
+        return is_object($data) && get_class($data) === \Bitly\Model\CreateSubscriptionResponse::class;
     }
 
     public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
@@ -45,39 +45,29 @@ class QRCodeShapeItemNormalizer implements DenormalizerInterface, NormalizerInte
         if (isset($data['$recursiveRef'])) {
             return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-        $object = new \Bitly\Model\QRCodeShapeItem();
-        if (\array_key_exists('content_ratio', $data) && \is_int($data['content_ratio'])) {
-            $data['content_ratio'] = (float) $data['content_ratio'];
-        }
-        if (\array_key_exists('locked', $data) && \is_int($data['locked'])) {
-            $data['locked'] = (bool) $data['locked'];
-        }
+        $object = new \Bitly\Model\CreateSubscriptionResponse();
         if (null === $data || false === \is_array($data)) {
             return $object;
-        }
-        if (\array_key_exists('thumbnail', $data)) {
-            $object->setThumbnail($data['thumbnail']);
-            unset($data['thumbnail']);
-        }
-        if (\array_key_exists('locked', $data)) {
-            $object->setLocked($data['locked']);
-            unset($data['locked']);
         }
         if (\array_key_exists('id', $data)) {
             $object->setId($data['id']);
             unset($data['id']);
         }
-        if (\array_key_exists('angle', $data)) {
-            $object->setAngle($data['angle']);
-            unset($data['angle']);
+        if (\array_key_exists('object', $data)) {
+            $object->setObject($data['object']);
+            unset($data['object']);
         }
-        if (\array_key_exists('outline', $data)) {
-            $object->setOutline($data['outline']);
-            unset($data['outline']);
+        if (\array_key_exists('customer', $data)) {
+            $object->setCustomer($data['customer']);
+            unset($data['customer']);
         }
-        if (\array_key_exists('content_ratio', $data)) {
-            $object->setContentRatio($data['content_ratio']);
-            unset($data['content_ratio']);
+        if (\array_key_exists('status', $data)) {
+            $object->setStatus($data['status']);
+            unset($data['status']);
+        }
+        if (\array_key_exists('latest_invoice', $data)) {
+            $object->setLatestInvoice($this->denormalizer->denormalize($data['latest_invoice'], \Bitly\Model\CreateSubscriptionResponseLatestInvoice::class, 'json', $context));
+            unset($data['latest_invoice']);
         }
         foreach ($data as $key => $value) {
             if (preg_match('/.*/', (string) $key)) {
@@ -91,21 +81,20 @@ class QRCodeShapeItemNormalizer implements DenormalizerInterface, NormalizerInte
     public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
     {
         $dataArray = [];
-        if ($data->isInitialized('thumbnail') && null !== $data->getThumbnail()) {
-            $dataArray['thumbnail'] = $data->getThumbnail();
+        if ($data->isInitialized('id') && null !== $data->getId()) {
+            $dataArray['id'] = $data->getId();
         }
-        if ($data->isInitialized('locked') && null !== $data->getLocked()) {
-            $dataArray['locked'] = $data->getLocked();
+        if ($data->isInitialized('object') && null !== $data->getObject()) {
+            $dataArray['object'] = $data->getObject();
         }
-        $dataArray['id'] = $data->getId();
-        if ($data->isInitialized('angle') && null !== $data->getAngle()) {
-            $dataArray['angle'] = $data->getAngle();
+        if ($data->isInitialized('customer') && null !== $data->getCustomer()) {
+            $dataArray['customer'] = $data->getCustomer();
         }
-        if ($data->isInitialized('outline') && null !== $data->getOutline()) {
-            $dataArray['outline'] = $data->getOutline();
+        if ($data->isInitialized('status') && null !== $data->getStatus()) {
+            $dataArray['status'] = $data->getStatus();
         }
-        if ($data->isInitialized('contentRatio') && null !== $data->getContentRatio()) {
-            $dataArray['content_ratio'] = $data->getContentRatio();
+        if ($data->isInitialized('latestInvoice') && null !== $data->getLatestInvoice()) {
+            $dataArray['latest_invoice'] = $this->normalizer->normalize($data->getLatestInvoice(), 'json', $context);
         }
         foreach ($data as $key => $value) {
             if (preg_match('/.*/', (string) $key)) {
@@ -118,6 +107,6 @@ class QRCodeShapeItemNormalizer implements DenormalizerInterface, NormalizerInte
 
     public function getSupportedTypes(?string $format = null): array
     {
-        return [\Bitly\Model\QRCodeShapeItem::class => false];
+        return [\Bitly\Model\CreateSubscriptionResponse::class => false];
     }
 }

@@ -22,10 +22,6 @@ class ChannelBitlink extends \ArrayObject
         return array_key_exists($property, $this->initialized);
     }
     /**
-     * @var int
-     */
-    protected $createdTs;
-    /**
      * @var string
      */
     protected $bitlinkId;
@@ -37,47 +33,6 @@ class ChannelBitlink extends \ArrayObject
      * @var string
      */
     protected $channelGuid;
-    /**
-     * @var string
-     */
-    protected $title;
-    /**
-     * @var int
-     */
-    protected $totalClicks;
-    /**
-     * @var list<CampaignClickData>
-     */
-    protected $clicks;
-    /**
-     * @var string
-     */
-    protected $keywordLink;
-    /**
-     * @var string
-     */
-    protected $link;
-    /**
-     * @var string
-     */
-    protected $longUrl;
-    /**
-     * @var list<string>
-     */
-    protected $campaignIds;
-
-    public function getCreatedTs(): int
-    {
-        return $this->createdTs;
-    }
-
-    public function setCreatedTs(int $createdTs): self
-    {
-        $this->initialized['createdTs'] = true;
-        $this->createdTs = $createdTs;
-
-        return $this;
-    }
 
     public function getBitlinkId(): string
     {
@@ -114,109 +69,6 @@ class ChannelBitlink extends \ArrayObject
     {
         $this->initialized['channelGuid'] = true;
         $this->channelGuid = $channelGuid;
-
-        return $this;
-    }
-
-    public function getTitle(): string
-    {
-        return $this->title;
-    }
-
-    public function setTitle(string $title): self
-    {
-        $this->initialized['title'] = true;
-        $this->title = $title;
-
-        return $this;
-    }
-
-    public function getTotalClicks(): int
-    {
-        return $this->totalClicks;
-    }
-
-    public function setTotalClicks(int $totalClicks): self
-    {
-        $this->initialized['totalClicks'] = true;
-        $this->totalClicks = $totalClicks;
-
-        return $this;
-    }
-
-    /**
-     * @return list<CampaignClickData>
-     */
-    public function getClicks(): array
-    {
-        return $this->clicks;
-    }
-
-    /**
-     * @param list<CampaignClickData> $clicks
-     */
-    public function setClicks(array $clicks): self
-    {
-        $this->initialized['clicks'] = true;
-        $this->clicks = $clicks;
-
-        return $this;
-    }
-
-    public function getKeywordLink(): string
-    {
-        return $this->keywordLink;
-    }
-
-    public function setKeywordLink(string $keywordLink): self
-    {
-        $this->initialized['keywordLink'] = true;
-        $this->keywordLink = $keywordLink;
-
-        return $this;
-    }
-
-    public function getLink(): string
-    {
-        return $this->link;
-    }
-
-    public function setLink(string $link): self
-    {
-        $this->initialized['link'] = true;
-        $this->link = $link;
-
-        return $this;
-    }
-
-    public function getLongUrl(): string
-    {
-        return $this->longUrl;
-    }
-
-    public function setLongUrl(string $longUrl): self
-    {
-        $this->initialized['longUrl'] = true;
-        $this->longUrl = $longUrl;
-
-        return $this;
-    }
-
-    /**
-     * @return list<string>
-     */
-    public function getCampaignIds(): array
-    {
-        return $this->campaignIds;
-    }
-
-    /**
-     * @param list<string> $campaignIds
-     */
-    public function setCampaignIds(array $campaignIds): self
-    {
-        $this->initialized['campaignIds'] = true;
-        $this->campaignIds = $campaignIds;
 
         return $this;
     }

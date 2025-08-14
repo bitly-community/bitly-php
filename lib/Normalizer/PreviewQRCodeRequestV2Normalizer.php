@@ -53,10 +53,6 @@ class PreviewQRCodeRequestV2Normalizer implements DenormalizerInterface, Normali
             $object->setRenderCustomizations($this->denormalizer->denormalize($data['render_customizations'], \Bitly\Model\QRCodeCustomizations::class, 'json', $context));
             unset($data['render_customizations']);
         }
-        if (\array_key_exists('static_content', $data)) {
-            $object->setStaticContent($this->denormalizer->denormalize($data['static_content'], \Bitly\Model\QRCodeStatic::class, 'json', $context));
-            unset($data['static_content']);
-        }
         foreach ($data as $key => $value) {
             if (preg_match('/.*/', (string) $key)) {
                 $object[$key] = $value;
@@ -71,9 +67,6 @@ class PreviewQRCodeRequestV2Normalizer implements DenormalizerInterface, Normali
         $dataArray = [];
         if ($data->isInitialized('renderCustomizations') && null !== $data->getRenderCustomizations()) {
             $dataArray['render_customizations'] = $this->normalizer->normalize($data->getRenderCustomizations(), 'json', $context);
-        }
-        if ($data->isInitialized('staticContent') && null !== $data->getStaticContent()) {
-            $dataArray['static_content'] = $this->normalizer->normalize($data->getStaticContent(), 'json', $context);
         }
         foreach ($data as $key => $value) {
             if (preg_match('/.*/', (string) $key)) {

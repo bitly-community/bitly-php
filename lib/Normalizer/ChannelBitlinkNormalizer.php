@@ -49,10 +49,6 @@ class ChannelBitlinkNormalizer implements DenormalizerInterface, NormalizerInter
         if (null === $data || false === \is_array($data)) {
             return $object;
         }
-        if (\array_key_exists('created_ts', $data)) {
-            $object->setCreatedTs($data['created_ts']);
-            unset($data['created_ts']);
-        }
         if (\array_key_exists('bitlink_id', $data)) {
             $object->setBitlinkId($data['bitlink_id']);
             unset($data['bitlink_id']);
@@ -65,45 +61,9 @@ class ChannelBitlinkNormalizer implements DenormalizerInterface, NormalizerInter
             $object->setChannelGuid($data['channel_guid']);
             unset($data['channel_guid']);
         }
-        if (\array_key_exists('title', $data)) {
-            $object->setTitle($data['title']);
-            unset($data['title']);
-        }
-        if (\array_key_exists('total_clicks', $data)) {
-            $object->setTotalClicks($data['total_clicks']);
-            unset($data['total_clicks']);
-        }
-        if (\array_key_exists('clicks', $data)) {
-            $values = [];
-            foreach ($data['clicks'] as $value) {
-                $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\CampaignClickData::class, 'json', $context);
-            }
-            $object->setClicks($values);
-            unset($data['clicks']);
-        }
-        if (\array_key_exists('keyword_link', $data)) {
-            $object->setKeywordLink($data['keyword_link']);
-            unset($data['keyword_link']);
-        }
-        if (\array_key_exists('link', $data)) {
-            $object->setLink($data['link']);
-            unset($data['link']);
-        }
-        if (\array_key_exists('long_url', $data)) {
-            $object->setLongUrl($data['long_url']);
-            unset($data['long_url']);
-        }
-        if (\array_key_exists('campaign_ids', $data)) {
-            $values_1 = [];
-            foreach ($data['campaign_ids'] as $value_1) {
-                $values_1[] = $value_1;
-            }
-            $object->setCampaignIds($values_1);
-            unset($data['campaign_ids']);
-        }
-        foreach ($data as $key => $value_2) {
+        foreach ($data as $key => $value) {
             if (preg_match('/.*/', (string) $key)) {
-                $object[$key] = $value_2;
+                $object[$key] = $value;
             }
         }
 
@@ -113,42 +73,12 @@ class ChannelBitlinkNormalizer implements DenormalizerInterface, NormalizerInter
     public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
     {
         $dataArray = [];
-        $dataArray['created_ts'] = $data->getCreatedTs();
         $dataArray['bitlink_id'] = $data->getBitlinkId();
         $dataArray['campaign_guid'] = $data->getCampaignGuid();
         $dataArray['channel_guid'] = $data->getChannelGuid();
-        if ($data->isInitialized('title') && null !== $data->getTitle()) {
-            $dataArray['title'] = $data->getTitle();
-        }
-        if ($data->isInitialized('totalClicks') && null !== $data->getTotalClicks()) {
-            $dataArray['total_clicks'] = $data->getTotalClicks();
-        }
-        if ($data->isInitialized('clicks') && null !== $data->getClicks()) {
-            $values = [];
-            foreach ($data->getClicks() as $value) {
-                $values[] = $this->normalizer->normalize($value, 'json', $context);
-            }
-            $dataArray['clicks'] = $values;
-        }
-        if ($data->isInitialized('keywordLink') && null !== $data->getKeywordLink()) {
-            $dataArray['keyword_link'] = $data->getKeywordLink();
-        }
-        if ($data->isInitialized('link') && null !== $data->getLink()) {
-            $dataArray['link'] = $data->getLink();
-        }
-        if ($data->isInitialized('longUrl') && null !== $data->getLongUrl()) {
-            $dataArray['long_url'] = $data->getLongUrl();
-        }
-        if ($data->isInitialized('campaignIds') && null !== $data->getCampaignIds()) {
-            $values_1 = [];
-            foreach ($data->getCampaignIds() as $value_1) {
-                $values_1[] = $value_1;
-            }
-            $dataArray['campaign_ids'] = $values_1;
-        }
-        foreach ($data as $key => $value_2) {
+        foreach ($data as $key => $value) {
             if (preg_match('/.*/', (string) $key)) {
-                $dataArray[$key] = $value_2;
+                $dataArray[$key] = $value;
             }
         }
 

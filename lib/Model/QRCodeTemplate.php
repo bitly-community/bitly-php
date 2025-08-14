@@ -40,12 +40,6 @@ class QRCodeTemplate extends \ArrayObject
      */
     protected $renderCustomizations;
     /**
-     * A hash calculated from all the QR code's customization fields.
-     *
-     * @var string
-     */
-    protected $customizationHash;
-    /**
      * A boolean representing whether this is a default template premade by bitly.
      *
      * @var bool
@@ -129,25 +123,6 @@ class QRCodeTemplate extends \ArrayObject
     {
         $this->initialized['renderCustomizations'] = true;
         $this->renderCustomizations = $renderCustomizations;
-
-        return $this;
-    }
-
-    /**
-     * A hash calculated from all the QR code's customization fields.
-     */
-    public function getCustomizationHash(): string
-    {
-        return $this->customizationHash;
-    }
-
-    /**
-     * A hash calculated from all the QR code's customization fields.
-     */
-    public function setCustomizationHash(string $customizationHash): self
-    {
-        $this->initialized['customizationHash'] = true;
-        $this->customizationHash = $customizationHash;
 
         return $this;
     }
