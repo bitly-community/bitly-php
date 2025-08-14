@@ -66,12 +66,6 @@ class QRCodeCustomizations extends \ArrayObject
      */
     protected $text;
     /**
-     * Describes the shape of the QR code's container.
-     *
-     * @var QRCodeShape
-     */
-    protected $shape;
-    /**
      * @var QRCodeBranding
      */
     protected $branding;
@@ -219,25 +213,6 @@ class QRCodeCustomizations extends \ArrayObject
     {
         $this->initialized['text'] = true;
         $this->text = $text;
-
-        return $this;
-    }
-
-    /**
-     * Describes the shape of the QR code's container.
-     */
-    public function getShape(): QRCodeShape
-    {
-        return $this->shape;
-    }
-
-    /**
-     * Describes the shape of the QR code's container.
-     */
-    public function setShape(QRCodeShape $shape): self
-    {
-        $this->initialized['shape'] = true;
-        $this->shape = $shape;
 
         return $this;
     }

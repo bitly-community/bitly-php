@@ -108,6 +108,14 @@ class BillingAccountNormalizer implements DenormalizerInterface, NormalizerInter
             $object->setCompanyName($data['company_name']);
             unset($data['company_name']);
         }
+        if (\array_key_exists('upcoming_subscriptions', $data)) {
+            $values = [];
+            foreach ($data['upcoming_subscriptions'] as $value) {
+                $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\UpcomingSubscription::class, 'json', $context);
+            }
+            $object->setUpcomingSubscriptions($values);
+            unset($data['upcoming_subscriptions']);
+        }
         if (\array_key_exists('billing_info', $data)) {
             $object->setBillingInfo($this->denormalizer->denormalize($data['billing_info'], \Bitly\Model\BillingInfo::class, 'json', $context));
             unset($data['billing_info']);
@@ -121,16 +129,16 @@ class BillingAccountNormalizer implements DenormalizerInterface, NormalizerInter
             unset($data['contact_info']);
         }
         if (\array_key_exists('subscription_discounts', $data)) {
-            $values = [];
-            foreach ($data['subscription_discounts'] as $value) {
-                $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\SubscriptionDiscount::class, 'json', $context);
+            $values_1 = [];
+            foreach ($data['subscription_discounts'] as $value_1) {
+                $values_1[] = $this->denormalizer->denormalize($value_1, \Bitly\Model\SubscriptionDiscount::class, 'json', $context);
             }
-            $object->setSubscriptionDiscounts($values);
+            $object->setSubscriptionDiscounts($values_1);
             unset($data['subscription_discounts']);
         }
-        foreach ($data as $key => $value_1) {
+        foreach ($data as $key => $value_2) {
             if (preg_match('/.*/', (string) $key)) {
-                $object[$key] = $value_1;
+                $object[$key] = $value_2;
             }
         }
 
@@ -182,6 +190,13 @@ class BillingAccountNormalizer implements DenormalizerInterface, NormalizerInter
         if ($data->isInitialized('companyName') && null !== $data->getCompanyName()) {
             $dataArray['company_name'] = $data->getCompanyName();
         }
+        if ($data->isInitialized('upcomingSubscriptions') && null !== $data->getUpcomingSubscriptions()) {
+            $values = [];
+            foreach ($data->getUpcomingSubscriptions() as $value) {
+                $values[] = $this->normalizer->normalize($value, 'json', $context);
+            }
+            $dataArray['upcoming_subscriptions'] = $values;
+        }
         if ($data->isInitialized('billingInfo') && null !== $data->getBillingInfo()) {
             $dataArray['billing_info'] = $this->normalizer->normalize($data->getBillingInfo(), 'json', $context);
         }
@@ -192,15 +207,15 @@ class BillingAccountNormalizer implements DenormalizerInterface, NormalizerInter
             $dataArray['contact_info'] = $this->normalizer->normalize($data->getContactInfo(), 'json', $context);
         }
         if ($data->isInitialized('subscriptionDiscounts') && null !== $data->getSubscriptionDiscounts()) {
-            $values = [];
-            foreach ($data->getSubscriptionDiscounts() as $value) {
-                $values[] = $this->normalizer->normalize($value, 'json', $context);
+            $values_1 = [];
+            foreach ($data->getSubscriptionDiscounts() as $value_1) {
+                $values_1[] = $this->normalizer->normalize($value_1, 'json', $context);
             }
-            $dataArray['subscription_discounts'] = $values;
+            $dataArray['subscription_discounts'] = $values_1;
         }
-        foreach ($data as $key => $value_1) {
+        foreach ($data as $key => $value_2) {
             if (preg_match('/.*/', (string) $key)) {
-                $dataArray[$key] = $value_1;
+                $dataArray[$key] = $value_2;
             }
         }
 

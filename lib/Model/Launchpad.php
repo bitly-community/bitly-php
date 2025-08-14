@@ -73,6 +73,10 @@ class Launchpad extends \ArrayObject
      * @var string
      */
     protected $qrCodeId;
+    /**
+     * @var list<SiteRedirects>
+     */
+    protected $redirects;
 
     public function getLaunchpadId(): string
     {
@@ -251,6 +255,25 @@ class Launchpad extends \ArrayObject
     {
         $this->initialized['qrCodeId'] = true;
         $this->qrCodeId = $qrCodeId;
+
+        return $this;
+    }
+
+    /**
+     * @return list<SiteRedirects>
+     */
+    public function getRedirects(): array
+    {
+        return $this->redirects;
+    }
+
+    /**
+     * @param list<SiteRedirects> $redirects
+     */
+    public function setRedirects(array $redirects): self
+    {
+        $this->initialized['redirects'] = true;
+        $this->redirects = $redirects;
 
         return $this;
     }

@@ -63,7 +63,7 @@ class LaunchpadContentTextBlockResponseNormalizer implements DenormalizerInterfa
             unset($data['content']);
         }
         if (\array_key_exists('appearance', $data)) {
-            $object->setAppearance($this->denormalizer->denormalize($data['appearance'], \Bitly\Model\TextBlockAppearance::class, 'json', $context));
+            $object->setAppearance($this->denormalizer->denormalize($data['appearance'], \Bitly\Model\TextBlockAppearanceResponse::class, 'json', $context));
             unset($data['appearance']);
         }
         if (\array_key_exists('launchpad_id', $data)) {

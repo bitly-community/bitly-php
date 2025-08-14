@@ -68,7 +68,7 @@ class CampaignAddBitlinkResponseDataNormalizer implements DenormalizerInterface,
         if (\array_key_exists('results', $data)) {
             $values = [];
             foreach ($data['results'] as $value) {
-                $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\AddBitlinkResult::class, 'json', $context);
+                $values[] = $this->denormalizer->denormalize($value, \Bitly\Model\CampaignAddBitlinkResult::class, 'json', $context);
             }
             $object->setResults($values);
             unset($data['results']);

@@ -60,7 +60,7 @@ class LaunchpadContentTextBlockRequestNormalizer implements DenormalizerInterfac
             unset($data['content']);
         }
         if (\array_key_exists('appearance', $data)) {
-            $object->setAppearance($this->denormalizer->denormalize($data['appearance'], \Bitly\Model\TextBlockAppearance::class, 'json', $context));
+            $object->setAppearance($this->denormalizer->denormalize($data['appearance'], \Bitly\Model\TextBlockAppearanceRequest::class, 'json', $context));
             unset($data['appearance']);
         }
         if (\array_key_exists('schedule_start', $data)) {

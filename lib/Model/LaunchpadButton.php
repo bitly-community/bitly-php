@@ -99,6 +99,10 @@ class LaunchpadButton extends \ArrayObject
      * @var array<string, mixed>
      */
     protected $content;
+    /**
+     * @var TextBlockAppearanceResponse
+     */
+    protected $appearance;
 
     public function getLaunchpadId(): string
     {
@@ -355,6 +359,19 @@ class LaunchpadButton extends \ArrayObject
     {
         $this->initialized['content'] = true;
         $this->content = $content;
+
+        return $this;
+    }
+
+    public function getAppearance(): TextBlockAppearanceResponse
+    {
+        return $this->appearance;
+    }
+
+    public function setAppearance(TextBlockAppearanceResponse $appearance): self
+    {
+        $this->initialized['appearance'] = true;
+        $this->appearance = $appearance;
 
         return $this;
     }

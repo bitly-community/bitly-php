@@ -102,6 +102,14 @@ class PaymentInvoiceNormalizer implements DenormalizerInterface, NormalizerInter
             $object->setDescription($data['description']);
             unset($data['description']);
         }
+        if (\array_key_exists('invoice_provider', $data)) {
+            $object->setInvoiceProvider($data['invoice_provider']);
+            unset($data['invoice_provider']);
+        }
+        if (\array_key_exists('invoice_url', $data)) {
+            $object->setInvoiceUrl($data['invoice_url']);
+            unset($data['invoice_url']);
+        }
         foreach ($data as $key => $value_1) {
             if (preg_match('/.*/', (string) $key)) {
                 $object[$key] = $value_1;
@@ -147,6 +155,12 @@ class PaymentInvoiceNormalizer implements DenormalizerInterface, NormalizerInter
         }
         if ($data->isInitialized('description') && null !== $data->getDescription()) {
             $dataArray['description'] = $data->getDescription();
+        }
+        if ($data->isInitialized('invoiceProvider') && null !== $data->getInvoiceProvider()) {
+            $dataArray['invoice_provider'] = $data->getInvoiceProvider();
+        }
+        if ($data->isInitialized('invoiceUrl') && null !== $data->getInvoiceUrl()) {
+            $dataArray['invoice_url'] = $data->getInvoiceUrl();
         }
         foreach ($data as $key => $value_1) {
             if (preg_match('/.*/', (string) $key)) {

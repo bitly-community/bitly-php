@@ -67,10 +67,6 @@ class QRCodeTemplateNormalizer implements DenormalizerInterface, NormalizerInter
             $object->setRenderCustomizations($this->denormalizer->denormalize($data['render_customizations'], \Bitly\Model\QRCodeCustomizations::class, 'json', $context));
             unset($data['render_customizations']);
         }
-        if (\array_key_exists('customization_hash', $data)) {
-            $object->setCustomizationHash($data['customization_hash']);
-            unset($data['customization_hash']);
-        }
         if (\array_key_exists('premade', $data)) {
             $object->setPremade($data['premade']);
             unset($data['premade']);
@@ -111,9 +107,6 @@ class QRCodeTemplateNormalizer implements DenormalizerInterface, NormalizerInter
         }
         if ($data->isInitialized('renderCustomizations') && null !== $data->getRenderCustomizations()) {
             $dataArray['render_customizations'] = $this->normalizer->normalize($data->getRenderCustomizations(), 'json', $context);
-        }
-        if ($data->isInitialized('customizationHash') && null !== $data->getCustomizationHash()) {
-            $dataArray['customization_hash'] = $data->getCustomizationHash();
         }
         if ($data->isInitialized('premade') && null !== $data->getPremade()) {
             $dataArray['premade'] = $data->getPremade();

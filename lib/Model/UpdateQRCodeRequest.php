@@ -37,12 +37,6 @@ class UpdateQRCodeRequest extends \ArrayObject
      * @var bool
      */
     protected $isHidden;
-    /**
-     * An object containing relevant properties for static QR codes, i.e. ones that are NOT linked to a bitlink.
-     *
-     * @var QRCodeStatic
-     */
-    protected $staticContent;
 
     public function getTitle(): string
     {
@@ -91,25 +85,6 @@ class UpdateQRCodeRequest extends \ArrayObject
     {
         $this->initialized['isHidden'] = true;
         $this->isHidden = $isHidden;
-
-        return $this;
-    }
-
-    /**
-     * An object containing relevant properties for static QR codes, i.e. ones that are NOT linked to a bitlink.
-     */
-    public function getStaticContent(): QRCodeStatic
-    {
-        return $this->staticContent;
-    }
-
-    /**
-     * An object containing relevant properties for static QR codes, i.e. ones that are NOT linked to a bitlink.
-     */
-    public function setStaticContent(QRCodeStatic $staticContent): self
-    {
-        $this->initialized['staticContent'] = true;
-        $this->staticContent = $staticContent;
 
         return $this;
     }

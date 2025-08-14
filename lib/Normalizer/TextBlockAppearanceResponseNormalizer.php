@@ -20,7 +20,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class TextBlockAppearanceNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class TextBlockAppearanceResponseNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
@@ -29,12 +29,12 @@ class TextBlockAppearanceNormalizer implements DenormalizerInterface, Normalizer
 
     public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        return $type === \Bitly\Model\TextBlockAppearance::class;
+        return $type === \Bitly\Model\TextBlockAppearanceResponse::class;
     }
 
     public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        return is_object($data) && get_class($data) === \Bitly\Model\TextBlockAppearance::class;
+        return is_object($data) && get_class($data) === \Bitly\Model\TextBlockAppearanceResponse::class;
     }
 
     public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
@@ -45,7 +45,7 @@ class TextBlockAppearanceNormalizer implements DenormalizerInterface, Normalizer
         if (isset($data['$recursiveRef'])) {
             return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-        $object = new \Bitly\Model\TextBlockAppearance();
+        $object = new \Bitly\Model\TextBlockAppearanceResponse();
         if (null === $data || false === \is_array($data)) {
             return $object;
         }
@@ -121,6 +121,6 @@ class TextBlockAppearanceNormalizer implements DenormalizerInterface, Normalizer
 
     public function getSupportedTypes(?string $format = null): array
     {
-        return [\Bitly\Model\TextBlockAppearance::class => false];
+        return [\Bitly\Model\TextBlockAppearanceResponse::class => false];
     }
 }

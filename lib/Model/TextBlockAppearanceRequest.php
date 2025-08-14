@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace Bitly\Model;
 
-class TextBlockAppearance extends \ArrayObject
+class TextBlockAppearanceRequest extends \ArrayObject
 {
     /**
      * @var array
@@ -41,14 +41,6 @@ class TextBlockAppearance extends \ArrayObject
      * @var string
      */
     protected $fontSize;
-    /**
-     * @var int
-     */
-    protected $shape;
-    /**
-     * @var int
-     */
-    protected $shadow;
 
     public function getBackgroundColor(): string
     {
@@ -111,32 +103,6 @@ class TextBlockAppearance extends \ArrayObject
     {
         $this->initialized['fontSize'] = true;
         $this->fontSize = $fontSize;
-
-        return $this;
-    }
-
-    public function getShape(): int
-    {
-        return $this->shape;
-    }
-
-    public function setShape(int $shape): self
-    {
-        $this->initialized['shape'] = true;
-        $this->shape = $shape;
-
-        return $this;
-    }
-
-    public function getShadow(): int
-    {
-        return $this->shadow;
-    }
-
-    public function setShadow(int $shadow): self
-    {
-        $this->initialized['shadow'] = true;
-        $this->shadow = $shadow;
 
         return $this;
     }

@@ -49,25 +49,25 @@ class CreateSubscriptionBodyNormalizer implements DenormalizerInterface, Normali
         if (null === $data || false === \is_array($data)) {
             return $object;
         }
+        if (\array_key_exists('customer_id', $data)) {
+            $object->setCustomerId($data['customer_id']);
+            unset($data['customer_id']);
+        }
         if (\array_key_exists('org_guid', $data)) {
             $object->setOrgGuid($data['org_guid']);
             unset($data['org_guid']);
         }
-        if (\array_key_exists('rate_plan_name', $data)) {
-            $object->setRatePlanName($data['rate_plan_name']);
-            unset($data['rate_plan_name']);
+        if (\array_key_exists('tier_name', $data)) {
+            $object->setTierName($data['tier_name']);
+            unset($data['tier_name']);
         }
         if (\array_key_exists('promo_code', $data)) {
             $object->setPromoCode($data['promo_code']);
             unset($data['promo_code']);
         }
-        if (\array_key_exists('billing_info', $data)) {
-            $object->setBillingInfo($this->denormalizer->denormalize($data['billing_info'], \Bitly\Model\BillingInfo::class, 'json', $context));
-            unset($data['billing_info']);
-        }
-        if (\array_key_exists('contact_info', $data)) {
-            $object->setContactInfo($this->denormalizer->denormalize($data['contact_info'], \Bitly\Model\BillingInfo::class, 'json', $context));
-            unset($data['contact_info']);
+        if (\array_key_exists('payment_method_id', $data)) {
+            $object->setPaymentMethodId($data['payment_method_id']);
+            unset($data['payment_method_id']);
         }
         if (\array_key_exists('currency', $data)) {
             $object->setCurrency($data['currency']);
@@ -85,20 +85,20 @@ class CreateSubscriptionBodyNormalizer implements DenormalizerInterface, Normali
     public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
     {
         $dataArray = [];
+        if ($data->isInitialized('customerId') && null !== $data->getCustomerId()) {
+            $dataArray['customer_id'] = $data->getCustomerId();
+        }
         if ($data->isInitialized('orgGuid') && null !== $data->getOrgGuid()) {
             $dataArray['org_guid'] = $data->getOrgGuid();
         }
-        if ($data->isInitialized('ratePlanName') && null !== $data->getRatePlanName()) {
-            $dataArray['rate_plan_name'] = $data->getRatePlanName();
+        if ($data->isInitialized('tierName') && null !== $data->getTierName()) {
+            $dataArray['tier_name'] = $data->getTierName();
         }
         if ($data->isInitialized('promoCode') && null !== $data->getPromoCode()) {
             $dataArray['promo_code'] = $data->getPromoCode();
         }
-        if ($data->isInitialized('billingInfo') && null !== $data->getBillingInfo()) {
-            $dataArray['billing_info'] = $this->normalizer->normalize($data->getBillingInfo(), 'json', $context);
-        }
-        if ($data->isInitialized('contactInfo') && null !== $data->getContactInfo()) {
-            $dataArray['contact_info'] = $this->normalizer->normalize($data->getContactInfo(), 'json', $context);
+        if ($data->isInitialized('paymentMethodId') && null !== $data->getPaymentMethodId()) {
+            $dataArray['payment_method_id'] = $data->getPaymentMethodId();
         }
         if ($data->isInitialized('currency') && null !== $data->getCurrency()) {
             $dataArray['currency'] = $data->getCurrency();

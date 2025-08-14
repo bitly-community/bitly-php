@@ -46,9 +46,6 @@ class QRCodeNormalizer implements DenormalizerInterface, NormalizerInterface, De
             return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
         $object = new \Bitly\Model\QRCode();
-        if (\array_key_exists('is_hidden', $data) && \is_int($data['is_hidden'])) {
-            $data['is_hidden'] = (bool) $data['is_hidden'];
-        }
         if (\array_key_exists('is_customized', $data) && \is_int($data['is_customized'])) {
             $data['is_customized'] = (bool) $data['is_customized'];
         }
@@ -59,17 +56,9 @@ class QRCodeNormalizer implements DenormalizerInterface, NormalizerInterface, De
             $object->setQrcodeId($data['qrcode_id']);
             unset($data['qrcode_id']);
         }
-        if (\array_key_exists('title', $data)) {
-            $object->setTitle($data['title']);
-            unset($data['title']);
-        }
         if (\array_key_exists('render_customizations', $data)) {
             $object->setRenderCustomizations($this->denormalizer->denormalize($data['render_customizations'], \Bitly\Model\QRCodeCustomizations::class, 'json', $context));
             unset($data['render_customizations']);
-        }
-        if (\array_key_exists('is_hidden', $data)) {
-            $object->setIsHidden($data['is_hidden']);
-            unset($data['is_hidden']);
         }
         if (\array_key_exists('is_customized', $data)) {
             $object->setIsCustomized($data['is_customized']);
@@ -82,14 +71,6 @@ class QRCodeNormalizer implements DenormalizerInterface, NormalizerInterface, De
         if (\array_key_exists('qr_code_type', $data)) {
             $object->setQrCodeType($data['qr_code_type']);
             unset($data['qr_code_type']);
-        }
-        if (\array_key_exists('customization_hash', $data)) {
-            $object->setCustomizationHash($data['customization_hash']);
-            unset($data['customization_hash']);
-        }
-        if (\array_key_exists('full_hash', $data)) {
-            $object->setFullHash($data['full_hash']);
-            unset($data['full_hash']);
         }
         if (\array_key_exists('created', $data)) {
             $object->setCreated($data['created']);
@@ -111,21 +92,9 @@ class QRCodeNormalizer implements DenormalizerInterface, NormalizerInterface, De
             $object->setSvg($data['svg']);
             unset($data['svg']);
         }
-        if (\array_key_exists('png', $data)) {
-            $object->setPng($data['png']);
-            unset($data['png']);
-        }
-        if (\array_key_exists('jpg', $data)) {
-            $object->setJpg($data['jpg']);
-            unset($data['jpg']);
-        }
         if (\array_key_exists('dynamic_content', $data)) {
             $object->setDynamicContent($this->denormalizer->denormalize($data['dynamic_content'], \Bitly\Model\QRCodeDynamic::class, 'json', $context));
             unset($data['dynamic_content']);
-        }
-        if (\array_key_exists('static_content', $data)) {
-            $object->setStaticContent($this->denormalizer->denormalize($data['static_content'], \Bitly\Model\QRCodeStatic::class, 'json', $context));
-            unset($data['static_content']);
         }
         if (\array_key_exists('spec_settings', $data)) {
             $object->setSpecSettings($this->denormalizer->denormalize($data['spec_settings'], \Bitly\Model\QRCodeSpecSettings::class, 'json', $context));
@@ -150,14 +119,8 @@ class QRCodeNormalizer implements DenormalizerInterface, NormalizerInterface, De
         if ($data->isInitialized('qrcodeId') && null !== $data->getQrcodeId()) {
             $dataArray['qrcode_id'] = $data->getQrcodeId();
         }
-        if ($data->isInitialized('title') && null !== $data->getTitle()) {
-            $dataArray['title'] = $data->getTitle();
-        }
         if ($data->isInitialized('renderCustomizations') && null !== $data->getRenderCustomizations()) {
             $dataArray['render_customizations'] = $this->normalizer->normalize($data->getRenderCustomizations(), 'json', $context);
-        }
-        if ($data->isInitialized('isHidden') && null !== $data->getIsHidden()) {
-            $dataArray['is_hidden'] = $data->getIsHidden();
         }
         if ($data->isInitialized('isCustomized') && null !== $data->getIsCustomized()) {
             $dataArray['is_customized'] = $data->getIsCustomized();
@@ -167,12 +130,6 @@ class QRCodeNormalizer implements DenormalizerInterface, NormalizerInterface, De
         }
         if ($data->isInitialized('qrCodeType') && null !== $data->getQrCodeType()) {
             $dataArray['qr_code_type'] = $data->getQrCodeType();
-        }
-        if ($data->isInitialized('customizationHash') && null !== $data->getCustomizationHash()) {
-            $dataArray['customization_hash'] = $data->getCustomizationHash();
-        }
-        if ($data->isInitialized('fullHash') && null !== $data->getFullHash()) {
-            $dataArray['full_hash'] = $data->getFullHash();
         }
         if ($data->isInitialized('created') && null !== $data->getCreated()) {
             $dataArray['created'] = $data->getCreated();
@@ -189,17 +146,8 @@ class QRCodeNormalizer implements DenormalizerInterface, NormalizerInterface, De
         if ($data->isInitialized('svg') && null !== $data->getSvg()) {
             $dataArray['svg'] = $data->getSvg();
         }
-        if ($data->isInitialized('png') && null !== $data->getPng()) {
-            $dataArray['png'] = $data->getPng();
-        }
-        if ($data->isInitialized('jpg') && null !== $data->getJpg()) {
-            $dataArray['jpg'] = $data->getJpg();
-        }
         if ($data->isInitialized('dynamicContent') && null !== $data->getDynamicContent()) {
             $dataArray['dynamic_content'] = $this->normalizer->normalize($data->getDynamicContent(), 'json', $context);
-        }
-        if ($data->isInitialized('staticContent') && null !== $data->getStaticContent()) {
-            $dataArray['static_content'] = $this->normalizer->normalize($data->getStaticContent(), 'json', $context);
         }
         if ($data->isInitialized('specSettings') && null !== $data->getSpecSettings()) {
             $dataArray['spec_settings'] = $this->normalizer->normalize($data->getSpecSettings(), 'json', $context);

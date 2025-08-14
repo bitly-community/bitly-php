@@ -39,12 +39,6 @@ class QRCodeDynamic extends \ArrayObject
      * @var string
      */
     protected $longUrl;
-    /**
-     * A calculated field representing the number of times the QR code has been scanned.
-     *
-     * @var int
-     */
-    protected $totalScanCount;
 
     /**
      * A unique id acting like a foreign key to reference the dynamic content. For bitlinks this would be the `<domain>/<backhalf>`, for other content it should be a standard guid.
@@ -99,25 +93,6 @@ class QRCodeDynamic extends \ArrayObject
     {
         $this->initialized['longUrl'] = true;
         $this->longUrl = $longUrl;
-
-        return $this;
-    }
-
-    /**
-     * A calculated field representing the number of times the QR code has been scanned.
-     */
-    public function getTotalScanCount(): int
-    {
-        return $this->totalScanCount;
-    }
-
-    /**
-     * A calculated field representing the number of times the QR code has been scanned.
-     */
-    public function setTotalScanCount(int $totalScanCount): self
-    {
-        $this->initialized['totalScanCount'] = true;
-        $this->totalScanCount = $totalScanCount;
 
         return $this;
     }

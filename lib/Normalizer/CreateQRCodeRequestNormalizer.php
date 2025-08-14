@@ -76,10 +76,6 @@ class CreateQRCodeRequestNormalizer implements DenormalizerInterface, Normalizer
             $object->setDynamicContent($this->denormalizer->denormalize($data['dynamic_content'], \Bitly\Model\QRCodeDynamic::class, 'json', $context));
             unset($data['dynamic_content']);
         }
-        if (\array_key_exists('static_content', $data)) {
-            $object->setStaticContent($this->denormalizer->denormalize($data['static_content'], \Bitly\Model\QRCodeStatic::class, 'json', $context));
-            unset($data['static_content']);
-        }
         if (\array_key_exists('format', $data)) {
             $object->setFormat($data['format']);
             unset($data['format']);
@@ -115,9 +111,6 @@ class CreateQRCodeRequestNormalizer implements DenormalizerInterface, Normalizer
         $dataArray['qr_code_type'] = $data->getQrCodeType();
         if ($data->isInitialized('dynamicContent') && null !== $data->getDynamicContent()) {
             $dataArray['dynamic_content'] = $this->normalizer->normalize($data->getDynamicContent(), 'json', $context);
-        }
-        if ($data->isInitialized('staticContent') && null !== $data->getStaticContent()) {
-            $dataArray['static_content'] = $this->normalizer->normalize($data->getStaticContent(), 'json', $context);
         }
         if ($data->isInitialized('format') && null !== $data->getFormat()) {
             $dataArray['format'] = $data->getFormat();

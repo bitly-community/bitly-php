@@ -24,27 +24,40 @@ class CreateSubscriptionBody extends \ArrayObject
     /**
      * @var string
      */
+    protected $customerId;
+    /**
+     * @var string
+     */
     protected $orgGuid;
     /**
      * @var string
      */
-    protected $ratePlanName;
+    protected $tierName;
     /**
      * @var string
      */
     protected $promoCode;
     /**
-     * @var BillingInfo
+     * @var string
      */
-    protected $billingInfo;
-    /**
-     * @var BillingInfo
-     */
-    protected $contactInfo;
+    protected $paymentMethodId;
     /**
      * @var string
      */
     protected $currency = 'USD';
+
+    public function getCustomerId(): string
+    {
+        return $this->customerId;
+    }
+
+    public function setCustomerId(string $customerId): self
+    {
+        $this->initialized['customerId'] = true;
+        $this->customerId = $customerId;
+
+        return $this;
+    }
 
     public function getOrgGuid(): string
     {
@@ -59,15 +72,15 @@ class CreateSubscriptionBody extends \ArrayObject
         return $this;
     }
 
-    public function getRatePlanName(): string
+    public function getTierName(): string
     {
-        return $this->ratePlanName;
+        return $this->tierName;
     }
 
-    public function setRatePlanName(string $ratePlanName): self
+    public function setTierName(string $tierName): self
     {
-        $this->initialized['ratePlanName'] = true;
-        $this->ratePlanName = $ratePlanName;
+        $this->initialized['tierName'] = true;
+        $this->tierName = $tierName;
 
         return $this;
     }
@@ -85,28 +98,15 @@ class CreateSubscriptionBody extends \ArrayObject
         return $this;
     }
 
-    public function getBillingInfo(): BillingInfo
+    public function getPaymentMethodId(): string
     {
-        return $this->billingInfo;
+        return $this->paymentMethodId;
     }
 
-    public function setBillingInfo(BillingInfo $billingInfo): self
+    public function setPaymentMethodId(string $paymentMethodId): self
     {
-        $this->initialized['billingInfo'] = true;
-        $this->billingInfo = $billingInfo;
-
-        return $this;
-    }
-
-    public function getContactInfo(): BillingInfo
-    {
-        return $this->contactInfo;
-    }
-
-    public function setContactInfo(BillingInfo $contactInfo): self
-    {
-        $this->initialized['contactInfo'] = true;
-        $this->contactInfo = $contactInfo;
+        $this->initialized['paymentMethodId'] = true;
+        $this->paymentMethodId = $paymentMethodId;
 
         return $this;
     }

@@ -64,10 +64,6 @@ class UpdateQRCodeRequestNormalizer implements DenormalizerInterface, Normalizer
             $object->setIsHidden($data['is_hidden']);
             unset($data['is_hidden']);
         }
-        if (\array_key_exists('static_content', $data)) {
-            $object->setStaticContent($this->denormalizer->denormalize($data['static_content'], \Bitly\Model\QRCodeStatic::class, 'json', $context));
-            unset($data['static_content']);
-        }
         foreach ($data as $key => $value) {
             if (preg_match('/.*/', (string) $key)) {
                 $object[$key] = $value;
@@ -88,9 +84,6 @@ class UpdateQRCodeRequestNormalizer implements DenormalizerInterface, Normalizer
         }
         if ($data->isInitialized('isHidden') && null !== $data->getIsHidden()) {
             $dataArray['is_hidden'] = $data->getIsHidden();
-        }
-        if ($data->isInitialized('staticContent') && null !== $data->getStaticContent()) {
-            $dataArray['static_content'] = $this->normalizer->normalize($data->getStaticContent(), 'json', $context);
         }
         foreach ($data as $key => $value) {
             if (preg_match('/.*/', (string) $key)) {

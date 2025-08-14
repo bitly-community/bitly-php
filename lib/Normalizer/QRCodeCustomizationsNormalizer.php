@@ -85,10 +85,6 @@ class QRCodeCustomizationsNormalizer implements DenormalizerInterface, Normalize
             $object->setText($this->denormalizer->denormalize($data['text'], \Bitly\Model\QRCodeText::class, 'json', $context));
             unset($data['text']);
         }
-        if (\array_key_exists('shape', $data)) {
-            $object->setShape($this->denormalizer->denormalize($data['shape'], \Bitly\Model\QRCodeShape::class, 'json', $context));
-            unset($data['shape']);
-        }
         if (\array_key_exists('branding', $data)) {
             $object->setBranding($this->denormalizer->denormalize($data['branding'], \Bitly\Model\QRCodeBranding::class, 'json', $context));
             unset($data['branding']);
@@ -135,9 +131,6 @@ class QRCodeCustomizationsNormalizer implements DenormalizerInterface, Normalize
         }
         if ($data->isInitialized('text') && null !== $data->getText()) {
             $dataArray['text'] = $this->normalizer->normalize($data->getText(), 'json', $context);
-        }
-        if ($data->isInitialized('shape') && null !== $data->getShape()) {
-            $dataArray['shape'] = $this->normalizer->normalize($data->getShape(), 'json', $context);
         }
         if ($data->isInitialized('branding') && null !== $data->getBranding()) {
             $dataArray['branding'] = $this->normalizer->normalize($data->getBranding(), 'json', $context);

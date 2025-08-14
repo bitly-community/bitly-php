@@ -54,6 +54,10 @@ class JaneObjectNormalizer implements DenormalizerInterface, NormalizerInterface
 
         \Bitly\Model\BillingAccountID::class => BillingAccountIDNormalizer::class,
 
+        \Bitly\Model\BillingProvider::class => BillingProviderNormalizer::class,
+
+        \Bitly\Model\UpcomingSubscription::class => UpcomingSubscriptionNormalizer::class,
+
         \Bitly\Model\BillingSignature::class => BillingSignatureNormalizer::class,
 
         \Bitly\Model\PayPalToken::class => PayPalTokenNormalizer::class,
@@ -116,6 +120,22 @@ class JaneObjectNormalizer implements DenormalizerInterface, NormalizerInterface
 
         \Bitly\Model\CreateSubscriptionBody::class => CreateSubscriptionBodyNormalizer::class,
 
+        \Bitly\Model\CreateSubscriptionResponse::class => CreateSubscriptionResponseNormalizer::class,
+
+        \Bitly\Model\CreateSubscriptionResponseLatestInvoice::class => CreateSubscriptionResponseLatestInvoiceNormalizer::class,
+
+        \Bitly\Model\CreateCustomerBody::class => CreateCustomerBodyNormalizer::class,
+
+        \Bitly\Model\UpdateStripeCustomerBody::class => UpdateStripeCustomerBodyNormalizer::class,
+
+        \Bitly\Model\CreateCustomerResponse::class => CreateCustomerResponseNormalizer::class,
+
+        \Bitly\Model\StripeCustomer::class => StripeCustomerNormalizer::class,
+
+        \Bitly\Model\StripeCustomerInvoiceSettings::class => StripeCustomerInvoiceSettingsNormalizer::class,
+
+        \Bitly\Model\StripeUpgradeOrgBody::class => StripeUpgradeOrgBodyNormalizer::class,
+
         \Bitly\Model\UpgradeOrgBody::class => UpgradeOrgBodyNormalizer::class,
 
         \Bitly\Model\DowngradeOrgBody::class => DowngradeOrgBodyNormalizer::class,
@@ -133,6 +153,8 @@ class JaneObjectNormalizer implements DenormalizerInterface, NormalizerInterface
         \Bitly\Model\BillingContact::class => BillingContactNormalizer::class,
 
         \Bitly\Model\BillingAddress::class => BillingAddressNormalizer::class,
+
+        \Bitly\Model\StripeAddress::class => StripeAddressNormalizer::class,
 
         \Bitly\Model\CreatePaymentMethod::class => CreatePaymentMethodNormalizer::class,
 
@@ -240,6 +262,12 @@ class JaneObjectNormalizer implements DenormalizerInterface, NormalizerInterface
 
         \Bitly\Model\FullShorten::class => FullShortenNormalizer::class,
 
+        \Bitly\Model\FullLink::class => FullLinkNormalizer::class,
+
+        \Bitly\Model\LinkBody::class => LinkBodyNormalizer::class,
+
+        \Bitly\Model\LinkDestination::class => LinkDestinationNormalizer::class,
+
         \Bitly\Model\Shorten::class => ShortenNormalizer::class,
 
         \Bitly\Model\LinkClicks::class => LinkClicksNormalizer::class,
@@ -322,6 +350,8 @@ class JaneObjectNormalizer implements DenormalizerInterface, NormalizerInterface
 
         \Bitly\Model\SiteCityViewMetrics::class => SiteCityViewMetricsNormalizer::class,
 
+        \Bitly\Model\SiteViewsSummary::class => SiteViewsSummaryNormalizer::class,
+
         \Bitly\Model\ViewsSummary::class => ViewsSummaryNormalizer::class,
 
         \Bitly\Model\DownloadsOverTime::class => DownloadsOverTimeNormalizer::class,
@@ -340,7 +370,21 @@ class JaneObjectNormalizer implements DenormalizerInterface, NormalizerInterface
 
         \Bitly\Model\MicrositeDownloads::class => MicrositeDownloadsNormalizer::class,
 
+        \Bitly\Model\SiteClicks::class => SiteClicksNormalizer::class,
+
+        \Bitly\Model\SitesPagination::class => SitesPaginationNormalizer::class,
+
+        \Bitly\Model\SiteLinkPerformance::class => SiteLinkPerformanceNormalizer::class,
+
         \Bitly\Model\CampaignClickData::class => CampaignClickDataNormalizer::class,
+
+        \Bitly\Model\BrandCampaignsResponse::class => BrandCampaignsResponseNormalizer::class,
+
+        \Bitly\Model\BrandCampaign::class => BrandCampaignNormalizer::class,
+
+        \Bitly\Model\CampaignChannels::class => CampaignChannelsNormalizer::class,
+
+        \Bitly\Model\CampaignChannel::class => CampaignChannelNormalizer::class,
 
         \Bitly\Model\ChannelBitlink::class => ChannelBitlinkNormalizer::class,
 
@@ -458,7 +502,7 @@ class JaneObjectNormalizer implements DenormalizerInterface, NormalizerInterface
 
         \Bitly\Model\CampaignAddBitlinkResponseData::class => CampaignAddBitlinkResponseDataNormalizer::class,
 
-        \Bitly\Model\AddBitlinkResult::class => AddBitlinkResultNormalizer::class,
+        \Bitly\Model\CampaignAddBitlinkResult::class => CampaignAddBitlinkResultNormalizer::class,
 
         \Bitly\Model\BaseChannelBitlink::class => BaseChannelBitlinkNormalizer::class,
 
@@ -490,6 +534,10 @@ class JaneObjectNormalizer implements DenormalizerInterface, NormalizerInterface
 
         \Bitly\Model\IntegrationOAuths::class => IntegrationOAuthsNormalizer::class,
 
+        \Bitly\Model\ShopifyTokenExchangeRequest::class => ShopifyTokenExchangeRequestNormalizer::class,
+
+        \Bitly\Model\ShopifyDomainDetailsResponse::class => ShopifyDomainDetailsResponseNormalizer::class,
+
         \Bitly\Model\BSDsResponse::class => BSDsResponseNormalizer::class,
 
         \Bitly\Model\BSDAISearchPrompt::class => BSDAISearchPromptNormalizer::class,
@@ -515,8 +563,6 @@ class JaneObjectNormalizer implements DenormalizerInterface, NormalizerInterface
         \Bitly\Model\AddOnSetting::class => AddOnSettingNormalizer::class,
 
         \Bitly\Model\AddOns::class => AddOnsNormalizer::class,
-
-        \Bitly\Model\ProvisionOrgAccessRequest::class => ProvisionOrgAccessRequestNormalizer::class,
 
         \Bitly\Model\AddOn::class => AddOnNormalizer::class,
 
@@ -730,6 +776,8 @@ class JaneObjectNormalizer implements DenormalizerInterface, NormalizerInterface
 
         \Bitly\Model\LaunchpadSocial::class => LaunchpadSocialNormalizer::class,
 
+        \Bitly\Model\SiteRedirects::class => SiteRedirectsNormalizer::class,
+
         \Bitly\Model\SiteBlockCommon::class => SiteBlockCommonNormalizer::class,
 
         \Bitly\Model\SiteBlockContent::class => SiteBlockContentNormalizer::class,
@@ -802,11 +850,13 @@ class JaneObjectNormalizer implements DenormalizerInterface, NormalizerInterface
 
         \Bitly\Model\TextBlockContent::class => TextBlockContentNormalizer::class,
 
-        \Bitly\Model\TextBlockAppearance::class => TextBlockAppearanceNormalizer::class,
+        \Bitly\Model\TextBlockAppearanceRequest::class => TextBlockAppearanceRequestNormalizer::class,
 
         \Bitly\Model\TextBlockStyle::class => TextBlockStyleNormalizer::class,
 
         \Bitly\Model\LaunchpadContentTextBlockResponse::class => LaunchpadContentTextBlockResponseNormalizer::class,
+
+        \Bitly\Model\TextBlockAppearanceResponse::class => TextBlockAppearanceResponseNormalizer::class,
 
         \Bitly\Model\LaunchpadContainerRequest::class => LaunchpadContainerRequestNormalizer::class,
 
@@ -847,6 +897,8 @@ class JaneObjectNormalizer implements DenormalizerInterface, NormalizerInterface
         \Bitly\Model\KeepSitesRequest::class => KeepSitesRequestNormalizer::class,
 
         \Bitly\Model\LaunchpadImageUpload::class => LaunchpadImageUploadNormalizer::class,
+
+        \Bitly\Model\SiteImageUpload::class => SiteImageUploadNormalizer::class,
 
         \Bitly\Model\ImageCropPoint::class => ImageCropPointNormalizer::class,
 
@@ -932,8 +984,6 @@ class JaneObjectNormalizer implements DenormalizerInterface, NormalizerInterface
 
         \Bitly\Model\PublicQRCodeImageResponse::class => PublicQRCodeImageResponseNormalizer::class,
 
-        \Bitly\Model\PublicQrCode::class => PublicQrCodeNormalizer::class,
-
         \Bitly\Model\QRCodeFullResponse::class => QRCodeFullResponseNormalizer::class,
 
         \Bitly\Model\QRCodeFullListResponse::class => QRCodeFullListResponseNormalizer::class,
@@ -994,13 +1044,7 @@ class JaneObjectNormalizer implements DenormalizerInterface, NormalizerInterface
 
         \Bitly\Model\Text::class => TextNormalizer::class,
 
-        \Bitly\Model\QRCodeShape::class => QRCodeShapeNormalizer::class,
-
-        \Bitly\Model\QRCodeShapeItem::class => QRCodeShapeItemNormalizer::class,
-
         \Bitly\Model\QRCodeDynamic::class => QRCodeDynamicNormalizer::class,
-
-        \Bitly\Model\QRCodeStatic::class => QRCodeStaticNormalizer::class,
 
         \Bitly\Model\QRCodeVirtualCard::class => QRCodeVirtualCardNormalizer::class,
 
@@ -1164,6 +1208,8 @@ class JaneObjectNormalizer implements DenormalizerInterface, NormalizerInterface
             \Bitly\Model\Contacts::class => false,
             \Bitly\Model\BillingAccount::class => false,
             \Bitly\Model\BillingAccountID::class => false,
+            \Bitly\Model\BillingProvider::class => false,
+            \Bitly\Model\UpcomingSubscription::class => false,
             \Bitly\Model\BillingSignature::class => false,
             \Bitly\Model\PayPalToken::class => false,
             \Bitly\Model\OrgTierHistory::class => false,
@@ -1195,6 +1241,14 @@ class JaneObjectNormalizer implements DenormalizerInterface, NormalizerInterface
             \Bitly\Model\BasicInfo::class => false,
             \Bitly\Model\BillingInfo::class => false,
             \Bitly\Model\CreateSubscriptionBody::class => false,
+            \Bitly\Model\CreateSubscriptionResponse::class => false,
+            \Bitly\Model\CreateSubscriptionResponseLatestInvoice::class => false,
+            \Bitly\Model\CreateCustomerBody::class => false,
+            \Bitly\Model\UpdateStripeCustomerBody::class => false,
+            \Bitly\Model\CreateCustomerResponse::class => false,
+            \Bitly\Model\StripeCustomer::class => false,
+            \Bitly\Model\StripeCustomerInvoiceSettings::class => false,
+            \Bitly\Model\StripeUpgradeOrgBody::class => false,
             \Bitly\Model\UpgradeOrgBody::class => false,
             \Bitly\Model\DowngradeOrgBody::class => false,
             \Bitly\Model\ContactInfo::class => false,
@@ -1204,6 +1258,7 @@ class JaneObjectNormalizer implements DenormalizerInterface, NormalizerInterface
             \Bitly\Model\PayPalTokenRequest::class => false,
             \Bitly\Model\BillingContact::class => false,
             \Bitly\Model\BillingAddress::class => false,
+            \Bitly\Model\StripeAddress::class => false,
             \Bitly\Model\CreatePaymentMethod::class => false,
             \Bitly\Model\SetupIntent::class => false,
             \Bitly\Model\PaymentMethod::class => false,
@@ -1257,6 +1312,9 @@ class JaneObjectNormalizer implements DenormalizerInterface, NormalizerInterface
             \Bitly\Model\DeeplinkRules::class => false,
             \Bitly\Model\Deeplink::class => false,
             \Bitly\Model\FullShorten::class => false,
+            \Bitly\Model\FullLink::class => false,
+            \Bitly\Model\LinkBody::class => false,
+            \Bitly\Model\LinkDestination::class => false,
             \Bitly\Model\Shorten::class => false,
             \Bitly\Model\LinkClicks::class => false,
             \Bitly\Model\QRScans::class => false,
@@ -1298,6 +1356,7 @@ class JaneObjectNormalizer implements DenormalizerInterface, NormalizerInterface
             \Bitly\Model\Views::class => false,
             \Bitly\Model\SiteViewMetrics::class => false,
             \Bitly\Model\SiteCityViewMetrics::class => false,
+            \Bitly\Model\SiteViewsSummary::class => false,
             \Bitly\Model\ViewsSummary::class => false,
             \Bitly\Model\DownloadsOverTime::class => false,
             \Bitly\Model\DownloadMetric::class => false,
@@ -1307,7 +1366,14 @@ class JaneObjectNormalizer implements DenormalizerInterface, NormalizerInterface
             \Bitly\Model\DeviceDownloadMetric::class => false,
             \Bitly\Model\DeviceDownloadMetrics::class => false,
             \Bitly\Model\MicrositeDownloads::class => false,
+            \Bitly\Model\SiteClicks::class => false,
+            \Bitly\Model\SitesPagination::class => false,
+            \Bitly\Model\SiteLinkPerformance::class => false,
             \Bitly\Model\CampaignClickData::class => false,
+            \Bitly\Model\BrandCampaignsResponse::class => false,
+            \Bitly\Model\BrandCampaign::class => false,
+            \Bitly\Model\CampaignChannels::class => false,
+            \Bitly\Model\CampaignChannel::class => false,
             \Bitly\Model\ChannelBitlink::class => false,
             \Bitly\Model\ChannelBitlinks::class => false,
             \Bitly\Model\CampaignClicks::class => false,
@@ -1366,7 +1432,7 @@ class JaneObjectNormalizer implements DenormalizerInterface, NormalizerInterface
             \Bitly\Model\CampaignAddBitlink::class => false,
             \Bitly\Model\CampaignAddBitlinkResponse::class => false,
             \Bitly\Model\CampaignAddBitlinkResponseData::class => false,
-            \Bitly\Model\AddBitlinkResult::class => false,
+            \Bitly\Model\CampaignAddBitlinkResult::class => false,
             \Bitly\Model\BaseChannelBitlink::class => false,
             \Bitly\Model\BaseChannel::class => false,
             \Bitly\Model\Channel::class => false,
@@ -1382,6 +1448,8 @@ class JaneObjectNormalizer implements DenormalizerInterface, NormalizerInterface
             \Bitly\Model\Authorizations::class => false,
             \Bitly\Model\IntegrationOAuth::class => false,
             \Bitly\Model\IntegrationOAuths::class => false,
+            \Bitly\Model\ShopifyTokenExchangeRequest::class => false,
+            \Bitly\Model\ShopifyDomainDetailsResponse::class => false,
             \Bitly\Model\BSDsResponse::class => false,
             \Bitly\Model\BSDAISearchPrompt::class => false,
             \Bitly\Model\BSDSearchResult::class => false,
@@ -1395,7 +1463,6 @@ class JaneObjectNormalizer implements DenormalizerInterface, NormalizerInterface
             \Bitly\Model\DefaultAccessFeature::class => false,
             \Bitly\Model\AddOnSetting::class => false,
             \Bitly\Model\AddOns::class => false,
-            \Bitly\Model\ProvisionOrgAccessRequest::class => false,
             \Bitly\Model\AddOn::class => false,
             \Bitly\Model\DomainValidateBody::class => false,
             \Bitly\Model\DomainValidate::class => false,
@@ -1502,6 +1569,7 @@ class JaneObjectNormalizer implements DenormalizerInterface, NormalizerInterface
             \Bitly\Model\LaunchpadButtonCommon::class => false,
             \Bitly\Model\LaunchpadButton::class => false,
             \Bitly\Model\LaunchpadSocial::class => false,
+            \Bitly\Model\SiteRedirects::class => false,
             \Bitly\Model\SiteBlockCommon::class => false,
             \Bitly\Model\SiteBlockContent::class => false,
             \Bitly\Model\BlockContentYoutube::class => false,
@@ -1538,9 +1606,10 @@ class JaneObjectNormalizer implements DenormalizerInterface, NormalizerInterface
             \Bitly\Model\DigitalBusinessCardContact::class => false,
             \Bitly\Model\LaunchpadContentTextBlockRequest::class => false,
             \Bitly\Model\TextBlockContent::class => false,
-            \Bitly\Model\TextBlockAppearance::class => false,
+            \Bitly\Model\TextBlockAppearanceRequest::class => false,
             \Bitly\Model\TextBlockStyle::class => false,
             \Bitly\Model\LaunchpadContentTextBlockResponse::class => false,
+            \Bitly\Model\TextBlockAppearanceResponse::class => false,
             \Bitly\Model\LaunchpadContainerRequest::class => false,
             \Bitly\Model\LaunchpadContainerResponse::class => false,
             \Bitly\Model\LaunchpadContentImage::class => false,
@@ -1561,6 +1630,7 @@ class JaneObjectNormalizer implements DenormalizerInterface, NormalizerInterface
             \Bitly\Model\PrevalidateYouTubeVideoRequest::class => false,
             \Bitly\Model\KeepSitesRequest::class => false,
             \Bitly\Model\LaunchpadImageUpload::class => false,
+            \Bitly\Model\SiteImageUpload::class => false,
             \Bitly\Model\ImageCropPoint::class => false,
             \Bitly\Model\ImageCrop::class => false,
             \Bitly\Model\ImageUpdate::class => false,
@@ -1603,7 +1673,6 @@ class JaneObjectNormalizer implements DenormalizerInterface, NormalizerInterface
             \Bitly\Model\PublicCreateQRCodeRequest::class => false,
             \Bitly\Model\PublicUpdateQRCodeRequest::class => false,
             \Bitly\Model\PublicQRCodeImageResponse::class => false,
-            \Bitly\Model\PublicQrCode::class => false,
             \Bitly\Model\QRCodeFullResponse::class => false,
             \Bitly\Model\QRCodeFullListResponse::class => false,
             \Bitly\Model\QRCodesMinimal::class => false,
@@ -1634,10 +1703,7 @@ class JaneObjectNormalizer implements DenormalizerInterface, NormalizerInterface
             \Bitly\Model\QRCodeFrameResponseItem::class => false,
             \Bitly\Model\QRCodeText::class => false,
             \Bitly\Model\Text::class => false,
-            \Bitly\Model\QRCodeShape::class => false,
-            \Bitly\Model\QRCodeShapeItem::class => false,
             \Bitly\Model\QRCodeDynamic::class => false,
-            \Bitly\Model\QRCodeStatic::class => false,
             \Bitly\Model\QRCodeVirtualCard::class => false,
             \Bitly\Model\QRCodeWifi::class => false,
             \Bitly\Model\QRCodeEmail::class => false,

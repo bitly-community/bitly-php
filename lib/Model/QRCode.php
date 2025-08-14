@@ -28,23 +28,11 @@ class QRCode extends \ArrayObject
      */
     protected $qrcodeId;
     /**
-     * The QR code's title.
-     *
-     * @var string
-     */
-    protected $title;
-    /**
      * Options for customizing a QR Code's appearance.
      *
      * @var QRCodeCustomizations
      */
     protected $renderCustomizations;
-    /**
-     * A boolean representing if the QR code is being hidden from the user.
-     *
-     * @var bool
-     */
-    protected $isHidden;
     /**
      * A boolean representing if any of the QR code's customization values have been changed from their default setting.
      *
@@ -63,18 +51,6 @@ class QRCode extends \ArrayObject
      * @var string
      */
     protected $qrCodeType;
-    /**
-     * A hash calculated from all the QR code's customization fields.
-     *
-     * @var string
-     */
-    protected $customizationHash;
-    /**
-     * A hash calculated from all the QR code's customization and content fields.
-     *
-     * @var string
-     */
-    protected $fullHash;
     /**
      * ISO_TIMESTAMP.
      *
@@ -106,29 +82,11 @@ class QRCode extends \ArrayObject
      */
     protected $svg;
     /**
-     * The QR code's png image data as a data uri.
-     *
-     * @var string
-     */
-    protected $png;
-    /**
-     * The QR code's jpg image data as a data uri.
-     *
-     * @var string
-     */
-    protected $jpg;
-    /**
      * An object containing relevant properties for dynamic QR codes, i.e. ones that are linked to a bitlink.
      *
      * @var QRCodeDynamic
      */
     protected $dynamicContent;
-    /**
-     * An object containing relevant properties for static QR codes, i.e. ones that are NOT linked to a bitlink.
-     *
-     * @var QRCodeStatic
-     */
-    protected $staticContent;
     /**
      * The QR code's version, error correction, and mask values.
      *
@@ -162,25 +120,6 @@ class QRCode extends \ArrayObject
     }
 
     /**
-     * The QR code's title.
-     */
-    public function getTitle(): string
-    {
-        return $this->title;
-    }
-
-    /**
-     * The QR code's title.
-     */
-    public function setTitle(string $title): self
-    {
-        $this->initialized['title'] = true;
-        $this->title = $title;
-
-        return $this;
-    }
-
-    /**
      * Options for customizing a QR Code's appearance.
      */
     public function getRenderCustomizations(): QRCodeCustomizations
@@ -195,25 +134,6 @@ class QRCode extends \ArrayObject
     {
         $this->initialized['renderCustomizations'] = true;
         $this->renderCustomizations = $renderCustomizations;
-
-        return $this;
-    }
-
-    /**
-     * A boolean representing if the QR code is being hidden from the user.
-     */
-    public function getIsHidden(): bool
-    {
-        return $this->isHidden;
-    }
-
-    /**
-     * A boolean representing if the QR code is being hidden from the user.
-     */
-    public function setIsHidden(bool $isHidden): self
-    {
-        $this->initialized['isHidden'] = true;
-        $this->isHidden = $isHidden;
 
         return $this;
     }
@@ -271,44 +191,6 @@ class QRCode extends \ArrayObject
     {
         $this->initialized['qrCodeType'] = true;
         $this->qrCodeType = $qrCodeType;
-
-        return $this;
-    }
-
-    /**
-     * A hash calculated from all the QR code's customization fields.
-     */
-    public function getCustomizationHash(): string
-    {
-        return $this->customizationHash;
-    }
-
-    /**
-     * A hash calculated from all the QR code's customization fields.
-     */
-    public function setCustomizationHash(string $customizationHash): self
-    {
-        $this->initialized['customizationHash'] = true;
-        $this->customizationHash = $customizationHash;
-
-        return $this;
-    }
-
-    /**
-     * A hash calculated from all the QR code's customization and content fields.
-     */
-    public function getFullHash(): string
-    {
-        return $this->fullHash;
-    }
-
-    /**
-     * A hash calculated from all the QR code's customization and content fields.
-     */
-    public function setFullHash(string $fullHash): self
-    {
-        $this->initialized['fullHash'] = true;
-        $this->fullHash = $fullHash;
 
         return $this;
     }
@@ -409,44 +291,6 @@ class QRCode extends \ArrayObject
     }
 
     /**
-     * The QR code's png image data as a data uri.
-     */
-    public function getPng(): string
-    {
-        return $this->png;
-    }
-
-    /**
-     * The QR code's png image data as a data uri.
-     */
-    public function setPng(string $png): self
-    {
-        $this->initialized['png'] = true;
-        $this->png = $png;
-
-        return $this;
-    }
-
-    /**
-     * The QR code's jpg image data as a data uri.
-     */
-    public function getJpg(): string
-    {
-        return $this->jpg;
-    }
-
-    /**
-     * The QR code's jpg image data as a data uri.
-     */
-    public function setJpg(string $jpg): self
-    {
-        $this->initialized['jpg'] = true;
-        $this->jpg = $jpg;
-
-        return $this;
-    }
-
-    /**
      * An object containing relevant properties for dynamic QR codes, i.e. ones that are linked to a bitlink.
      */
     public function getDynamicContent(): QRCodeDynamic
@@ -461,25 +305,6 @@ class QRCode extends \ArrayObject
     {
         $this->initialized['dynamicContent'] = true;
         $this->dynamicContent = $dynamicContent;
-
-        return $this;
-    }
-
-    /**
-     * An object containing relevant properties for static QR codes, i.e. ones that are NOT linked to a bitlink.
-     */
-    public function getStaticContent(): QRCodeStatic
-    {
-        return $this->staticContent;
-    }
-
-    /**
-     * An object containing relevant properties for static QR codes, i.e. ones that are NOT linked to a bitlink.
-     */
-    public function setStaticContent(QRCodeStatic $staticContent): self
-    {
-        $this->initialized['staticContent'] = true;
-        $this->staticContent = $staticContent;
 
         return $this;
     }

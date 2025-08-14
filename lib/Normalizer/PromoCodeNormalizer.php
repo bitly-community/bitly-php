@@ -52,6 +52,9 @@ class PromoCodeNormalizer implements DenormalizerInterface, NormalizerInterface,
         if (\array_key_exists('is_valid', $data) && \is_int($data['is_valid'])) {
             $data['is_valid'] = (bool) $data['is_valid'];
         }
+        if (\array_key_exists('is_valid_for_plan', $data) && \is_int($data['is_valid_for_plan'])) {
+            $data['is_valid_for_plan'] = (bool) $data['is_valid_for_plan'];
+        }
         if (null === $data || false === \is_array($data)) {
             return $object;
         }
@@ -62,6 +65,10 @@ class PromoCodeNormalizer implements DenormalizerInterface, NormalizerInterface,
         if (\array_key_exists('is_valid', $data)) {
             $object->setIsValid($data['is_valid']);
             unset($data['is_valid']);
+        }
+        if (\array_key_exists('is_valid_for_plan', $data)) {
+            $object->setIsValidForPlan($data['is_valid_for_plan']);
+            unset($data['is_valid_for_plan']);
         }
         if (\array_key_exists('discount_type', $data)) {
             $object->setDiscountType($data['discount_type']);
@@ -104,6 +111,9 @@ class PromoCodeNormalizer implements DenormalizerInterface, NormalizerInterface,
         }
         if ($data->isInitialized('isValid') && null !== $data->getIsValid()) {
             $dataArray['is_valid'] = $data->getIsValid();
+        }
+        if ($data->isInitialized('isValidForPlan') && null !== $data->getIsValidForPlan()) {
+            $dataArray['is_valid_for_plan'] = $data->getIsValidForPlan();
         }
         if ($data->isInitialized('discountType') && null !== $data->getDiscountType()) {
             $dataArray['discount_type'] = $data->getDiscountType();

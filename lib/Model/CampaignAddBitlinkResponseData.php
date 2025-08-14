@@ -38,7 +38,7 @@ class CampaignAddBitlinkResponseData extends \ArrayObject
      */
     protected $createBitlinkFailures;
     /**
-     * @var list<AddBitlinkResult>
+     * @var list<CampaignAddBitlinkResult>
      */
     protected $results;
 
@@ -95,7 +95,7 @@ class CampaignAddBitlinkResponseData extends \ArrayObject
     }
 
     /**
-     * @return list<AddBitlinkResult>
+     * @return list<CampaignAddBitlinkResult>
      */
     public function getResults(): array
     {
@@ -103,7 +103,7 @@ class CampaignAddBitlinkResponseData extends \ArrayObject
     }
 
     /**
-     * @param list<AddBitlinkResult> $results
+     * @param list<CampaignAddBitlinkResult> $results
      */
     public function setResults(array $results): self
     {

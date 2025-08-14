@@ -61,6 +61,10 @@ class DowngradeOrgBodyNormalizer implements DenormalizerInterface, NormalizerInt
             $object->setTermEndDate($data['term_end_date']);
             unset($data['term_end_date']);
         }
+        if (\array_key_exists('subscription_num', $data)) {
+            $object->setSubscriptionNum($data['subscription_num']);
+            unset($data['subscription_num']);
+        }
         foreach ($data as $key => $value) {
             if (preg_match('/.*/', (string) $key)) {
                 $object[$key] = $value;
@@ -81,6 +85,9 @@ class DowngradeOrgBodyNormalizer implements DenormalizerInterface, NormalizerInt
         }
         if ($data->isInitialized('termEndDate') && null !== $data->getTermEndDate()) {
             $dataArray['term_end_date'] = $data->getTermEndDate();
+        }
+        if ($data->isInitialized('subscriptionNum') && null !== $data->getSubscriptionNum()) {
+            $dataArray['subscription_num'] = $data->getSubscriptionNum();
         }
         foreach ($data as $key => $value) {
             if (preg_match('/.*/', (string) $key)) {

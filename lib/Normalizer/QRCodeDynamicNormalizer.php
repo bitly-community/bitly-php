@@ -61,10 +61,6 @@ class QRCodeDynamicNormalizer implements DenormalizerInterface, NormalizerInterf
             $object->setLongUrl($data['long_url']);
             unset($data['long_url']);
         }
-        if (\array_key_exists('total_scan_count', $data)) {
-            $object->setTotalScanCount($data['total_scan_count']);
-            unset($data['total_scan_count']);
-        }
         foreach ($data as $key => $value) {
             if (preg_match('/.*/', (string) $key)) {
                 $object[$key] = $value;
@@ -83,9 +79,6 @@ class QRCodeDynamicNormalizer implements DenormalizerInterface, NormalizerInterf
         }
         if ($data->isInitialized('longUrl') && null !== $data->getLongUrl()) {
             $dataArray['long_url'] = $data->getLongUrl();
-        }
-        if ($data->isInitialized('totalScanCount') && null !== $data->getTotalScanCount()) {
-            $dataArray['total_scan_count'] = $data->getTotalScanCount();
         }
         foreach ($data as $key => $value) {
             if (preg_match('/.*/', (string) $key)) {
