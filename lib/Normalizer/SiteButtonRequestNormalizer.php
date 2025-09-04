@@ -20,7 +20,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class SiteBlockNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class SiteButtonRequestNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
@@ -29,12 +29,12 @@ class SiteBlockNormalizer implements DenormalizerInterface, NormalizerInterface,
 
     public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        return $type === \Bitly\Model\SiteBlock::class;
+        return $type === \Bitly\Model\SiteButtonRequest::class;
     }
 
     public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        return is_object($data) && get_class($data) === \Bitly\Model\SiteBlock::class;
+        return is_object($data) && get_class($data) === \Bitly\Model\SiteButtonRequest::class;
     }
 
     public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
@@ -45,46 +45,31 @@ class SiteBlockNormalizer implements DenormalizerInterface, NormalizerInterface,
         if (isset($data['$recursiveRef'])) {
             return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-        $object = new \Bitly\Model\SiteBlock();
+        $object = new \Bitly\Model\SiteButtonRequest();
         if (\array_key_exists('is_active', $data) && \is_int($data['is_active'])) {
             $data['is_active'] = (bool) $data['is_active'];
         }
         if (\array_key_exists('is_pinned', $data) && \is_int($data['is_pinned'])) {
             $data['is_pinned'] = (bool) $data['is_pinned'];
         }
-        if (\array_key_exists('is_sample', $data) && \is_int($data['is_sample'])) {
-            $data['is_sample'] = (bool) $data['is_sample'];
-        }
         if (null === $data || false === \is_array($data)) {
             return $object;
         }
-        if (\array_key_exists('container_id', $data)) {
-            $object->setContainerId($data['container_id']);
-            unset($data['container_id']);
+        if (\array_key_exists('bitlink', $data)) {
+            $object->setBitlink($data['bitlink']);
+            unset($data['bitlink']);
         }
-        if (\array_key_exists('scheme', $data)) {
-            $object->setScheme($data['scheme']);
-            unset($data['scheme']);
+        if (\array_key_exists('long_url', $data)) {
+            $object->setLongUrl($data['long_url']);
+            unset($data['long_url']);
         }
-        if (\array_key_exists('content', $data)) {
-            $object->setContent($this->denormalizer->denormalize($data['content'], \Bitly\Model\SiteBlockContent::class, 'json', $context));
-            unset($data['content']);
+        if (\array_key_exists('domain', $data)) {
+            $object->setDomain($data['domain']);
+            unset($data['domain']);
         }
-        if (\array_key_exists('appearance', $data)) {
-            $object->setAppearance($this->denormalizer->denormalize($data['appearance'], \Bitly\Model\TextBlockAppearance::class, 'json', $context));
-            unset($data['appearance']);
-        }
-        if (\array_key_exists('site_id', $data)) {
-            $object->setSiteId($data['site_id']);
-            unset($data['site_id']);
-        }
-        if (\array_key_exists('block_id', $data)) {
-            $object->setBlockId($data['block_id']);
-            unset($data['block_id']);
-        }
-        if (\array_key_exists('sort_order', $data)) {
-            $object->setSortOrder($data['sort_order']);
-            unset($data['sort_order']);
+        if (\array_key_exists('title', $data)) {
+            $object->setTitle($data['title']);
+            unset($data['title']);
         }
         if (\array_key_exists('schedule_start', $data)) {
             $object->setScheduleStart($data['schedule_start']);
@@ -102,13 +87,17 @@ class SiteBlockNormalizer implements DenormalizerInterface, NormalizerInterface,
             $object->setIsPinned($data['is_pinned']);
             unset($data['is_pinned']);
         }
-        if (\array_key_exists('is_sample', $data)) {
-            $object->setIsSample($data['is_sample']);
-            unset($data['is_sample']);
+        if (\array_key_exists('description', $data)) {
+            $object->setDescription($data['description']);
+            unset($data['description']);
         }
-        if (\array_key_exists('type', $data)) {
-            $object->setType($data['type']);
-            unset($data['type']);
+        if (\array_key_exists('parent', $data)) {
+            $object->setParent($data['parent']);
+            unset($data['parent']);
+        }
+        if (\array_key_exists('button_thumbnail_image', $data)) {
+            $object->setButtonThumbnailImage($data['button_thumbnail_image']);
+            unset($data['button_thumbnail_image']);
         }
         foreach ($data as $key => $value) {
             if (preg_match('/.*/', (string) $key)) {
@@ -122,26 +111,17 @@ class SiteBlockNormalizer implements DenormalizerInterface, NormalizerInterface,
     public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
     {
         $dataArray = [];
-        if ($data->isInitialized('containerId') && null !== $data->getContainerId()) {
-            $dataArray['container_id'] = $data->getContainerId();
+        if ($data->isInitialized('bitlink') && null !== $data->getBitlink()) {
+            $dataArray['bitlink'] = $data->getBitlink();
         }
-        if ($data->isInitialized('scheme') && null !== $data->getScheme()) {
-            $dataArray['scheme'] = $data->getScheme();
+        if ($data->isInitialized('longUrl') && null !== $data->getLongUrl()) {
+            $dataArray['long_url'] = $data->getLongUrl();
         }
-        if ($data->isInitialized('content') && null !== $data->getContent()) {
-            $dataArray['content'] = $this->normalizer->normalize($data->getContent(), 'json', $context);
+        if ($data->isInitialized('domain') && null !== $data->getDomain()) {
+            $dataArray['domain'] = $data->getDomain();
         }
-        if ($data->isInitialized('appearance') && null !== $data->getAppearance()) {
-            $dataArray['appearance'] = $this->normalizer->normalize($data->getAppearance(), 'json', $context);
-        }
-        if ($data->isInitialized('siteId') && null !== $data->getSiteId()) {
-            $dataArray['site_id'] = $data->getSiteId();
-        }
-        if ($data->isInitialized('blockId') && null !== $data->getBlockId()) {
-            $dataArray['block_id'] = $data->getBlockId();
-        }
-        if ($data->isInitialized('sortOrder') && null !== $data->getSortOrder()) {
-            $dataArray['sort_order'] = $data->getSortOrder();
+        if ($data->isInitialized('title') && null !== $data->getTitle()) {
+            $dataArray['title'] = $data->getTitle();
         }
         if ($data->isInitialized('scheduleStart') && null !== $data->getScheduleStart()) {
             $dataArray['schedule_start'] = $data->getScheduleStart();
@@ -155,11 +135,14 @@ class SiteBlockNormalizer implements DenormalizerInterface, NormalizerInterface,
         if ($data->isInitialized('isPinned') && null !== $data->getIsPinned()) {
             $dataArray['is_pinned'] = $data->getIsPinned();
         }
-        if ($data->isInitialized('isSample') && null !== $data->getIsSample()) {
-            $dataArray['is_sample'] = $data->getIsSample();
+        if ($data->isInitialized('description') && null !== $data->getDescription()) {
+            $dataArray['description'] = $data->getDescription();
         }
-        if ($data->isInitialized('type') && null !== $data->getType()) {
-            $dataArray['type'] = $data->getType();
+        if ($data->isInitialized('parent') && null !== $data->getParent()) {
+            $dataArray['parent'] = $data->getParent();
+        }
+        if ($data->isInitialized('buttonThumbnailImage') && null !== $data->getButtonThumbnailImage()) {
+            $dataArray['button_thumbnail_image'] = $data->getButtonThumbnailImage();
         }
         foreach ($data as $key => $value) {
             if (preg_match('/.*/', (string) $key)) {
@@ -172,6 +155,6 @@ class SiteBlockNormalizer implements DenormalizerInterface, NormalizerInterface,
 
     public function getSupportedTypes(?string $format = null): array
     {
-        return [\Bitly\Model\SiteBlock::class => false];
+        return [\Bitly\Model\SiteButtonRequest::class => false];
     }
 }

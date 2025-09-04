@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace Bitly\Model;
 
-class LaunchpadContentTextBlockRequest extends \ArrayObject
+class SiteContentRequest extends \ArrayObject
 {
     /**
      * @var array
@@ -22,11 +22,11 @@ class LaunchpadContentTextBlockRequest extends \ArrayObject
         return array_key_exists($property, $this->initialized);
     }
     /**
-     * @var TextBlockContent
+     * @var YoutubeVideoRequest|SocialContent|DigitalBusinessCardContent|TextBlockContent
      */
     protected $content;
     /**
-     * @var TextBlockAppearance
+     * @var TextBlockAppearanceRequest
      */
     protected $appearance;
     /**
@@ -50,12 +50,18 @@ class LaunchpadContentTextBlockRequest extends \ArrayObject
      */
     protected $parent;
 
-    public function getContent(): TextBlockContent
+    /**
+     * @return YoutubeVideoRequest|SocialContent|DigitalBusinessCardContent|TextBlockContent
+     */
+    public function getContent()
     {
         return $this->content;
     }
 
-    public function setContent(TextBlockContent $content): self
+    /**
+     * @param YoutubeVideoRequest|SocialContent|DigitalBusinessCardContent|TextBlockContent $content
+     */
+    public function setContent($content): self
     {
         $this->initialized['content'] = true;
         $this->content = $content;
@@ -63,12 +69,12 @@ class LaunchpadContentTextBlockRequest extends \ArrayObject
         return $this;
     }
 
-    public function getAppearance(): TextBlockAppearance
+    public function getAppearance(): TextBlockAppearanceRequest
     {
         return $this->appearance;
     }
 
-    public function setAppearance(TextBlockAppearance $appearance): self
+    public function setAppearance(TextBlockAppearanceRequest $appearance): self
     {
         $this->initialized['appearance'] = true;
         $this->appearance = $appearance;

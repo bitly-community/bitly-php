@@ -20,7 +20,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class TextBlockAppearanceRequestNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class TextBlockAppearanceNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
@@ -29,12 +29,12 @@ class TextBlockAppearanceRequestNormalizer implements DenormalizerInterface, Nor
 
     public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        return $type === \Bitly\Model\TextBlockAppearanceRequest::class;
+        return $type === \Bitly\Model\TextBlockAppearance::class;
     }
 
     public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        return is_object($data) && get_class($data) === \Bitly\Model\TextBlockAppearanceRequest::class;
+        return is_object($data) && get_class($data) === \Bitly\Model\TextBlockAppearance::class;
     }
 
     public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
@@ -45,7 +45,7 @@ class TextBlockAppearanceRequestNormalizer implements DenormalizerInterface, Nor
         if (isset($data['$recursiveRef'])) {
             return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-        $object = new \Bitly\Model\TextBlockAppearanceRequest();
+        $object = new \Bitly\Model\TextBlockAppearance();
         if (null === $data || false === \is_array($data)) {
             return $object;
         }
@@ -61,13 +61,13 @@ class TextBlockAppearanceRequestNormalizer implements DenormalizerInterface, Nor
             $object->setAlignment($data['alignment']);
             unset($data['alignment']);
         }
-        if (\array_key_exists('font_size', $data)) {
-            $object->setFontSize($data['font_size']);
-            unset($data['font_size']);
-        }
         if (\array_key_exists('text_block_style', $data)) {
             $object->setTextBlockStyle($this->denormalizer->denormalize($data['text_block_style'], \Bitly\Model\TextBlockStyle::class, 'json', $context));
             unset($data['text_block_style']);
+        }
+        if (\array_key_exists('font_size', $data)) {
+            $object->setFontSize($data['font_size']);
+            unset($data['font_size']);
         }
         foreach ($data as $key => $value) {
             if (preg_match('/.*/', (string) $key)) {
@@ -90,11 +90,11 @@ class TextBlockAppearanceRequestNormalizer implements DenormalizerInterface, Nor
         if ($data->isInitialized('alignment') && null !== $data->getAlignment()) {
             $dataArray['alignment'] = $data->getAlignment();
         }
-        if ($data->isInitialized('fontSize') && null !== $data->getFontSize()) {
-            $dataArray['font_size'] = $data->getFontSize();
-        }
         if ($data->isInitialized('textBlockStyle') && null !== $data->getTextBlockStyle()) {
             $dataArray['text_block_style'] = $this->normalizer->normalize($data->getTextBlockStyle(), 'json', $context);
+        }
+        if ($data->isInitialized('fontSize') && null !== $data->getFontSize()) {
+            $dataArray['font_size'] = $data->getFontSize();
         }
         foreach ($data as $key => $value) {
             if (preg_match('/.*/', (string) $key)) {
@@ -107,6 +107,6 @@ class TextBlockAppearanceRequestNormalizer implements DenormalizerInterface, Nor
 
     public function getSupportedTypes(?string $format = null): array
     {
-        return [\Bitly\Model\TextBlockAppearanceRequest::class => false];
+        return [\Bitly\Model\TextBlockAppearance::class => false];
     }
 }
