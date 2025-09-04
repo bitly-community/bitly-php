@@ -45,7 +45,7 @@ jobs:
         with:
           add_options: '-A'
           branch: 'feat/lib'
-          commit_message: 'feat(lib): generate code'
+          commit_message: 'feat(lib): generate library from Bitly OpenAPI'
           push_options: '--force'
 
       - name: Create Pull Request with GitHub CLI
