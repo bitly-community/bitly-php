@@ -76,6 +76,10 @@ class BitlinkUpdateBodyNormalizer implements DenormalizerInterface, NormalizerIn
             $object->setDeeplinks($values_1);
             unset($data['deeplinks']);
         }
+        if (\array_key_exists('long_url', $data)) {
+            $object->setLongUrl($data['long_url']);
+            unset($data['long_url']);
+        }
         foreach ($data as $key => $value_2) {
             if (preg_match('/.*/', (string) $key)) {
                 $object[$key] = $value_2;
@@ -107,6 +111,9 @@ class BitlinkUpdateBodyNormalizer implements DenormalizerInterface, NormalizerIn
                 $values_1[] = $this->normalizer->normalize($value_1, 'json', $context);
             }
             $dataArray['deeplinks'] = $values_1;
+        }
+        if ($data->isInitialized('longUrl') && null !== $data->getLongUrl()) {
+            $dataArray['long_url'] = $data->getLongUrl();
         }
         foreach ($data as $key => $value_2) {
             if (preg_match('/.*/', (string) $key)) {

@@ -812,6 +812,10 @@ class JaneObjectNormalizer implements DenormalizerInterface, NormalizerInterface
 
         \Bitly\Model\LaunchpadButtonRequest::class => LaunchpadButtonRequestNormalizer::class,
 
+        \Bitly\Model\SiteButtonRequest::class => SiteButtonRequestNormalizer::class,
+
+        \Bitly\Model\BitlinkContentResponse::class => BitlinkContentResponseNormalizer::class,
+
         \Bitly\Model\LaunchpadSocialRequest::class => LaunchpadSocialRequestNormalizer::class,
 
         \Bitly\Model\ContentRequestBitlink::class => ContentRequestBitlinkNormalizer::class,
@@ -822,6 +826,8 @@ class JaneObjectNormalizer implements DenormalizerInterface, NormalizerInterface
 
         \Bitly\Model\LaunchpadContentBitlinkRequestContent::class => LaunchpadContentBitlinkRequestContentNormalizer::class,
 
+        \Bitly\Model\SiteContentRequest::class => SiteContentRequestNormalizer::class,
+
         \Bitly\Model\LaunchpadContentSocialRequest::class => LaunchpadContentSocialRequestNormalizer::class,
 
         \Bitly\Model\LaunchpadContentYouTubeRequest::class => LaunchpadContentYouTubeRequestNormalizer::class,
@@ -831,6 +837,8 @@ class JaneObjectNormalizer implements DenormalizerInterface, NormalizerInterface
         \Bitly\Model\YoutubeVideoRequest::class => YoutubeVideoRequestNormalizer::class,
 
         \Bitly\Model\YoutubeVideoResponse::class => YoutubeVideoResponseNormalizer::class,
+
+        \Bitly\Model\SocialContent::class => SocialContentNormalizer::class,
 
         \Bitly\Model\LaunchpadContentSocial::class => LaunchpadContentSocialNormalizer::class,
 
@@ -850,6 +858,8 @@ class JaneObjectNormalizer implements DenormalizerInterface, NormalizerInterface
 
         \Bitly\Model\TextBlockContent::class => TextBlockContentNormalizer::class,
 
+        \Bitly\Model\TextBlockAppearance::class => TextBlockAppearanceNormalizer::class,
+
         \Bitly\Model\TextBlockAppearanceRequest::class => TextBlockAppearanceRequestNormalizer::class,
 
         \Bitly\Model\TextBlockStyle::class => TextBlockStyleNormalizer::class,
@@ -865,6 +875,8 @@ class JaneObjectNormalizer implements DenormalizerInterface, NormalizerInterface
         \Bitly\Model\LaunchpadContentImage::class => LaunchpadContentImageNormalizer::class,
 
         \Bitly\Model\LaunchpadImageContentRequestData::class => LaunchpadImageContentRequestDataNormalizer::class,
+
+        \Bitly\Model\ImageContent::class => ImageContentNormalizer::class,
 
         \Bitly\Model\LaunchpadImageContentData::class => LaunchpadImageContentDataNormalizer::class,
 
@@ -1587,16 +1599,20 @@ class JaneObjectNormalizer implements DenormalizerInterface, NormalizerInterface
             \Bitly\Model\LaunchpadImage::class => false,
             \Bitly\Model\ImageCommon::class => false,
             \Bitly\Model\LaunchpadButtonRequest::class => false,
+            \Bitly\Model\SiteButtonRequest::class => false,
+            \Bitly\Model\BitlinkContentResponse::class => false,
             \Bitly\Model\LaunchpadSocialRequest::class => false,
             \Bitly\Model\ContentRequestBitlink::class => false,
             \Bitly\Model\ContentRequestSocial::class => false,
             \Bitly\Model\LaunchpadContentBitlinkRequest::class => false,
             \Bitly\Model\LaunchpadContentBitlinkRequestContent::class => false,
+            \Bitly\Model\SiteContentRequest::class => false,
             \Bitly\Model\LaunchpadContentSocialRequest::class => false,
             \Bitly\Model\LaunchpadContentYouTubeRequest::class => false,
             \Bitly\Model\LaunchpadContentYouTubeResponse::class => false,
             \Bitly\Model\YoutubeVideoRequest::class => false,
             \Bitly\Model\YoutubeVideoResponse::class => false,
+            \Bitly\Model\SocialContent::class => false,
             \Bitly\Model\LaunchpadContentSocial::class => false,
             \Bitly\Model\LaunchpadContentImageRequest::class => false,
             \Bitly\Model\LaunchpadContentDigitalBusinessCardRequest::class => false,
@@ -1606,6 +1622,7 @@ class JaneObjectNormalizer implements DenormalizerInterface, NormalizerInterface
             \Bitly\Model\DigitalBusinessCardContact::class => false,
             \Bitly\Model\LaunchpadContentTextBlockRequest::class => false,
             \Bitly\Model\TextBlockContent::class => false,
+            \Bitly\Model\TextBlockAppearance::class => false,
             \Bitly\Model\TextBlockAppearanceRequest::class => false,
             \Bitly\Model\TextBlockStyle::class => false,
             \Bitly\Model\LaunchpadContentTextBlockResponse::class => false,
@@ -1614,6 +1631,7 @@ class JaneObjectNormalizer implements DenormalizerInterface, NormalizerInterface
             \Bitly\Model\LaunchpadContainerResponse::class => false,
             \Bitly\Model\LaunchpadContentImage::class => false,
             \Bitly\Model\LaunchpadImageContentRequestData::class => false,
+            \Bitly\Model\ImageContent::class => false,
             \Bitly\Model\LaunchpadImageContentData::class => false,
             \Bitly\Model\LaunchpadContentImageShortenURLData::class => false,
             \Bitly\Model\LaunchpadButtonAppearance::class => false,

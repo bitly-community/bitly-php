@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace Bitly\Model;
 
-class LaunchpadContentTextBlockRequest extends \ArrayObject
+class SiteButtonRequest extends \ArrayObject
 {
     /**
      * @var array
@@ -22,13 +22,21 @@ class LaunchpadContentTextBlockRequest extends \ArrayObject
         return array_key_exists($property, $this->initialized);
     }
     /**
-     * @var TextBlockContent
+     * @var string
      */
-    protected $content;
+    protected $bitlink;
     /**
-     * @var TextBlockAppearance
+     * @var string
      */
-    protected $appearance;
+    protected $longUrl;
+    /**
+     * @var string
+     */
+    protected $domain;
+    /**
+     * @var string
+     */
+    protected $title;
     /**
      * @var string
      */
@@ -48,30 +56,64 @@ class LaunchpadContentTextBlockRequest extends \ArrayObject
     /**
      * @var string
      */
+    protected $description;
+    /**
+     * @var string
+     */
     protected $parent;
+    /**
+     * @var object
+     */
+    protected $buttonThumbnailImage;
 
-    public function getContent(): TextBlockContent
+    public function getBitlink(): string
     {
-        return $this->content;
+        return $this->bitlink;
     }
 
-    public function setContent(TextBlockContent $content): self
+    public function setBitlink(string $bitlink): self
     {
-        $this->initialized['content'] = true;
-        $this->content = $content;
+        $this->initialized['bitlink'] = true;
+        $this->bitlink = $bitlink;
 
         return $this;
     }
 
-    public function getAppearance(): TextBlockAppearance
+    public function getLongUrl(): string
     {
-        return $this->appearance;
+        return $this->longUrl;
     }
 
-    public function setAppearance(TextBlockAppearance $appearance): self
+    public function setLongUrl(string $longUrl): self
     {
-        $this->initialized['appearance'] = true;
-        $this->appearance = $appearance;
+        $this->initialized['longUrl'] = true;
+        $this->longUrl = $longUrl;
+
+        return $this;
+    }
+
+    public function getDomain(): string
+    {
+        return $this->domain;
+    }
+
+    public function setDomain(string $domain): self
+    {
+        $this->initialized['domain'] = true;
+        $this->domain = $domain;
+
+        return $this;
+    }
+
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): self
+    {
+        $this->initialized['title'] = true;
+        $this->title = $title;
 
         return $this;
     }
@@ -128,6 +170,19 @@ class LaunchpadContentTextBlockRequest extends \ArrayObject
         return $this;
     }
 
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): self
+    {
+        $this->initialized['description'] = true;
+        $this->description = $description;
+
+        return $this;
+    }
+
     public function getParent(): string
     {
         return $this->parent;
@@ -137,6 +192,25 @@ class LaunchpadContentTextBlockRequest extends \ArrayObject
     {
         $this->initialized['parent'] = true;
         $this->parent = $parent;
+
+        return $this;
+    }
+
+    /**
+     * @return object
+     */
+    public function getButtonThumbnailImage()
+    {
+        return $this->buttonThumbnailImage;
+    }
+
+    /**
+     * @param object $buttonThumbnailImage
+     */
+    public function setButtonThumbnailImage($buttonThumbnailImage): self
+    {
+        $this->initialized['buttonThumbnailImage'] = true;
+        $this->buttonThumbnailImage = $buttonThumbnailImage;
 
         return $this;
     }

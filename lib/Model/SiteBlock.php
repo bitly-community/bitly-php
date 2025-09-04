@@ -26,9 +26,17 @@ class SiteBlock extends \ArrayObject
      */
     protected $containerId;
     /**
+     * @var string
+     */
+    protected $scheme;
+    /**
      * @var SiteBlockContent
      */
     protected $content;
+    /**
+     * @var TextBlockAppearance
+     */
+    protected $appearance;
     /**
      * @var string
      */
@@ -81,6 +89,19 @@ class SiteBlock extends \ArrayObject
         return $this;
     }
 
+    public function getScheme(): string
+    {
+        return $this->scheme;
+    }
+
+    public function setScheme(string $scheme): self
+    {
+        $this->initialized['scheme'] = true;
+        $this->scheme = $scheme;
+
+        return $this;
+    }
+
     public function getContent(): SiteBlockContent
     {
         return $this->content;
@@ -90,6 +111,19 @@ class SiteBlock extends \ArrayObject
     {
         $this->initialized['content'] = true;
         $this->content = $content;
+
+        return $this;
+    }
+
+    public function getAppearance(): TextBlockAppearance
+    {
+        return $this->appearance;
+    }
+
+    public function setAppearance(TextBlockAppearance $appearance): self
+    {
+        $this->initialized['appearance'] = true;
+        $this->appearance = $appearance;
 
         return $this;
     }

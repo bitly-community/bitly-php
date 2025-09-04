@@ -20,7 +20,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class TextBlockAppearanceRequestNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
+class BitlinkContentResponseNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
@@ -29,12 +29,12 @@ class TextBlockAppearanceRequestNormalizer implements DenormalizerInterface, Nor
 
     public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        return $type === \Bitly\Model\TextBlockAppearanceRequest::class;
+        return $type === \Bitly\Model\BitlinkContentResponse::class;
     }
 
     public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        return is_object($data) && get_class($data) === \Bitly\Model\TextBlockAppearanceRequest::class;
+        return is_object($data) && get_class($data) === \Bitly\Model\BitlinkContentResponse::class;
     }
 
     public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
@@ -45,29 +45,32 @@ class TextBlockAppearanceRequestNormalizer implements DenormalizerInterface, Nor
         if (isset($data['$recursiveRef'])) {
             return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
-        $object = new \Bitly\Model\TextBlockAppearanceRequest();
+        $object = new \Bitly\Model\BitlinkContentResponse();
+        if (\array_key_exists('is_pinned', $data) && \is_int($data['is_pinned'])) {
+            $data['is_pinned'] = (bool) $data['is_pinned'];
+        }
         if (null === $data || false === \is_array($data)) {
             return $object;
         }
-        if (\array_key_exists('background_color', $data)) {
-            $object->setBackgroundColor($data['background_color']);
-            unset($data['background_color']);
+        if (\array_key_exists('bitlink_id', $data)) {
+            $object->setBitlinkId($data['bitlink_id']);
+            unset($data['bitlink_id']);
         }
-        if (\array_key_exists('text_color', $data)) {
-            $object->setTextColor($data['text_color']);
-            unset($data['text_color']);
+        if (\array_key_exists('link_title', $data)) {
+            $object->setLinkTitle($data['link_title']);
+            unset($data['link_title']);
         }
-        if (\array_key_exists('alignment', $data)) {
-            $object->setAlignment($data['alignment']);
-            unset($data['alignment']);
+        if (\array_key_exists('description', $data)) {
+            $object->setDescription($data['description']);
+            unset($data['description']);
         }
-        if (\array_key_exists('font_size', $data)) {
-            $object->setFontSize($data['font_size']);
-            unset($data['font_size']);
+        if (\array_key_exists('is_pinned', $data)) {
+            $object->setIsPinned($data['is_pinned']);
+            unset($data['is_pinned']);
         }
-        if (\array_key_exists('text_block_style', $data)) {
-            $object->setTextBlockStyle($this->denormalizer->denormalize($data['text_block_style'], \Bitly\Model\TextBlockStyle::class, 'json', $context));
-            unset($data['text_block_style']);
+        if (\array_key_exists('image_url', $data)) {
+            $object->setImageUrl($data['image_url']);
+            unset($data['image_url']);
         }
         foreach ($data as $key => $value) {
             if (preg_match('/.*/', (string) $key)) {
@@ -81,20 +84,20 @@ class TextBlockAppearanceRequestNormalizer implements DenormalizerInterface, Nor
     public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
     {
         $dataArray = [];
-        if ($data->isInitialized('backgroundColor') && null !== $data->getBackgroundColor()) {
-            $dataArray['background_color'] = $data->getBackgroundColor();
+        if ($data->isInitialized('bitlinkId') && null !== $data->getBitlinkId()) {
+            $dataArray['bitlink_id'] = $data->getBitlinkId();
         }
-        if ($data->isInitialized('textColor') && null !== $data->getTextColor()) {
-            $dataArray['text_color'] = $data->getTextColor();
+        if ($data->isInitialized('linkTitle') && null !== $data->getLinkTitle()) {
+            $dataArray['link_title'] = $data->getLinkTitle();
         }
-        if ($data->isInitialized('alignment') && null !== $data->getAlignment()) {
-            $dataArray['alignment'] = $data->getAlignment();
+        if ($data->isInitialized('description') && null !== $data->getDescription()) {
+            $dataArray['description'] = $data->getDescription();
         }
-        if ($data->isInitialized('fontSize') && null !== $data->getFontSize()) {
-            $dataArray['font_size'] = $data->getFontSize();
+        if ($data->isInitialized('isPinned') && null !== $data->getIsPinned()) {
+            $dataArray['is_pinned'] = $data->getIsPinned();
         }
-        if ($data->isInitialized('textBlockStyle') && null !== $data->getTextBlockStyle()) {
-            $dataArray['text_block_style'] = $this->normalizer->normalize($data->getTextBlockStyle(), 'json', $context);
+        if ($data->isInitialized('imageUrl') && null !== $data->getImageUrl()) {
+            $dataArray['image_url'] = $data->getImageUrl();
         }
         foreach ($data as $key => $value) {
             if (preg_match('/.*/', (string) $key)) {
@@ -107,6 +110,6 @@ class TextBlockAppearanceRequestNormalizer implements DenormalizerInterface, Nor
 
     public function getSupportedTypes(?string $format = null): array
     {
-        return [\Bitly\Model\TextBlockAppearanceRequest::class => false];
+        return [\Bitly\Model\BitlinkContentResponse::class => false];
     }
 }

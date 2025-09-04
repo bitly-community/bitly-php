@@ -37,6 +37,10 @@ class BitlinkUpdateBody extends \ArrayObject
      * @var list<DeeplinkRule>
      */
     protected $deeplinks;
+    /**
+     * @var string
+     */
+    protected $longUrl;
 
     public function getTitle(): string
     {
@@ -98,6 +102,19 @@ class BitlinkUpdateBody extends \ArrayObject
     {
         $this->initialized['deeplinks'] = true;
         $this->deeplinks = $deeplinks;
+
+        return $this;
+    }
+
+    public function getLongUrl(): string
+    {
+        return $this->longUrl;
+    }
+
+    public function setLongUrl(string $longUrl): self
+    {
+        $this->initialized['longUrl'] = true;
+        $this->longUrl = $longUrl;
 
         return $this;
     }

@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace Bitly\Model;
 
-class TextBlockAppearanceRequest extends \ArrayObject
+class TextBlockAppearance extends \ArrayObject
 {
     /**
      * @var array
@@ -34,13 +34,13 @@ class TextBlockAppearanceRequest extends \ArrayObject
      */
     protected $alignment;
     /**
-     * @var string
-     */
-    protected $fontSize;
-    /**
      * @var TextBlockStyle
      */
     protected $textBlockStyle;
+    /**
+     * @var string
+     */
+    protected $fontSize;
 
     public function getBackgroundColor(): string
     {
@@ -81,19 +81,6 @@ class TextBlockAppearanceRequest extends \ArrayObject
         return $this;
     }
 
-    public function getFontSize(): string
-    {
-        return $this->fontSize;
-    }
-
-    public function setFontSize(string $fontSize): self
-    {
-        $this->initialized['fontSize'] = true;
-        $this->fontSize = $fontSize;
-
-        return $this;
-    }
-
     public function getTextBlockStyle(): TextBlockStyle
     {
         return $this->textBlockStyle;
@@ -103,6 +90,19 @@ class TextBlockAppearanceRequest extends \ArrayObject
     {
         $this->initialized['textBlockStyle'] = true;
         $this->textBlockStyle = $textBlockStyle;
+
+        return $this;
+    }
+
+    public function getFontSize(): string
+    {
+        return $this->fontSize;
+    }
+
+    public function setFontSize(string $fontSize): self
+    {
+        $this->initialized['fontSize'] = true;
+        $this->fontSize = $fontSize;
 
         return $this;
     }
