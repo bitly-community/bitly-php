@@ -108,6 +108,10 @@ class BillingAccountNormalizer implements DenormalizerInterface, NormalizerInter
             $object->setCompanyName($data['company_name']);
             unset($data['company_name']);
         }
+        if (\array_key_exists('migration_status', $data)) {
+            $object->setMigrationStatus($data['migration_status']);
+            unset($data['migration_status']);
+        }
         if (\array_key_exists('upcoming_subscriptions', $data)) {
             $values = [];
             foreach ($data['upcoming_subscriptions'] as $value) {
@@ -189,6 +193,9 @@ class BillingAccountNormalizer implements DenormalizerInterface, NormalizerInter
         }
         if ($data->isInitialized('companyName') && null !== $data->getCompanyName()) {
             $dataArray['company_name'] = $data->getCompanyName();
+        }
+        if ($data->isInitialized('migrationStatus') && null !== $data->getMigrationStatus()) {
+            $dataArray['migration_status'] = $data->getMigrationStatus();
         }
         if ($data->isInitialized('upcomingSubscriptions') && null !== $data->getUpcomingSubscriptions()) {
             $values = [];

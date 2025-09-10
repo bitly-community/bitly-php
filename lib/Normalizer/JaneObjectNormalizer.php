@@ -54,6 +54,8 @@ class JaneObjectNormalizer implements DenormalizerInterface, NormalizerInterface
 
         \Bitly\Model\BillingAccountID::class => BillingAccountIDNormalizer::class,
 
+        \Bitly\Model\StripeOrganizationInfo::class => StripeOrganizationInfoNormalizer::class,
+
         \Bitly\Model\BillingProvider::class => BillingProviderNormalizer::class,
 
         \Bitly\Model\UpcomingSubscription::class => UpcomingSubscriptionNormalizer::class,
@@ -1220,6 +1222,7 @@ class JaneObjectNormalizer implements DenormalizerInterface, NormalizerInterface
             \Bitly\Model\Contacts::class => false,
             \Bitly\Model\BillingAccount::class => false,
             \Bitly\Model\BillingAccountID::class => false,
+            \Bitly\Model\StripeOrganizationInfo::class => false,
             \Bitly\Model\BillingProvider::class => false,
             \Bitly\Model\UpcomingSubscription::class => false,
             \Bitly\Model\BillingSignature::class => false,

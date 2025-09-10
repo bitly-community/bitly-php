@@ -22,6 +22,8 @@ class FullShorten extends \ArrayObject
         return array_key_exists($property, $this->initialized);
     }
     /**
+     * URL to be shortened. Required when creating new bitlinks. Cannot be used with bitlink_id.
+     *
      * @var string
      */
     protected $longUrl;
@@ -51,12 +53,30 @@ class FullShorten extends \ArrayObject
      * @var bool
      */
     protected $forceNewLink;
+    /**
+     * Custom keyword for creating keyword overrides. If provided, creates an override at domain/keyword.
+     *
+     * @var string
+     */
+    protected $keyword;
+    /**
+     * Existing bitlink ID to add a keyword override to. Format: domain/hash. Cannot be used with long_url.
+     *
+     * @var string
+     */
+    protected $bitlinkId;
 
+    /**
+     * URL to be shortened. Required when creating new bitlinks. Cannot be used with bitlink_id.
+     */
     public function getLongUrl(): string
     {
         return $this->longUrl;
     }
 
+    /**
+     * URL to be shortened. Required when creating new bitlinks. Cannot be used with bitlink_id.
+     */
     public function setLongUrl(string $longUrl): self
     {
         $this->initialized['longUrl'] = true;
@@ -157,6 +177,44 @@ class FullShorten extends \ArrayObject
     {
         $this->initialized['forceNewLink'] = true;
         $this->forceNewLink = $forceNewLink;
+
+        return $this;
+    }
+
+    /**
+     * Custom keyword for creating keyword overrides. If provided, creates an override at domain/keyword.
+     */
+    public function getKeyword(): string
+    {
+        return $this->keyword;
+    }
+
+    /**
+     * Custom keyword for creating keyword overrides. If provided, creates an override at domain/keyword.
+     */
+    public function setKeyword(string $keyword): self
+    {
+        $this->initialized['keyword'] = true;
+        $this->keyword = $keyword;
+
+        return $this;
+    }
+
+    /**
+     * Existing bitlink ID to add a keyword override to. Format: domain/hash. Cannot be used with long_url.
+     */
+    public function getBitlinkId(): string
+    {
+        return $this->bitlinkId;
+    }
+
+    /**
+     * Existing bitlink ID to add a keyword override to. Format: domain/hash. Cannot be used with long_url.
+     */
+    public function setBitlinkId(string $bitlinkId): self
+    {
+        $this->initialized['bitlinkId'] = true;
+        $this->bitlinkId = $bitlinkId;
 
         return $this;
     }

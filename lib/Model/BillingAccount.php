@@ -82,6 +82,10 @@ class BillingAccount extends \ArrayObject
      */
     protected $companyName;
     /**
+     * @var string
+     */
+    protected $migrationStatus;
+    /**
      * @var list<UpcomingSubscription>
      */
     protected $upcomingSubscriptions;
@@ -298,6 +302,19 @@ class BillingAccount extends \ArrayObject
     {
         $this->initialized['companyName'] = true;
         $this->companyName = $companyName;
+
+        return $this;
+    }
+
+    public function getMigrationStatus(): string
+    {
+        return $this->migrationStatus;
+    }
+
+    public function setMigrationStatus(string $migrationStatus): self
+    {
+        $this->initialized['migrationStatus'] = true;
+        $this->migrationStatus = $migrationStatus;
 
         return $this;
     }

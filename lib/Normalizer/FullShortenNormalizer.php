@@ -88,6 +88,14 @@ class FullShortenNormalizer implements DenormalizerInterface, NormalizerInterfac
             $object->setForceNewLink($data['force_new_link']);
             unset($data['force_new_link']);
         }
+        if (\array_key_exists('keyword', $data)) {
+            $object->setKeyword($data['keyword']);
+            unset($data['keyword']);
+        }
+        if (\array_key_exists('bitlink_id', $data)) {
+            $object->setBitlinkId($data['bitlink_id']);
+            unset($data['bitlink_id']);
+        }
         foreach ($data as $key => $value_2) {
             if (preg_match('/.*/', (string) $key)) {
                 $object[$key] = $value_2;
@@ -100,7 +108,9 @@ class FullShortenNormalizer implements DenormalizerInterface, NormalizerInterfac
     public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
     {
         $dataArray = [];
-        $dataArray['long_url'] = $data->getLongUrl();
+        if ($data->isInitialized('longUrl') && null !== $data->getLongUrl()) {
+            $dataArray['long_url'] = $data->getLongUrl();
+        }
         if ($data->isInitialized('domain') && null !== $data->getDomain()) {
             $dataArray['domain'] = $data->getDomain();
         }
@@ -126,6 +136,12 @@ class FullShortenNormalizer implements DenormalizerInterface, NormalizerInterfac
         }
         if ($data->isInitialized('forceNewLink') && null !== $data->getForceNewLink()) {
             $dataArray['force_new_link'] = $data->getForceNewLink();
+        }
+        if ($data->isInitialized('keyword') && null !== $data->getKeyword()) {
+            $dataArray['keyword'] = $data->getKeyword();
+        }
+        if ($data->isInitialized('bitlinkId') && null !== $data->getBitlinkId()) {
+            $dataArray['bitlink_id'] = $data->getBitlinkId();
         }
         foreach ($data as $key => $value_2) {
             if (preg_match('/.*/', (string) $key)) {
