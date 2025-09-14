@@ -37,6 +37,53 @@ class Client extends Runtime\Client\Client
      *
      * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
      *
+     * @return Model\LinkBody|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CreateLinkBadRequestException
+     * @throws Exception\CreateLinkPaymentRequiredException
+     * @throws Exception\CreateLinkForbiddenException
+     * @throws Exception\CreateLinkNotFoundException
+     * @throws Exception\CreateLinkConflictException
+     * @throws Exception\CreateLinkExpectationFailedException
+     * @throws Exception\CreateLinkUnprocessableEntityException
+     * @throws Exception\CreateLinkTooManyRequestsException
+     * @throws Exception\CreateLinkInternalServerErrorException
+     * @throws Exception\CreateLinkServiceUnavailableException
+     */
+    public function createLink(Model\FullLink $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CreateLink($requestBody), $fetch);
+    }
+
+    /**
+     * Updates the destination of a bitlink. You may see errors returned from this endpoint - "BRANDED_LINK_MONTHLY_LIMIT_EXCEEDED" occurs if you have shortened more links than your account is configured for for the month, and "DNS_CONFIGURATION_ERROR" occurs if you are attempting to shorten links against a custom domain which doesn't have DNS properly configured.
+     *
+     * @param string $bitlink A Bitlink made of the domain and hash
+     * @param string $fetch   Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\LinkBody|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\UpdateLinkBadRequestException
+     * @throws Exception\UpdateLinkPaymentRequiredException
+     * @throws Exception\UpdateLinkForbiddenException
+     * @throws Exception\UpdateLinkNotFoundException
+     * @throws Exception\UpdateLinkConflictException
+     * @throws Exception\UpdateLinkExpectationFailedException
+     * @throws Exception\UpdateLinkUnprocessableEntityException
+     * @throws Exception\UpdateLinkTooManyRequestsException
+     * @throws Exception\UpdateLinkInternalServerErrorException
+     * @throws Exception\UpdateLinkServiceUnavailableException
+     */
+    public function updateLink(string $bitlink, Model\LinksBitlinkDestinationsPutBody $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\UpdateLink($bitlink, $requestBody), $fetch);
+    }
+
+    /**
+     * Converts a long url to a Bitlink and sets additional parameters. You may see errors returned from this endpoint - "BRANDED_LINK_MONTHLY_LIMIT_EXCEEDED" occurs if you have shortened more links than your account is configured for for the month, and "DNS_CONFIGURATION_ERROR" occurs if you are attempting to shorten links against a custom domain which doesn't have DNS properly configured.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
      * @return Model\BitlinkBody|\Psr\Http\Message\ResponseInterface|null
      *
      * @throws Exception\CreateFullBitlinkBadRequestException
@@ -137,6 +184,30 @@ class Client extends Runtime\Client\Client
     }
 
     /**
+     * Retrieves batched click counts for the specified link.
+     *
+     * @param array $queryParameters {
+     *
+     * @var array $bitlink_id The query parameter used to get clicks for a Bitlink
+     *            }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\ClicksForBitlinks|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetBitlinkClickCountsBadRequestException
+     * @throws Exception\GetBitlinkClickCountsNotFoundException
+     * @throws Exception\GetBitlinkClickCountsGoneException
+     * @throws Exception\GetBitlinkClickCountsUnprocessableEntityException
+     * @throws Exception\GetBitlinkClickCountsInternalServerErrorException
+     * @throws Exception\GetBitlinkClickCountsServiceUnavailableException
+     */
+    public function getBitlinkClickCounts(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetBitlinkClickCounts($queryParameters), $fetch);
+    }
+
+    /**
      * Returns the click counts for the specified link in an array based on a date.
      *
      * @param string $bitlink         A Bitlink made of the domain and hash
@@ -187,6 +258,398 @@ class Client extends Runtime\Client\Client
     public function getClicksSummaryForBitlink(string $bitlink, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
     {
         return $this->executeEndpoint(new Endpoint\GetClicksSummaryForBitlink($bitlink, $queryParameters), $fetch);
+    }
+
+    /**
+     * Returns the scan counts for the specified link in an array based on a date.
+     *
+     * @param string $bitlink         A Bitlink made of the domain and hash
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch  Fetch mode to use (can be OBJECT or RESPONSE)
+     * @param array  $accept Accept content header application/json|text/csv
+     *
+     * @return Model\Scans|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetScansForBitlinkBadRequestException
+     * @throws Exception\GetScansForBitlinkForbiddenException
+     * @throws Exception\GetScansForBitlinkNotFoundException
+     * @throws Exception\GetScansForBitlinkGoneException
+     * @throws Exception\GetScansForBitlinkInternalServerErrorException
+     * @throws Exception\GetScansForBitlinkServiceUnavailableException
+     */
+    public function getScansForBitlink(string $bitlink, array $queryParameters = [], string $fetch = self::FETCH_OBJECT, array $accept = [])
+    {
+        return $this->executeEndpoint(new Endpoint\GetScansForBitlink($bitlink, $queryParameters, $accept), $fetch);
+    }
+
+    /**
+     * Returns the scan counts for the specified link rolled up into a single field.
+     *
+     * @param string $bitlink         A Bitlink made of the domain and hash
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\ScansSummary|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetScansSummaryForBitlinkBadRequestException
+     * @throws Exception\GetScansSummaryForBitlinkForbiddenException
+     * @throws Exception\GetScansSummaryForBitlinkNotFoundException
+     * @throws Exception\GetScansSummaryForBitlinkGoneException
+     * @throws Exception\GetScansSummaryForBitlinkInternalServerErrorException
+     * @throws Exception\GetScansSummaryForBitlinkServiceUnavailableException
+     */
+    public function getScansSummaryForBitlink(string $bitlink, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetScansSummaryForBitlink($bitlink, $queryParameters), $fetch);
+    }
+
+    /**
+     * Returns an array of bitlink click counts for the specified link. The array is comprised of click counts for each time window, where the window is based on the provided unit.
+     *
+     * @param string $bitlink         A Bitlink made of the domain and hash
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\BitlinkClicks|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetBitlinkClicksBadRequestException
+     * @throws Exception\GetBitlinkClicksForbiddenException
+     * @throws Exception\GetBitlinkClicksNotFoundException
+     * @throws Exception\GetBitlinkClicksGoneException
+     * @throws Exception\GetBitlinkClicksInternalServerErrorException
+     * @throws Exception\GetBitlinkClicksServiceUnavailableException
+     */
+    public function getBitlinkClicks(string $bitlink, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetBitlinkClicks($bitlink, $queryParameters), $fetch);
+    }
+
+    /**
+     * Returns the bitlink click counts for the specified link rolled up into a single field.
+     *
+     * @param string $bitlink         A Bitlink made of the domain and hash
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\BitlinkClicksSummary|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetBitlinkClicksSummaryBadRequestException
+     * @throws Exception\GetBitlinkClicksSummaryForbiddenException
+     * @throws Exception\GetBitlinkClicksSummaryNotFoundException
+     * @throws Exception\GetBitlinkClicksSummaryGoneException
+     * @throws Exception\GetBitlinkClicksSummaryInternalServerErrorException
+     * @throws Exception\GetBitlinkClicksSummaryServiceUnavailableException
+     */
+    public function getBitlinkClicksSummary(string $bitlink, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetBitlinkClicksSummary($bitlink, $queryParameters), $fetch);
+    }
+
+    /**
+     * Returns the country origins of click traffic and their counts for the specified link.
+     *
+     * @param string $bitlink         A Bitlink made of the domain and hash
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var int    $size The quantity of items to be be returned
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch  Fetch mode to use (can be OBJECT or RESPONSE)
+     * @param array  $accept Accept content header application/json|text/csv
+     *
+     * @return Model\BitlinkClicksMetrics|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetBitlinkClicksMetricsForBitlinkByCountriesBadRequestException
+     * @throws Exception\GetBitlinkClicksMetricsForBitlinkByCountriesPaymentRequiredException
+     * @throws Exception\GetBitlinkClicksMetricsForBitlinkByCountriesForbiddenException
+     * @throws Exception\GetBitlinkClicksMetricsForBitlinkByCountriesNotFoundException
+     * @throws Exception\GetBitlinkClicksMetricsForBitlinkByCountriesGoneException
+     * @throws Exception\GetBitlinkClicksMetricsForBitlinkByCountriesInternalServerErrorException
+     * @throws Exception\GetBitlinkClicksMetricsForBitlinkByCountriesServiceUnavailableException
+     */
+    public function getBitlinkClicksMetricsForBitlinkByCountries(string $bitlink, array $queryParameters = [], string $fetch = self::FETCH_OBJECT, array $accept = [])
+    {
+        return $this->executeEndpoint(new Endpoint\GetBitlinkClicksMetricsForBitlinkByCountries($bitlink, $queryParameters, $accept), $fetch);
+    }
+
+    /**
+     * Returns the city origins of click traffic and their counts for the specified link.
+     *
+     * @param string $bitlink         A Bitlink made of the domain and hash
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var int    $size The quantity of items to be be returned
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch  Fetch mode to use (can be OBJECT or RESPONSE)
+     * @param array  $accept Accept content header application/json|text/csv
+     *
+     * @return Model\CityBitlinkClicksMetrics|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetBitlinkClicksMetricsForBitlinkByCitiesBadRequestException
+     * @throws Exception\GetBitlinkClicksMetricsForBitlinkByCitiesPaymentRequiredException
+     * @throws Exception\GetBitlinkClicksMetricsForBitlinkByCitiesForbiddenException
+     * @throws Exception\GetBitlinkClicksMetricsForBitlinkByCitiesNotFoundException
+     * @throws Exception\GetBitlinkClicksMetricsForBitlinkByCitiesGoneException
+     * @throws Exception\GetBitlinkClicksMetricsForBitlinkByCitiesInternalServerErrorException
+     * @throws Exception\GetBitlinkClicksMetricsForBitlinkByCitiesServiceUnavailableException
+     */
+    public function getBitlinkClicksMetricsForBitlinkByCities(string $bitlink, array $queryParameters = [], string $fetch = self::FETCH_OBJECT, array $accept = [])
+    {
+        return $this->executeEndpoint(new Endpoint\GetBitlinkClicksMetricsForBitlinkByCities($bitlink, $queryParameters, $accept), $fetch);
+    }
+
+    /**
+     * Returns the device os generating clicks traffic to the specified link.
+     *
+     * @param string $bitlink         A Bitlink made of the domain and hash
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var int    $size The quantity of items to be be returned
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch  Fetch mode to use (can be OBJECT or RESPONSE)
+     * @param array  $accept Accept content header application/json|text/csv
+     *
+     * @return Model\BitlinkClicksMetrics|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetBitlinkClicksMetricsForBitlinkByDevicesOSBadRequestException
+     * @throws Exception\GetBitlinkClicksMetricsForBitlinkByDevicesOSPaymentRequiredException
+     * @throws Exception\GetBitlinkClicksMetricsForBitlinkByDevicesOSForbiddenException
+     * @throws Exception\GetBitlinkClicksMetricsForBitlinkByDevicesOSNotFoundException
+     * @throws Exception\GetBitlinkClicksMetricsForBitlinkByDevicesOSGoneException
+     * @throws Exception\GetBitlinkClicksMetricsForBitlinkByDevicesOSInternalServerErrorException
+     * @throws Exception\GetBitlinkClicksMetricsForBitlinkByDevicesOSServiceUnavailableException
+     */
+    public function getBitlinkClicksMetricsForBitlinkByDevicesOS(string $bitlink, array $queryParameters = [], string $fetch = self::FETCH_OBJECT, array $accept = [])
+    {
+        return $this->executeEndpoint(new Endpoint\GetBitlinkClicksMetricsForBitlinkByDevicesOS($bitlink, $queryParameters, $accept), $fetch);
+    }
+
+    /**
+     * Returns the browsers generating click traffic to the specified link as well as their counts.
+     *
+     * @param string $bitlink         A Bitlink made of the domain and hash
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var int    $size The quantity of items to be be returned
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch  Fetch mode to use (can be OBJECT or RESPONSE)
+     * @param array  $accept Accept content header application/json|text/csv
+     *
+     * @return Model\BitlinkClicksMetrics|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetBitlinkClicksMetricsForBitlinkByBrowserBadRequestException
+     * @throws Exception\GetBitlinkClicksMetricsForBitlinkByBrowserPaymentRequiredException
+     * @throws Exception\GetBitlinkClicksMetricsForBitlinkByBrowserForbiddenException
+     * @throws Exception\GetBitlinkClicksMetricsForBitlinkByBrowserNotFoundException
+     * @throws Exception\GetBitlinkClicksMetricsForBitlinkByBrowserGoneException
+     * @throws Exception\GetBitlinkClicksMetricsForBitlinkByBrowserInternalServerErrorException
+     * @throws Exception\GetBitlinkClicksMetricsForBitlinkByBrowserServiceUnavailableException
+     */
+    public function getBitlinkClicksMetricsForBitlinkByBrowser(string $bitlink, array $queryParameters = [], string $fetch = self::FETCH_OBJECT, array $accept = [])
+    {
+        return $this->executeEndpoint(new Endpoint\GetBitlinkClicksMetricsForBitlinkByBrowser($bitlink, $queryParameters, $accept), $fetch);
+    }
+
+    /**
+     * Returns an array of button click counts for the specified link. The array is comprised of button click counts for each time window, where the window is based on the provided unit.
+     *
+     * @param string $bitlink         A Bitlink made of the domain and hash
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\ButtonClicks|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetButtonClicksBadRequestException
+     * @throws Exception\GetButtonClicksForbiddenException
+     * @throws Exception\GetButtonClicksNotFoundException
+     * @throws Exception\GetButtonClicksGoneException
+     * @throws Exception\GetButtonClicksInternalServerErrorException
+     * @throws Exception\GetButtonClicksServiceUnavailableException
+     */
+    public function getButtonClicks(string $bitlink, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetButtonClicks($bitlink, $queryParameters), $fetch);
+    }
+
+    /**
+     * Returns the button click counts for the specified link rolled up into a single field.
+     *
+     * @param string $bitlink         A Bitlink made of the domain and hash
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\ButtonClicksSummary|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetButtonClicksSummaryBadRequestException
+     * @throws Exception\GetButtonClicksSummaryForbiddenException
+     * @throws Exception\GetButtonClicksSummaryNotFoundException
+     * @throws Exception\GetButtonClicksSummaryGoneException
+     * @throws Exception\GetButtonClicksSummaryInternalServerErrorException
+     * @throws Exception\GetButtonClicksSummaryServiceUnavailableException
+     */
+    public function getButtonClicksSummary(string $bitlink, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetButtonClicksSummary($bitlink, $queryParameters), $fetch);
+    }
+
+    /**
+     * Returns an array of engagement counts for the specified link. The array is comprised of button click, click and scan counts for each time window, where the window is based on the provided unit.
+     *
+     * @param string $bitlink         A Bitlink made of the domain and hash
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch  Fetch mode to use (can be OBJECT or RESPONSE)
+     * @param array  $accept Accept content header application/json|text/csv
+     *
+     * @return Model\TotalEngagements|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetEngagementsBadRequestException
+     * @throws Exception\GetEngagementsForbiddenException
+     * @throws Exception\GetEngagementsNotFoundException
+     * @throws Exception\GetEngagementsGoneException
+     * @throws Exception\GetEngagementsInternalServerErrorException
+     * @throws Exception\GetEngagementsServiceUnavailableException
+     */
+    public function getEngagements(string $bitlink, array $queryParameters = [], string $fetch = self::FETCH_OBJECT, array $accept = [])
+    {
+        return $this->executeEndpoint(new Endpoint\GetEngagements($bitlink, $queryParameters, $accept), $fetch);
+    }
+
+    /**
+     * Returns the engagement counts for the specified link rolled up into a single field.
+     *
+     * @param string $bitlink         A Bitlink made of the domain and hash
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\TotalEngagementsSummary|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetEngagementsSummaryBadRequestException
+     * @throws Exception\GetEngagementsSummaryForbiddenException
+     * @throws Exception\GetEngagementsSummaryNotFoundException
+     * @throws Exception\GetEngagementsSummaryGoneException
+     * @throws Exception\GetEngagementsSummaryInternalServerErrorException
+     * @throws Exception\GetEngagementsSummaryServiceUnavailableException
+     */
+    public function getEngagementsSummary(string $bitlink, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetEngagementsSummary($bitlink, $queryParameters), $fetch);
+    }
+
+    /**
+     * Returns an array of bitlink click counts for the specified link. The array is comprised of click counts for each time window, where the window is based on the provided unit.
+     *
+     * @param string $bitlink         A Bitlink made of the domain and hash
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\BitlinkScans|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetBitlinkScansBadRequestException
+     * @throws Exception\GetBitlinkScansForbiddenException
+     * @throws Exception\GetBitlinkScansNotFoundException
+     * @throws Exception\GetBitlinkScansGoneException
+     * @throws Exception\GetBitlinkScansInternalServerErrorException
+     * @throws Exception\GetBitlinkScansServiceUnavailableException
+     */
+    public function getBitlinkScans(string $bitlink, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetBitlinkScans($bitlink, $queryParameters), $fetch);
+    }
+
+    /**
+     * Returns the bitlink click counts for the specified link rolled up into a single field.
+     *
+     * @param string $bitlink         A Bitlink made of the domain and hash
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\BitlinkScansSummary|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetBitlinkScansSummaryBadRequestException
+     * @throws Exception\GetBitlinkScansSummaryForbiddenException
+     * @throws Exception\GetBitlinkScansSummaryNotFoundException
+     * @throws Exception\GetBitlinkScansSummaryGoneException
+     * @throws Exception\GetBitlinkScansSummaryInternalServerErrorException
+     * @throws Exception\GetBitlinkScansSummaryServiceUnavailableException
+     */
+    public function getBitlinkScansSummary(string $bitlink, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetBitlinkScansSummary($bitlink, $queryParameters), $fetch);
     }
 
     /**
@@ -399,6 +862,477 @@ class Client extends Runtime\Client\Client
     }
 
     /**
+     * Returns the country origins of scan traffic for the specified link.
+     *
+     * @param string $bitlink         A Bitlink made of the domain and hash
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var int    $size The quantity of items to be be returned
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch  Fetch mode to use (can be OBJECT or RESPONSE)
+     * @param array  $accept Accept content header application/json|text/csv
+     *
+     * @return Model\ScanMetrics|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetScanMetricsForBitlinkByCountriesBadRequestException
+     * @throws Exception\GetScanMetricsForBitlinkByCountriesForbiddenException
+     * @throws Exception\GetScanMetricsForBitlinkByCountriesNotFoundException
+     * @throws Exception\GetScanMetricsForBitlinkByCountriesGoneException
+     * @throws Exception\GetScanMetricsForBitlinkByCountriesInternalServerErrorException
+     * @throws Exception\GetScanMetricsForBitlinkByCountriesServiceUnavailableException
+     */
+    public function getScanMetricsForBitlinkByCountries(string $bitlink, array $queryParameters = [], string $fetch = self::FETCH_OBJECT, array $accept = [])
+    {
+        return $this->executeEndpoint(new Endpoint\GetScanMetricsForBitlinkByCountries($bitlink, $queryParameters, $accept), $fetch);
+    }
+
+    /**
+     * Gets a descending sorted list of metrics (scans) for a list of links by unit of time for a specific period of time - maximum 100 links. By default returns top 10.
+     *
+     * @param array $queryParameters {
+     *
+     * @var int    $size The quantity of items to be be returned
+     * @var array  $bitlink Filter by given bitlinks
+     * @var string $unit A unit of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\SortedEngagements|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetSortedScansBadRequestException
+     * @throws Exception\GetSortedScansPaymentRequiredException
+     * @throws Exception\GetSortedScansForbiddenException
+     * @throws Exception\GetSortedScansNotFoundException
+     * @throws Exception\GetSortedScansGoneException
+     * @throws Exception\GetSortedScansInternalServerErrorException
+     * @throws Exception\GetSortedScansServiceUnavailableException
+     */
+    public function getSortedScans(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetSortedScans($queryParameters), $fetch);
+    }
+
+    /**
+     * Returns the city origins of scan traffic for the specified link.
+     *
+     * @param string $bitlink         A Bitlink made of the domain and hash
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var int    $size The quantity of items to be be returned
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch  Fetch mode to use (can be OBJECT or RESPONSE)
+     * @param array  $accept Accept content header application/json|text/csv
+     *
+     * @return Model\CityScanMetrics|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetScanMetricsForBitlinkByCitiesBadRequestException
+     * @throws Exception\GetScanMetricsForBitlinkByCitiesPaymentRequiredException
+     * @throws Exception\GetScanMetricsForBitlinkByCitiesForbiddenException
+     * @throws Exception\GetScanMetricsForBitlinkByCitiesNotFoundException
+     * @throws Exception\GetScanMetricsForBitlinkByCitiesGoneException
+     * @throws Exception\GetScanMetricsForBitlinkByCitiesInternalServerErrorException
+     * @throws Exception\GetScanMetricsForBitlinkByCitiesServiceUnavailableException
+     */
+    public function getScanMetricsForBitlinkByCities(string $bitlink, array $queryParameters = [], string $fetch = self::FETCH_OBJECT, array $accept = [])
+    {
+        return $this->executeEndpoint(new Endpoint\GetScanMetricsForBitlinkByCities($bitlink, $queryParameters, $accept), $fetch);
+    }
+
+    /**
+     * Returns the device os generating scan traffic to the specified link.
+     *
+     * @param string $bitlink         A Bitlink made of the domain and hash
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var int    $size The quantity of items to be be returned
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch  Fetch mode to use (can be OBJECT or RESPONSE)
+     * @param array  $accept Accept content header application/json|text/csv
+     *
+     * @return Model\ScanMetrics|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetScanMetricsForBitlinkByDevicesOSBadRequestException
+     * @throws Exception\GetScanMetricsForBitlinkByDevicesOSPaymentRequiredException
+     * @throws Exception\GetScanMetricsForBitlinkByDevicesOSForbiddenException
+     * @throws Exception\GetScanMetricsForBitlinkByDevicesOSNotFoundException
+     * @throws Exception\GetScanMetricsForBitlinkByDevicesOSGoneException
+     * @throws Exception\GetScanMetricsForBitlinkByDevicesOSInternalServerErrorException
+     * @throws Exception\GetScanMetricsForBitlinkByDevicesOSServiceUnavailableException
+     */
+    public function getScanMetricsForBitlinkByDevicesOS(string $bitlink, array $queryParameters = [], string $fetch = self::FETCH_OBJECT, array $accept = [])
+    {
+        return $this->executeEndpoint(new Endpoint\GetScanMetricsForBitlinkByDevicesOS($bitlink, $queryParameters, $accept), $fetch);
+    }
+
+    /**
+     * Returns the browsers generating scan traffic to the specified link.
+     *
+     * @param string $bitlink         A Bitlink made of the domain and hash
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var int    $size The quantity of items to be be returned
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch  Fetch mode to use (can be OBJECT or RESPONSE)
+     * @param array  $accept Accept content header application/json|text/csv
+     *
+     * @return Model\ScanMetrics|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetScanMetricsForBitlinkByBrowserBadRequestException
+     * @throws Exception\GetScanMetricsForBitlinkByBrowserPaymentRequiredException
+     * @throws Exception\GetScanMetricsForBitlinkByBrowserForbiddenException
+     * @throws Exception\GetScanMetricsForBitlinkByBrowserNotFoundException
+     * @throws Exception\GetScanMetricsForBitlinkByBrowserGoneException
+     * @throws Exception\GetScanMetricsForBitlinkByBrowserInternalServerErrorException
+     * @throws Exception\GetScanMetricsForBitlinkByBrowserServiceUnavailableException
+     */
+    public function getScanMetricsForBitlinkByBrowser(string $bitlink, array $queryParameters = [], string $fetch = self::FETCH_OBJECT, array $accept = [])
+    {
+        return $this->executeEndpoint(new Endpoint\GetScanMetricsForBitlinkByBrowser($bitlink, $queryParameters, $accept), $fetch);
+    }
+
+    /**
+     * Gets a descending sorted list of scans for bitlinks in a group filtered by unit of time for a specific period of time. By default returns top 10.
+     *
+     * @param string $groupGuid       A GUID for a Bitly group
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var int    $size The quantity of items to be be returned
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\SortedEngagements|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetSortedScansForGroupBadRequestException
+     * @throws Exception\GetSortedScansForGroupPaymentRequiredException
+     * @throws Exception\GetSortedScansForGroupForbiddenException
+     * @throws Exception\GetSortedScansForGroupNotFoundException
+     * @throws Exception\GetSortedScansForGroupGoneException
+     * @throws Exception\GetSortedScansForGroupInternalServerErrorException
+     * @throws Exception\GetSortedScansForGroupServiceUnavailableException
+     */
+    public function getSortedScansForGroup(string $groupGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetSortedScansForGroup($groupGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * Gets an aggregate of all link engagements for a list of links by unit of time for a specific period of time (accepts bitlinks or a tag, or both).
+     *
+     * @param array $queryParameters {
+     *
+     * @var array  $bitlink Filter by given bitlinks
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var string $report_guid
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AggregateClicksForBitlinks|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetAggregateEngagementsForBitlinksBadRequestException
+     * @throws Exception\GetAggregateEngagementsForBitlinksPaymentRequiredException
+     * @throws Exception\GetAggregateEngagementsForBitlinksForbiddenException
+     * @throws Exception\GetAggregateEngagementsForBitlinksNotFoundException
+     * @throws Exception\GetAggregateEngagementsForBitlinksGoneException
+     * @throws Exception\GetAggregateEngagementsForBitlinksInternalServerErrorException
+     * @throws Exception\GetAggregateEngagementsForBitlinksServiceUnavailableException
+     */
+    public function getAggregateEngagementsForBitlinks(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetAggregateEngagementsForBitlinks($queryParameters), $fetch);
+    }
+
+    /**
+     * Gets an aggregate of all link engagements by cities facet for a list of links by unit of time for a specific period of time (accepts a list of bitlinks).
+     *
+     * @param array $queryParameters {
+     *
+     * @var array  $bitlink Filter by given bitlinks
+     * @var string $unit A unit of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $report_guid
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AggregateClicksForBitlinksByCitiesFacet|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetAggregateEngagementsForBitlinksByCitiesFacetBadRequestException
+     * @throws Exception\GetAggregateEngagementsForBitlinksByCitiesFacetPaymentRequiredException
+     * @throws Exception\GetAggregateEngagementsForBitlinksByCitiesFacetForbiddenException
+     * @throws Exception\GetAggregateEngagementsForBitlinksByCitiesFacetNotFoundException
+     * @throws Exception\GetAggregateEngagementsForBitlinksByCitiesFacetGoneException
+     * @throws Exception\GetAggregateEngagementsForBitlinksByCitiesFacetInternalServerErrorException
+     * @throws Exception\GetAggregateEngagementsForBitlinksByCitiesFacetServiceUnavailableException
+     */
+    public function getAggregateEngagementsForBitlinksByCitiesFacet(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetAggregateEngagementsForBitlinksByCitiesFacet($queryParameters), $fetch);
+    }
+
+    /**
+     * Gets an aggregate of all link engagements by facet (available facets are  countries, devices, referrers) for a list of links by unit of time for a specific period of time (accepts a list of bitlinks).
+     *
+     * @param array $queryParameters {
+     *
+     * @var array  $bitlink Filter by given bitlinks
+     * @var string $unit A unit of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $report_guid
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AggregateClicksForBitlinksByFacet|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetAggregateEngagementsForBitlinksByFacetBadRequestException
+     * @throws Exception\GetAggregateEngagementsForBitlinksByFacetPaymentRequiredException
+     * @throws Exception\GetAggregateEngagementsForBitlinksByFacetForbiddenException
+     * @throws Exception\GetAggregateEngagementsForBitlinksByFacetNotFoundException
+     * @throws Exception\GetAggregateEngagementsForBitlinksByFacetGoneException
+     * @throws Exception\GetAggregateEngagementsForBitlinksByFacetInternalServerErrorException
+     * @throws Exception\GetAggregateEngagementsForBitlinksByFacetServiceUnavailableException
+     */
+    public function getAggregateEngagementsForBitlinksByFacet(string $facet, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetAggregateEngagementsForBitlinksByFacet($facet, $queryParameters), $fetch);
+    }
+
+    /**
+     * Gets a descending sorted list of metrics (scans + clicks) for a list of links by unit of time for a specific period of time - maximum 100 links. By default returns top 10.
+     *
+     * @param array $queryParameters {
+     *
+     * @var int    $size The quantity of items to be be returned
+     * @var array  $bitlink Filter by given bitlinks
+     * @var string $unit A unit of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $report_guid
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\SortedEngagements|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetSortedEngagementsBadRequestException
+     * @throws Exception\GetSortedEngagementsPaymentRequiredException
+     * @throws Exception\GetSortedEngagementsForbiddenException
+     * @throws Exception\GetSortedEngagementsNotFoundException
+     * @throws Exception\GetSortedEngagementsGoneException
+     * @throws Exception\GetSortedEngagementsInternalServerErrorException
+     * @throws Exception\GetSortedEngagementsServiceUnavailableException
+     */
+    public function getSortedEngagements(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetSortedEngagements($queryParameters), $fetch);
+    }
+
+    /**
+     * Gets a descending sorted list of metrics  clicks for a list of links by unit of time for a specific period of time - maximum 100 links. By default returns top 10.
+     *
+     * @param array $queryParameters {
+     *
+     * @var int    $size The quantity of items to be be returned
+     * @var array  $bitlink Filter by given bitlinks
+     * @var string $unit A unit of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\SortedEngagements|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetTopSortedBitlinksBadRequestException
+     * @throws Exception\GetTopSortedBitlinksPaymentRequiredException
+     * @throws Exception\GetTopSortedBitlinksForbiddenException
+     * @throws Exception\GetTopSortedBitlinksNotFoundException
+     * @throws Exception\GetTopSortedBitlinksGoneException
+     * @throws Exception\GetTopSortedBitlinksInternalServerErrorException
+     * @throws Exception\GetTopSortedBitlinksServiceUnavailableException
+     */
+    public function getTopSortedBitlinks(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetTopSortedBitlinks($queryParameters), $fetch);
+    }
+
+    /**
+     * Returns the override rules for the specified link.
+     *
+     * @param string $bitlink A Bitlink made of the domain and hash
+     * @param string $fetch   Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\BitlinkOverrides|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetOverridesForBitlinkPaymentRequiredException
+     * @throws Exception\GetOverridesForBitlinkForbiddenException
+     * @throws Exception\GetOverridesForBitlinkNotFoundException
+     * @throws Exception\GetOverridesForBitlinkGoneException
+     * @throws Exception\GetOverridesForBitlinkInternalServerErrorException
+     * @throws Exception\GetOverridesForBitlinkServiceUnavailableException
+     */
+    public function getOverridesForBitlink(string $bitlink, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetOverridesForBitlink($bitlink), $fetch);
+    }
+
+    /**
+     * Creates the override rules for the specified link.
+     *
+     * @param string $bitlink A Bitlink made of the domain and hash
+     * @param string $fetch   Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\BitlinkOverrides|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CreateOverridesForBitlinkBadRequestException
+     * @throws Exception\CreateOverridesForBitlinkPaymentRequiredException
+     * @throws Exception\CreateOverridesForBitlinkForbiddenException
+     * @throws Exception\CreateOverridesForBitlinkNotFoundException
+     * @throws Exception\CreateOverridesForBitlinkConflictException
+     * @throws Exception\CreateOverridesForBitlinkUnprocessableEntityException
+     * @throws Exception\CreateOverridesForBitlinkTooManyRequestsException
+     * @throws Exception\CreateOverridesForBitlinkInternalServerErrorException
+     * @throws Exception\CreateOverridesForBitlinkServiceUnavailableException
+     */
+    public function createOverridesForBitlink(string $bitlink, Model\CreateOverrideRules $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CreateOverridesForBitlink($bitlink, $requestBody), $fetch);
+    }
+
+    /**
+     * Updates the override rules for the specified link.
+     *
+     * @param string $bitlink A Bitlink made of the domain and hash
+     * @param string $fetch   Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\BitlinkOverrides|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\UpdateOverridesForBitlinkBadRequestException
+     * @throws Exception\UpdateOverridesForBitlinkPaymentRequiredException
+     * @throws Exception\UpdateOverridesForBitlinkForbiddenException
+     * @throws Exception\UpdateOverridesForBitlinkNotFoundException
+     * @throws Exception\UpdateOverridesForBitlinkUnprocessableEntityException
+     * @throws Exception\UpdateOverridesForBitlinkTooManyRequestsException
+     * @throws Exception\UpdateOverridesForBitlinkInternalServerErrorException
+     * @throws Exception\UpdateOverridesForBitlinkServiceUnavailableException
+     */
+    public function updateOverridesForBitlink(string $bitlink, Model\UpdateOverrideRules $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\UpdateOverridesForBitlink($bitlink, $requestBody), $fetch);
+    }
+
+    /**
+     * Returns the history of redirects for the specified link. A redirect is when the destination URL is changed.
+     *
+     * @param string $bitlink         A Bitlink made of the domain and hash
+     * @param array  $queryParameters {
+     *
+     * @var int $limit limit the amount of results returned
+     * @var int $offset set the starting index of the result set
+     *          }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\BitlinkOverrideHistory|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetOverrideHistoryForBitlinkPaymentRequiredException
+     * @throws Exception\GetOverrideHistoryForBitlinkForbiddenException
+     * @throws Exception\GetOverrideHistoryForBitlinkNotFoundException
+     * @throws Exception\GetOverrideHistoryForBitlinkTooManyRequestsException
+     * @throws Exception\GetOverrideHistoryForBitlinkInternalServerErrorException
+     * @throws Exception\GetOverrideHistoryForBitlinkServiceUnavailableException
+     */
+    public function getOverrideHistoryForBitlink(string $bitlink, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetOverrideHistoryForBitlink($bitlink, $queryParameters), $fetch);
+    }
+
+    /**
+     * Returns click metrics for the specified link by its override versions.
+     *
+     * @param string $bitlink         A Bitlink made of the domain and hash
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\ClickMetrics|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetOverrideMetricsByVersionBadRequestException
+     * @throws Exception\GetOverrideMetricsByVersionPaymentRequiredException
+     * @throws Exception\GetOverrideMetricsByVersionForbiddenException
+     * @throws Exception\GetOverrideMetricsByVersionNotFoundException
+     * @throws Exception\GetOverrideMetricsByVersionGoneException
+     * @throws Exception\GetOverrideMetricsByVersionInternalServerErrorException
+     * @throws Exception\GetOverrideMetricsByVersionServiceUnavailableException
+     */
+    public function getOverrideMetricsByVersion(string $bitlink, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetOverrideMetricsByVersion($bitlink, $queryParameters), $fetch);
+    }
+
+    /**
+     * retrieves all account overrides matching specified group_guid and bsd query filters.
+     *
+     * @param string $groupGuid       A GUID for a Bitly group
+     * @param array  $queryParameters {
+     *
+     * @var array $group_guid GUIDs for a Bitly group
+     * @var int   $created_after Timestamp as an integer unix epoch (seconds only)
+     * @var int   $limit limit the amount of results returned
+     * @var int   $offset set the starting index of the result set
+     * @var array $bsd a branded short domains to filter results
+     *            }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\BitlinkOverridesData|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetOverridesForGroupsBadRequestException
+     * @throws Exception\GetOverridesForGroupsPaymentRequiredException
+     * @throws Exception\GetOverridesForGroupsForbiddenException
+     * @throws Exception\GetOverridesForGroupsNotFoundException
+     * @throws Exception\GetOverridesForGroupsInternalServerErrorException
+     * @throws Exception\GetOverridesForGroupsServiceUnavailableException
+     */
+    public function getOverridesForGroups(string $groupGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetOverridesForGroups($groupGuid, $queryParameters), $fetch);
+    }
+
+    /**
      * Add a keyword (or "custom back-half") to a Bitlink with a Custom Domain (domains must match). This endpoint can also be used for initial redirects to a link.
      *
      * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
@@ -546,6 +1480,43 @@ class Client extends Runtime\Client\Client
     }
 
     /**
+     * Creates a new group in the organization.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\Group|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CreateGroupBadRequestException
+     * @throws Exception\CreateGroupForbiddenException
+     * @throws Exception\CreateGroupUnprocessableEntityException
+     * @throws Exception\CreateGroupTooManyRequestsException
+     * @throws Exception\CreateGroupInternalServerErrorException
+     */
+    public function createGroup(Model\GroupUpdate $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CreateGroup($requestBody), $fetch);
+    }
+
+    /**
+     * Deletes a group.
+     *
+     * @param string $groupGuid A GUID for a Bitly group
+     * @param string $fetch     Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\DeleteGroupForbiddenException
+     * @throws Exception\DeleteGroupNotFoundException
+     * @throws Exception\DeleteGroupTooManyRequestsException
+     * @throws Exception\DeleteGroupInternalServerErrorException
+     * @throws Exception\DeleteGroupServiceUnavailableException
+     */
+    public function deleteGroup(string $groupGuid, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\DeleteGroup($groupGuid), $fetch);
+    }
+
+    /**
      * Returns details for a group.
      *
      * @param string $groupGuid A GUID for a Bitly group
@@ -585,6 +1556,31 @@ class Client extends Runtime\Client\Client
     }
 
     /**
+     * Retrieve a list of users for Group GUID and optionally query by user's login, display name, or primary email.
+     *
+     * @param string $groupGuid       A GUID for a Bitly group
+     * @param array  $queryParameters {
+     *
+     * @var int    $page Integer specifying the numbered result at which to start
+     * @var int    $size The quantity of items to be be returned
+     * @var string $query A string used for fuzzy searching user's login, display name, or primary email.
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\UserRoleReferences|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\SearchGroupUserRolesBadRequestException
+     * @throws Exception\SearchGroupUserRolesForbiddenException
+     * @throws Exception\SearchGroupUserRolesNotFoundException
+     * @throws Exception\SearchGroupUserRolesInternalServerErrorException
+     */
+    public function searchGroupUserRoles(string $groupGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\SearchGroupUserRoles($groupGuid, $queryParameters), $fetch);
+    }
+
+    /**
      * Returns the tags currently used in the specified group. Maximum 1000.
      *
      * @param string $groupGuid A GUID for a Bitly group
@@ -612,6 +1608,7 @@ class Client extends Runtime\Client\Client
      * @var int    $size The quantity of items to be be returned
      * @var string $search_after token used to search next batch, only use response from API as input value
      * @var string $query The value that you would like to search
+     * @var string $hostname_path_query The hostname and/or path you would like to search (case-insensitive). Subdomains included; query params and fragment ignored.
      * @var int    $created_before Timestamp as an integer unix epoch (seconds only)
      * @var int    $created_after Timestamp as an integer unix epoch (seconds only)
      * @var string $archived Whether or not to include archived resources
@@ -658,6 +1655,89 @@ class Client extends Runtime\Client\Client
     public function updateBitlinksByGroup(string $groupGuid, Model\BulkUpdateRequest $requestBody, string $fetch = self::FETCH_OBJECT)
     {
         return $this->executeEndpoint(new Endpoint\UpdateBitlinksByGroup($groupGuid, $requestBody), $fetch);
+    }
+
+    /**
+     * get number of bitlinks encoded in a group.
+     *
+     * @param string $groupGuid       A GUID for a Bitly group
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\GroupBitlinksCount|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetGroupBitlinksCountBadRequestException
+     * @throws Exception\GetGroupBitlinksCountPaymentRequiredException
+     * @throws Exception\GetGroupBitlinksCountForbiddenException
+     * @throws Exception\GetGroupBitlinksCountInternalServerErrorException
+     */
+    public function getGroupBitlinksCount(string $groupGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetGroupBitlinksCount($groupGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * Gets all templates for the group.
+     *
+     * @param string $groupGuid A GUID for a Bitly group
+     * @param string $fetch     Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\QRCodeTemplatesResponse|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetQRCodeTemplatesBadRequestException
+     * @throws Exception\GetQRCodeTemplatesPaymentRequiredException
+     * @throws Exception\GetQRCodeTemplatesForbiddenException
+     * @throws Exception\GetQRCodeTemplatesNotFoundException
+     * @throws Exception\GetQRCodeTemplatesGoneException
+     * @throws Exception\GetQRCodeTemplatesInternalServerErrorException
+     */
+    public function getQRCodeTemplates(string $groupGuid, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetQRCodeTemplates($groupGuid), $fetch);
+    }
+
+    /**
+     * Creates a template of a QR Code customization.
+     *
+     * @param string $groupGuid A GUID for a Bitly group
+     * @param string $fetch     Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\QRCodeTemplateResponse|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CreateQRCodeTemplateBadRequestException
+     * @throws Exception\CreateQRCodeTemplatePaymentRequiredException
+     * @throws Exception\CreateQRCodeTemplateForbiddenException
+     * @throws Exception\CreateQRCodeTemplateNotFoundException
+     * @throws Exception\CreateQRCodeTemplateGoneException
+     * @throws Exception\CreateQRCodeTemplateInternalServerErrorException
+     */
+    public function createQRCodeTemplate(string $groupGuid, Model\QRCodeTemplateRequest $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CreateQRCodeTemplate($groupGuid, $requestBody), $fetch);
+    }
+
+    /**
+     * Deletes a specific template by id.
+     *
+     * @param string $groupGuid A GUID for a Bitly group
+     * @param string $fetch     Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\DeleteQRCodeTemplateForbiddenException
+     * @throws Exception\DeleteQRCodeTemplateNotFoundException
+     * @throws Exception\DeleteQRCodeTemplateInternalServerErrorException
+     * @throws Exception\DeleteQRCodeTemplateServiceUnavailableException
+     */
+    public function deleteQRCodeTemplate(string $groupGuid, string $templateId, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\DeleteQRCodeTemplate($groupGuid, $templateId), $fetch);
     }
 
     /**
@@ -725,6 +1805,69 @@ class Client extends Runtime\Client\Client
     public function updateGroupPreferences(string $groupGuid, Model\GroupPreferences $requestBody, string $fetch = self::FETCH_OBJECT)
     {
         return $this->executeEndpoint(new Endpoint\UpdateGroupPreferences($groupGuid, $requestBody), $fetch);
+    }
+
+    /**
+     * Returns preferences for the specified group.
+     *
+     * @param string $groupGuid A GUID for a Bitly group
+     * @param string $fetch     Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\UMGroupPreferences|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetUMGroupPreferencesForbiddenException
+     * @throws Exception\GetUMGroupPreferencesNotFoundException
+     * @throws Exception\GetUMGroupPreferencesUnprocessableEntityException
+     * @throws Exception\GetUMGroupPreferencesInternalServerErrorException
+     */
+    public function getUMGroupPreferences(string $groupGuid, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetUMGroupPreferences($groupGuid), $fetch);
+    }
+
+    /**
+     * Update or add new preferences for the specified group.
+     *
+     * @param string $groupGuid A GUID for a Bitly group
+     * @param string $fetch     Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\PatchUMGroupPreferencesBadRequestException
+     * @throws Exception\PatchUMGroupPreferencesForbiddenException
+     * @throws Exception\PatchUMGroupPreferencesNotFoundException
+     * @throws Exception\PatchUMGroupPreferencesUnprocessableEntityException
+     * @throws Exception\PatchUMGroupPreferencesInternalServerErrorException
+     */
+    public function patchUMGroupPreferences(string $groupGuid, \stdClass $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\PatchUMGroupPreferences($groupGuid, $requestBody), $fetch);
+    }
+
+    /**
+     * Returns site themes preference for the specified group.
+     *
+     * @param string $groupGuid A GUID for a Bitly group
+     * @param string $fetch     Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\SiteThemes|\Psr\Http\Message\ResponseInterface|null
+     */
+    public function getUMGroupSiteThemes(string $groupGuid, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetUMGroupSiteThemes($groupGuid), $fetch);
+    }
+
+    /**
+     * Upserts new site theme for the specified group.
+     *
+     * @param string $groupGuid A GUID for a Bitly group
+     * @param string $fetch     Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     */
+    public function putUMGroupSiteTheme(string $groupGuid, Model\SiteThemes $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\PutUMGroupSiteTheme($groupGuid, $requestBody), $fetch);
     }
 
     /**
@@ -894,6 +2037,33 @@ class Client extends Runtime\Client\Client
     }
 
     /**
+     * get number of bitlinks encoded in a group.
+     *
+     * @param string $groupGuid       A GUID for a Bitly group
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\GroupBitlinksCountRollup|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetGroupBitlinksCountRollupBadRequestException
+     * @throws Exception\GetGroupBitlinksCountRollupPaymentRequiredException
+     * @throws Exception\GetGroupBitlinksCountRollupForbiddenException
+     * @throws Exception\GetGroupBitlinksCountRollupTooManyRequestsException
+     * @throws Exception\GetGroupBitlinksCountRollupInternalServerErrorException
+     * @throws Exception\GetGroupBitlinksCountRollupServiceUnavailableException
+     */
+    public function getGroupBitlinksCountRollup(string $groupGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetGroupBitlinksCountRollup($groupGuid, $queryParameters), $fetch);
+    }
+
+    /**
      * get number of clicks on bitlinks in a group.
      *
      * @param string $groupGuid       A GUID for a Bitly group
@@ -918,6 +2088,144 @@ class Client extends Runtime\Client\Client
     public function getGroupClicks(string $groupGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
     {
         return $this->executeEndpoint(new Endpoint\GetGroupClicks($groupGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * get number of clicks on bitlinks in a group by facet.
+     *
+     * @param string $groupGuid       A GUID for a Bitly group
+     * @param string $facet           A facet of metrics (e.g. country, referrer, ...)
+     * @param array  $queryParameters {
+     *
+     * @var int    $limit only return this number of facet values (subtotal only)
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\GroupClicksByFacet|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetGroupClicksByFacetBadRequestException
+     * @throws Exception\GetGroupClicksByFacetPaymentRequiredException
+     * @throws Exception\GetGroupClicksByFacetForbiddenException
+     * @throws Exception\GetGroupClicksByFacetInternalServerErrorException
+     * @throws Exception\GetGroupClicksByFacetServiceUnavailableException
+     */
+    public function getGroupClicksByFacet(string $groupGuid, string $facet, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetGroupClicksByFacet($groupGuid, $facet, $queryParameters), $fetch);
+    }
+
+    /**
+     * get number of clicks on bitlinks in a group by facet, rolled up by facet.
+     *
+     * @param string $groupGuid       A GUID for a Bitly group
+     * @param string $facet           A facet of metrics (e.g. country, referrer, ...)
+     * @param array  $queryParameters {
+     *
+     * @var int    $limit only return this number of facet values (subtotal only)
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\GroupClicksByFacetRollup|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetGroupClicksByFacetRollupBadRequestException
+     * @throws Exception\GetGroupClicksByFacetRollupPaymentRequiredException
+     * @throws Exception\GetGroupClicksByFacetRollupForbiddenException
+     * @throws Exception\GetGroupClicksByFacetRollupInternalServerErrorException
+     * @throws Exception\GetGroupClicksByFacetRollupServiceUnavailableException
+     */
+    public function getGroupClicksByFacetRollup(string $groupGuid, string $facet, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetGroupClicksByFacetRollup($groupGuid, $facet, $queryParameters), $fetch);
+    }
+
+    /**
+     * get number of engagements in a group limited up to a months worth of engagements.
+     *
+     * @param string $groupGuid       A GUID for a Bitly group
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\GroupClicks|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetEngagementsSampleBadRequestException
+     * @throws Exception\GetEngagementsSampleForbiddenException
+     * @throws Exception\GetEngagementsSampleInternalServerErrorException
+     */
+    public function getEngagementsSample(string $groupGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetEngagementsSample($groupGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * post to queue a group data export job.
+     *
+     * @param string $groupGuid A GUID for a Bitly group
+     * @param string $fetch     Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\PostGroupDataExportBadRequestException
+     * @throws Exception\PostGroupDataExportForbiddenException
+     * @throws Exception\PostGroupDataExportUnprocessableEntityException
+     * @throws Exception\PostGroupDataExportInternalServerErrorException
+     * @throws Exception\PostGroupDataExportServiceUnavailableException
+     */
+    public function postGroupDataExport(string $groupGuid, Model\DataExportQuery $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\PostGroupDataExport($groupGuid, $requestBody), $fetch);
+    }
+
+    /**
+     * post to build a links report.
+     *
+     * @param string $groupGuid A GUID for a Bitly group
+     * @param string $fetch     Fetch mode to use (can be OBJECT or RESPONSE)
+     * @param array  $accept    Accept content header application/json|text/csv
+     *
+     * @return Model\LinksReportRequestResponse|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\PostGetLinksReportBadRequestException
+     * @throws Exception\PostGetLinksReportPaymentRequiredException
+     * @throws Exception\PostGetLinksReportForbiddenException
+     * @throws Exception\PostGetLinksReportUnprocessableEntityException
+     * @throws Exception\PostGetLinksReportInternalServerErrorException
+     * @throws Exception\PostGetLinksReportServiceUnavailableException
+     */
+    public function postGetLinksReport(string $groupGuid, Model\LinksReportRequestBody $requestBody, string $fetch = self::FETCH_OBJECT, array $accept = [])
+    {
+        return $this->executeEndpoint(new Endpoint\PostGetLinksReport($groupGuid, $requestBody, $accept), $fetch);
+    }
+
+    /**
+     * capture user submitted form data.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\FormCaptureBadRequestException
+     * @throws Exception\FormCaptureForbiddenException
+     * @throws Exception\FormCaptureUnprocessableEntityException
+     * @throws Exception\FormCaptureInternalServerErrorException
+     * @throws Exception\FormCaptureServiceUnavailableException
+     */
+    public function formCapture(Model\FormCapturePayload $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\FormCapture($requestBody), $fetch);
     }
 
     /**
@@ -951,6 +2259,653 @@ class Client extends Runtime\Client\Client
     public function getOrganization(string $organizationGuid, string $fetch = self::FETCH_OBJECT)
     {
         return $this->executeEndpoint(new Endpoint\GetOrganization($organizationGuid), $fetch);
+    }
+
+    /**
+     * Update an Organization.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\Organization|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\UpdateOrganizationForbiddenException
+     * @throws Exception\UpdateOrganizationNotFoundException
+     * @throws Exception\UpdateOrganizationInternalServerErrorException
+     * @throws Exception\UpdateOrganizationServiceUnavailableException
+     */
+    public function updateOrganization(string $organizationGuid, Model\OrganizationUpdate $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\UpdateOrganization($organizationGuid, $requestBody), $fetch);
+    }
+
+    /**
+     * post to queue an organization users data export job.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\PostOrgUsersDataExportBadRequestException
+     * @throws Exception\PostOrgUsersDataExportPaymentRequiredException
+     * @throws Exception\PostOrgUsersDataExportForbiddenException
+     * @throws Exception\PostOrgUsersDataExportUnprocessableEntityException
+     * @throws Exception\PostOrgUsersDataExportInternalServerErrorException
+     */
+    public function postOrgUsersDataExport(string $organizationGuid, Model\OrgUsersDataExportQuery $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\PostOrgUsersDataExport($organizationGuid, $requestBody), $fetch);
+    }
+
+    /**
+     * creates a stripe subscription.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\CreateSubscriptionResponse|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CreateSubscriptionBadRequestException
+     * @throws Exception\CreateSubscriptionForbiddenException
+     * @throws Exception\CreateSubscriptionUnprocessableEntityException
+     * @throws Exception\CreateSubscriptionInternalServerErrorException
+     */
+    public function createSubscription(Model\CreateSubscriptionBody $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CreateSubscription($requestBody), $fetch);
+    }
+
+    /**
+     * creates a stripe customer and setup intent.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\CreateCustomerResponse|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CreateCustomerBadRequestException
+     * @throws Exception\CreateCustomerForbiddenException
+     * @throws Exception\CreateCustomerUnprocessableEntityException
+     * @throws Exception\CreateCustomerInternalServerErrorException
+     */
+    public function createCustomer(Model\CreateCustomerBody $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CreateCustomer($requestBody), $fetch);
+    }
+
+    /**
+     * updates a stripe customer and setup intent.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $stripeCustomerId Stripe customer id that starts with cus_
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\StripeCustomer|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\UpdateStripeCustomerBadRequestException
+     * @throws Exception\UpdateStripeCustomerForbiddenException
+     * @throws Exception\UpdateStripeCustomerUnprocessableEntityException
+     * @throws Exception\UpdateStripeCustomerInternalServerErrorException
+     */
+    public function updateStripeCustomer(string $organizationGuid, string $stripeCustomerId, Model\UpdateStripeCustomerBody $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\UpdateStripeCustomer($organizationGuid, $stripeCustomerId, $requestBody), $fetch);
+    }
+
+    /**
+     * upgrade the organization with Stripe subscription.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\Organization|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\UpgradeOrganizationWithStripeSubscriptionBadRequestException
+     * @throws Exception\UpgradeOrganizationWithStripeSubscriptionForbiddenException
+     * @throws Exception\UpgradeOrganizationWithStripeSubscriptionUnprocessableEntityException
+     * @throws Exception\UpgradeOrganizationWithStripeSubscriptionInternalServerErrorException
+     */
+    public function upgradeOrganizationWithStripeSubscription(string $organizationGuid, Model\StripeUpgradeOrgBody $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\UpgradeOrganizationWithStripeSubscription($organizationGuid, $requestBody), $fetch);
+    }
+
+    /**
+     * schedule an account to be downgraded in billing and user management.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\SubscriptionCancelledDate|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\ScheduleOrgDowngradeStripeBadRequestException
+     * @throws Exception\ScheduleOrgDowngradeStripeForbiddenException
+     * @throws Exception\ScheduleOrgDowngradeStripeInternalServerErrorException
+     */
+    public function scheduleOrgDowngradeStripe(string $organizationGuid, Model\BillingDowngrade $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\ScheduleOrgDowngradeStripe($organizationGuid, $requestBody), $fetch);
+    }
+
+    /**
+     * Cancel a downgrade that is currently pending for stripe subscription.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CancelPendingDowngradeStripeNotFoundException
+     * @throws Exception\CancelPendingDowngradeStripeForbiddenException
+     * @throws Exception\CancelPendingDowngradeStripeInternalServerErrorException
+     */
+    public function cancelPendingDowngradeStripe(string $organizationGuid, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CancelPendingDowngradeStripe($organizationGuid), $fetch);
+    }
+
+    /**
+     * upgrade the organization.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\UpgradeOrganizationBadRequestException
+     * @throws Exception\UpgradeOrganizationForbiddenException
+     * @throws Exception\UpgradeOrganizationUnprocessableEntityException
+     * @throws Exception\UpgradeOrganizationInternalServerErrorException
+     */
+    public function upgradeOrganization(Model\UpgradeOrgBody $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\UpgradeOrganization($requestBody), $fetch);
+    }
+
+    /**
+     * get all the active organization preferences for an org.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\OrganizationPreferences|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetOrgPreferencesInternalServerErrorException
+     */
+    public function getOrgPreferences(string $organizationGuid, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetOrgPreferences($organizationGuid), $fetch);
+    }
+
+    /**
+     * create or update an organization preference.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\SetOrgPreferenceBadRequestException
+     * @throws Exception\SetOrgPreferenceForbiddenException
+     * @throws Exception\SetOrgPreferenceUnprocessableEntityException
+     * @throws Exception\SetOrgPreferenceInternalServerErrorException
+     */
+    public function setOrgPreference(string $organizationGuid, Model\OrganizationPreferenceSet $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\SetOrgPreference($organizationGuid, $requestBody), $fetch);
+    }
+
+    /**
+     * downgrade the organization.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\DowngradeOrganizationUnprocessableEntityException
+     * @throws Exception\DowngradeOrganizationInternalServerErrorException
+     */
+    public function downgradeOrganization(Model\DowngradeOrgBody $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\DowngradeOrganization($requestBody), $fetch);
+    }
+
+    /**
+     * get org emails by user or org.
+     *
+     * @param array $queryParameters {
+     *
+     * @var string $login The login for a Bitly user
+     * @var string $organization_guid A GUID for a Bitly organization
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\OrgEmails|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetOrgEmailsForbiddenException
+     * @throws Exception\GetOrgEmailsNotFoundException
+     * @throws Exception\GetOrgEmailsInternalServerErrorException
+     * @throws Exception\GetOrgEmailsServiceUnavailableException
+     */
+    public function getOrgEmails(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetOrgEmails($queryParameters), $fetch);
+    }
+
+    /**
+     * create or update an org email.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\OrgEmail|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\UpsertOrgEmailForbiddenException
+     * @throws Exception\UpsertOrgEmailNotFoundException
+     * @throws Exception\UpsertOrgEmailInternalServerErrorException
+     * @throws Exception\UpsertOrgEmailServiceUnavailableException
+     */
+    public function upsertOrgEmail(Model\OrgEmailBody $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\UpsertOrgEmail($requestBody), $fetch);
+    }
+
+    /**
+     * Returns all relevant data about a promo code and associated discount.
+     *
+     * @param string $promoCode A promo code string
+     * @param string $tierName  The name of a pricing plan
+     * @param string $fetch     Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\PromoCode|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\ValidatePromoCodeBadRequestException
+     * @throws Exception\ValidatePromoCodeNotFoundException
+     * @throws Exception\ValidatePromoCodeInternalServerErrorException
+     * @throws Exception\ValidatePromoCodeServiceUnavailableException
+     */
+    public function validatePromoCode(string $promoCode, string $tierName, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\ValidatePromoCode($promoCode, $tierName), $fetch);
+    }
+
+    /**
+     * Returns all relevant data about a stripe promo code and associated discount.
+     *
+     * @param string $promoCode A promo code string
+     * @param string $tierName  The name of a pricing plan
+     * @param string $fetch     Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\PromoCode|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\ValidateStripePromoCodeBadRequestException
+     * @throws Exception\ValidateStripePromoCodeNotFoundException
+     * @throws Exception\ValidateStripePromoCodeInternalServerErrorException
+     * @throws Exception\ValidateStripePromoCodeServiceUnavailableException
+     */
+    public function validateStripePromoCode(string $promoCode, string $tierName, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\ValidateStripePromoCode($promoCode, $tierName), $fetch);
+    }
+
+    /**
+     * Returns a list of strings of all valid plans for a promo code, regardless of if that promo code is active/expired.
+     *
+     * @param string $promoCode A promo code string
+     * @param string $fetch     Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\PromoCodeValidPlans|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetPromoCodeValidPlansInternalServerErrorException
+     * @throws Exception\GetPromoCodeValidPlansServiceUnavailableException
+     */
+    public function getPromoCodeValidPlans(string $promoCode, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetPromoCodeValidPlans($promoCode), $fetch);
+    }
+
+    /**
+     * Applies a discount via a stripe promo code to an existing subscription.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\ApplyStripeDiscountBadRequestException
+     * @throws Exception\ApplyStripeDiscountForbiddenException
+     * @throws Exception\ApplyStripeDiscountNotFoundException
+     * @throws Exception\ApplyStripeDiscountUnprocessableEntityException
+     * @throws Exception\ApplyStripeDiscountInternalServerErrorException
+     * @throws Exception\ApplyStripeDiscountServiceUnavailableException
+     */
+    public function applyStripeDiscount(string $organizationGuid, Model\ApplyDiscount $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\ApplyStripeDiscount($organizationGuid, $requestBody), $fetch);
+    }
+
+    /**
+     * Applies a discount via a promo code to an existing subscription.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\ApplyDiscountBadRequestException
+     * @throws Exception\ApplyDiscountForbiddenException
+     * @throws Exception\ApplyDiscountNotFoundException
+     * @throws Exception\ApplyDiscountUnprocessableEntityException
+     * @throws Exception\ApplyDiscountInternalServerErrorException
+     * @throws Exception\ApplyDiscountServiceUnavailableException
+     */
+    public function applyDiscount(string $organizationGuid, Model\ApplyDiscount $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\ApplyDiscount($organizationGuid, $requestBody), $fetch);
+    }
+
+    /**
+     * Endpoint to purchase add on entitlements for an account.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\PurchaseAddOnsBadRequestException
+     * @throws Exception\PurchaseAddOnsForbiddenException
+     * @throws Exception\PurchaseAddOnsNotFoundException
+     * @throws Exception\PurchaseAddOnsUnprocessableEntityException
+     * @throws Exception\PurchaseAddOnsInternalServerErrorException
+     * @throws Exception\PurchaseAddOnsServiceUnavailableException
+     */
+    public function purchaseAddOns(string $organizationGuid, Model\AddOns $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\PurchaseAddOns($organizationGuid, $requestBody), $fetch);
+    }
+
+    /**
+     * Endpoint to purchase add on entitlements for an account using Stripe.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\PurchaseStripeAddOnsBadRequestException
+     * @throws Exception\PurchaseStripeAddOnsForbiddenException
+     * @throws Exception\PurchaseStripeAddOnsNotFoundException
+     * @throws Exception\PurchaseStripeAddOnsUnprocessableEntityException
+     * @throws Exception\PurchaseStripeAddOnsInternalServerErrorException
+     * @throws Exception\PurchaseStripeAddOnsServiceUnavailableException
+     */
+    public function purchaseStripeAddOns(string $organizationGuid, Model\AddOns $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\PurchaseStripeAddOns($organizationGuid, $requestBody), $fetch);
+    }
+
+    /**
+     * get deeplink apps for an organization.
+     *
+     * @param array $queryParameters {
+     *
+     * @var string $organization_guid A GUID for a Bitly organization
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\DeeplinkApps|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetDeeplinkAppsForbiddenException
+     * @throws Exception\GetDeeplinkAppsInternalServerErrorException
+     * @throws Exception\GetDeeplinkAppsServiceUnavailableException
+     */
+    public function getDeeplinkApps(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetDeeplinkApps($queryParameters), $fetch);
+    }
+
+    /**
+     * create a new deeplink app.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\DeeplinkApp|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CreateDeeplinkAppBadRequestException
+     * @throws Exception\CreateDeeplinkAppForbiddenException
+     * @throws Exception\CreateDeeplinkAppExpectationFailedException
+     * @throws Exception\CreateDeeplinkAppUnprocessableEntityException
+     * @throws Exception\CreateDeeplinkAppInternalServerErrorException
+     * @throws Exception\CreateDeeplinkAppServiceUnavailableException
+     */
+    public function createDeeplinkApp(Model\DeeplinkApp $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CreateDeeplinkApp($requestBody), $fetch);
+    }
+
+    /**
+     * deactivate a deeplink app.
+     *
+     * @param string $deeplinkAppGuid the guid reference to a deeplink app
+     * @param string $fetch           Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\DeactivateDeeplinkAppPaymentRequiredException
+     * @throws Exception\DeactivateDeeplinkAppForbiddenException
+     * @throws Exception\DeactivateDeeplinkAppNotFoundException
+     * @throws Exception\DeactivateDeeplinkAppInternalServerErrorException
+     * @throws Exception\DeactivateDeeplinkAppServiceUnavailableException
+     */
+    public function deactivateDeeplinkApp(string $deeplinkAppGuid, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\DeactivateDeeplinkApp($deeplinkAppGuid), $fetch);
+    }
+
+    /**
+     * get a single deeplink app that belongs to an organization.
+     *
+     * @param string $deeplinkAppGuid the guid reference to a deeplink app
+     * @param string $fetch           Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\DeeplinkApp|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetDeeplinkAppForbiddenException
+     * @throws Exception\GetDeeplinkAppNotFoundException
+     * @throws Exception\GetDeeplinkAppInternalServerErrorException
+     * @throws Exception\GetDeeplinkAppServiceUnavailableException
+     */
+    public function getDeeplinkApp(string $deeplinkAppGuid, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetDeeplinkApp($deeplinkAppGuid), $fetch);
+    }
+
+    /**
+     * update a deeplink app.
+     *
+     * @param string $deeplinkAppGuid the guid reference to a deeplink app
+     * @param string $fetch           Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\DeeplinkApp|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\UpdateDeeplinkAppPaymentRequiredException
+     * @throws Exception\UpdateDeeplinkAppForbiddenException
+     * @throws Exception\UpdateDeeplinkAppNotFoundException
+     * @throws Exception\UpdateDeeplinkAppUnprocessableEntityException
+     * @throws Exception\UpdateDeeplinkAppInternalServerErrorException
+     * @throws Exception\UpdateDeeplinkAppServiceUnavailableException
+     */
+    public function updateDeeplinkApp(string $deeplinkAppGuid, Model\DeeplinkApp $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\UpdateDeeplinkApp($deeplinkAppGuid, $requestBody), $fetch);
+    }
+
+    /**
+     * get third party app data for a given third party app id.
+     *
+     * @param array $queryParameters {
+     *
+     * @var string $organization_guid A GUID for a Bitly organization
+     * @var string $third_party_app_id the third party app id describing a specific ios/android app
+     * @var string $os the os of a specific ios/android app
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\ThirdPartyAppData|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\ThirdPartyAppLookupPaymentRequiredException
+     * @throws Exception\ThirdPartyAppLookupForbiddenException
+     * @throws Exception\ThirdPartyAppLookupNotFoundException
+     * @throws Exception\ThirdPartyAppLookupInternalServerErrorException
+     * @throws Exception\ThirdPartyAppLookupServiceUnavailableException
+     */
+    public function thirdPartyAppLookup(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\ThirdPartyAppLookup($queryParameters), $fetch);
+    }
+
+    /**
+     * get all deeplink rules for a bitlink.
+     *
+     * @param string $bitlink A Bitlink made of the domain and hash
+     * @param string $fetch   Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\DeeplinkRules|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetDeeplinkRulesPaymentRequiredException
+     * @throws Exception\GetDeeplinkRulesForbiddenException
+     * @throws Exception\GetDeeplinkRulesNotFoundException
+     * @throws Exception\GetDeeplinkRulesTooManyRequestsException
+     * @throws Exception\GetDeeplinkRulesInternalServerErrorException
+     * @throws Exception\GetDeeplinkRulesServiceUnavailableException
+     */
+    public function getDeeplinkRules(string $bitlink, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetDeeplinkRules($bitlink), $fetch);
+    }
+
+    /**
+     * create deeplink rule for a bitlink.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\DeeplinkRule|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CreateDeeplinkRulePaymentRequiredException
+     * @throws Exception\CreateDeeplinkRuleForbiddenException
+     * @throws Exception\CreateDeeplinkRuleNotFoundException
+     * @throws Exception\CreateDeeplinkRuleInternalServerErrorException
+     */
+    public function createDeeplinkRule(Model\DeeplinkRule $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CreateDeeplinkRule($requestBody), $fetch);
+    }
+
+    /**
+     * delete a deeplink rule for a bitlink.
+     *
+     * @param string $deeplinkRuleGuid the guid of a deeplink rule
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\DeleteDeeplinkRulePaymentRequiredException
+     * @throws Exception\DeleteDeeplinkRuleForbiddenException
+     * @throws Exception\DeleteDeeplinkRuleNotFoundException
+     * @throws Exception\DeleteDeeplinkRuleInternalServerErrorException
+     * @throws Exception\DeleteDeeplinkRuleServiceUnavailableException
+     */
+    public function deleteDeeplinkRule(string $deeplinkRuleGuid, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\DeleteDeeplinkRule($deeplinkRuleGuid), $fetch);
+    }
+
+    /**
+     * update deeplink rule for a bitlink.
+     *
+     * @param string $deeplinkRuleGuid the guid of a deeplink rule
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\DeeplinkRule|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\UpdateDeeplinkRulePaymentRequiredException
+     * @throws Exception\UpdateDeeplinkRuleForbiddenException
+     * @throws Exception\UpdateDeeplinkRuleNotFoundException
+     * @throws Exception\UpdateDeeplinkRuleUnprocessableEntityException
+     * @throws Exception\UpdateDeeplinkRuleInternalServerErrorException
+     * @throws Exception\UpdateDeeplinkRuleServiceUnavailableException
+     */
+    public function updateDeeplinkRule(string $deeplinkRuleGuid, Model\DeeplinkRule $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\UpdateDeeplinkRule($deeplinkRuleGuid, $requestBody), $fetch);
+    }
+
+    /**
+     * get rolled up deeplink metrics for a bitlink.
+     *
+     * @param string $bitlink         A Bitlink made of the domain and hash
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\DeeplinkMetricsRollup|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetDeeplinkMetricsRollupPaymentRequiredException
+     * @throws Exception\GetDeeplinkMetricsRollupForbiddenException
+     * @throws Exception\GetDeeplinkMetricsRollupNotFoundException
+     * @throws Exception\GetDeeplinkMetricsRollupGoneException
+     * @throws Exception\GetDeeplinkMetricsRollupInternalServerErrorException
+     * @throws Exception\GetDeeplinkMetricsRollupServiceUnavailableException
+     */
+    public function getDeeplinkMetricsRollup(string $bitlink, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetDeeplinkMetricsRollup($bitlink, $queryParameters), $fetch);
+    }
+
+    /**
+     * validate shareable report URL.
+     *
+     * @param array $queryParameters {
+     *
+     * @var string $shareable_report Shareable Report URL to validate
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\ShareableReport|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CheckShareableReportBadRequestException
+     * @throws Exception\CheckShareableReportForbiddenException
+     * @throws Exception\CheckShareableReportNotFoundException
+     * @throws Exception\CheckShareableReportInternalServerErrorException
+     * @throws Exception\CheckShareableReportServiceUnavailableException
+     */
+    public function checkShareableReport(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CheckShareableReport($queryParameters), $fetch);
+    }
+
+    /**
+     * create shareable report URL.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\ShareableReport|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CreateShareableReportBadRequestException
+     * @throws Exception\CreateShareableReportForbiddenException
+     * @throws Exception\CreateShareableReportNotFoundException
+     * @throws Exception\CreateShareableReportInternalServerErrorException
+     * @throws Exception\CreateShareableReportServiceUnavailableException
+     */
+    public function createShareableReport(Model\ShareableReport $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CreateShareableReport($requestBody), $fetch);
     }
 
     /**
@@ -997,6 +2952,787 @@ class Client extends Runtime\Client\Client
     }
 
     /**
+     * update org's default payment method in billing provider.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\SetPaymentMethodDefaultBadRequestException
+     * @throws Exception\SetPaymentMethodDefaultForbiddenException
+     * @throws Exception\SetPaymentMethodDefaultUnprocessableEntityException
+     * @throws Exception\SetPaymentMethodDefaultInternalServerErrorException
+     * @throws Exception\SetPaymentMethodDefaultServiceUnavailableException
+     */
+    public function setPaymentMethodDefault(string $organizationGuid, string $paymentMethodId, Model\BillingAddress $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\SetPaymentMethodDefault($organizationGuid, $paymentMethodId, $requestBody), $fetch);
+    }
+
+    /**
+     * calls the billing provider to get a payment method.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\PaymentMethod|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CreatePaymentMethodBadRequestException
+     * @throws Exception\CreatePaymentMethodForbiddenException
+     * @throws Exception\CreatePaymentMethodUnprocessableEntityException
+     * @throws Exception\CreatePaymentMethodInternalServerErrorException
+     * @throws Exception\CreatePaymentMethodServiceUnavailableException
+     */
+    public function createPaymentMethod(string $organizationGuid, Model\CreatePaymentMethod $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CreatePaymentMethod($organizationGuid, $requestBody), $fetch);
+    }
+
+    /**
+     * calls the stripe billing provider and returns the client secret.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\SetupIntent|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CreateStripeSetupIntentBadRequestException
+     * @throws Exception\CreateStripeSetupIntentForbiddenException
+     * @throws Exception\CreateStripeSetupIntentUnprocessableEntityException
+     * @throws Exception\CreateStripeSetupIntentInternalServerErrorException
+     * @throws Exception\CreateStripeSetupIntentServiceUnavailableException
+     */
+    public function createStripeSetupIntent(string $organizationGuid, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CreateStripeSetupIntent($organizationGuid), $fetch);
+    }
+
+    /**
+     * sets payment method as default for the organization in stripe.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $paymentMethodId  A Stripe payment method ID
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\SetStripeDefaultPaymentMethodBadRequestException
+     * @throws Exception\SetStripeDefaultPaymentMethodForbiddenException
+     * @throws Exception\SetStripeDefaultPaymentMethodUnprocessableEntityException
+     * @throws Exception\SetStripeDefaultPaymentMethodInternalServerErrorException
+     * @throws Exception\SetStripeDefaultPaymentMethodServiceUnavailableException
+     */
+    public function setStripeDefaultPaymentMethod(string $organizationGuid, string $paymentMethodId, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\SetStripeDefaultPaymentMethod($organizationGuid, $paymentMethodId), $fetch);
+    }
+
+    /**
+     * make a call to billing provider to get a payment invoice summary.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\PaymentInvoices|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetPaymentInvoicesForbiddenException
+     * @throws Exception\GetPaymentInvoicesInternalServerErrorException
+     */
+    public function getPaymentInvoices(string $organizationGuid, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetPaymentInvoices($organizationGuid), $fetch);
+    }
+
+    /**
+     * make a call to billing provider to get a single payment invoice.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\PaymentInvoiceDetail|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetPaymentInvoiceForbiddenException
+     * @throws Exception\GetPaymentInvoiceInternalServerErrorException
+     */
+    public function getPaymentInvoice(string $organizationGuid, string $invoiceID, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetPaymentInvoice($organizationGuid, $invoiceID), $fetch);
+    }
+
+    /**
+     * make a call to billing provider to get a single payment invoice in PDF format.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     * @param array  $accept           Accept content header application/pdf|application/json
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetPaymentInvoiceFileForbiddenException
+     * @throws Exception\GetPaymentInvoiceFileNotFoundException
+     * @throws Exception\GetPaymentInvoiceFileInternalServerErrorException
+     */
+    public function getPaymentInvoiceFile(string $organizationGuid, string $invoiceID, string $fetch = self::FETCH_OBJECT, array $accept = [])
+    {
+        return $this->executeEndpoint(new Endpoint\GetPaymentInvoiceFile($organizationGuid, $invoiceID, $accept), $fetch);
+    }
+
+    /**
+     * Trigger the generation of an updated version of an invoice PDF.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\RegeneratePaymentInvoiceFileForbiddenException
+     * @throws Exception\RegeneratePaymentInvoiceFileInternalServerErrorException
+     */
+    public function regeneratePaymentInvoiceFile(string $organizationGuid, string $invoiceID, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\RegeneratePaymentInvoiceFile($organizationGuid, $invoiceID), $fetch);
+    }
+
+    /**
+     * Update user preferences to payment failure and cancel subscription.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\NotifyPaymentFailureBadRequestException
+     * @throws Exception\NotifyPaymentFailureUnprocessableEntityException
+     * @throws Exception\NotifyPaymentFailureInternalServerErrorException
+     * @throws Exception\NotifyPaymentFailureServiceUnavailableException
+     */
+    public function notifyPaymentFailure(Model\OrganizationGUID $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\NotifyPaymentFailure($requestBody), $fetch);
+    }
+
+    /**
+     * Sends an annual renewal email to billing contact on an account.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\AnnualRenewalReminderBadRequestException
+     * @throws Exception\AnnualRenewalReminderUnprocessableEntityException
+     * @throws Exception\AnnualRenewalReminderInternalServerErrorException
+     * @throws Exception\AnnualRenewalReminderServiceUnavailableException
+     */
+    public function annualRenewalReminder(Model\AnnualRenewalReminderRequest $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\AnnualRenewalReminder($requestBody), $fetch);
+    }
+
+    /**
+     * make a call to billing provider to update a billing info.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\UpdateBillingInfoBadRequestException
+     * @throws Exception\UpdateBillingInfoForbiddenException
+     * @throws Exception\UpdateBillingInfoUnprocessableEntityException
+     * @throws Exception\UpdateBillingInfoInternalServerErrorException
+     */
+    public function updateBillingInfo(string $organizationGuid, Model\BillingInfo $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\UpdateBillingInfo($organizationGuid, $requestBody), $fetch);
+    }
+
+    /**
+     * Update the contact tied to an account's payment method. This also appears as the "sold to contact" on the account invoices.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\ContactInfo|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\UpdatePaymentContactInfoBadRequestException
+     * @throws Exception\UpdatePaymentContactInfoForbiddenException
+     * @throws Exception\UpdatePaymentContactInfoNotFoundException
+     * @throws Exception\UpdatePaymentContactInfoUnprocessableEntityException
+     * @throws Exception\UpdatePaymentContactInfoInternalServerErrorException
+     */
+    public function updatePaymentContactInfo(string $organizationGuid, Model\ContactInfo $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\UpdatePaymentContactInfo($organizationGuid, $requestBody), $fetch);
+    }
+
+    /**
+     * make a call to billing provider to get an org's billing account.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\BillingAccount|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetBillingAccountForbiddenException
+     * @throws Exception\GetBillingAccountInternalServerErrorException
+     */
+    public function getBillingAccount(string $organizationGuid, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetBillingAccount($organizationGuid), $fetch);
+    }
+
+    /**
+     * Get the currency and Stripe Instance associated with the org if they have an existing Stripe account.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\StripeOrganizationInfo|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetOrganizationStripeInfoBadRequestException
+     * @throws Exception\GetOrganizationStripeInfoForbiddenException
+     * @throws Exception\GetOrganizationStripeInfoInternalServerErrorException
+     */
+    public function getOrganizationStripeInfo(string $organizationGuid, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetOrganizationStripeInfo($organizationGuid), $fetch);
+    }
+
+    /**
+     * determine the billing provider (stripe or zuora) for an account.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\BillingProvider|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetBillingProviderBadRequestException
+     * @throws Exception\GetBillingProviderForbiddenException
+     * @throws Exception\GetBillingProviderInternalServerErrorException
+     */
+    public function getBillingProvider(string $organizationGuid, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetBillingProvider($organizationGuid), $fetch);
+    }
+
+    /**
+     * make a call to billing API to get an org's main billing accout ID.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\BillingAccountID|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetBillingAccountIDForbiddenException
+     * @throws Exception\GetBillingAccountIDInternalServerErrorException
+     */
+    public function getBillingAccountID(string $organizationGuid, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetBillingAccountID($organizationGuid), $fetch);
+    }
+
+    /**
+     * schedule an account to be downgraded in billing and user management.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\SubscriptionCancelledDate|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\ScheduleOrganizationDowngradeBadRequestException
+     * @throws Exception\ScheduleOrganizationDowngradeForbiddenException
+     * @throws Exception\ScheduleOrganizationDowngradeInternalServerErrorException
+     */
+    public function scheduleOrganizationDowngrade(string $organizationGuid, Model\BillingDowngrade $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\ScheduleOrganizationDowngrade($organizationGuid, $requestBody), $fetch);
+    }
+
+    /**
+     * makes a call to billing provider to generate a unique signature.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\BillingSignature|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GenerateBillingSignatureForbiddenException
+     * @throws Exception\GenerateBillingSignatureInternalServerErrorException
+     */
+    public function generateBillingSignature(string $organizationGuid, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GenerateBillingSignature($organizationGuid), $fetch);
+    }
+
+    /**
+     * Creates a billing agreement token to be used with PayPal.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\PayPalToken|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CreatePayPalBillingAgreementTokenBadRequestException
+     * @throws Exception\CreatePayPalBillingAgreementTokenForbiddenException
+     * @throws Exception\CreatePayPalBillingAgreementTokenUnprocessableEntityException
+     * @throws Exception\CreatePayPalBillingAgreementTokenInternalServerErrorException
+     */
+    public function createPayPalBillingAgreementToken(Model\PayPalTokenRequest $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CreatePayPalBillingAgreementToken($requestBody), $fetch);
+    }
+
+    /**
+     * make a call to user management to check for a pending tier change.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\OrgTierHistory|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetPendingTierForOrgForbiddenException
+     * @throws Exception\GetPendingTierForOrgNotFoundException
+     * @throws Exception\GetPendingTierForOrgInternalServerErrorException
+     */
+    public function getPendingTierForOrg(string $organizationGuid, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetPendingTierForOrg($organizationGuid), $fetch);
+    }
+
+    /**
+     * Cancel a downgrade that is currently pending.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CancelPendingDowngradeNotFoundException
+     * @throws Exception\CancelPendingDowngradeForbiddenException
+     * @throws Exception\CancelPendingDowngradeInternalServerErrorException
+     */
+    public function cancelPendingDowngrade(string $organizationGuid, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CancelPendingDowngrade($organizationGuid), $fetch);
+    }
+
+    /**
+     * Update the entities (currently users) that will retain access to account on downgrade.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\UpdateEntitiesRetainedOnDowngradeBadRequestException
+     * @throws Exception\UpdateEntitiesRetainedOnDowngradeForbiddenException
+     * @throws Exception\UpdateEntitiesRetainedOnDowngradeUnprocessableEntityException
+     * @throws Exception\UpdateEntitiesRetainedOnDowngradeInternalServerErrorException
+     */
+    public function updateEntitiesRetainedOnDowngrade(string $organizationGuid, Model\UpdateRetainedDowngradeEntities $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\UpdateEntitiesRetainedOnDowngrade($organizationGuid, $requestBody), $fetch);
+    }
+
+    /**
+     * get an organization's feature limits and current usage.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\FeatureUsage|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetOrganizationFeatureUsageForbiddenException
+     * @throws Exception\GetOrganizationFeatureUsageInternalServerErrorException
+     * @throws Exception\GetOrganizationFeatureUsageServiceUnavailableException
+     */
+    public function getOrganizationFeatureUsage(string $organizationGuid, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetOrganizationFeatureUsage($organizationGuid), $fetch);
+    }
+
+    /**
+     * get an organization's current feature usage for all groups.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param array  $queryParameters  {
+     *
+     * @var array $name The limit name you would like usage for
+     * @var array $group_guid GUIDs for a Bitly group
+     *            }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\OrgFeatureUsageByGroup|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetOrganizationFeatureUsageByGroupBadRequestException
+     * @throws Exception\GetOrganizationFeatureUsageByGroupForbiddenException
+     * @throws Exception\GetOrganizationFeatureUsageByGroupInternalServerErrorException
+     */
+    public function getOrganizationFeatureUsageByGroup(string $organizationGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetOrganizationFeatureUsageByGroup($organizationGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * get an organization's activity log.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param array  $queryParameters  {
+     *
+     * @var string $next_page
+     * @var string $after_ts
+     * @var string $before_ts
+     * @var int    $limit
+     * @var array  $actions
+     * @var array  $user_filter
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\ActivityLogs|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetOrganizationActivityLogForbiddenException
+     * @throws Exception\GetOrganizationActivityLogInternalServerErrorException
+     * @throws Exception\GetOrganizationActivityLogServiceUnavailableException
+     */
+    public function getOrganizationActivityLog(string $organizationGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetOrganizationActivityLog($organizationGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * export an organization's activity log as csv.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param array  $queryParameters  {
+     *
+     * @var array  $actions
+     * @var array  $user_filter
+     * @var string $after_ts
+     * @var string $before_ts
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     */
+    public function getOrganizationActivityLogExport(string $organizationGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetOrganizationActivityLogExport($organizationGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * get a single log from aorganization's activity log.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\ActivityLog|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetOrganizationActivityLogEntryForbiddenException
+     * @throws Exception\GetOrganizationActivityLogEntryInternalServerErrorException
+     * @throws Exception\GetOrganizationActivityLogEntryServiceUnavailableException
+     */
+    public function getOrganizationActivityLogEntry(string $organizationGuid, string $action, string $timestamp, string $id, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetOrganizationActivityLogEntry($organizationGuid, $action, $timestamp, $id), $fetch);
+    }
+
+    /**
+     * This returns all of the attributes for all of the tiers.
+     *
+     * @param array $queryParameters {
+     *
+     * @var string $organization_guid A GUID for a Bitly organization
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\Tier[]|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetTiersForbiddenException
+     * @throws Exception\GetTiersInternalServerErrorException
+     * @throws Exception\GetTiersServiceUnavailableException
+     */
+    public function getTiers(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetTiers($queryParameters), $fetch);
+    }
+
+    /**
+     * Returns all attributes for experiment-based user available tiers.
+     *
+     * @param array $queryParameters {
+     *
+     * @var string $organization_guid A GUID for a Bitly organization
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\Tier[]|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetUserAvailableTiersForbiddenException
+     * @throws Exception\GetUserAvailableTiersInternalServerErrorException
+     * @throws Exception\GetUserAvailableTiersServiceUnavailableException
+     */
+    public function getUserAvailableTiers(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetUserAvailableTiers($queryParameters), $fetch);
+    }
+
+    /**
+     * This returns all of the attributes for the requested tier.
+     *
+     * @param string $tierName        The name of a pricing plan
+     * @param array  $queryParameters {
+     *
+     * @var string $organization_guid A GUID for a Bitly organization
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\Tier|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetTierForbiddenException
+     * @throws Exception\GetTierNotFoundException
+     * @throws Exception\GetTierInternalServerErrorException
+     * @throws Exception\GetTierServiceUnavailableException
+     */
+    public function getTier(string $tierName, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetTier($tierName, $queryParameters), $fetch);
+    }
+
+    /**
+     * delete passed in domain.
+     *
+     * @param string $customDomain find out more about your custom domain
+     * @param string $fetch        Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\DeleteCustomDomainForbiddenException
+     * @throws Exception\DeleteCustomDomainUnprocessableEntityException
+     * @throws Exception\DeleteCustomDomainInternalServerErrorException
+     */
+    public function deleteCustomDomain(string $customDomain, Model\OrganizationGUID $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\DeleteCustomDomain($customDomain, $requestBody), $fetch);
+    }
+
+    /**
+     * find out more about your custom domain.
+     *
+     * @param string $customDomain find out more about your custom domain
+     * @param string $fetch        Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\CustomDomainBody|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetCustomDomainForbiddenException
+     * @throws Exception\GetCustomDomainNotFoundException
+     * @throws Exception\GetCustomDomainInternalServerErrorException
+     * @throws Exception\GetCustomDomainServiceUnavailableException
+     */
+    public function getCustomDomain(string $customDomain, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetCustomDomain($customDomain), $fetch);
+    }
+
+    /**
+     * edit custom domain settings.
+     *
+     * @param string $customDomain find out more about your custom domain
+     * @param string $fetch        Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\EditCustomDomainForbiddenException
+     * @throws Exception\EditCustomDomainInternalServerErrorException
+     */
+    public function editCustomDomain(string $customDomain, Model\DomainUpdate $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\EditCustomDomain($customDomain, $requestBody), $fetch);
+    }
+
+    /**
+     * get custom domain data for an organization, including validation state.
+     *
+     * @param array $queryParameters {
+     *
+     * @var string $organization_guid A GUID for a Bitly organization
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\CustomDomains|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetCustomDomainsForbiddenException
+     * @throws Exception\GetCustomDomainsUnprocessableEntityException
+     * @throws Exception\GetCustomDomainsInternalServerErrorException
+     * @throws Exception\GetCustomDomainsServiceUnavailableException
+     */
+    public function getCustomDomains(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetCustomDomains($queryParameters), $fetch);
+    }
+
+    /**
+     * validate custom domain and organization.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\DomainValidate|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\ValidateCustomDomainBadRequestException
+     * @throws Exception\ValidateCustomDomainForbiddenException
+     * @throws Exception\ValidateCustomDomainNotFoundException
+     * @throws Exception\ValidateCustomDomainUnprocessableEntityException
+     * @throws Exception\ValidateCustomDomainInternalServerErrorException
+     * @throws Exception\ValidateCustomDomainServiceUnavailableException
+     */
+    public function validateCustomDomain(Model\DomainValidateBody $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\ValidateCustomDomain($requestBody), $fetch);
+    }
+
+    /**
+     * get deeplink app associations for a custom domain.
+     *
+     * @param string $customDomain find out more about your custom domain
+     * @param string $fetch        Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AppAssociations|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetAppAssociationsPaymentRequiredException
+     * @throws Exception\GetAppAssociationsForbiddenException
+     * @throws Exception\GetAppAssociationsNotFoundException
+     * @throws Exception\GetAppAssociationsInternalServerErrorException
+     * @throws Exception\GetAppAssociationsServiceUnavailableException
+     */
+    public function getAppAssociations(string $customDomain, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetAppAssociations($customDomain), $fetch);
+    }
+
+    /**
+     * update deeplink app associations for a custom domain.
+     *
+     * @param string $customDomain find out more about your custom domain
+     * @param string $fetch        Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AppAssociations|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\UpdateAppAssociationsBadRequestException
+     * @throws Exception\UpdateAppAssociationsPaymentRequiredException
+     * @throws Exception\UpdateAppAssociationsForbiddenException
+     * @throws Exception\UpdateAppAssociationsNotFoundException
+     * @throws Exception\UpdateAppAssociationsInternalServerErrorException
+     * @throws Exception\UpdateAppAssociationsServiceUnavailableException
+     */
+    public function updateAppAssociations(string $customDomain, Model\AppAssociations $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\UpdateAppAssociations($customDomain, $requestBody), $fetch);
+    }
+
+    /**
+     * Retrieve SSO Settings, if any exist, for a given organization.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\SSOSettings|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetOrganizationSSOSettingsPaymentRequiredException
+     * @throws Exception\GetOrganizationSSOSettingsForbiddenException
+     * @throws Exception\GetOrganizationSSOSettingsNotFoundException
+     * @throws Exception\GetOrganizationSSOSettingsInternalServerErrorException
+     * @throws Exception\GetOrganizationSSOSettingsServiceUnavailableException
+     */
+    public function getOrganizationSSOSettings(string $organizationGuid, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetOrganizationSSOSettings($organizationGuid), $fetch);
+    }
+
+    /**
+     * Update an Organization's SSO Settings.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\SSOSettings|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\UpdateOrganizationSSOSettingsPaymentRequiredException
+     * @throws Exception\UpdateOrganizationSSOSettingsForbiddenException
+     * @throws Exception\UpdateOrganizationSSOSettingsNotFoundException
+     * @throws Exception\UpdateOrganizationSSOSettingsUnprocessableEntityException
+     * @throws Exception\UpdateOrganizationSSOSettingsInternalServerErrorException
+     * @throws Exception\UpdateOrganizationSSOSettingsServiceUnavailableException
+     */
+    public function updateOrganizationSSOSettings(string $organizationGuid, Model\SSOSettings $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\UpdateOrganizationSSOSettings($organizationGuid, $requestBody), $fetch);
+    }
+
+    /**
+     * Create an Organization's SSO Settings.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\SSOSettings|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CreateOrganizationSSOSettingsBadRequestException
+     * @throws Exception\CreateOrganizationSSOSettingsPaymentRequiredException
+     * @throws Exception\CreateOrganizationSSOSettingsForbiddenException
+     * @throws Exception\CreateOrganizationSSOSettingsUnprocessableEntityException
+     * @throws Exception\CreateOrganizationSSOSettingsInternalServerErrorException
+     * @throws Exception\CreateOrganizationSSOSettingsServiceUnavailableException
+     */
+    public function createOrganizationSSOSettings(string $organizationGuid, Model\SSOSlug $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CreateOrganizationSSOSettings($organizationGuid, $requestBody), $fetch);
+    }
+
+    /**
+     * Check to see if the SSO Slug is available.
+     *
+     * @param string $urlSlug A potential slug for SSO
+     * @param string $fetch   Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\SSOVerifySlug|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\VerifySSOSlugPaymentRequiredException
+     * @throws Exception\VerifySSOSlugForbiddenException
+     * @throws Exception\VerifySSOSlugNotFoundException
+     * @throws Exception\VerifySSOSlugInternalServerErrorException
+     * @throws Exception\VerifySSOSlugServiceUnavailableException
+     */
+    public function verifySSOSlug(string $urlSlug, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\VerifySSOSlug($urlSlug), $fetch);
+    }
+
+    /**
+     * Retrieve all country calling codes optionally sorted by property.
+     *
+     * @param array $queryParameters {
+     *
+     * @var string $sort_by Country code property you would like to sort country codes by
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\CountryCode[]|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetCountryCallingCodesBadRequestException
+     * @throws Exception\GetCountryCallingCodesInternalServerErrorException
+     */
+    public function getCountryCallingCodes(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetCountryCallingCodes($queryParameters), $fetch);
+    }
+
+    /**
      * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
      *
      * @return Model\User|\Psr\Http\Message\ResponseInterface|null
@@ -1028,6 +3764,393 @@ class Client extends Runtime\Client\Client
     public function updateUser(Model\UserUpdate $requestBody, string $fetch = self::FETCH_OBJECT)
     {
         return $this->executeEndpoint(new Endpoint\UpdateUser($requestBody), $fetch);
+    }
+
+    /**
+     * Request SAR Report.
+     *
+     * @param mixed|null $requestBody
+     * @param string     $fetch       Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\RequestUserSARForbiddenException
+     * @throws Exception\RequestUserSARInternalServerErrorException
+     * @throws Exception\RequestUserSARServiceUnavailableException
+     */
+    public function requestUserSAR($requestBody = null, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\RequestUserSAR($requestBody), $fetch);
+    }
+
+    /**
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\ForgetUserForbiddenException
+     * @throws Exception\ForgetUserInternalServerErrorException
+     * @throws Exception\ForgetUserServiceUnavailableException
+     */
+    public function forgetUser(string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\ForgetUser(), $fetch);
+    }
+
+    /**
+     * Disable 2FA for a user.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\Disable2FABadRequestException
+     * @throws Exception\Disable2FAUnauthorizedException
+     * @throws Exception\Disable2FAForbiddenException
+     * @throws Exception\Disable2FANotFoundException
+     * @throws Exception\Disable2FAUnprocessableEntityException
+     * @throws Exception\Disable2FAInternalServerErrorException
+     * @throws Exception\Disable2FAServiceUnavailableException
+     */
+    public function disable2FA(Model\TwoFactorCode $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\Disable2FA($requestBody), $fetch);
+    }
+
+    /**
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\TwoFactor|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetTwoFARecordNotFoundException
+     * @throws Exception\GetTwoFARecordInternalServerErrorException
+     * @throws Exception\GetTwoFARecordServiceUnavailableException
+     */
+    public function getTwoFARecord(string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetTwoFARecord(), $fetch);
+    }
+
+    /**
+     * Set a phone number for 2FA via sms.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\TwoFactor|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\SetPhoneNumberBadRequestException
+     * @throws Exception\SetPhoneNumberForbiddenException
+     * @throws Exception\SetPhoneNumberUnprocessableEntityException
+     * @throws Exception\SetPhoneNumberInternalServerErrorException
+     * @throws Exception\SetPhoneNumberServiceUnavailableException
+     */
+    public function setPhoneNumber(Model\TwoFactor $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\SetPhoneNumber($requestBody), $fetch);
+    }
+
+    /**
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\TwoFactor|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\SendVerificationCodeBadRequestException
+     * @throws Exception\SendVerificationCodeUnauthorizedException
+     * @throws Exception\SendVerificationCodeForbiddenException
+     * @throws Exception\SendVerificationCodeNotFoundException
+     * @throws Exception\SendVerificationCodeInternalServerErrorException
+     * @throws Exception\SendVerificationCodeServiceUnavailableException
+     */
+    public function sendVerificationCode(string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\SendVerificationCode(), $fetch);
+    }
+
+    /**
+     * Verify a 2FA code and see if record is valid or expired.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\TwoFactorVerify|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\VerifyTwoFactorCodeBadRequestException
+     * @throws Exception\VerifyTwoFactorCodeNotFoundException
+     * @throws Exception\VerifyTwoFactorCodeInternalServerErrorException
+     * @throws Exception\VerifyTwoFactorCodeServiceUnavailableException
+     */
+    public function verifyTwoFactorCode(Model\TwoFactorCode $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\VerifyTwoFactorCode($requestBody), $fetch);
+    }
+
+    /**
+     * Remove a user from Bitly.
+     *
+     * @param string $login The login for a Bitly user
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\DeleteUserBadRequestException
+     * @throws Exception\DeleteUserForbiddenException
+     * @throws Exception\DeleteUserInternalServerErrorException
+     */
+    public function deleteUser(string $login, Model\DeactivateUser $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\DeleteUser($login, $requestBody), $fetch);
+    }
+
+    /**
+     * Retrieve a list of users for the provided scope.
+     *
+     * @param array $queryParameters {
+     *
+     * @var string $organization_guid A GUID for a Bitly organization
+     * @var int    $page Integer specifying the numbered result at which to start
+     * @var int    $size The quantity of items to be be returned
+     * @var string $group_guid A GUID for a Bitly group
+     * @var array  $logins The logins for Bitly users
+     * @var string $full_name_search A partial string that will be compared to the full name of a user
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\Users|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetUsersForbiddenException
+     * @throws Exception\GetUsersNotFoundException
+     * @throws Exception\GetUsersInternalServerErrorException
+     * @throws Exception\GetUsersServiceUnavailableException
+     */
+    public function getUsers(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetUsers($queryParameters), $fetch);
+    }
+
+    /**
+     * Create a user.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\PublicOAuthUser|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CreateUserBadRequestException
+     * @throws Exception\CreateUserUnprocessableEntityException
+     * @throws Exception\CreateUserTooManyRequestsException
+     * @throws Exception\CreateUserInternalServerErrorException
+     */
+    public function createUser(Model\CreateUserBody $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CreateUser($requestBody), $fetch);
+    }
+
+    /**
+     * Retrieve a list of Groups by a User Login.
+     *
+     * @param string $login The login for a Bitly user
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\Groups|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetGroupsByLoginForbiddenException
+     * @throws Exception\GetGroupsByLoginInternalServerErrorException
+     */
+    public function getGroupsByLogin(string $login, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetGroupsByLogin($login), $fetch);
+    }
+
+    /**
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\UserPreferences|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetUserPreferencesBadRequestException
+     * @throws Exception\GetUserPreferencesInternalServerErrorException
+     */
+    public function getUserPreferences(string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetUserPreferences(), $fetch);
+    }
+
+    /**
+     * Set a user preference.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\SetUserPreferenceBadRequestException
+     * @throws Exception\SetUserPreferenceUnprocessableEntityException
+     * @throws Exception\SetUserPreferenceInternalServerErrorException
+     */
+    public function setUserPreference(Model\UserPreferenceBody $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\SetUserPreference($requestBody), $fetch);
+    }
+
+    /**
+     * gets all invitations for a given login.
+     *
+     * @param string $login The login for a Bitly user
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\InvitationsForLogin|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetInvitationsByLoginBadRequestException
+     * @throws Exception\GetInvitationsByLoginForbiddenException
+     * @throws Exception\GetInvitationsByLoginInternalServerErrorException
+     */
+    public function getInvitationsByLogin(string $login, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetInvitationsByLogin($login), $fetch);
+    }
+
+    /**
+     * accepts an invitation for a user and adds them to invited organizations and groups.
+     *
+     * @param string $login The login for a Bitly user
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\Organizations|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\UserAcceptInviteBadRequestException
+     * @throws Exception\UserAcceptInviteForbiddenException
+     * @throws Exception\UserAcceptInviteUnprocessableEntityException
+     * @throws Exception\UserAcceptInviteInternalServerErrorException
+     */
+    public function userAcceptInvite(string $login, Model\InvitationsAccept $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\UserAcceptInvite($login, $requestBody), $fetch);
+    }
+
+    /**
+     * Get a user's activity log.
+     *
+     * @param array $queryParameters {
+     *
+     * @var string $next_page
+     * @var int    $limit
+     * @var array  $action
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\ActivityLogs|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetUserActivityLogForbiddenException
+     * @throws Exception\GetUserActivityLogInternalServerErrorException
+     * @throws Exception\GetUserActivityLogServiceUnavailableException
+     */
+    public function getUserActivityLog(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetUserActivityLog($queryParameters), $fetch);
+    }
+
+    /**
+     * Change the stored password for a user.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\ChangeUserPasswordBadRequestException
+     * @throws Exception\ChangeUserPasswordForbiddenException
+     * @throws Exception\ChangeUserPasswordNotFoundException
+     * @throws Exception\ChangeUserPasswordUnprocessableEntityException
+     * @throws Exception\ChangeUserPasswordInternalServerErrorException
+     */
+    public function changeUserPassword(Model\UserPasswordChange $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\ChangeUserPassword($requestBody), $fetch);
+    }
+
+    /**
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\UserOnboardingSurvey|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetUserOnboardingSurveyResultsForbiddenException
+     * @throws Exception\GetUserOnboardingSurveyResultsInternalServerErrorException
+     */
+    public function getUserOnboardingSurveyResults(string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetUserOnboardingSurveyResults(), $fetch);
+    }
+
+    /**
+     * adds a new email to an existing user.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\EmailBody|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\AddEmailToUserBadRequestException
+     * @throws Exception\AddEmailToUserForbiddenException
+     * @throws Exception\AddEmailToUserNotFoundException
+     * @throws Exception\AddEmailToUserUnprocessableEntityException
+     * @throws Exception\AddEmailToUserInternalServerErrorException
+     */
+    public function addEmailToUser(Model\EmailBody $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\AddEmailToUser($requestBody), $fetch);
+    }
+
+    /**
+     * Delete an existing email.
+     *
+     * @param string $email An email address
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\DeleteEmailBadRequestException
+     * @throws Exception\DeleteEmailForbiddenException
+     * @throws Exception\DeleteEmailNotFoundException
+     * @throws Exception\DeleteEmailInternalServerErrorException
+     * @throws Exception\DeleteEmailServiceUnavailableException
+     */
+    public function deleteEmail(string $email, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\DeleteEmail($email), $fetch);
+    }
+
+    /**
+     * Update an email.
+     *
+     * @param string $email An email address
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\EmailBody|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\UpdateEmailBadRequestException
+     * @throws Exception\UpdateEmailForbiddenException
+     * @throws Exception\UpdateEmailNotFoundException
+     * @throws Exception\UpdateEmailInternalServerErrorException
+     * @throws Exception\UpdateEmailServiceUnavailableException
+     */
+    public function updateEmail(string $email, Model\EmailBody $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\UpdateEmail($email, $requestBody), $fetch);
+    }
+
+    /**
+     * Send a verification for an email to a user.
+     *
+     * @param string     $email       An email address
+     * @param mixed|null $requestBody
+     * @param string     $fetch       Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\SendEmailVerificationBadRequestException
+     * @throws Exception\SendEmailVerificationNotFoundException
+     * @throws Exception\SendEmailVerificationInternalServerErrorException
+     * @throws Exception\SendEmailVerificationServiceUnavailableException
+     */
+    public function sendEmailVerification(string $email, $requestBody = null, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\SendEmailVerification($email, $requestBody), $fetch);
     }
 
     /**
@@ -1077,6 +4200,25 @@ class Client extends Runtime\Client\Client
     }
 
     /**
+     * Deletes a campaign.
+     *
+     * @param string $campaignGuid A GUID for a Bitly campaign
+     * @param string $fetch        Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\DeleteCampaignPaymentRequiredException
+     * @throws Exception\DeleteCampaignForbiddenException
+     * @throws Exception\DeleteCampaignNotFoundException
+     * @throws Exception\DeleteCampaignInternalServerErrorException
+     * @throws Exception\DeleteCampaignServiceUnavailableException
+     */
+    public function deleteCampaign(string $campaignGuid, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\DeleteCampaign($campaignGuid), $fetch);
+    }
+
+    /**
      * Returns details for a campaign.
      *
      * @param string $campaignGuid A GUID for a Bitly campaign
@@ -1116,6 +4258,72 @@ class Client extends Runtime\Client\Client
     public function updateCampaign(string $campaignGuid, Model\CampaignModify $requestBody, string $fetch = self::FETCH_OBJECT)
     {
         return $this->executeEndpoint(new Endpoint\UpdateCampaign($campaignGuid, $requestBody), $fetch);
+    }
+
+    /**
+     * Returns the number of clicks for all channels within a campaign.
+     *
+     * @param string $campaignGuid    A GUID for a Bitly campaign
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch  Fetch mode to use (can be OBJECT or RESPONSE)
+     * @param array  $accept Accept content header application/json|text/csv
+     *
+     * @return Model\CampaignClicks|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetCampaignClicksPaymentRequiredException
+     * @throws Exception\GetCampaignClicksForbiddenException
+     * @throws Exception\GetCampaignClicksNotFoundException
+     * @throws Exception\GetCampaignClicksInternalServerErrorException
+     * @throws Exception\GetCampaignClicksServiceUnavailableException
+     */
+    public function getCampaignClicks(string $campaignGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT, array $accept = [])
+    {
+        return $this->executeEndpoint(new Endpoint\GetCampaignClicks($campaignGuid, $queryParameters, $accept), $fetch);
+    }
+
+    /**
+     * bulk add bitlinks to multiple campaign channels.
+     *
+     * @param string $campaignGuid A GUID for a Bitly campaign
+     * @param string $fetch        Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\BulkAddResponse|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\BulkAddBadRequestException
+     * @throws Exception\BulkAddForbiddenException
+     * @throws Exception\BulkAddNotFoundException
+     * @throws Exception\BulkAddInternalServerErrorException
+     */
+    public function bulkAdd(string $campaignGuid, Model\CampaignsCampaignGuidAddURLsPostBody $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\BulkAdd($campaignGuid, $requestBody), $fetch);
+    }
+
+    /**
+     * add a url to a channel for a brand and campaign.
+     *
+     * @param string $campaignGuid A GUID for a Bitly campaign
+     * @param string $fetch        Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\CampaignAddBitlinkResponse|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CampaignAddBitlinkBadRequestException
+     * @throws Exception\CampaignAddBitlinkPaymentRequiredException
+     * @throws Exception\CampaignAddBitlinkForbiddenException
+     * @throws Exception\CampaignAddBitlinkNotFoundException
+     * @throws Exception\CampaignAddBitlinkUnprocessableEntityException
+     * @throws Exception\CampaignAddBitlinkInternalServerErrorException
+     * @throws Exception\CampaignAddBitlinkServiceUnavailableException
+     */
+    public function campaignAddBitlink(string $campaignGuid, Model\CampaignAddBitlink $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CampaignAddBitlink($campaignGuid, $requestBody), $fetch);
     }
 
     /**
@@ -1161,6 +4369,25 @@ class Client extends Runtime\Client\Client
     public function createChannel(Model\ChannelModify $requestBody, string $fetch = self::FETCH_OBJECT)
     {
         return $this->executeEndpoint(new Endpoint\CreateChannel($requestBody), $fetch);
+    }
+
+    /**
+     * Deletes a channel.
+     *
+     * @param string $channelGuid A GUID for a Bitly Channel
+     * @param string $fetch       Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\DeleteChannelPaymentRequiredException
+     * @throws Exception\DeleteChannelForbiddenException
+     * @throws Exception\DeleteChannelNotFoundException
+     * @throws Exception\DeleteChannelInternalServerErrorException
+     * @throws Exception\DeleteChannelServiceUnavailableException
+     */
+    public function deleteChannel(string $channelGuid, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\DeleteChannel($channelGuid), $fetch);
     }
 
     /**
@@ -1224,6 +4451,205 @@ class Client extends Runtime\Client\Client
     }
 
     /**
+     * Update the details for the provided OAuth App client ID.
+     *
+     * @param string $clientId The client ID of an OAuth app
+     * @param string $fetch    Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\OAuthAppFull|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\UpdateOAuthAppBadRequestException
+     * @throws Exception\UpdateOAuthAppForbiddenException
+     * @throws Exception\UpdateOAuthAppNotFoundException
+     * @throws Exception\UpdateOAuthAppInternalServerErrorException
+     * @throws Exception\UpdateOAuthAppServiceUnavailableException
+     */
+    public function updateOAuthApp(string $clientId, Model\UpdateApp $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\UpdateOAuthApp($clientId, $requestBody), $fetch);
+    }
+
+    /**
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\OAuthApps|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetOAuthAppsBadRequestException
+     * @throws Exception\GetOAuthAppsNotFoundException
+     * @throws Exception\GetOAuthAppsInternalServerErrorException
+     * @throws Exception\GetOAuthAppsServiceUnavailableException
+     */
+    public function getOAuthApps(string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetOAuthApps(), $fetch);
+    }
+
+    /**
+     * Creates an OAuth App for the user.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\OAuthAppFull|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CreateOAuthAppBadRequestException
+     * @throws Exception\CreateOAuthAppForbiddenException
+     * @throws Exception\CreateOAuthAppInternalServerErrorException
+     */
+    public function createOAuthApp(Model\CreateOAuthAppReq $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CreateOAuthApp($requestBody), $fetch);
+    }
+
+    /**
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\Authorizations|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetOAuthAuthorizationsNotFoundException
+     * @throws Exception\GetOAuthAuthorizationsInternalServerErrorException
+     * @throws Exception\GetOAuthAuthorizationsServiceUnavailableException
+     */
+    public function getOAuthAuthorizations(string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetOAuthAuthorizations(), $fetch);
+    }
+
+    /**
+     * Creates a generic access token for the user.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\GenericAccessToken|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CreateGenericAccessTokenBadRequestException
+     * @throws Exception\CreateGenericAccessTokenUnauthorizedException
+     * @throws Exception\CreateGenericAccessTokenForbiddenException
+     * @throws Exception\CreateGenericAccessTokenNotFoundException
+     * @throws Exception\CreateGenericAccessTokenInternalServerErrorException
+     */
+    public function createGenericAccessToken(Model\GenericAccessTokenReq $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CreateGenericAccessToken($requestBody), $fetch);
+    }
+
+    /**
+     * Delete the oauth authorization for a user.
+     *
+     * @param string $authorizationId A ID for an oAuth authorization
+     * @param string $fetch           Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\ExpireOAuthAuthorizationBadRequestException
+     * @throws Exception\ExpireOAuthAuthorizationNotFoundException
+     * @throws Exception\ExpireOAuthAuthorizationInternalServerErrorException
+     * @throws Exception\ExpireOAuthAuthorizationServiceUnavailableException
+     */
+    public function expireOAuthAuthorization(string $authorizationId, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\ExpireOAuthAuthorization($authorizationId), $fetch);
+    }
+
+    /**
+     * Finds the OAuth App associated with the param clientID, and updates the client secret for that app.
+     *
+     * @param string     $clientId    The client ID of an OAuth app
+     * @param mixed|null $requestBody
+     * @param string     $fetch       Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\OAuthAppFull|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\UpdateOAuthAppClientSecretForbiddenException
+     * @throws Exception\UpdateOAuthAppClientSecretNotFoundException
+     * @throws Exception\UpdateOAuthAppClientSecretInternalServerErrorException
+     * @throws Exception\UpdateOAuthAppClientSecretServiceUnavailableException
+     */
+    public function updateOAuthAppClientSecret(string $clientId, $requestBody = null, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\UpdateOAuthAppClientSecret($clientId, $requestBody), $fetch);
+    }
+
+    /**
+     * Retrieve the Integration OAuths matching a given clientID.
+     *
+     * @param array $queryParameters {
+     *
+     * @var string $client_id The client_id is a required search param partially matching the integration oauth composite key
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\IntegrationOAuths|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetIntegrationOAuthsByClientIDBadRequestException
+     * @throws Exception\GetIntegrationOAuthsByClientIDInternalServerErrorException
+     * @throws Exception\GetIntegrationOAuthsByClientIDServiceUnavailableException
+     */
+    public function getIntegrationOAuthsByClientID(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetIntegrationOAuthsByClientID($queryParameters), $fetch);
+    }
+
+    /**
+     * delete a Integration OAuth matching a given clientID and Organization GUID.
+     *
+     * @param string $clientId         The client ID of an OAuth app
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\DeleteIntegrationOAuthBadRequestException
+     * @throws Exception\DeleteIntegrationOAuthForbiddenException
+     * @throws Exception\DeleteIntegrationOAuthInternalServerErrorException
+     * @throws Exception\DeleteIntegrationOAuthServiceUnavailableException
+     */
+    public function deleteIntegrationOAuth(string $clientId, string $organizationGuid, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\DeleteIntegrationOAuth($clientId, $organizationGuid), $fetch);
+    }
+
+    /**
+     * Creates a new Shopify Integration OAuth for the given Organization GUID.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CreateShopifyIntegrationOAuthBadRequestException
+     * @throws Exception\CreateShopifyIntegrationOAuthForbiddenException
+     * @throws Exception\CreateShopifyIntegrationOAuthConflictException
+     * @throws Exception\CreateShopifyIntegrationOAuthUnprocessableEntityException
+     * @throws Exception\CreateShopifyIntegrationOAuthInternalServerErrorException
+     * @throws Exception\CreateShopifyIntegrationOAuthServiceUnavailableException
+     */
+    public function createShopifyIntegrationOAuth(string $organizationGuid, Model\ShopifyTokenExchangeRequest $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CreateShopifyIntegrationOAuth($organizationGuid, $requestBody), $fetch);
+    }
+
+    /**
+     * Retrieves shopify domain details for a organization guid and client id.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $clientId         The client ID of an OAuth app
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\ShopifyDomainDetailsResponse|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetShopifyShopDomainDetailsBadRequestException
+     * @throws Exception\GetShopifyShopDomainDetailsForbiddenException
+     * @throws Exception\GetShopifyShopDomainDetailsNotFoundException
+     * @throws Exception\GetShopifyShopDomainDetailsInternalServerErrorException
+     * @throws Exception\GetShopifyShopDomainDetailsServiceUnavailableException
+     */
+    public function getShopifyShopDomainDetails(string $organizationGuid, string $clientId, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetShopifyShopDomainDetails($organizationGuid, $clientId), $fetch);
+    }
+
+    /**
      * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
      *
      * @return Model\BSDsResponse|\Psr\Http\Message\ResponseInterface|null
@@ -1236,6 +4662,296 @@ class Client extends Runtime\Client\Client
     public function getBSDs(string $fetch = self::FETCH_OBJECT)
     {
         return $this->executeEndpoint(new Endpoint\GetBSDs(), $fetch);
+    }
+
+    /**
+     * Fetch a list of domains based on a query.
+     *
+     * @param array $queryParameters {
+     *
+     * @var int    $limit limit the amount of results returned
+     * @var string $query The value that you would like to search
+     * @var string $organization_guid A GUID for a Bitly organization
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\BSDSearchResults|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\SearchDomainsForbiddenException
+     * @throws Exception\SearchDomainsInternalServerErrorException
+     */
+    public function searchDomains(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\SearchDomains($queryParameters), $fetch);
+    }
+
+    /**
+     * Fetch AI-generated branded short domains based on a natural language prompt.
+     *
+     * @param array $queryParameters {
+     *
+     * @var int $limit limit the amount of results returned
+     *          }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\BSDSearchResults|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\AiDomainSearchBadRequestException
+     * @throws Exception\AiDomainSearchForbiddenException
+     * @throws Exception\AiDomainSearchInternalServerErrorException
+     */
+    public function aiDomainSearch(Model\BSDAISearchPrompt $requestBody, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\AiDomainSearch($requestBody, $queryParameters), $fetch);
+    }
+
+    /**
+     * Fetches autobranded domain for urls.
+     *
+     * @param array $queryParameters {
+     *
+     * @var array $long_url
+     *            }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AutobrandedDomain|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetAutobrandedDomainBadRequestException
+     * @throws Exception\GetAutobrandedDomainInternalServerErrorException
+     */
+    public function getAutobrandedDomain(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetAutobrandedDomain($queryParameters), $fetch);
+    }
+
+    /**
+     * Buy a BSD for a user.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\PurchaseBSDResponse|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\PurchaseBsdForbiddenException
+     * @throws Exception\PurchaseBsdInternalServerErrorException
+     */
+    public function purchaseBsd(Model\PurchaseBSD $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\PurchaseBsd($requestBody), $fetch);
+    }
+
+    /**
+     * Get domain details from registrar.
+     *
+     * @param string $domain a web domain
+     * @param string $fetch  Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\DomainRegistrarInfo|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetDomainRegistrarInfoInternalServerErrorException
+     */
+    public function getDomainRegistrarInfo(string $domain, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetDomainRegistrarInfo($domain), $fetch);
+    }
+
+    /**
+     * Get agreements from registrar to purchase a domain.
+     *
+     * @param string $domain          a web domain
+     * @param array  $queryParameters {
+     *
+     * @var string $organization_guid A GUID for a Bitly organization
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\DomainAgreements|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\FetchDomainAgreementsInternalServerErrorException
+     */
+    public function fetchDomainAgreements(string $domain, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\FetchDomainAgreements($domain, $queryParameters), $fetch);
+    }
+
+    /**
+     * Get DNS provider, DNS record type (A or CNAME), values (where DNS points), and whether the DNS values are valid.
+     *
+     * @param string $domain a web domain
+     * @param string $fetch  Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\DomainDNS|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CheckDomainDNSInternalServerErrorException
+     */
+    public function checkDomainDNS(string $domain, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CheckDomainDNS($domain), $fetch);
+    }
+
+    /**
+     * Fetch the status of available domain.
+     *
+     * @param string $domain          a web domain
+     * @param array  $queryParameters {
+     *
+     * @var string $organization_guid A GUID for a Bitly organization
+     * @var bool   $fetch_price Include pricing information for a domain
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\DomainStatus|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\FetchDomainStatusForbiddenException
+     * @throws Exception\FetchDomainStatusInternalServerErrorException
+     * @throws Exception\FetchDomainStatusGatewayTimeoutException
+     */
+    public function fetchDomainStatus(string $domain, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\FetchDomainStatus($domain, $queryParameters), $fetch);
+    }
+
+    /**
+     * Fetch all information around a complimentary domain purchase for a specific domain.
+     *
+     * @param string $domain a web domain
+     * @param string $fetch  Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\DomainPurchase|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\FetchCompDomainPurchaseForbiddenException
+     * @throws Exception\FetchCompDomainPurchaseInternalServerErrorException
+     * @throws Exception\FetchCompDomainPurchaseGatewayTimeoutException
+     */
+    public function fetchCompDomainPurchase(string $domain, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\FetchCompDomainPurchase($domain), $fetch);
+    }
+
+    /**
+     * Fetch all Access Features available for an Organization.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AccessFeatures|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetAccessFeaturesForbiddenException
+     * @throws Exception\GetAccessFeaturesInternalServerErrorException
+     */
+    public function getAccessFeatures(string $organizationGuid, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetAccessFeatures($organizationGuid), $fetch);
+    }
+
+    /**
+     * allows us to capture user events.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CaptureEventForbiddenException
+     * @throws Exception\CaptureEventInternalServerErrorException
+     */
+    public function captureEvent(Model\Event $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CaptureEvent($requestBody), $fetch);
+    }
+
+    /**
+     * Fetch all Consumable Features available for an Organization.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\ConsumableFeatures|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetConsumableFeaturesForbiddenException
+     * @throws Exception\GetConsumableFeaturesConflictException
+     * @throws Exception\GetConsumableFeaturesInternalServerErrorException
+     */
+    public function getConsumableFeatures(string $organizationGuid, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetConsumableFeatures($organizationGuid), $fetch);
+    }
+
+    /**
+     * Fetch all invitations available for an Organization.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\Invitations|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetInvitationsForbiddenException
+     * @throws Exception\GetInvitationsInternalServerErrorException
+     */
+    public function getInvitations(string $organizationGuid, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetInvitations($organizationGuid), $fetch);
+    }
+
+    /**
+     * Create invitaitons for an Organization.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\Invitations|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CreateOrganizationInvitationsBadRequestException
+     * @throws Exception\CreateOrganizationInvitationsPaymentRequiredException
+     * @throws Exception\CreateOrganizationInvitationsForbiddenException
+     * @throws Exception\CreateOrganizationInvitationsTooManyRequestsException
+     * @throws Exception\CreateOrganizationInvitationsInternalServerErrorException
+     * @throws Exception\CreateOrganizationInvitationsServiceUnavailableException
+     */
+    public function createOrganizationInvitations(string $organizationGuid, Model\InvitationsCreate $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CreateOrganizationInvitations($organizationGuid, $requestBody), $fetch);
+    }
+
+    /**
+     * Fetch all invitations available for an Organization.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $email            An email address
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\Invitation|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\ResendInvitationForbiddenException
+     * @throws Exception\ResendInvitationNotFoundException
+     * @throws Exception\ResendInvitationTooManyRequestsException
+     * @throws Exception\ResendInvitationInternalServerErrorException
+     */
+    public function resendInvitation(string $organizationGuid, string $email, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\ResendInvitation($organizationGuid, $email), $fetch);
+    }
+
+    /**
+     * Deletes an invitation for a given organization and email address.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $email            An email address
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\DeleteInvitationForbiddenException
+     * @throws Exception\DeleteInvitationNotFoundException
+     * @throws Exception\DeleteInvitationTooManyRequestsException
+     * @throws Exception\DeleteInvitationInternalServerErrorException
+     */
+    public function deleteInvitation(string $organizationGuid, string $email, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\DeleteInvitation($organizationGuid, $email), $fetch);
     }
 
     /**
@@ -1402,6 +5118,1468 @@ class Client extends Runtime\Client\Client
     }
 
     /**
+     * validate bulk upload.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\BulkUploadData|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\ValidateBulkUploadBadRequestException
+     * @throws Exception\ValidateBulkUploadPaymentRequiredException
+     * @throws Exception\ValidateBulkUploadForbiddenException
+     * @throws Exception\ValidateBulkUploadNotFoundException
+     * @throws Exception\ValidateBulkUploadUnprocessableEntityException
+     * @throws Exception\ValidateBulkUploadInternalServerErrorException
+     * @throws Exception\ValidateBulkUploadServiceUnavailableException
+     */
+    public function validateBulkUpload(Model\BulkUploadValidate $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\ValidateBulkUpload($requestBody), $fetch);
+    }
+
+    /**
+     * Returns all bulk uploads for an organization.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param array  $queryParameters  {
+     *
+     * @var string $upload_type Return uploads specific to the action being performed.
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\BulkUploads|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetBulkUploadsBadRequestException
+     * @throws Exception\GetBulkUploadsPaymentRequiredException
+     * @throws Exception\GetBulkUploadsForbiddenException
+     * @throws Exception\GetBulkUploadsNotFoundException
+     * @throws Exception\GetBulkUploadsInternalServerErrorException
+     * @throws Exception\GetBulkUploadsServiceUnavailableException
+     */
+    public function getBulkUploads(string $organizationGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetBulkUploads($organizationGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * Deletes an existing Link Launchpad.
+     *
+     * @param string $launchpadId A GUID for a Bitly Link Launchpad
+     * @param string $fetch       Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\DeleteLaunchpadBadRequestException
+     * @throws Exception\DeleteLaunchpadForbiddenException
+     * @throws Exception\DeleteLaunchpadNotFoundException
+     * @throws Exception\DeleteLaunchpadInternalServerErrorException
+     * @throws Exception\DeleteLaunchpadServiceUnavailableException
+     */
+    public function deleteLaunchpad(string $launchpadId, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\DeleteLaunchpad($launchpadId), $fetch);
+    }
+
+    /**
+     * Returns all relevant data to render a specific link launchpad.
+     *
+     * @param string $launchpadId A GUID for a Bitly Link Launchpad
+     * @param string $fetch       Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\Launchpad|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetLaunchpadForbiddenException
+     * @throws Exception\GetLaunchpadNotFoundException
+     * @throws Exception\GetLaunchpadInternalServerErrorException
+     * @throws Exception\GetLaunchpadServiceUnavailableException
+     */
+    public function getLaunchpad(string $launchpadId, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetLaunchpad($launchpadId), $fetch);
+    }
+
+    /**
+     * Updates an existing link launchpad.
+     *
+     * @param string $launchpadId A GUID for a Bitly Link Launchpad
+     * @param string $fetch       Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\Launchpad|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\UpdateLaunchpadBadRequestException
+     * @throws Exception\UpdateLaunchpadForbiddenException
+     * @throws Exception\UpdateLaunchpadNotFoundException
+     * @throws Exception\UpdateLaunchpadTooManyRequestsException
+     * @throws Exception\UpdateLaunchpadInternalServerErrorException
+     * @throws Exception\UpdateLaunchpadServiceUnavailableException
+     */
+    public function updateLaunchpad(string $launchpadId, Model\UpdateLaunchpad $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\UpdateLaunchpad($launchpadId, $requestBody), $fetch);
+    }
+
+    /**
+     * Creates an empty link launchpad for a group using default appearance settings.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\Launchpad|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CreateLaunchpadBadRequestException
+     * @throws Exception\CreateLaunchpadForbiddenException
+     * @throws Exception\CreateLaunchpadInternalServerErrorException
+     * @throws Exception\CreateLaunchpadServiceUnavailableException
+     */
+    public function createLaunchpad(Model\CreateLaunchpad $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CreateLaunchpad($requestBody), $fetch);
+    }
+
+    /**
+     * Creates an empty Bitly Site for a group using default appearance settings.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CreateSiteBadRequestException
+     * @throws Exception\CreateSitePaymentRequiredException
+     * @throws Exception\CreateSiteForbiddenException
+     * @throws Exception\CreateSiteUnprocessableEntityException
+     * @throws Exception\CreateSiteInternalServerErrorException
+     * @throws Exception\CreateSiteServiceUnavailableException
+     */
+    public function createSite(Model\CreateLaunchpad $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CreateSite($requestBody), $fetch);
+    }
+
+    /**
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\BitlySiteLayout[]|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetSiteLayoutsBadRequestException
+     * @throws Exception\GetSiteLayoutsForbiddenException
+     * @throws Exception\GetSiteLayoutsNotFoundException
+     * @throws Exception\GetSiteLayoutsInternalServerErrorException
+     * @throws Exception\GetSiteLayoutsServiceUnavailableException
+     */
+    public function getSiteLayouts(string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetSiteLayouts(), $fetch);
+    }
+
+    /**
+     * Deletes an existing Site.
+     *
+     * @param string $siteId A GUID for a Bitly Site
+     * @param string $fetch  Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\DeleteSiteBadRequestException
+     * @throws Exception\DeleteSiteForbiddenException
+     * @throws Exception\DeleteSiteNotFoundException
+     * @throws Exception\DeleteSiteInternalServerErrorException
+     * @throws Exception\DeleteSiteServiceUnavailableException
+     */
+    public function deleteSite(string $siteId, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\DeleteSite($siteId), $fetch);
+    }
+
+    /**
+     * Retrieves a Bitly Site by ID.
+     *
+     * @param string $siteId A GUID for a Bitly Site
+     * @param string $fetch  Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetSiteBadRequestException
+     * @throws Exception\GetSiteForbiddenException
+     * @throws Exception\GetSiteNotFoundException
+     * @throws Exception\GetSiteInternalServerErrorException
+     * @throws Exception\GetSiteServiceUnavailableException
+     */
+    public function getSite(string $siteId, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetSite($siteId), $fetch);
+    }
+
+    /**
+     * Creates a new Bitly site by cloning content and appearance from an existing site.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CloneSiteBadRequestException
+     * @throws Exception\CloneSitePaymentRequiredException
+     * @throws Exception\CloneSiteForbiddenException
+     * @throws Exception\CloneSiteInternalServerErrorException
+     * @throws Exception\CloneSiteServiceUnavailableException
+     */
+    public function cloneSite(string $siteId, Model\SiteCloneRequest $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CloneSite($siteId, $requestBody), $fetch);
+    }
+
+    /**
+     * Discards a given site's in-progress draft.
+     *
+     * @param string $siteId A GUID for a Bitly Site
+     * @param string $fetch  Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\DiscardSiteDraftBadRequestException
+     * @throws Exception\DiscardSiteDraftForbiddenException
+     * @throws Exception\DiscardSiteDraftNotFoundException
+     * @throws Exception\DiscardSiteDraftUnprocessableEntityException
+     * @throws Exception\DiscardSiteDraftInternalServerErrorException
+     */
+    public function discardSiteDraft(string $siteId, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\DiscardSiteDraft($siteId), $fetch);
+    }
+
+    /**
+     * Discards a launchpad draft copy of production launchpad.
+     *
+     * @param string $launchpadId A GUID for a Bitly Link Launchpad
+     * @param string $fetch       Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\Launchpad|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\DiscardDraftLaunchpadBadRequestException
+     * @throws Exception\DiscardDraftLaunchpadForbiddenException
+     * @throws Exception\DiscardDraftLaunchpadInternalServerErrorException
+     * @throws Exception\DiscardDraftLaunchpadServiceUnavailableException
+     */
+    public function discardDraftLaunchpad(string $launchpadId, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\DiscardDraftLaunchpad($launchpadId), $fetch);
+    }
+
+    /**
+     * Replaces a production launchpad with its draft launchpad if changes are made.
+     *
+     * @param string $launchpadId A GUID for a Bitly Link Launchpad
+     * @param string $fetch       Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\Launchpad|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\PublishDraftLaunchpadBadRequestException
+     * @throws Exception\PublishDraftLaunchpadForbiddenException
+     * @throws Exception\PublishDraftLaunchpadInternalServerErrorException
+     * @throws Exception\PublishDraftLaunchpadServiceUnavailableException
+     */
+    public function publishDraftLaunchpad(string $launchpadId, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\PublishDraftLaunchpad($launchpadId), $fetch);
+    }
+
+    /**
+     * Fully deletes a link launchpad button - does not deactivate. Does not delete link tied to button.
+     *
+     * @param string $launchpadId A GUID for a Bitly Link Launchpad
+     * @param string $buttonId    A GUID for a Bitly Link Launchpad button
+     * @param string $fetch       Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\DeleteLaunchpadButtonForbiddenException
+     * @throws Exception\DeleteLaunchpadButtonNotFoundException
+     * @throws Exception\DeleteLaunchpadButtonInternalServerErrorException
+     * @throws Exception\DeleteLaunchpadButtonServiceUnavailableException
+     */
+    public function deleteLaunchpadButton(string $launchpadId, string $buttonId, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\DeleteLaunchpadButton($launchpadId, $buttonId), $fetch);
+    }
+
+    /**
+     * Updates a provided button on a provided link launchpad.
+     *
+     * @param string $buttonId    A GUID for a Bitly Link Launchpad button
+     * @param string $launchpadId A GUID for a Bitly Link Launchpad
+     * @param string $fetch       Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\LaunchpadButton|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\UpdateLaunchpadButtonBadRequestException
+     * @throws Exception\UpdateLaunchpadButtonForbiddenException
+     * @throws Exception\UpdateLaunchpadButtonNotFoundException
+     * @throws Exception\UpdateLaunchpadButtonInternalServerErrorException
+     * @throws Exception\UpdateLaunchpadButtonServiceUnavailableException
+     */
+    public function updateLaunchpadButton(string $buttonId, string $launchpadId, Model\LaunchpadButtonRequest $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\UpdateLaunchpadButton($buttonId, $launchpadId, $requestBody), $fetch);
+    }
+
+    /**
+     * Updates a provided social icon on a provided link launchpad.
+     *
+     * @param string $buttonId    A GUID for a Bitly Link Launchpad button
+     * @param string $launchpadId A GUID for a Bitly Link Launchpad
+     * @param string $fetch       Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\LaunchpadSocial|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\UpdateLaunchpadSocialBadRequestException
+     * @throws Exception\UpdateLaunchpadSocialForbiddenException
+     * @throws Exception\UpdateLaunchpadSocialNotFoundException
+     * @throws Exception\UpdateLaunchpadSocialInternalServerErrorException
+     * @throws Exception\UpdateLaunchpadSocialServiceUnavailableException
+     */
+    public function updateLaunchpadSocial(string $buttonId, string $launchpadId, Model\LaunchpadSocialRequest $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\UpdateLaunchpadSocial($buttonId, $launchpadId, $requestBody), $fetch);
+    }
+
+    /**
+     * Updates a provided youtube embed on a provided link launchpad.
+     *
+     * @param string $buttonId    A GUID for a Bitly Link Launchpad button
+     * @param string $launchpadId A GUID for a Bitly Link Launchpad
+     * @param string $fetch       Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\LaunchpadContentYouTubeResponse|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\UpdateLaunchpadYoutubeVideoBadRequestException
+     * @throws Exception\UpdateLaunchpadYoutubeVideoForbiddenException
+     * @throws Exception\UpdateLaunchpadYoutubeVideoNotFoundException
+     * @throws Exception\UpdateLaunchpadYoutubeVideoInternalServerErrorException
+     * @throws Exception\UpdateLaunchpadYoutubeVideoServiceUnavailableException
+     */
+    public function updateLaunchpadYoutubeVideo(string $buttonId, string $launchpadId, Model\LaunchpadContentYouTubeRequest $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\UpdateLaunchpadYoutubeVideo($buttonId, $launchpadId, $requestBody), $fetch);
+    }
+
+    /**
+     * Updates a provided image on a provided link launchpad.
+     *
+     * @param string $buttonId    A GUID for a Bitly Link Launchpad button
+     * @param string $launchpadId A GUID for a Bitly Link Launchpad
+     * @param string $fetch       Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\LaunchpadContentImage|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\UpdateLaunchpadImageContentBadRequestException
+     * @throws Exception\UpdateLaunchpadImageContentForbiddenException
+     * @throws Exception\UpdateLaunchpadImageContentNotFoundException
+     * @throws Exception\UpdateLaunchpadImageContentInternalServerErrorException
+     * @throws Exception\UpdateLaunchpadImageContentServiceUnavailableException
+     */
+    public function updateLaunchpadImageContent(string $buttonId, string $launchpadId, Model\LaunchpadContentImageRequest $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\UpdateLaunchpadImageContent($buttonId, $launchpadId, $requestBody), $fetch);
+    }
+
+    /**
+     * Updates a provided grid on a provided link launchpad.
+     *
+     * @param string $buttonId    A GUID for a Bitly Link Launchpad button
+     * @param string $launchpadId A GUID for a Bitly Link Launchpad
+     * @param string $fetch       Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\LaunchpadContainerResponse|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\UpdateLaunchpadGridContentBadRequestException
+     * @throws Exception\UpdateLaunchpadGridContentForbiddenException
+     * @throws Exception\UpdateLaunchpadGridContentNotFoundException
+     * @throws Exception\UpdateLaunchpadGridContentUnprocessableEntityException
+     * @throws Exception\UpdateLaunchpadGridContentInternalServerErrorException
+     * @throws Exception\UpdateLaunchpadGridContentServiceUnavailableException
+     */
+    public function updateLaunchpadGridContent(string $buttonId, string $launchpadId, Model\LaunchpadContainerRequest $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\UpdateLaunchpadGridContent($buttonId, $launchpadId, $requestBody), $fetch);
+    }
+
+    /**
+     * Updates a provided carousel on a provided link launchpad.
+     *
+     * @param string $buttonId    A GUID for a Bitly Link Launchpad button
+     * @param string $launchpadId A GUID for a Bitly Link Launchpad
+     * @param string $fetch       Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\LaunchpadContainerResponse|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\UpdateLaunchpadCarouselContentBadRequestException
+     * @throws Exception\UpdateLaunchpadCarouselContentForbiddenException
+     * @throws Exception\UpdateLaunchpadCarouselContentNotFoundException
+     * @throws Exception\UpdateLaunchpadCarouselContentUnprocessableEntityException
+     * @throws Exception\UpdateLaunchpadCarouselContentInternalServerErrorException
+     * @throws Exception\UpdateLaunchpadCarouselContentServiceUnavailableException
+     */
+    public function updateLaunchpadCarouselContent(string $buttonId, string $launchpadId, Model\LaunchpadContainerRequest $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\UpdateLaunchpadCarouselContent($buttonId, $launchpadId, $requestBody), $fetch);
+    }
+
+    /**
+     * Updates a provided bitlink on a provided link launchpad.
+     *
+     * @param string $buttonId    A GUID for a Bitly Link Launchpad button
+     * @param string $launchpadId A GUID for a Bitly Link Launchpad
+     * @param string $fetch       Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\LaunchpadButton|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\UpdateLaunchpadBitlinkContentBadRequestException
+     * @throws Exception\UpdateLaunchpadBitlinkContentForbiddenException
+     * @throws Exception\UpdateLaunchpadBitlinkContentNotFoundException
+     * @throws Exception\UpdateLaunchpadBitlinkContentInternalServerErrorException
+     * @throws Exception\UpdateLaunchpadBitlinkContentServiceUnavailableException
+     */
+    public function updateLaunchpadBitlinkContent(string $buttonId, string $launchpadId, Model\LaunchpadContentBitlinkRequest $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\UpdateLaunchpadBitlinkContent($buttonId, $launchpadId, $requestBody), $fetch);
+    }
+
+    /**
+     * Updates the sort order for all buttons associated with a launchpad.
+     *
+     * @param string $launchpadId A GUID for a Bitly Link Launchpad
+     * @param string $fetch       Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\UpdateButtonSortOrder|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\UpdateLaunchpadButtonSortOrderBadRequestException
+     * @throws Exception\UpdateLaunchpadButtonSortOrderForbiddenException
+     * @throws Exception\UpdateLaunchpadButtonSortOrderNotFoundException
+     * @throws Exception\UpdateLaunchpadButtonSortOrderInternalServerErrorException
+     * @throws Exception\UpdateLaunchpadButtonSortOrderServiceUnavailableException
+     */
+    public function updateLaunchpadButtonSortOrder(string $launchpadId, Model\UpdateButtonSortOrder $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\UpdateLaunchpadButtonSortOrder($launchpadId, $requestBody), $fetch);
+    }
+
+    /**
+     * Creates a button on a provided link launchpad.
+     *
+     * @param string $launchpadId A GUID for a Bitly Link Launchpad
+     * @param string $fetch       Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\LaunchpadButton|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CreateLaunchpadButtonBadRequestException
+     * @throws Exception\CreateLaunchpadButtonForbiddenException
+     * @throws Exception\CreateLaunchpadButtonNotFoundException
+     * @throws Exception\CreateLaunchpadButtonInternalServerErrorException
+     * @throws Exception\CreateLaunchpadButtonServiceUnavailableException
+     */
+    public function createLaunchpadButton(string $launchpadId, Model\LaunchpadButtonRequest $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CreateLaunchpadButton($launchpadId, $requestBody), $fetch);
+    }
+
+    /**
+     * Creates a content of given type on the provided launchpad ID.
+     *
+     * @param string $launchpadId A GUID for a Bitly Link Launchpad
+     * @param string $fetch       Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\LaunchpadButton|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CreateLaunchpadContentBitlinkBadRequestException
+     * @throws Exception\CreateLaunchpadContentBitlinkForbiddenException
+     * @throws Exception\CreateLaunchpadContentBitlinkNotFoundException
+     * @throws Exception\CreateLaunchpadContentBitlinkInternalServerErrorException
+     * @throws Exception\CreateLaunchpadContentBitlinkServiceUnavailableException
+     */
+    public function createLaunchpadContentBitlink(string $launchpadId, Model\LaunchpadContentBitlinkRequest $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CreateLaunchpadContentBitlink($launchpadId, $requestBody), $fetch);
+    }
+
+    /**
+     * Creates a content of given type on the provided launchpad ID.
+     *
+     * @param string $launchpadId A GUID for a Bitly Link Launchpad
+     * @param string $fetch       Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\LaunchpadSocial|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CreateLaunchpadContentSocialBadRequestException
+     * @throws Exception\CreateLaunchpadContentSocialForbiddenException
+     * @throws Exception\CreateLaunchpadContentSocialNotFoundException
+     * @throws Exception\CreateLaunchpadContentSocialInternalServerErrorException
+     * @throws Exception\CreateLaunchpadContentSocialServiceUnavailableException
+     */
+    public function createLaunchpadContentSocial(string $launchpadId, Model\LaunchpadContentSocialRequest $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CreateLaunchpadContentSocial($launchpadId, $requestBody), $fetch);
+    }
+
+    /**
+     * Creates a content of given type on the provided launchpad ID.
+     *
+     * @param string $launchpadId A GUID for a Bitly Link Launchpad
+     * @param string $fetch       Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\LaunchpadContentYouTubeResponse|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CreateLaunchpadContentYoutubeVideoBadRequestException
+     * @throws Exception\CreateLaunchpadContentYoutubeVideoForbiddenException
+     * @throws Exception\CreateLaunchpadContentYoutubeVideoNotFoundException
+     * @throws Exception\CreateLaunchpadContentYoutubeVideoInternalServerErrorException
+     * @throws Exception\CreateLaunchpadContentYoutubeVideoServiceUnavailableException
+     */
+    public function createLaunchpadContentYoutubeVideo(string $launchpadId, Model\LaunchpadContentYouTubeRequest $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CreateLaunchpadContentYoutubeVideo($launchpadId, $requestBody), $fetch);
+    }
+
+    /**
+     * Creates a content of given type on the provided launchpad ID.
+     *
+     * @param string $launchpadId A GUID for a Bitly Link Launchpad
+     * @param string $fetch       Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\LaunchpadContentImage|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CreateLaunchpadContentImageBadRequestException
+     * @throws Exception\CreateLaunchpadContentImageForbiddenException
+     * @throws Exception\CreateLaunchpadContentImageNotFoundException
+     * @throws Exception\CreateLaunchpadContentImageInternalServerErrorException
+     * @throws Exception\CreateLaunchpadContentImageServiceUnavailableException
+     */
+    public function createLaunchpadContentImage(string $launchpadId, Model\LaunchpadContentImageRequest $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CreateLaunchpadContentImage($launchpadId, $requestBody), $fetch);
+    }
+
+    /**
+     * Creates a content of given type on the provided launchpad ID.
+     *
+     * @param string $launchpadId A GUID for a Bitly Link Launchpad
+     * @param string $fetch       Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\LaunchpadContentDigitalBusinessCardResponse|\Psr\Http\Message\ResponseInterface|null
+     */
+    public function createLaunchpadContentDigitalBusinessCard(string $launchpadId, Model\LaunchpadContentDigitalBusinessCardRequest $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CreateLaunchpadContentDigitalBusinessCard($launchpadId, $requestBody), $fetch);
+    }
+
+    /**
+     * Updates a digital business card on a provided link launchpad.
+     *
+     * @param string $buttonId    A GUID for a Bitly Link Launchpad button
+     * @param string $launchpadId A GUID for a Bitly Link Launchpad
+     * @param string $fetch       Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\LaunchpadContentDigitalBusinessCardResponse|\Psr\Http\Message\ResponseInterface|null
+     */
+    public function updateLaunchpadContentDigitalBusinessCard(string $buttonId, string $launchpadId, Model\LaunchpadContentDigitalBusinessCardRequest $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\UpdateLaunchpadContentDigitalBusinessCard($buttonId, $launchpadId, $requestBody), $fetch);
+    }
+
+    /**
+     * Creates a content of given type on the provided launchpad ID.
+     *
+     * @param string $launchpadId A GUID for a Bitly Link Launchpad
+     * @param string $fetch       Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\LaunchpadContentTextBlockResponse|\Psr\Http\Message\ResponseInterface|null
+     */
+    public function createLaunchpadTextBlockContent(string $launchpadId, Model\LaunchpadContentTextBlockRequest $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CreateLaunchpadTextBlockContent($launchpadId, $requestBody), $fetch);
+    }
+
+    /**
+     * Updates a content of given type on the provided launchpad ID and button ID.
+     *
+     * @param string $launchpadId A GUID for a Bitly Link Launchpad
+     * @param string $buttonId    A GUID for a Bitly Link Launchpad button
+     * @param string $fetch       Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\LaunchpadContentTextBlockResponse|\Psr\Http\Message\ResponseInterface|null
+     */
+    public function updateLaunchpadTextBlockContent(string $launchpadId, string $buttonId, Model\LaunchpadContentTextBlockRequest $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\UpdateLaunchpadTextBlockContent($launchpadId, $buttonId, $requestBody), $fetch);
+    }
+
+    /**
+     * Allows for the upload of an image for use on a launchpad.
+     *
+     * @param string $launchpadId A GUID for a Bitly Link Launchpad
+     * @param string $fetch       Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\ImageUploadResponse|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\UploadLaunchpadImageBadRequestException
+     * @throws Exception\UploadLaunchpadImageForbiddenException
+     * @throws Exception\UploadLaunchpadImageNotFoundException
+     * @throws Exception\UploadLaunchpadImageInternalServerErrorException
+     * @throws Exception\UploadLaunchpadImageServiceUnavailableException
+     */
+    public function uploadLaunchpadImage(string $launchpadId, Model\LaunchpadImageUpload $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\UploadLaunchpadImage($launchpadId, $requestBody), $fetch);
+    }
+
+    /**
+     * Deletes an image associated with a launchpad.
+     *
+     * @param string $launchpadId A GUID for a Bitly Link Launchpad
+     * @param string $imageUse    An image use for an image uploaded to Bitly
+     * @param string $fetch       Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\LaunchpadImageUpload|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\DeleteLaunchpadImageByImageUseForbiddenException
+     * @throws Exception\DeleteLaunchpadImageByImageUseNotFoundException
+     * @throws Exception\DeleteLaunchpadImageByImageUseInternalServerErrorException
+     * @throws Exception\DeleteLaunchpadImageByImageUseServiceUnavailableException
+     */
+    public function deleteLaunchpadImageByImageUse(string $launchpadId, string $imageUse, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\DeleteLaunchpadImageByImageUse($launchpadId, $imageUse), $fetch);
+    }
+
+    /**
+     * this endpoint is authenticated so that only the launchpad admin can see the original image.
+     *
+     * @param string $launchpadId A GUID for a Bitly Link Launchpad
+     * @param string $imageUse    An image use for an image uploaded to Bitly
+     * @param string $fetch       Fetch mode to use (can be OBJECT or RESPONSE)
+     * @param array  $accept      Accept content header image/*|application/json
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetLaunchpadImageByImageUseBadRequestException
+     * @throws Exception\GetLaunchpadImageByImageUseForbiddenException
+     * @throws Exception\GetLaunchpadImageByImageUseNotFoundException
+     * @throws Exception\GetLaunchpadImageByImageUseInternalServerErrorException
+     * @throws Exception\GetLaunchpadImageByImageUseServiceUnavailableException
+     */
+    public function getLaunchpadImageByImageUse(string $launchpadId, string $imageUse, string $fetch = self::FETCH_OBJECT, array $accept = [])
+    {
+        return $this->executeEndpoint(new Endpoint\GetLaunchpadImageByImageUse($launchpadId, $imageUse, $accept), $fetch);
+    }
+
+    /**
+     * the public version of an image can be recropped without reuploading the original image.
+     *
+     * @param string $launchpadId A GUID for a Bitly Link Launchpad
+     * @param string $imageUse    An image use for an image uploaded to Bitly
+     * @param string $fetch       Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\LaunchpadImageUpdate|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\UpdateLaunchpadImageByImageUseBadRequestException
+     * @throws Exception\UpdateLaunchpadImageByImageUseForbiddenException
+     * @throws Exception\UpdateLaunchpadImageByImageUseNotFoundException
+     * @throws Exception\UpdateLaunchpadImageByImageUseInternalServerErrorException
+     * @throws Exception\UpdateLaunchpadImageByImageUseServiceUnavailableException
+     */
+    public function updateLaunchpadImageByImageUse(string $launchpadId, string $imageUse, Model\ImageCrop $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\UpdateLaunchpadImageByImageUse($launchpadId, $imageUse, $requestBody), $fetch);
+    }
+
+    /**
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\LaunchpadPresetTheme[]|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetLaunchpadPresetThemesInternalServerErrorException
+     * @throws Exception\GetLaunchpadPresetThemesServiceUnavailableException
+     */
+    public function getLaunchpadPresetThemes(string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetLaunchpadPresetThemes(), $fetch);
+    }
+
+    /**
+     * Retrieves All Link Launchpads Associated with a Provided Group.
+     *
+     * @param string $groupGuid A GUID for a Bitly group
+     * @param string $fetch     Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\Launchpads|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetLaunchpadsForGroupForbiddenException
+     * @throws Exception\GetLaunchpadsForGroupNotFoundException
+     * @throws Exception\GetLaunchpadsForGroupInternalServerErrorException
+     * @throws Exception\GetLaunchpadsForGroupServiceUnavailableException
+     */
+    public function getLaunchpadsForGroup(string $groupGuid, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetLaunchpadsForGroup($groupGuid), $fetch);
+    }
+
+    /**
+     * Returns the view counts for the specified launchpad rolled up into a single field.
+     *
+     * @param string $launchpadId     A GUID for a Bitly Link Launchpad
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var int    $size The quantity of items to be be returned
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\ViewsSummary|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetViewsSummaryForLaunchpadForbiddenException
+     * @throws Exception\GetViewsSummaryForLaunchpadNotFoundException
+     * @throws Exception\GetViewsSummaryForLaunchpadInternalServerErrorException
+     * @throws Exception\GetViewsSummaryForLaunchpadServiceUnavailableException
+     */
+    public function getViewsSummaryForLaunchpad(string $launchpadId, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetViewsSummaryForLaunchpad($launchpadId, $queryParameters), $fetch);
+    }
+
+    /**
+     * Returns the country origins of view traffic for the specified launchpad.
+     *
+     * @param string $launchpadId     A GUID for a Bitly Link Launchpad
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var int    $size The quantity of items to be be returned
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\Views|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetMetricsForLaunchpadByCountriesBadRequestException
+     * @throws Exception\GetMetricsForLaunchpadByCountriesForbiddenException
+     * @throws Exception\GetMetricsForLaunchpadByCountriesNotFoundException
+     * @throws Exception\GetMetricsForLaunchpadByCountriesInternalServerErrorException
+     * @throws Exception\GetMetricsForLaunchpadByCountriesServiceUnavailableException
+     */
+    public function getMetricsForLaunchpadByCountries(string $launchpadId, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetMetricsForLaunchpadByCountries($launchpadId, $queryParameters), $fetch);
+    }
+
+    /**
+     * Returns the city origins of view traffic for the specified Launchpad.
+     *
+     * @param string $launchpadId     A GUID for a Bitly Link Launchpad
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var int    $size The quantity of items to be be returned
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\CityViewMetrics|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetMetricsForLaunchpadByCitiesBadRequestException
+     * @throws Exception\GetMetricsForLaunchpadByCitiesPaymentRequiredException
+     * @throws Exception\GetMetricsForLaunchpadByCitiesForbiddenException
+     * @throws Exception\GetMetricsForLaunchpadByCitiesNotFoundException
+     * @throws Exception\GetMetricsForLaunchpadByCitiesInternalServerErrorException
+     * @throws Exception\GetMetricsForLaunchpadByCitiesServiceUnavailableException
+     */
+    public function getMetricsForLaunchpadByCities(string $launchpadId, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetMetricsForLaunchpadByCities($launchpadId, $queryParameters), $fetch);
+    }
+
+    /**
+     * Returns the device types generating view traffic to the specified launchpad.
+     *
+     * @param string $launchpadId     A GUID for a Bitly Link Launchpad
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var int    $size The quantity of items to be be returned
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\Views|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetMetricsForLaunchpadByDevicesBadRequestException
+     * @throws Exception\GetMetricsForLaunchpadByDevicesPaymentRequiredException
+     * @throws Exception\GetMetricsForLaunchpadByDevicesForbiddenException
+     * @throws Exception\GetMetricsForLaunchpadByDevicesNotFoundException
+     * @throws Exception\GetMetricsForLaunchpadByDevicesInternalServerErrorException
+     * @throws Exception\GetMetricsForLaunchpadByDevicesServiceUnavailableException
+     */
+    public function getMetricsForLaunchpadByDevices(string $launchpadId, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetMetricsForLaunchpadByDevices($launchpadId, $queryParameters), $fetch);
+    }
+
+    /**
+     * Returns referrer view counts for the specified launchpad.
+     *
+     * @param string $launchpadId     A GUID for a Bitly Link Launchpad
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var int    $size The quantity of items to be be returned
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\Views|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetMetricsForLaunchpadByReferrersBadRequestException
+     * @throws Exception\GetMetricsForLaunchpadByReferrersForbiddenException
+     * @throws Exception\GetMetricsForLaunchpadByReferrersNotFoundException
+     * @throws Exception\GetMetricsForLaunchpadByReferrersInternalServerErrorException
+     * @throws Exception\GetMetricsForLaunchpadByReferrersServiceUnavailableException
+     */
+    public function getMetricsForLaunchpadByReferrers(string $launchpadId, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetMetricsForLaunchpadByReferrers($launchpadId, $queryParameters), $fetch);
+    }
+
+    /**
+     * Returns the view counts for the specified link in an array based on a date.
+     *
+     * @param string $launchpadId     A GUID for a Bitly Link Launchpad
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var int    $size The quantity of items to be be returned
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\Views|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetViewsForLaunchpadForbiddenException
+     * @throws Exception\GetViewsForLaunchpadNotFoundException
+     * @throws Exception\GetViewsForLaunchpadInternalServerErrorException
+     * @throws Exception\GetViewsForLaunchpadServiceUnavailableException
+     */
+    public function getViewsForLaunchpad(string $launchpadId, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetViewsForLaunchpad($launchpadId, $queryParameters), $fetch);
+    }
+
+    /**
+     * Returns the click counts for all active and inactive links that were associated with a launchpad.
+     *
+     * @param string $launchpadId     A GUID for a Bitly Link Launchpad
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var int    $size The quantity of items to be be returned
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var int    $page Integer specifying the numbered result at which to start
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\LaunchpadLinkPerformance|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetLinkPerformanceForLaunchpadForbiddenException
+     * @throws Exception\GetLinkPerformanceForLaunchpadNotFoundException
+     * @throws Exception\GetLinkPerformanceForLaunchpadInternalServerErrorException
+     * @throws Exception\GetLinkPerformanceForLaunchpadServiceUnavailableException
+     */
+    public function getLinkPerformanceForLaunchpad(string $launchpadId, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetLinkPerformanceForLaunchpad($launchpadId, $queryParameters), $fetch);
+    }
+
+    /**
+     * Gets all active Bitly Sites owned by the provided Group GUID.
+     *
+     * @param string $groupGuid       A GUID for a Bitly group
+     * @param array  $queryParameters {
+     *
+     * @var string $search_after token used to search next batch, only use response from API as input value
+     * @var int    $size The quantity of items to be be returned
+     * @var string $sites_url_param
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\BitlySites|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetSitesForGroupBadRequestException
+     * @throws Exception\GetSitesForGroupForbiddenException
+     * @throws Exception\GetSitesForGroupInternalServerErrorException
+     */
+    public function getSitesForGroup(string $groupGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetSitesForGroup($groupGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * Update which sites to keep upon tier downgrade.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\UpdateSitesToKeepBadRequestException
+     * @throws Exception\UpdateSitesToKeepForbiddenException
+     * @throws Exception\UpdateSitesToKeepUnprocessableEntityException
+     * @throws Exception\UpdateSitesToKeepInternalServerErrorException
+     */
+    public function updateSitesToKeep(string $organizationGuid, Model\KeepSitesRequest $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\UpdateSitesToKeep($organizationGuid, $requestBody), $fetch);
+    }
+
+    /**
+     * Deletes a button from a given site - does not deactivate. Does not delete link tied to button.
+     *
+     * @param string $siteId   A GUID for a Bitly Site
+     * @param string $buttonId A GUID for a Bitly Site button
+     * @param string $fetch    Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\DeleteSiteButtonBadRequestException
+     * @throws Exception\DeleteSiteButtonForbiddenException
+     * @throws Exception\DeleteSiteButtonNotFoundException
+     * @throws Exception\DeleteSiteButtonInternalServerErrorException
+     * @throws Exception\DeleteSiteButtonServiceUnavailableException
+     */
+    public function deleteSiteButton(string $siteId, string $buttonId, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\DeleteSiteButton($siteId, $buttonId), $fetch);
+    }
+
+    /**
+     * Updates a provided button on a provided site.
+     *
+     * @param string $siteId   A GUID for a Bitly Site
+     * @param string $buttonId A GUID for a Bitly Site button
+     * @param string $fetch    Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\UpdateSiteButtonBadRequestException
+     * @throws Exception\UpdateSiteButtonForbiddenException
+     * @throws Exception\UpdateSiteButtonNotFoundException
+     * @throws Exception\UpdateSiteButtonExpectationFailedException
+     * @throws Exception\UpdateSiteButtonUnprocessableEntityException
+     * @throws Exception\UpdateSiteButtonTooManyRequestsException
+     * @throws Exception\UpdateSiteButtonInternalServerErrorException
+     */
+    public function updateSiteButton(string $siteId, string $buttonId, Model\SiteButtonRequest $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\UpdateSiteButton($siteId, $buttonId, $requestBody), $fetch);
+    }
+
+    /**
+     * constructs the content blob required to create a YouTube video button.
+     *
+     * @param string $launchpadId A GUID for a Bitly Link Launchpad
+     * @param string $fetch       Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\YoutubeVideoRequest|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\PrevalidateYouTubeVideoButtonBadRequestException
+     * @throws Exception\PrevalidateYouTubeVideoButtonForbiddenException
+     * @throws Exception\PrevalidateYouTubeVideoButtonUnprocessableEntityException
+     * @throws Exception\PrevalidateYouTubeVideoButtonInternalServerErrorException
+     */
+    public function prevalidateYouTubeVideoButton(string $launchpadId, Model\PrevalidateYouTubeVideoRequest $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\PrevalidateYouTubeVideoButton($launchpadId, $requestBody), $fetch);
+    }
+
+    /**
+     * Retrieves all content that are children of a block (i.e carousel or grid).
+     *
+     * @param string $siteId      A GUID for a Bitly Site
+     * @param string $containerId A GUID for a Bitly Container
+     * @param string $fetch       Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\SiteBlock[]|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetChildrenForBlockForbiddenException
+     * @throws Exception\GetChildrenForBlockNotFoundException
+     * @throws Exception\GetChildrenForBlockInternalServerErrorException
+     * @throws Exception\GetChildrenForBlockServiceUnavailableException
+     */
+    public function getChildrenForBlock(string $siteId, string $containerId, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetChildrenForBlock($siteId, $containerId), $fetch);
+    }
+
+    /**
+     * Updates the order of all blocks within the container. Container can be root, social, or a grid/carousel GUID.
+     *
+     * @param string $siteId      A GUID for a Bitly Site
+     * @param string $containerId A GUID for a Bitly Container
+     * @param string $fetch       Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\ReorderBlocksByContainerBadRequestException
+     * @throws Exception\ReorderBlocksByContainerForbiddenException
+     * @throws Exception\ReorderBlocksByContainerNotFoundException
+     * @throws Exception\ReorderBlocksByContainerUnprocessableEntityException
+     * @throws Exception\ReorderBlocksByContainerInternalServerErrorException
+     * @throws Exception\ReorderBlocksByContainerServiceUnavailableException
+     */
+    public function reorderBlocksByContainer(string $siteId, string $containerId, Model\BlockOrders $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\ReorderBlocksByContainer($siteId, $containerId, $requestBody), $fetch);
+    }
+
+    /**
+     * Retrieves all templates optionally sorted by a Site's onboarding category.
+     *
+     * @param array $queryParameters {
+     *
+     * @var string $category A filter option for template categories
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\Template[]|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetTemplatesForbiddenException
+     * @throws Exception\GetTemplatesNotFoundException
+     * @throws Exception\GetTemplatesInternalServerErrorException
+     * @throws Exception\GetTemplatesServiceUnavailableException
+     */
+    public function getTemplates(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetTemplates($queryParameters), $fetch);
+    }
+
+    /**
+     * Applies a template's appearance and optionally sample content to a Bitly Site.
+     *
+     * @param string $siteId A GUID for a Bitly Site
+     * @param string $fetch  Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\ApplyTemplateForbiddenException
+     * @throws Exception\ApplyTemplateNotFoundException
+     * @throws Exception\ApplyTemplateUnprocessableEntityException
+     * @throws Exception\ApplyTemplateInternalServerErrorException
+     * @throws Exception\ApplyTemplateServiceUnavailableException
+     */
+    public function applyTemplate(string $siteId, ?Model\ApplyTemplateRequest $requestBody = null, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\ApplyTemplate($siteId, $requestBody), $fetch);
+    }
+
+    /**
+     * Creates a container which contains a set of other content.
+     *
+     * @param string $siteId A GUID for a Bitly Site
+     * @param string $fetch  Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\SiteBlock|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CreateContainerBadRequestException
+     * @throws Exception\CreateContainerForbiddenException
+     * @throws Exception\CreateContainerNotFoundException
+     * @throws Exception\CreateContainerUnprocessableEntityException
+     * @throws Exception\CreateContainerInternalServerErrorException
+     * @throws Exception\CreateContainerServiceUnavailableException
+     */
+    public function createContainer(string $siteId, Model\SiteBlockContainerRequest $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CreateContainer($siteId, $requestBody), $fetch);
+    }
+
+    /**
+     * Replaces a production Site with its draft Site if changes are made.
+     *
+     * @param string $siteId A GUID for a Bitly Site
+     * @param string $fetch  Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\PublishSiteBadRequestException
+     * @throws Exception\PublishSiteForbiddenException
+     * @throws Exception\PublishSiteInternalServerErrorException
+     * @throws Exception\PublishSiteServiceUnavailableException
+     */
+    public function publishSite(string $siteId, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\PublishSite($siteId), $fetch);
+    }
+
+    /**
+     * Returns the country origins of view traffic for the specified Site.
+     *
+     * @param string $siteId          A GUID for a Bitly Site
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var int    $size The quantity of items to be be returned
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\SiteViewMetrics|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetMetricsForSitesByCountriesBadRequestException
+     * @throws Exception\GetMetricsForSitesByCountriesForbiddenException
+     * @throws Exception\GetMetricsForSitesByCountriesNotFoundException
+     * @throws Exception\GetMetricsForSitesByCountriesInternalServerErrorException
+     * @throws Exception\GetMetricsForSitesByCountriesServiceUnavailableException
+     */
+    public function getMetricsForSitesByCountries(string $siteId, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetMetricsForSitesByCountries($siteId, $queryParameters), $fetch);
+    }
+
+    /**
+     * Returns the city origins of view traffic for the specified Site.
+     *
+     * @param string $siteId          A GUID for a Bitly Site
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var int    $size The quantity of items to be be returned
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\SiteCityViewMetrics|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetMetricsForSiteByCitiesBadRequestException
+     * @throws Exception\GetMetricsForSiteByCitiesPaymentRequiredException
+     * @throws Exception\GetMetricsForSiteByCitiesForbiddenException
+     * @throws Exception\GetMetricsForSiteByCitiesNotFoundException
+     * @throws Exception\GetMetricsForSiteByCitiesInternalServerErrorException
+     * @throws Exception\GetMetricsForSiteByCitiesServiceUnavailableException
+     */
+    public function getMetricsForSiteByCities(string $siteId, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetMetricsForSiteByCities($siteId, $queryParameters), $fetch);
+    }
+
+    /**
+     * Returns the device types generating view traffic to the specified site.
+     *
+     * @param string $siteId          A GUID for a Bitly Site
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var int    $size The quantity of items to be be returned
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\SiteViewMetrics|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetMetricsForSiteByDevicesBadRequestException
+     * @throws Exception\GetMetricsForSiteByDevicesPaymentRequiredException
+     * @throws Exception\GetMetricsForSiteByDevicesForbiddenException
+     * @throws Exception\GetMetricsForSiteByDevicesNotFoundException
+     * @throws Exception\GetMetricsForSiteByDevicesInternalServerErrorException
+     * @throws Exception\GetMetricsForSiteByDevicesServiceUnavailableException
+     */
+    public function getMetricsForSiteByDevices(string $siteId, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetMetricsForSiteByDevices($siteId, $queryParameters), $fetch);
+    }
+
+    /**
+     * Returns referrer view counts for the specified site.
+     *
+     * @param string $siteId          A GUID for a Bitly Site
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var int    $size The quantity of items to be be returned
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\SiteViewMetrics|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetMetricsForSiteByReferrersBadRequestException
+     * @throws Exception\GetMetricsForSiteByReferrersForbiddenException
+     * @throws Exception\GetMetricsForSiteByReferrersNotFoundException
+     * @throws Exception\GetMetricsForSiteByReferrersInternalServerErrorException
+     * @throws Exception\GetMetricsForSiteByReferrersServiceUnavailableException
+     */
+    public function getMetricsForSiteByReferrers(string $siteId, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetMetricsForSiteByReferrers($siteId, $queryParameters), $fetch);
+    }
+
+    /**
+     * add a user with role to a brand or organization.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\UserInternal|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\AddUserWithRoleBadRequestException
+     * @throws Exception\AddUserWithRoleForbiddenException
+     * @throws Exception\AddUserWithRoleUnprocessableEntityException
+     * @throws Exception\AddUserWithRoleInternalServerErrorException
+     * @throws Exception\AddUserWithRoleServiceUnavailableException
+     */
+    public function addUserWithRole(Model\UserRole $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\AddUserWithRole($requestBody), $fetch);
+    }
+
+    /**
+     * delete a user with role from a brand or organization.
+     *
+     * @param string $roleName The role specified for a user
+     * @param string $fetch    Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\DeleteUserWithRoleBadRequestException
+     * @throws Exception\DeleteUserWithRoleForbiddenException
+     * @throws Exception\DeleteUserWithRoleUnprocessableEntityException
+     * @throws Exception\DeleteUserWithRoleInternalServerErrorException
+     * @throws Exception\DeleteUserWithRoleServiceUnavailableException
+     */
+    public function deleteUserWithRole(string $roleName, Model\UserRole $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\DeleteUserWithRole($roleName, $requestBody), $fetch);
+    }
+
+    /**
+     * delete a user with role for a brand or organization.
+     *
+     * @param string $roleName The role specified for a user
+     * @param string $fetch    Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\UpdateUserWithRoleBadRequestException
+     * @throws Exception\UpdateUserWithRoleForbiddenException
+     * @throws Exception\UpdateUserWithRoleUnprocessableEntityException
+     * @throws Exception\UpdateUserWithRoleInternalServerErrorException
+     * @throws Exception\UpdateUserWithRoleServiceUnavailableException
+     */
+    public function updateUserWithRole(string $roleName, Model\UserRole $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\UpdateUserWithRole($roleName, $requestBody), $fetch);
+    }
+
+    /**
+     * Crawls the web to return the webpages title for a long URL.
+     *
+     * @param array $queryParameters {
+     *
+     * @var string $url
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\TitleResponse|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetTitleForLongURLForbiddenException
+     * @throws Exception\GetTitleForLongURLNotFoundException
+     * @throws Exception\GetTitleForLongURLInternalServerErrorException
+     * @throws Exception\GetTitleForLongURLServiceUnavailableException
+     */
+    public function getTitleForLongURL(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetTitleForLongURL($queryParameters), $fetch);
+    }
+
+    /**
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\HandleWebhookForbiddenException
+     * @throws Exception\HandleWebhookUnprocessableEntityException
+     * @throws Exception\HandleWebhookInternalServerErrorException
+     */
+    public function handleWebhook(string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\HandleWebhook(), $fetch);
+    }
+
+    /**
+     * Evaluates an intervention and returns the appropriate promo code.
+     *
+     * @param string $intervention the type of intervention (e.g. downgrade, upgrade, etc)
+     * @param string $fetch        Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\EvaluateInterventionResponse|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\EvaluateInterventionBadRequestException
+     * @throws Exception\EvaluateInterventionForbiddenException
+     * @throws Exception\EvaluateInterventionUnprocessableEntityException
+     * @throws Exception\EvaluateInterventionInternalServerErrorException
+     * @throws Exception\EvaluateInterventionServiceUnavailableException
+     */
+    public function evaluateIntervention(string $intervention, Model\EvaluateInterventionRequest $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\EvaluateIntervention($intervention, $requestBody), $fetch);
+    }
+
+    /**
+     * Creates an intervention for the org.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\Intervention|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CreateInterventionBadRequestException
+     * @throws Exception\CreateInterventionForbiddenException
+     * @throws Exception\CreateInterventionUnprocessableEntityException
+     * @throws Exception\CreateInterventionInternalServerErrorException
+     * @throws Exception\CreateInterventionServiceUnavailableException
+     */
+    public function createIntervention(Model\Intervention $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CreateIntervention($requestBody), $fetch);
+    }
+
+    /**
+     * Decides the variant for an entity in a given optimizely experiment.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\DecideResponse|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\ExperimentDecideBadRequestException
+     * @throws Exception\ExperimentDecideForbiddenException
+     * @throws Exception\ExperimentDecideUnprocessableEntityException
+     * @throws Exception\ExperimentDecideInternalServerErrorException
+     */
+    public function experimentDecide(Model\DecideRequest $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\ExperimentDecide($requestBody), $fetch);
+    }
+
+    /**
+     * Track captures an Optimizely event on an entity in a given experiment.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\ExperimentTrackForbiddenException
+     * @throws Exception\ExperimentTrackUnprocessableEntityException
+     * @throws Exception\ExperimentTrackInternalServerErrorException
+     */
+    public function experimentTrack(Model\TrackRequest $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\ExperimentTrack($requestBody), $fetch);
+    }
+
+    /**
+     * Upload an image for use in a QR code. Specify optional "use" parameter to store image as a default group preference.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\ImageUploadResponse|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\UploadImageBadRequestException
+     * @throws Exception\UploadImageForbiddenException
+     * @throws Exception\UploadImageNotFoundException
+     * @throws Exception\UploadImageInternalServerErrorException
+     * @throws Exception\UploadImageServiceUnavailableException
+     */
+    public function uploadImage(Model\ImageUpload $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\UploadImage($requestBody), $fetch);
+    }
+
+    /**
+     * Fetches the original image associated with the provided image_guid for use when cropping.
+     *
+     * @param string $imageGuid A GUID for an image uploaded to Bitly
+     * @param string $fetch     Fetch mode to use (can be OBJECT or RESPONSE)
+     * @param array  $accept    Accept content header image/*|application/json
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetImageByGUIDBadRequestException
+     * @throws Exception\GetImageByGUIDForbiddenException
+     * @throws Exception\GetImageByGUIDNotFoundException
+     * @throws Exception\GetImageByGUIDInternalServerErrorException
+     * @throws Exception\GetImageByGUIDServiceUnavailableException
+     */
+    public function getImageByGUID(string $imageGuid, string $fetch = self::FETCH_OBJECT, array $accept = [])
+    {
+        return $this->executeEndpoint(new Endpoint\GetImageByGUID($imageGuid, $accept), $fetch);
+    }
+
+    /**
+     * the public version of an image can be recropped without reuploading the original image.
+     *
+     * @param string $imageGuid A GUID for an image uploaded to Bitly
+     * @param string $fetch     Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\PublicImageURL|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\UpdateImageBadRequestException
+     * @throws Exception\UpdateImageForbiddenException
+     * @throws Exception\UpdateImageNotFoundException
+     * @throws Exception\UpdateImageInternalServerErrorException
+     * @throws Exception\UpdateImageServiceUnavailableException
+     */
+    public function updateImage(string $imageGuid, Model\ImageUpdate $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\UpdateImage($imageGuid, $requestBody), $fetch);
+    }
+
+    /**
+     * Gets the QR code with a matching id.
+     *
+     * @param string $id    The QR code ID
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\QRCodeFullResponse|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetQRCodeByIdBadRequestException
+     * @throws Exception\GetQRCodeByIdForbiddenException
+     * @throws Exception\GetQRCodeByIdNotFoundException
+     * @throws Exception\GetQRCodeByIdGoneException
+     * @throws Exception\GetQRCodeByIdInternalServerErrorException
+     */
+    public function getQRCodeById(string $id, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetQRCodeById($id), $fetch);
+    }
+
+    /**
      * Create a new QR Code and return its metadata.
      *
      * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
@@ -1509,6 +6687,30 @@ class Client extends Runtime\Client\Client
     public function updateQRCodePublic(string $qrcodeId, Model\PublicUpdateQRCodeRequest $requestBody, string $fetch = self::FETCH_OBJECT)
     {
         return $this->executeEndpoint(new Endpoint\UpdateQRCodePublic($qrcodeId, $requestBody), $fetch);
+    }
+
+    /**
+     * Returns the history of redirects for the specified QR Code. A redirect is when the destination URL is changed.
+     *
+     * @param string $qrcodeId        The QR code ID
+     * @param array  $queryParameters {
+     *
+     * @var int $limit limit the amount of results returned
+     * @var int $offset set the starting index of the result set
+     *          }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\QRCodeHistory|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetQRCHistoryBadRequestException
+     * @throws Exception\GetQRCHistoryForbiddenException
+     * @throws Exception\GetQRCHistoryTooManyRequestsException
+     * @throws Exception\GetQRCHistoryInternalServerErrorException
+     */
+    public function getQRCHistory(string $qrcodeId, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetQRCHistory($qrcodeId, $queryParameters), $fetch);
     }
 
     /**
@@ -1717,6 +6919,164 @@ class Client extends Runtime\Client\Client
     }
 
     /**
+     * Gets the QR code with a matching bitlink id.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\QRCodeFullResponse|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetQRCodeByBitlinkIdBadRequestException
+     * @throws Exception\GetQRCodeByBitlinkIdForbiddenException
+     * @throws Exception\GetQRCodeByBitlinkIdNotFoundException
+     * @throws Exception\GetQRCodeByBitlinkIdGoneException
+     * @throws Exception\GetQRCodeByBitlinkIdInternalServerErrorException
+     */
+    public function getQRCodeByBitlinkId(string $bitlinkId, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetQRCodeByBitlinkId($bitlinkId), $fetch);
+    }
+
+    /**
+     * Get the list of QR code customization options including metadata, id, and thumbnails.
+     *
+     * @param string $groupGuid A GUID for a Bitly group
+     * @param string $fetch     Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\QRCodeCustomizationOptionsResponse|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetQRCodeCustomizationOptionsBadRequestException
+     * @throws Exception\GetQRCodeCustomizationOptionsForbiddenException
+     * @throws Exception\GetQRCodeCustomizationOptionsNotFoundException
+     * @throws Exception\GetQRCodeCustomizationOptionsInternalServerErrorException
+     */
+    public function getQRCodeCustomizationOptions(string $groupGuid, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetQRCodeCustomizationOptions($groupGuid), $fetch);
+    }
+
+    /**
+     * Creates a preview of a QR Code with an interstitial link.
+     *
+     * @param string $groupGuid A GUID for a Bitly group
+     * @param string $fetch     Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\QRCodeFullResponse|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CreateQRCodePreviewBadRequestException
+     * @throws Exception\CreateQRCodePreviewPaymentRequiredException
+     * @throws Exception\CreateQRCodePreviewForbiddenException
+     * @throws Exception\CreateQRCodePreviewNotFoundException
+     * @throws Exception\CreateQRCodePreviewGoneException
+     * @throws Exception\CreateQRCodePreviewInternalServerErrorException
+     */
+    public function createQRCodePreview(string $groupGuid, Model\PreviewQRCodeRequestV2 $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CreateQRCodePreview($groupGuid, $requestBody), $fetch);
+    }
+
+    /**
+     * Preview changes on an existing QR Code but don't save the result to the DB.
+     *
+     * @param string $groupGuid A GUID for a Bitly group
+     * @param string $id        The QR code ID
+     * @param string $fetch     Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\QRCodeFullResponse|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\EditQRCodePreviewBadRequestException
+     * @throws Exception\EditQRCodePreviewPaymentRequiredException
+     * @throws Exception\EditQRCodePreviewForbiddenException
+     * @throws Exception\EditQRCodePreviewNotFoundException
+     * @throws Exception\EditQRCodePreviewGoneException
+     * @throws Exception\EditQRCodePreviewInternalServerErrorException
+     */
+    public function editQRCodePreview(string $groupGuid, string $id, Model\PreviewQRCodeRequestV2 $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\EditQRCodePreview($groupGuid, $id, $requestBody), $fetch);
+    }
+
+    /**
+     * Upgrade a QR code to a bitlink.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\BitlinkBody|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\UpgradeQRCodeToBitlinkBadRequestException
+     * @throws Exception\UpgradeQRCodeToBitlinkForbiddenException
+     * @throws Exception\UpgradeQRCodeToBitlinkNotFoundException
+     * @throws Exception\UpgradeQRCodeToBitlinkTooManyRequestsException
+     * @throws Exception\UpgradeQRCodeToBitlinkInternalServerErrorException
+     */
+    public function upgradeQRCodeToBitlink(string $id, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\UpgradeQRCodeToBitlink($id), $fetch);
+    }
+
+    /**
+     * Redirect the destination URL of a QR Code.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\QRCodeMinimal|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\RedirectQRCodeDestinationBadRequestException
+     * @throws Exception\RedirectQRCodeDestinationForbiddenException
+     * @throws Exception\RedirectQRCodeDestinationNotFoundException
+     * @throws Exception\RedirectQRCodeDestinationTooManyRequestsException
+     * @throws Exception\RedirectQRCodeDestinationInternalServerErrorException
+     */
+    public function redirectQRCodeDestination(string $id, Model\RedirectQRCodeRequest $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\RedirectQRCodeDestination($id, $requestBody), $fetch);
+    }
+
+    /**
+     * Returns metrics for the specified qrcode by its override versions.
+     *
+     * @param string $qrcodeId        The QR Code ID
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\ClickMetrics|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetQRCodeOverrideMetricsByVersionBadRequestException
+     * @throws Exception\GetQRCodeOverrideMetricsByVersionPaymentRequiredException
+     * @throws Exception\GetQRCodeOverrideMetricsByVersionForbiddenException
+     * @throws Exception\GetQRCodeOverrideMetricsByVersionNotFoundException
+     * @throws Exception\GetQRCodeOverrideMetricsByVersionGoneException
+     * @throws Exception\GetQRCodeOverrideMetricsByVersionInternalServerErrorException
+     * @throws Exception\GetQRCodeOverrideMetricsByVersionServiceUnavailableException
+     */
+    public function getQRCodeOverrideMetricsByVersion(string $qrcodeId, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetQRCodeOverrideMetricsByVersion($qrcodeId, $queryParameters), $fetch);
+    }
+
+    /**
+     * Determines if a group has utilized the Links, QR Codes, the Analytics Dashboard and Link-in-bio products.
+     *
+     * @param string $groupGuid A GUID for a Bitly group
+     * @param string $fetch     Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\ProductUtilizationResponse|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetProductUtilizationBadRequestException
+     * @throws Exception\GetProductUtilizationForbiddenException
+     * @throws Exception\GetProductUtilizationInternalServerErrorException
+     */
+    public function getProductUtilization(string $groupGuid, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetProductUtilization($groupGuid), $fetch);
+    }
+
+    /**
      * Get a group's current feature limit usage, optionally provide limit name(s) for usage on specific limit(s).
      *
      * @param string $groupGuid       A GUID for a Bitly group
@@ -1737,6 +7097,30 @@ class Client extends Runtime\Client\Client
     public function getGroupFeatureUsage(string $groupGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
     {
         return $this->executeEndpoint(new Endpoint\GetGroupFeatureUsage($groupGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * Get an organization's groups' historical usage totals for specific feature(s) and date range.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param array  $queryParameters  {
+     *
+     * @var array  $name The limit name you would like usage for
+     * @var string $start_date The start date for the date range
+     * @var string $end_date The end date for the date range
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\OrganizationHistoricalUsageTotals|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetOrganizationHistoricalUsageTotalsByGroupBadRequestException
+     * @throws Exception\GetOrganizationHistoricalUsageTotalsByGroupForbiddenException
+     * @throws Exception\GetOrganizationHistoricalUsageTotalsByGroupInternalServerErrorException
+     */
+    public function getOrganizationHistoricalUsageTotalsByGroup(string $organizationGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetOrganizationHistoricalUsageTotalsByGroup($organizationGuid, $queryParameters), $fetch);
     }
 
     /**
@@ -1763,6 +7147,2728 @@ class Client extends Runtime\Client\Client
     public function getGroupHistoricalUsage(string $groupGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
     {
         return $this->executeEndpoint(new Endpoint\GetGroupHistoricalUsage($groupGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * Deletes an analytics report by ID.
+     *
+     * @param string $groupGuid A GUID for a Bitly group
+     * @param string $reportId  A GUID for a Bitly Analytics Report
+     * @param string $fetch     Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\DeleteAnalyticsReportBadRequestException
+     * @throws Exception\DeleteAnalyticsReportPaymentRequiredException
+     * @throws Exception\DeleteAnalyticsReportForbiddenException
+     * @throws Exception\DeleteAnalyticsReportNotFoundException
+     * @throws Exception\DeleteAnalyticsReportInternalServerErrorException
+     * @throws Exception\DeleteAnalyticsReportServiceUnavailableException
+     */
+    public function deleteAnalyticsReport(string $groupGuid, string $reportId, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\DeleteAnalyticsReport($groupGuid, $reportId), $fetch);
+    }
+
+    /**
+     * Retrieves an analytics report by ID.
+     *
+     * @param string $groupGuid A GUID for a Bitly group
+     * @param string $reportId  A GUID for a Bitly Analytics Report
+     * @param string $fetch     Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AnalyticsReport|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetAnalyticsReportForbiddenException
+     * @throws Exception\GetAnalyticsReportNotFoundException
+     * @throws Exception\GetAnalyticsReportInternalServerErrorException
+     * @throws Exception\GetAnalyticsReportServiceUnavailableException
+     */
+    public function getAnalyticsReport(string $groupGuid, string $reportId, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetAnalyticsReport($groupGuid, $reportId), $fetch);
+    }
+
+    /**
+     * Updates an existing Analytics Report.
+     *
+     * @param string $groupGuid A GUID for a Bitly group
+     * @param string $reportId  A GUID for a Bitly Analytics Report
+     * @param string $fetch     Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AnalyticsReport|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\UpdateAnalyticsReportBadRequestException
+     * @throws Exception\UpdateAnalyticsReportForbiddenException
+     * @throws Exception\UpdateAnalyticsReportNotFoundException
+     * @throws Exception\UpdateAnalyticsReportInternalServerErrorException
+     * @throws Exception\UpdateAnalyticsReportServiceUnavailableException
+     */
+    public function updateAnalyticsReport(string $groupGuid, string $reportId, Model\UpdateAnalyticsReport $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\UpdateAnalyticsReport($groupGuid, $reportId, $requestBody), $fetch);
+    }
+
+    /**
+     * Duplicate an analytics report by ID.
+     *
+     * @param string $groupGuid A GUID for a Bitly group
+     * @param string $reportId  A GUID for a Bitly Analytics Report
+     * @param string $fetch     Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AnalyticsReport|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\DuplicateAnalyticsReportBadRequestException
+     * @throws Exception\DuplicateAnalyticsReportForbiddenException
+     * @throws Exception\DuplicateAnalyticsReportNotFoundException
+     * @throws Exception\DuplicateAnalyticsReportInternalServerErrorException
+     * @throws Exception\DuplicateAnalyticsReportServiceUnavailableException
+     */
+    public function duplicateAnalyticsReport(string $groupGuid, string $reportId, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\DuplicateAnalyticsReport($groupGuid, $reportId), $fetch);
+    }
+
+    /**
+     * Retrieves many paginated analytics report by group ID.
+     *
+     * @param string $groupGuid       A GUID for a Bitly group
+     * @param array  $queryParameters {
+     *
+     * @var int $page Integer specifying the numbered result at which to start
+     * @var int $size The quantity of items to be be returned
+     *          }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\PaginatedAnalyticsReports|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetAnalyticsReportsByGroupPaginatedBadRequestException
+     * @throws Exception\GetAnalyticsReportsByGroupPaginatedPaymentRequiredException
+     * @throws Exception\GetAnalyticsReportsByGroupPaginatedForbiddenException
+     * @throws Exception\GetAnalyticsReportsByGroupPaginatedInternalServerErrorException
+     * @throws Exception\GetAnalyticsReportsByGroupPaginatedServiceUnavailableException
+     */
+    public function getAnalyticsReportsByGroupPaginated(string $groupGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetAnalyticsReportsByGroupPaginated($groupGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * Creates a new analytics report.
+     *
+     * @param string $groupGuid A GUID for a Bitly group
+     * @param string $fetch     Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AnalyticsReport|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CreateAnalyticsReportBadRequestException
+     * @throws Exception\CreateAnalyticsReportForbiddenException
+     * @throws Exception\CreateAnalyticsReportNotFoundException
+     * @throws Exception\CreateAnalyticsReportInternalServerErrorException
+     * @throws Exception\CreateAnalyticsReportServiceUnavailableException
+     */
+    public function createAnalyticsReport(string $groupGuid, Model\CreateAnalyticsReport $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CreateAnalyticsReport($groupGuid, $requestBody), $fetch);
+    }
+
+    /**
+     * Retrieves all analytics reports by group ID.
+     *
+     * @param string $groupGuid A GUID for a Bitly group
+     * @param string $fetch     Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AnalyticsReports|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetAnalyticsReportsListByGroupBadRequestException
+     * @throws Exception\GetAnalyticsReportsListByGroupPaymentRequiredException
+     * @throws Exception\GetAnalyticsReportsListByGroupForbiddenException
+     * @throws Exception\GetAnalyticsReportsListByGroupInternalServerErrorException
+     * @throws Exception\GetAnalyticsReportsListByGroupServiceUnavailableException
+     */
+    public function getAnalyticsReportsListByGroup(string $groupGuid, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetAnalyticsReportsListByGroup($groupGuid), $fetch);
+    }
+
+    /**
+     * Creates a default analytics report for a group.
+     *
+     * @param string $groupGuid       A GUID for a Bitly group
+     * @param array  $queryParameters {
+     *
+     * @var bool $is_custom Allows for granular control over default analytics report creation
+     *           }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AnalyticsReport|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CreateDefaultAnalyticsReportForGroupBadRequestException
+     * @throws Exception\CreateDefaultAnalyticsReportForGroupForbiddenException
+     * @throws Exception\CreateDefaultAnalyticsReportForGroupNotFoundException
+     * @throws Exception\CreateDefaultAnalyticsReportForGroupInternalServerErrorException
+     * @throws Exception\CreateDefaultAnalyticsReportForGroupServiceUnavailableException
+     */
+    public function createDefaultAnalyticsReportForGroup(string $groupGuid, ?Model\CreateAnalyticsReport $requestBody = null, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CreateDefaultAnalyticsReportForGroup($groupGuid, $requestBody, $queryParameters), $fetch);
+    }
+
+    /**
+     * Deletes an analytics module and updates the associated modules for the supplied report ID.
+     *
+     * @param string $groupGuid A GUID for a Bitly group
+     * @param string $reportId  A GUID for a Bitly Analytics Report
+     * @param string $fetch     Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\DeleteAnalyticsModuleByReportPaymentRequiredException
+     * @throws Exception\DeleteAnalyticsModuleByReportForbiddenException
+     * @throws Exception\DeleteAnalyticsModuleByReportNotFoundException
+     * @throws Exception\DeleteAnalyticsModuleByReportInternalServerErrorException
+     */
+    public function deleteAnalyticsModuleByReport(string $groupGuid, string $moduleGuid, string $reportId, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\DeleteAnalyticsModuleByReport($groupGuid, $moduleGuid, $reportId), $fetch);
+    }
+
+    /**
+     * Deletes an analytics module by ID.
+     *
+     * @param string $groupGuid A GUID for a Bitly group
+     * @param string $fetch     Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\DeleteAnalyticsModulePaymentRequiredException
+     * @throws Exception\DeleteAnalyticsModuleForbiddenException
+     * @throws Exception\DeleteAnalyticsModuleNotFoundException
+     * @throws Exception\DeleteAnalyticsModuleInternalServerErrorException
+     */
+    public function deleteAnalyticsModule(string $groupGuid, string $moduleGuid, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\DeleteAnalyticsModule($groupGuid, $moduleGuid), $fetch);
+    }
+
+    /**
+     * Retrieves an analytics module by ID.
+     *
+     * @param string $groupGuid A GUID for a Bitly group
+     * @param string $fetch     Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\Module|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetAnalyticsModuleForbiddenException
+     * @throws Exception\GetAnalyticsModuleNotFoundException
+     * @throws Exception\GetAnalyticsModuleInternalServerErrorException
+     * @throws Exception\GetAnalyticsModuleServiceUnavailableException
+     */
+    public function getAnalyticsModule(string $groupGuid, string $moduleGuid, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetAnalyticsModule($groupGuid, $moduleGuid), $fetch);
+    }
+
+    /**
+     * Updates an existing Analytics Module.
+     *
+     * @param string $groupGuid A GUID for a Bitly group
+     * @param string $fetch     Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\Module|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\UpdateAnalyticsModuleBadRequestException
+     * @throws Exception\UpdateAnalyticsModuleForbiddenException
+     * @throws Exception\UpdateAnalyticsModuleNotFoundException
+     * @throws Exception\UpdateAnalyticsModuleInternalServerErrorException
+     * @throws Exception\UpdateAnalyticsModuleServiceUnavailableException
+     */
+    public function updateAnalyticsModule(string $groupGuid, string $moduleGuid, Model\UpdateAnalyticsModule $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\UpdateAnalyticsModule($groupGuid, $moduleGuid, $requestBody), $fetch);
+    }
+
+    /**
+     * Creates a new analytics module.
+     *
+     * @param string $groupGuid A GUID for a Bitly group
+     * @param string $fetch     Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\Module|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CreateAnalyticsModuleBadRequestException
+     * @throws Exception\CreateAnalyticsModuleForbiddenException
+     * @throws Exception\CreateAnalyticsModuleNotFoundException
+     * @throws Exception\CreateAnalyticsModuleInternalServerErrorException
+     * @throws Exception\CreateAnalyticsModuleServiceUnavailableException
+     */
+    public function createAnalyticsModule(string $groupGuid, Model\CreateAnalyticsModule $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CreateAnalyticsModule($groupGuid, $requestBody), $fetch);
+    }
+
+    /**
+     * Retrieves an organization's analytics usage.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\GroupAnalyticsUsage[]|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetAnalyticsUsageBadRequestException
+     * @throws Exception\GetAnalyticsUsageForbiddenException
+     * @throws Exception\GetAnalyticsUsageInternalServerErrorException
+     * @throws Exception\GetAnalyticsUsageServiceUnavailableException
+     */
+    public function getAnalyticsUsage(string $organizationGuid, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetAnalyticsUsage($organizationGuid), $fetch);
+    }
+
+    /**
+     * Get a daily summary of engagements for a report.
+     *
+     * @param string $groupGuid A GUID for a Bitly group
+     * @param string $reportId  A GUID for a Bitly Analytics Report
+     * @param string $fetch     Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\EngagementsDailySummary|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetLinkEngagementsDailySummaryBadRequestException
+     * @throws Exception\GetLinkEngagementsDailySummaryForbiddenException
+     * @throws Exception\GetLinkEngagementsDailySummaryNotFoundException
+     * @throws Exception\GetLinkEngagementsDailySummaryUnprocessableEntityException
+     * @throws Exception\GetLinkEngagementsDailySummaryInternalServerErrorException
+     * @throws Exception\GetLinkEngagementsDailySummaryServiceUnavailableException
+     */
+    public function getLinkEngagementsDailySummary(string $groupGuid, string $reportId, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetLinkEngagementsDailySummary($groupGuid, $reportId), $fetch);
+    }
+
+    /**
+     * Returns a csv file download or queues an email export job.
+     *
+     * @param string $groupGuid A GUID for a Bitly group
+     * @param string $reportId  A GUID for a Bitly Analytics Report
+     * @param string $fetch     Fetch mode to use (can be OBJECT or RESPONSE)
+     * @param array  $accept    Accept content header text/csv|application/json
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetLinkEngagementsReportBadRequestException
+     * @throws Exception\GetLinkEngagementsReportForbiddenException
+     * @throws Exception\GetLinkEngagementsReportNotFoundException
+     * @throws Exception\GetLinkEngagementsReportUnprocessableEntityException
+     * @throws Exception\GetLinkEngagementsReportInternalServerErrorException
+     * @throws Exception\GetLinkEngagementsReportServiceUnavailableException
+     */
+    public function getLinkEngagementsReport(string $groupGuid, string $reportId, string $fetch = self::FETCH_OBJECT, array $accept = [])
+    {
+        return $this->executeEndpoint(new Endpoint\GetLinkEngagementsReport($groupGuid, $reportId, $accept), $fetch);
+    }
+
+    /**
+     * Get a single day's link-level engagements for a report.
+     *
+     * @param string $groupGuid       A GUID for a Bitly group
+     * @param string $reportId        A GUID for a Bitly Analytics Report
+     * @param array  $queryParameters {
+     *
+     * @var string $sort
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\EngagementsDayDrillDown|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetLinkEngagementsDayDrillDownBadRequestException
+     * @throws Exception\GetLinkEngagementsDayDrillDownForbiddenException
+     * @throws Exception\GetLinkEngagementsDayDrillDownNotFoundException
+     * @throws Exception\GetLinkEngagementsDayDrillDownUnprocessableEntityException
+     * @throws Exception\GetLinkEngagementsDayDrillDownInternalServerErrorException
+     * @throws Exception\GetLinkEngagementsDayDrillDownServiceUnavailableException
+     */
+    public function getLinkEngagementsDayDrillDown(string $groupGuid, string $reportId, string $timestamp, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetLinkEngagementsDayDrillDown($groupGuid, $reportId, $timestamp, $queryParameters), $fetch);
+    }
+
+    /**
+     * Retrieves a Canva UserBrand record matching the Canva UserID and BrandID.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\PublicCanvaUserBrand|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetCanvaUserBrandBadRequestException
+     * @throws Exception\GetCanvaUserBrandNotFoundException
+     * @throws Exception\GetCanvaUserBrandInternalServerErrorException
+     */
+    public function getCanvaUserBrand(string $canvaUserID, string $canvaBrandID, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetCanvaUserBrand($canvaUserID, $canvaBrandID), $fetch);
+    }
+
+    /**
+     * Patches a Canva UserBrand record's Brand GUID, and inferred Org GUID matching the Canva UserID and BrandID.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\PatchCanvaUserBrandBadRequestException
+     * @throws Exception\PatchCanvaUserBrandNotFoundException
+     * @throws Exception\PatchCanvaUserBrandInternalServerErrorException
+     */
+    public function patchCanvaUserBrand(string $canvaUserID, string $canvaBrandID, Model\UpdateCanvaUserBrand $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\PatchCanvaUserBrand($canvaUserID, $canvaBrandID, $requestBody), $fetch);
+    }
+
+    /**
+     * Deletes all Canva UserBrand record's matching the Bitly user's login.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\DeleteCanvaUserBrandsByLoginBadRequestException
+     * @throws Exception\DeleteCanvaUserBrandsByLoginInternalServerErrorException
+     */
+    public function deleteCanvaUserBrandsByLogin(string $login, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\DeleteCanvaUserBrandsByLogin($login), $fetch);
+    }
+
+    /**
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\GetFocusResponse|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetFocusInternalServerErrorException
+     */
+    public function getFocus(string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetFocus(), $fetch);
+    }
+
+    /**
+     * Store Focus record with Bitly login key to memcache.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\CreateFocusResponse|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CreateFocusBadRequestException
+     * @throws Exception\CreateFocusForbiddenException
+     * @throws Exception\CreateFocusInternalServerErrorException
+     */
+    public function createFocus(Model\CreateFocusRequest $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CreateFocus($requestBody), $fetch);
+    }
+
+    /**
+     * Validates an admins request to control a domain, upserts a non-expired org domain verification and sends a verification email to the admin.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\OrgDomainVerification|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CreateOrgDomainVerificationEmailBadRequestException
+     * @throws Exception\CreateOrgDomainVerificationEmailPaymentRequiredException
+     * @throws Exception\CreateOrgDomainVerificationEmailForbiddenException
+     * @throws Exception\CreateOrgDomainVerificationEmailInternalServerErrorException
+     */
+    public function createOrgDomainVerificationEmail(Model\CreateOrgDomainVerificationEmailRequest $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CreateOrgDomainVerificationEmail($requestBody), $fetch);
+    }
+
+    /**
+     * This will update the status of a controlled domain for an org and deactivate any other controlled domain for that org that are active.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $domain           a web domain
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\PatchOrgControlledDomainBadRequestException
+     * @throws Exception\PatchOrgControlledDomainPaymentRequiredException
+     * @throws Exception\PatchOrgControlledDomainForbiddenException
+     * @throws Exception\PatchOrgControlledDomainUnprocessableEntityException
+     * @throws Exception\PatchOrgControlledDomainInternalServerErrorException
+     */
+    public function patchOrgControlledDomain(string $organizationGuid, string $domain, Model\PatchOrgControlledDomain $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\PatchOrgControlledDomain($organizationGuid, $domain, $requestBody), $fetch);
+    }
+
+    /**
+     * This returns all domains that an org can claim as well as domains that are already controlled by the org.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\OrgDomainsStatus|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetOrgDomainsStatusBadRequestException
+     * @throws Exception\GetOrgDomainsStatusForbiddenException
+     * @throws Exception\GetOrgDomainsStatusTooManyRequestsException
+     * @throws Exception\GetOrgDomainsStatusInternalServerErrorException
+     */
+    public function getOrgDomainsStatus(string $organizationGuid, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetOrgDomainsStatus($organizationGuid), $fetch);
+    }
+
+    /**
+     * Fetch all org invitation requests to an Organization.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\OrgInvitationRequests|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetOrgInvitationRequestsBadRequestException
+     * @throws Exception\GetOrgInvitationRequestsForbiddenException
+     * @throws Exception\GetOrgInvitationRequestsInternalServerErrorException
+     */
+    public function getOrgInvitationRequests(string $organizationGuid, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetOrgInvitationRequests($organizationGuid), $fetch);
+    }
+
+    /**
+     * This will update the status of an org invitation request for a user. Only 'denied' status allowed for this endpoint--approving a request follows the create organization invitation flow.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\PatchOrgInvitationRequestBadRequestException
+     * @throws Exception\PatchOrgInvitationRequestForbiddenException
+     * @throws Exception\PatchOrgInvitationRequestUnprocessableEntityException
+     * @throws Exception\PatchOrgInvitationRequestInternalServerErrorException
+     */
+    public function patchOrgInvitationRequest(string $organizationGuid, Model\PatchOrgInvitationRequest $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\PatchOrgInvitationRequest($organizationGuid, $requestBody), $fetch);
+    }
+
+    /**
+     * This will get a list of logins for entities that have preserved_status after a scheduled downgrade.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param string $fetch            Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\RetainedEntitiesAfterDowngrade|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetRetainedEntitiesAfterDowngradeForbiddenException
+     * @throws Exception\GetRetainedEntitiesAfterDowngradeInternalServerErrorException
+     */
+    public function getRetainedEntitiesAfterDowngrade(string $organizationGuid, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetRetainedEntitiesAfterDowngrade($organizationGuid), $fetch);
+    }
+
+    /**
+     * Retrieve a list of users for Organization GUID and optionally query by user's login, display name, or primary email.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param array  $queryParameters  {
+     *
+     * @var int    $page Integer specifying the numbered result at which to start
+     * @var int    $size The quantity of items to be be returned
+     * @var string $query A string used for fuzzy searching user's login, display name, or primary email.
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\UserRoleReferences|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\SearchOrgUserRolesBadRequestException
+     * @throws Exception\SearchOrgUserRolesForbiddenException
+     * @throws Exception\SearchOrgUserRolesNotFoundException
+     * @throws Exception\SearchOrgUserRolesInternalServerErrorException
+     */
+    public function searchOrgUserRoles(string $organizationGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\SearchOrgUserRoles($organizationGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * Retrieve a list of SSO users, and optionally query by sso username or login.
+     *
+     * @param string $organizationGuid A GUID for a Bitly organization
+     * @param array  $queryParameters  {
+     *
+     * @var int    $page Integer specifying the numbered result at which to start
+     * @var int    $size The quantity of items to be be returned
+     * @var string $sso_username a string used for searching sso users by sso username
+     * @var string $login The login for a Bitly user
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\PublicSSOUsersResults|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetSSOUsersBadRequestException
+     * @throws Exception\GetSSOUsersForbiddenException
+     * @throws Exception\GetSSOUsersInternalServerErrorException
+     */
+    public function getSSOUsers(string $organizationGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetSSOUsers($organizationGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * Creates a valid PayPal billing agreement using a token.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\BillingAgreement|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CreatePayPalBillingAgreementBadRequestException
+     * @throws Exception\CreatePayPalBillingAgreementForbiddenException
+     * @throws Exception\CreatePayPalBillingAgreementUnprocessableEntityException
+     * @throws Exception\CreatePayPalBillingAgreementInternalServerErrorException
+     */
+    public function createPayPalBillingAgreement(Model\BillingAgreementToken $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CreatePayPalBillingAgreement($requestBody), $fetch);
+    }
+
+    /**
+     * get all campaigns for a brand.
+     *
+     * @param string $groupGuid       A GUID for a Bitly group
+     * @param array  $queryParameters {
+     *
+     * @var int    $limit limit the amount of results returned
+     * @var int    $offset set the starting index of the result set
+     * @var string $query The value that you would like to search
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\BrandCampaignsResponse|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetAllBrandCampaignsBadRequestException
+     * @throws Exception\GetAllBrandCampaignsUnprocessableEntityException
+     * @throws Exception\GetAllBrandCampaignsInternalServerErrorException
+     */
+    public function getAllBrandCampaigns(string $groupGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetAllBrandCampaigns($groupGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * get a single campaigns for a brand.
+     *
+     * @param string $groupGuid    A GUID for a Bitly group
+     * @param string $campaignGuid A GUID for a Bitly campaign
+     * @param string $fetch        Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\BrandCampaign|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetBrandCampaignBadRequestException
+     * @throws Exception\GetBrandCampaignUnprocessableEntityException
+     * @throws Exception\GetBrandCampaignInternalServerErrorException
+     */
+    public function getBrandCampaign(string $groupGuid, string $campaignGuid, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetBrandCampaign($groupGuid, $campaignGuid), $fetch);
+    }
+
+    /**
+     * delete a bitlink id from a campaign channel.
+     *
+     * @param string $groupGuid    A GUID for a Bitly group
+     * @param string $campaignGuid A GUID for a Bitly campaign
+     * @param string $channelGuid  A GUID for a Bitly Channel
+     * @param string $bitlink      A Bitlink made of the domain and hash
+     * @param string $fetch        Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\DeleteChannelBitlinkBadRequestException
+     * @throws Exception\DeleteChannelBitlinkUnprocessableEntityException
+     * @throws Exception\DeleteChannelBitlinkInternalServerErrorException
+     */
+    public function deleteChannelBitlink(string $groupGuid, string $campaignGuid, string $channelGuid, string $bitlink, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\DeleteChannelBitlink($groupGuid, $campaignGuid, $channelGuid, $bitlink), $fetch);
+    }
+
+    /**
+     * add a bitlink id to a campaign channel.
+     *
+     * @param string $groupGuid    A GUID for a Bitly group
+     * @param string $campaignGuid A GUID for a Bitly campaign
+     * @param string $channelGuid  A GUID for a Bitly Channel
+     * @param string $bitlink      A Bitlink made of the domain and hash
+     * @param string $fetch        Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CreateChannelBitlinkBadRequestException
+     * @throws Exception\CreateChannelBitlinkUnprocessableEntityException
+     * @throws Exception\CreateChannelBitlinkInternalServerErrorException
+     */
+    public function createChannelBitlink(string $groupGuid, string $campaignGuid, string $channelGuid, string $bitlink, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CreateChannelBitlink($groupGuid, $campaignGuid, $channelGuid, $bitlink), $fetch);
+    }
+
+    /**
+     * associate an already existing channel to a campaign for a brand guid.
+     *
+     * @param string $groupGuid    A GUID for a Bitly group
+     * @param string $campaignGuid A GUID for a Bitly campaign
+     * @param string $channelGuid  A GUID for a Bitly Channel
+     * @param string $fetch        Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CreateCampaignChannelBadRequestException
+     * @throws Exception\CreateCampaignChannelUnprocessableEntityException
+     * @throws Exception\CreateCampaignChannelInternalServerErrorException
+     */
+    public function createCampaignChannel(string $groupGuid, string $campaignGuid, string $channelGuid, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CreateCampaignChannel($groupGuid, $campaignGuid, $channelGuid), $fetch);
+    }
+
+    /**
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\GeoIP|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetPrivateGeoInternalServerErrorException
+     */
+    public function getPrivateGeo(string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetPrivateGeo(), $fetch);
+    }
+
+    /**
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\CurrencyList|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetCurrencyListInternalServerErrorException
+     */
+    public function getCurrencyList(string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetCurrencyList(), $fetch);
+    }
+
+    /**
+     * Checks if the given currency is supported.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\SupportedCurrency|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetCurrencyInternalServerErrorException
+     */
+    public function getCurrency(string $currency, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetCurrency($currency), $fetch);
+    }
+
+    /**
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\Regions|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetRegionsListInternalServerErrorException
+     */
+    public function getRegionsList(string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetRegionsList(), $fetch);
+    }
+
+    /**
+     * get link clicks over time for all links in a group.
+     *
+     * @param string $groupGuid       A GUID for a Bitly group
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\GroupClicks|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetGroupLinkClicksOverTimeBadRequestException
+     * @throws Exception\GetGroupLinkClicksOverTimeForbiddenException
+     * @throws Exception\GetGroupLinkClicksOverTimeInternalServerErrorException
+     * @throws Exception\GetGroupLinkClicksOverTimeServiceUnavailableException
+     */
+    public function getGroupLinkClicksOverTime(string $groupGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetGroupLinkClicksOverTime($groupGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * get link clicks by device for all links in a group.
+     *
+     * @param string $groupGuid       A GUID for a Bitly group
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\GroupsGroupGuidLinksClicksDevicesGetResponse200|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetGroupLinkClicksByDeviceBadRequestException
+     * @throws Exception\GetGroupLinkClicksByDeviceForbiddenException
+     * @throws Exception\GetGroupLinkClicksByDeviceInternalServerErrorException
+     * @throws Exception\GetGroupLinkClicksByDeviceServiceUnavailableException
+     */
+    public function getGroupLinkClicksByDevice(string $groupGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetGroupLinkClicksByDevice($groupGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * get link clicks by referrer for all links in a group.
+     *
+     * @param string $groupGuid       A GUID for a Bitly group
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\ClickMetrics|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetGroupLinkClicksByReferrerBadRequestException
+     * @throws Exception\GetGroupLinkClicksByReferrerForbiddenException
+     * @throws Exception\GetGroupLinkClicksByReferrerInternalServerErrorException
+     * @throws Exception\GetGroupLinkClicksByReferrerServiceUnavailableException
+     */
+    public function getGroupLinkClicksByReferrer(string $groupGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetGroupLinkClicksByReferrer($groupGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * get link clicks by country for all links in a group.
+     *
+     * @param string $groupGuid       A GUID for a Bitly group
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\ClickMetrics|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetGroupLinkClicksByCountryBadRequestException
+     * @throws Exception\GetGroupLinkClicksByCountryForbiddenException
+     * @throws Exception\GetGroupLinkClicksByCountryInternalServerErrorException
+     * @throws Exception\GetGroupLinkClicksByCountryServiceUnavailableException
+     */
+    public function getGroupLinkClicksByCountry(string $groupGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetGroupLinkClicksByCountry($groupGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * get link clicks by city for all links in a group.
+     *
+     * @param string $groupGuid       A GUID for a Bitly group
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\CityMetrics|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetGroupLinkClicksByCityBadRequestException
+     * @throws Exception\GetGroupLinkClicksByCityForbiddenException
+     * @throws Exception\GetGroupLinkClicksByCityInternalServerErrorException
+     * @throws Exception\GetGroupLinkClicksByCityServiceUnavailableException
+     */
+    public function getGroupLinkClicksByCity(string $groupGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetGroupLinkClicksByCity($groupGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * get top performing links by click for all links in a group.
+     *
+     * @param string $groupGuid       A GUID for a Bitly group
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\SortedLinks|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetGroupTopLinkClicksBadRequestException
+     * @throws Exception\GetGroupTopLinkClicksForbiddenException
+     * @throws Exception\GetGroupTopLinkClicksInternalServerErrorException
+     * @throws Exception\GetGroupTopLinkClicksServiceUnavailableException
+     */
+    public function getGroupTopLinkClicks(string $groupGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetGroupTopLinkClicks($groupGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * get code scans over time for all qr codes in a group.
+     *
+     * @param string $groupGuid       A GUID for a Bitly group
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\GroupClicks|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetGroupCodeScansOverTimeBadRequestException
+     * @throws Exception\GetGroupCodeScansOverTimeForbiddenException
+     * @throws Exception\GetGroupCodeScansOverTimeInternalServerErrorException
+     * @throws Exception\GetGroupCodeScansOverTimeServiceUnavailableException
+     */
+    public function getGroupCodeScansOverTime(string $groupGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetGroupCodeScansOverTime($groupGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * get code scans by country for all qr codes in a group.
+     *
+     * @param string $groupGuid       A GUID for a Bitly group
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\ClickMetrics|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetGroupCodeScansByCountryBadRequestException
+     * @throws Exception\GetGroupCodeScansByCountryForbiddenException
+     * @throws Exception\GetGroupCodeScansByCountryInternalServerErrorException
+     * @throws Exception\GetGroupCodeScansByCountryServiceUnavailableException
+     */
+    public function getGroupCodeScansByCountry(string $groupGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetGroupCodeScansByCountry($groupGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * get code scans by city for all qr codes in a group.
+     *
+     * @param string $groupGuid       A GUID for a Bitly group
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\CityMetrics|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetGroupCodeScansByCityBadRequestException
+     * @throws Exception\GetGroupCodeScansByCityForbiddenException
+     * @throws Exception\GetGroupCodeScansByCityInternalServerErrorException
+     * @throws Exception\GetGroupCodeScansByCityServiceUnavailableException
+     */
+    public function getGroupCodeScansByCity(string $groupGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetGroupCodeScansByCity($groupGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * get top performing codes by scan for all qr codes in a group.
+     *
+     * @param string $groupGuid       A GUID for a Bitly group
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\SortedLinks|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetGroupTopCodeScansBadRequestException
+     * @throws Exception\GetGroupTopCodeScansForbiddenException
+     * @throws Exception\GetGroupTopCodeScansInternalServerErrorException
+     * @throws Exception\GetGroupTopCodeScansServiceUnavailableException
+     */
+    public function getGroupTopCodeScans(string $groupGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetGroupTopCodeScans($groupGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * get link clicks over time for requested links.
+     *
+     * @param array $queryParameters {
+     *
+     * @var array  $bitlink Filter by given bitlinks
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var string $report_guid
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AggregateClicksForBitlinks|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetAggregateLinkClicksOverTimeBadRequestException
+     * @throws Exception\GetAggregateLinkClicksOverTimeForbiddenException
+     * @throws Exception\GetAggregateLinkClicksOverTimeInternalServerErrorException
+     * @throws Exception\GetAggregateLinkClicksOverTimeServiceUnavailableException
+     */
+    public function getAggregateLinkClicksOverTime(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetAggregateLinkClicksOverTime($queryParameters), $fetch);
+    }
+
+    /**
+     * get link clicks by device for requested links.
+     *
+     * @param array $queryParameters {
+     *
+     * @var array  $bitlink Filter by given bitlinks
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var string $report_guid
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AggregateClicksForBitlinksByFacet|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetAggregateLinkClicksByDeviceBadRequestException
+     * @throws Exception\GetAggregateLinkClicksByDeviceForbiddenException
+     * @throws Exception\GetAggregateLinkClicksByDeviceInternalServerErrorException
+     * @throws Exception\GetAggregateLinkClicksByDeviceServiceUnavailableException
+     */
+    public function getAggregateLinkClicksByDevice(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetAggregateLinkClicksByDevice($queryParameters), $fetch);
+    }
+
+    /**
+     * get link clicks by referrer for requested links.
+     *
+     * @param array $queryParameters {
+     *
+     * @var array  $bitlink Filter by given bitlinks
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var string $report_guid
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AggregateClicksForBitlinksByFacet|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetAggregateLinkClicksByReferrerBadRequestException
+     * @throws Exception\GetAggregateLinkClicksByReferrerForbiddenException
+     * @throws Exception\GetAggregateLinkClicksByReferrerInternalServerErrorException
+     * @throws Exception\GetAggregateLinkClicksByReferrerServiceUnavailableException
+     */
+    public function getAggregateLinkClicksByReferrer(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetAggregateLinkClicksByReferrer($queryParameters), $fetch);
+    }
+
+    /**
+     * get link clicks by country for requested links.
+     *
+     * @param array $queryParameters {
+     *
+     * @var array  $bitlink Filter by given bitlinks
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var string $report_guid
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AggregateClicksForBitlinksByFacet|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetAggregateLinkClicksByCountryBadRequestException
+     * @throws Exception\GetAggregateLinkClicksByCountryForbiddenException
+     * @throws Exception\GetAggregateLinkClicksByCountryInternalServerErrorException
+     * @throws Exception\GetAggregateLinkClicksByCountryServiceUnavailableException
+     */
+    public function getAggregateLinkClicksByCountry(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetAggregateLinkClicksByCountry($queryParameters), $fetch);
+    }
+
+    /**
+     * get link clicks by city for requested links.
+     *
+     * @param array $queryParameters {
+     *
+     * @var array  $bitlink Filter by given bitlinks
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var string $report_guid
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AggregateClicksForBitlinksByCitiesFacet|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetAggregateLinkClicksByCityBadRequestException
+     * @throws Exception\GetAggregateLinkClicksByCityForbiddenException
+     * @throws Exception\GetAggregateLinkClicksByCityInternalServerErrorException
+     * @throws Exception\GetAggregateLinkClicksByCityServiceUnavailableException
+     */
+    public function getAggregateLinkClicksByCity(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetAggregateLinkClicksByCity($queryParameters), $fetch);
+    }
+
+    /**
+     * get top performing links by click for requested links.
+     *
+     * @param array $queryParameters {
+     *
+     * @var array  $bitlink Filter by given bitlinks
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var string $report_guid
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\SortedLinks|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetAggregateTopLinkClicksBadRequestException
+     * @throws Exception\GetAggregateTopLinkClicksForbiddenException
+     * @throws Exception\GetAggregateTopLinkClicksInternalServerErrorException
+     * @throws Exception\GetAggregateTopLinkClicksServiceUnavailableException
+     */
+    public function getAggregateTopLinkClicks(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetAggregateTopLinkClicks($queryParameters), $fetch);
+    }
+
+    /**
+     * get code scans over time for requested qr codes.
+     *
+     * @param array $queryParameters {
+     *
+     * @var array  $bitlink Filter by given bitlinks
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var string $report_guid
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AggregateClicksForBitlinks|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetAggregateCodeScansOverTimeBadRequestException
+     * @throws Exception\GetAggregateCodeScansOverTimeForbiddenException
+     * @throws Exception\GetAggregateCodeScansOverTimeInternalServerErrorException
+     * @throws Exception\GetAggregateCodeScansOverTimeServiceUnavailableException
+     */
+    public function getAggregateCodeScansOverTime(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetAggregateCodeScansOverTime($queryParameters), $fetch);
+    }
+
+    /**
+     * get code scans by country for requested codes.
+     *
+     * @param array $queryParameters {
+     *
+     * @var array  $bitlink Filter by given bitlinks
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var string $report_guid
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AggregateClicksForBitlinksByFacet|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetAggregateCodeScansByCountryBadRequestException
+     * @throws Exception\GetAggregateCodeScansByCountryForbiddenException
+     * @throws Exception\GetAggregateCodeScansByCountryInternalServerErrorException
+     * @throws Exception\GetAggregateCodeScansByCountryServiceUnavailableException
+     */
+    public function getAggregateCodeScansByCountry(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetAggregateCodeScansByCountry($queryParameters), $fetch);
+    }
+
+    /**
+     * get code scans by city for requested codes.
+     *
+     * @param array $queryParameters {
+     *
+     * @var array  $bitlink Filter by given bitlinks
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var string $report_guid
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AggregateClicksForBitlinksByCitiesFacet|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetAggregateCodeScansByCityBadRequestException
+     * @throws Exception\GetAggregateCodeScansByCityForbiddenException
+     * @throws Exception\GetAggregateCodeScansByCityInternalServerErrorException
+     * @throws Exception\GetAggregateCodeScansByCityServiceUnavailableException
+     */
+    public function getAggregateCodeScansByCity(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetAggregateCodeScansByCity($queryParameters), $fetch);
+    }
+
+    /**
+     * get top performing codes by scan for requested codes.
+     *
+     * @param array $queryParameters {
+     *
+     * @var array  $bitlink Filter by given bitlinks
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var string $report_guid
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\SortedLinks|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetAggregateTopCodeScansBadRequestException
+     * @throws Exception\GetAggregateTopCodeScansForbiddenException
+     * @throws Exception\GetAggregateTopCodeScansInternalServerErrorException
+     * @throws Exception\GetAggregateTopCodeScansServiceUnavailableException
+     */
+    public function getAggregateTopCodeScans(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetAggregateTopCodeScans($queryParameters), $fetch);
+    }
+
+    /**
+     * get page views over time for all pages in a group.
+     *
+     * @param string $groupGuid       A GUID for a Bitly group
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\GroupClicks|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetGroupPageViewsOverTimeBadRequestException
+     * @throws Exception\GetGroupPageViewsOverTimeForbiddenException
+     * @throws Exception\GetGroupPageViewsOverTimeInternalServerErrorException
+     * @throws Exception\GetGroupPageViewsOverTimeServiceUnavailableException
+     */
+    public function getGroupPageViewsOverTime(string $groupGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetGroupPageViewsOverTime($groupGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * get page views by device for all pages in a group.
+     *
+     * @param string $groupGuid       A GUID for a Bitly group
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\DeviceMetrics|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetGroupPageViewsByDeviceBadRequestException
+     * @throws Exception\GetGroupPageViewsByDeviceForbiddenException
+     * @throws Exception\GetGroupPageViewsByDeviceInternalServerErrorException
+     * @throws Exception\GetGroupPageViewsByDeviceServiceUnavailableException
+     */
+    public function getGroupPageViewsByDevice(string $groupGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetGroupPageViewsByDevice($groupGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * get page views by referrer for all pages in a group.
+     *
+     * @param string $groupGuid       A GUID for a Bitly group
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\ClickMetrics|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetGroupPageViewsByReferrerBadRequestException
+     * @throws Exception\GetGroupPageViewsByReferrerForbiddenException
+     * @throws Exception\GetGroupPageViewsByReferrerInternalServerErrorException
+     * @throws Exception\GetGroupPageViewsByReferrerServiceUnavailableException
+     */
+    public function getGroupPageViewsByReferrer(string $groupGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetGroupPageViewsByReferrer($groupGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * get page views by country for all pages in a group.
+     *
+     * @param string $groupGuid       A GUID for a Bitly group
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\ClickMetrics|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetGroupPageViewsByCountryBadRequestException
+     * @throws Exception\GetGroupPageViewsByCountryForbiddenException
+     * @throws Exception\GetGroupPageViewsByCountryInternalServerErrorException
+     * @throws Exception\GetGroupPageViewsByCountryServiceUnavailableException
+     */
+    public function getGroupPageViewsByCountry(string $groupGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetGroupPageViewsByCountry($groupGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * get page views by city for all pages in a group.
+     *
+     * @param string $groupGuid       A GUID for a Bitly group
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\CityMetrics|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetGroupPageViewsByCityBadRequestException
+     * @throws Exception\GetGroupPageViewsByCityForbiddenException
+     * @throws Exception\GetGroupPageViewsByCityInternalServerErrorException
+     * @throws Exception\GetGroupPageViewsByCityServiceUnavailableException
+     */
+    public function getGroupPageViewsByCity(string $groupGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetGroupPageViewsByCity($groupGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * get button clicks over time for all pages in a group.
+     *
+     * @param string $groupGuid       A GUID for a Bitly group
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\GroupClicks|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetGroupButtonClicksOverTimeBadRequestException
+     * @throws Exception\GetGroupButtonClicksOverTimeForbiddenException
+     * @throws Exception\GetGroupButtonClicksOverTimeInternalServerErrorException
+     * @throws Exception\GetGroupButtonClicksOverTimeServiceUnavailableException
+     */
+    public function getGroupButtonClicksOverTime(string $groupGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetGroupButtonClicksOverTime($groupGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * get button clicks by device for all pages in a group.
+     *
+     * @param string $groupGuid       A GUID for a Bitly group
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\DeviceMetrics|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetGroupButtonClicksByDeviceBadRequestException
+     * @throws Exception\GetGroupButtonClicksByDeviceForbiddenException
+     * @throws Exception\GetGroupButtonClicksByDeviceInternalServerErrorException
+     * @throws Exception\GetGroupButtonClicksByDeviceServiceUnavailableException
+     */
+    public function getGroupButtonClicksByDevice(string $groupGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetGroupButtonClicksByDevice($groupGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * get button clicks by country for all pages in a group.
+     *
+     * @param string $groupGuid       A GUID for a Bitly group
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\ClickMetrics|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetGroupButtonClicksByCountryBadRequestException
+     * @throws Exception\GetGroupButtonClicksByCountryForbiddenException
+     * @throws Exception\GetGroupButtonClicksByCountryInternalServerErrorException
+     * @throws Exception\GetGroupButtonClicksByCountryServiceUnavailableException
+     */
+    public function getGroupButtonClicksByCountry(string $groupGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetGroupButtonClicksByCountry($groupGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * get button clicks by city for all pages in a group.
+     *
+     * @param string $groupGuid       A GUID for a Bitly group
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\CityMetrics|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetGroupButtonClicksByCityBadRequestException
+     * @throws Exception\GetGroupButtonClicksByCityForbiddenException
+     * @throws Exception\GetGroupButtonClicksByCityInternalServerErrorException
+     * @throws Exception\GetGroupButtonClicksByCityServiceUnavailableException
+     */
+    public function getGroupButtonClicksByCity(string $groupGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetGroupButtonClicksByCity($groupGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * get top performing buttons by click for all pages in a group.
+     *
+     * @param string $groupGuid       A GUID for a Bitly group
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\SortedButtons|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetGroupTopButtonClicksBadRequestException
+     * @throws Exception\GetGroupTopButtonClicksForbiddenException
+     * @throws Exception\GetGroupTopButtonClicksInternalServerErrorException
+     * @throws Exception\GetGroupTopButtonClicksServiceUnavailableException
+     */
+    public function getGroupTopButtonClicks(string $groupGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetGroupTopButtonClicks($groupGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * get pages overview (total button clicks and page views) for all pages in a group.
+     *
+     * @param string $groupGuid       A GUID for a Bitly group
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\GroupsGroupGuidPagesOverviewGetResponse200|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetGroupPagesOverviewBadRequestException
+     * @throws Exception\GetGroupPagesOverviewForbiddenException
+     * @throws Exception\GetGroupPagesOverviewInternalServerErrorException
+     * @throws Exception\GetGroupPagesOverviewServiceUnavailableException
+     */
+    public function getGroupPagesOverview(string $groupGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetGroupPagesOverview($groupGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * group DBC downloads over time.
+     *
+     * @param string $groupGuid       A GUID for a Bitly group
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var int    $size The quantity of items to be be returned
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\DownloadsOverTime|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetGroupDigitalBusinessCardDownloadsOverTimeBadRequestException
+     * @throws Exception\GetGroupDigitalBusinessCardDownloadsOverTimeForbiddenException
+     * @throws Exception\GetGroupDigitalBusinessCardDownloadsOverTimeNotFoundException
+     * @throws Exception\GetGroupDigitalBusinessCardDownloadsOverTimeInternalServerErrorException
+     * @throws Exception\GetGroupDigitalBusinessCardDownloadsOverTimeServiceUnavailableException
+     */
+    public function getGroupDigitalBusinessCardDownloadsOverTime(string $groupGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetGroupDigitalBusinessCardDownloadsOverTime($groupGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * group DBC downloads by device.
+     *
+     * @param string $groupGuid       A GUID for a Bitly group
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var int    $size The quantity of items to be be returned
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\DeviceDownloadMetrics|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetGroupDigitalBusinessCardDownloadsByDevicesBadRequestException
+     * @throws Exception\GetGroupDigitalBusinessCardDownloadsByDevicesForbiddenException
+     * @throws Exception\GetGroupDigitalBusinessCardDownloadsByDevicesNotFoundException
+     * @throws Exception\GetGroupDigitalBusinessCardDownloadsByDevicesInternalServerErrorException
+     * @throws Exception\GetGroupDigitalBusinessCardDownloadsByDevicesServiceUnavailableException
+     */
+    public function getGroupDigitalBusinessCardDownloadsByDevices(string $groupGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetGroupDigitalBusinessCardDownloadsByDevices($groupGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * group DBC downloads by country.
+     *
+     * @param string $groupGuid       A GUID for a Bitly group
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var int    $size The quantity of items to be be returned
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\DownloadMetrics|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetGroupDigitalBusinessCardDownloadsByCountriesBadRequestException
+     * @throws Exception\GetGroupDigitalBusinessCardDownloadsByCountriesForbiddenException
+     * @throws Exception\GetGroupDigitalBusinessCardDownloadsByCountriesNotFoundException
+     * @throws Exception\GetGroupDigitalBusinessCardDownloadsByCountriesInternalServerErrorException
+     * @throws Exception\GetGroupDigitalBusinessCardDownloadsByCountriesServiceUnavailableException
+     */
+    public function getGroupDigitalBusinessCardDownloadsByCountries(string $groupGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetGroupDigitalBusinessCardDownloadsByCountries($groupGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * group DBC downloads by city.
+     *
+     * @param string $groupGuid       A GUID for a Bitly group
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var int    $size The quantity of items to be be returned
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\CityDownloadMetrics|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetGroupDigitalBusinessCardDownloadsByCitiesBadRequestException
+     * @throws Exception\GetGroupDigitalBusinessCardDownloadsByCitiesForbiddenException
+     * @throws Exception\GetGroupDigitalBusinessCardDownloadsByCitiesNotFoundException
+     * @throws Exception\GetGroupDigitalBusinessCardDownloadsByCitiesInternalServerErrorException
+     * @throws Exception\GetGroupDigitalBusinessCardDownloadsByCitiesServiceUnavailableException
+     */
+    public function getGroupDigitalBusinessCardDownloadsByCities(string $groupGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetGroupDigitalBusinessCardDownloadsByCities($groupGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * group DBC downloads by Page.
+     *
+     * @param string $groupGuid       A GUID for a Bitly group
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var int    $size The quantity of items to be be returned
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\DownloadMetrics|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetGroupDigitalBusinessCardDownloadsByMicrositesBadRequestException
+     * @throws Exception\GetGroupDigitalBusinessCardDownloadsByMicrositesForbiddenException
+     * @throws Exception\GetGroupDigitalBusinessCardDownloadsByMicrositesNotFoundException
+     * @throws Exception\GetGroupDigitalBusinessCardDownloadsByMicrositesInternalServerErrorException
+     * @throws Exception\GetGroupDigitalBusinessCardDownloadsByMicrositesServiceUnavailableException
+     */
+    public function getGroupDigitalBusinessCardDownloadsByMicrosites(string $groupGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetGroupDigitalBusinessCardDownloadsByMicrosites($groupGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * group DBC downloads by block.
+     *
+     * @param string $groupGuid       A GUID for a Bitly group
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var int    $size The quantity of items to be be returned
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\DownloadMetrics|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetGroupDigitalBusinessCardDownloadsByBlocksBadRequestException
+     * @throws Exception\GetGroupDigitalBusinessCardDownloadsByBlocksForbiddenException
+     * @throws Exception\GetGroupDigitalBusinessCardDownloadsByBlocksNotFoundException
+     * @throws Exception\GetGroupDigitalBusinessCardDownloadsByBlocksInternalServerErrorException
+     * @throws Exception\GetGroupDigitalBusinessCardDownloadsByBlocksServiceUnavailableException
+     */
+    public function getGroupDigitalBusinessCardDownloadsByBlocks(string $groupGuid, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetGroupDigitalBusinessCardDownloadsByBlocks($groupGuid, $queryParameters), $fetch);
+    }
+
+    /**
+     * site DBC downloads over time.
+     *
+     * @param string $siteId          A GUID for a Bitly Site
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var int    $size The quantity of items to be be returned
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\DownloadsOverTime|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetSiteDigitalBusinessCardDownloadsOverTimeBadRequestException
+     * @throws Exception\GetSiteDigitalBusinessCardDownloadsOverTimeForbiddenException
+     * @throws Exception\GetSiteDigitalBusinessCardDownloadsOverTimeNotFoundException
+     * @throws Exception\GetSiteDigitalBusinessCardDownloadsOverTimeInternalServerErrorException
+     * @throws Exception\GetSiteDigitalBusinessCardDownloadsOverTimeServiceUnavailableException
+     */
+    public function getSiteDigitalBusinessCardDownloadsOverTime(string $siteId, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetSiteDigitalBusinessCardDownloadsOverTime($siteId, $queryParameters), $fetch);
+    }
+
+    /**
+     * site DBC downloads by device.
+     *
+     * @param string $siteId          A GUID for a Bitly Site
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var int    $size The quantity of items to be be returned
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\DeviceDownloadMetrics|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetSiteDigitalBusinessCardDownloadsByDevicesBadRequestException
+     * @throws Exception\GetSiteDigitalBusinessCardDownloadsByDevicesForbiddenException
+     * @throws Exception\GetSiteDigitalBusinessCardDownloadsByDevicesNotFoundException
+     * @throws Exception\GetSiteDigitalBusinessCardDownloadsByDevicesInternalServerErrorException
+     * @throws Exception\GetSiteDigitalBusinessCardDownloadsByDevicesServiceUnavailableException
+     */
+    public function getSiteDigitalBusinessCardDownloadsByDevices(string $siteId, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetSiteDigitalBusinessCardDownloadsByDevices($siteId, $queryParameters), $fetch);
+    }
+
+    /**
+     * site DBC downloads by country.
+     *
+     * @param string $siteId          A GUID for a Bitly Site
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var int    $size The quantity of items to be be returned
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\DownloadMetrics|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetSiteDigitalBusinessCardDownloadsByCountriesBadRequestException
+     * @throws Exception\GetSiteDigitalBusinessCardDownloadsByCountriesForbiddenException
+     * @throws Exception\GetSiteDigitalBusinessCardDownloadsByCountriesNotFoundException
+     * @throws Exception\GetSiteDigitalBusinessCardDownloadsByCountriesInternalServerErrorException
+     * @throws Exception\GetSiteDigitalBusinessCardDownloadsByCountriesServiceUnavailableException
+     */
+    public function getSiteDigitalBusinessCardDownloadsByCountries(string $siteId, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetSiteDigitalBusinessCardDownloadsByCountries($siteId, $queryParameters), $fetch);
+    }
+
+    /**
+     * site DBC downloads by city.
+     *
+     * @param string $siteId          A GUID for a Bitly Site
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var int    $size The quantity of items to be be returned
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\CityDownloadMetrics|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetSiteDigitalBusinessCardDownloadsByCitiesBadRequestException
+     * @throws Exception\GetSiteDigitalBusinessCardDownloadsByCitiesForbiddenException
+     * @throws Exception\GetSiteDigitalBusinessCardDownloadsByCitiesNotFoundException
+     * @throws Exception\GetSiteDigitalBusinessCardDownloadsByCitiesInternalServerErrorException
+     * @throws Exception\GetSiteDigitalBusinessCardDownloadsByCitiesServiceUnavailableException
+     */
+    public function getSiteDigitalBusinessCardDownloadsByCities(string $siteId, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetSiteDigitalBusinessCardDownloadsByCities($siteId, $queryParameters), $fetch);
+    }
+
+    /**
+     * site DBC downloads by block.
+     *
+     * @param string $siteId          A GUID for a Bitly Site
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var int    $size The quantity of items to be be returned
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\DownloadMetrics|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetSiteDigitalBusinessCardDownloadsByBlocksBadRequestException
+     * @throws Exception\GetSiteDigitalBusinessCardDownloadsByBlocksForbiddenException
+     * @throws Exception\GetSiteDigitalBusinessCardDownloadsByBlocksNotFoundException
+     * @throws Exception\GetSiteDigitalBusinessCardDownloadsByBlocksInternalServerErrorException
+     * @throws Exception\GetSiteDigitalBusinessCardDownloadsByBlocksServiceUnavailableException
+     */
+    public function getSiteDigitalBusinessCardDownloadsByBlocks(string $siteId, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetSiteDigitalBusinessCardDownloadsByBlocks($siteId, $queryParameters), $fetch);
+    }
+
+    /**
+     * a DBC's downloads over time.
+     *
+     * @param string $siteId          A GUID for a Bitly Site
+     * @param string $blockId         A GUID for a Bitly Site Block
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var int    $size The quantity of items to be be returned
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\DownloadsOverTime|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetBlockDigitalBusinessCardDownloadsOverTimeBadRequestException
+     * @throws Exception\GetBlockDigitalBusinessCardDownloadsOverTimeForbiddenException
+     * @throws Exception\GetBlockDigitalBusinessCardDownloadsOverTimeNotFoundException
+     * @throws Exception\GetBlockDigitalBusinessCardDownloadsOverTimeInternalServerErrorException
+     * @throws Exception\GetBlockDigitalBusinessCardDownloadsOverTimeServiceUnavailableException
+     */
+    public function getBlockDigitalBusinessCardDownloadsOverTime(string $siteId, string $blockId, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetBlockDigitalBusinessCardDownloadsOverTime($siteId, $blockId, $queryParameters), $fetch);
+    }
+
+    /**
+     * a DBC's downloads by device.
+     *
+     * @param string $siteId          A GUID for a Bitly Site
+     * @param string $blockId         A GUID for a Bitly Site Block
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var int    $size The quantity of items to be be returned
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\DeviceDownloadMetrics|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetBlockDigitalBusinessCardDownloadsByDevicesBadRequestException
+     * @throws Exception\GetBlockDigitalBusinessCardDownloadsByDevicesForbiddenException
+     * @throws Exception\GetBlockDigitalBusinessCardDownloadsByDevicesNotFoundException
+     * @throws Exception\GetBlockDigitalBusinessCardDownloadsByDevicesInternalServerErrorException
+     * @throws Exception\GetBlockDigitalBusinessCardDownloadsByDevicesServiceUnavailableException
+     */
+    public function getBlockDigitalBusinessCardDownloadsByDevices(string $siteId, string $blockId, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetBlockDigitalBusinessCardDownloadsByDevices($siteId, $blockId, $queryParameters), $fetch);
+    }
+
+    /**
+     * a DBC's downloads by country.
+     *
+     * @param string $siteId          A GUID for a Bitly Site
+     * @param string $blockId         A GUID for a Bitly Site Block
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var int    $size The quantity of items to be be returned
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\DownloadMetrics|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetBlockDigitalBusinessCardDownloadsByCountriesBadRequestException
+     * @throws Exception\GetBlockDigitalBusinessCardDownloadsByCountriesForbiddenException
+     * @throws Exception\GetBlockDigitalBusinessCardDownloadsByCountriesNotFoundException
+     * @throws Exception\GetBlockDigitalBusinessCardDownloadsByCountriesInternalServerErrorException
+     * @throws Exception\GetBlockDigitalBusinessCardDownloadsByCountriesServiceUnavailableException
+     */
+    public function getBlockDigitalBusinessCardDownloadsByCountries(string $siteId, string $blockId, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetBlockDigitalBusinessCardDownloadsByCountries($siteId, $blockId, $queryParameters), $fetch);
+    }
+
+    /**
+     * a DBC's downloads by city.
+     *
+     * @param string $siteId          A GUID for a Bitly Site
+     * @param string $blockId         A GUID for a Bitly Site Block
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var int    $size The quantity of items to be be returned
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\CityDownloadMetrics|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetBlockDigitalBusinessCardDownloadsByCitiesBadRequestException
+     * @throws Exception\GetBlockDigitalBusinessCardDownloadsByCitiesForbiddenException
+     * @throws Exception\GetBlockDigitalBusinessCardDownloadsByCitiesNotFoundException
+     * @throws Exception\GetBlockDigitalBusinessCardDownloadsByCitiesInternalServerErrorException
+     * @throws Exception\GetBlockDigitalBusinessCardDownloadsByCitiesServiceUnavailableException
+     */
+    public function getBlockDigitalBusinessCardDownloadsByCities(string $siteId, string $blockId, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetBlockDigitalBusinessCardDownloadsByCities($siteId, $blockId, $queryParameters), $fetch);
+    }
+
+    /**
+     * Returns the click counts for all active and inactive links that were associated with a site.
+     *
+     * @param string $siteId          A GUID for a Bitly Site
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var int    $size The quantity of items to be be returned
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var int    $page Integer specifying the numbered result at which to start
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\SiteLinkPerformance|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetLinkPerformanceForSiteForbiddenException
+     * @throws Exception\GetLinkPerformanceForSiteNotFoundException
+     * @throws Exception\GetLinkPerformanceForSiteInternalServerErrorException
+     * @throws Exception\GetLinkPerformanceForSiteServiceUnavailableException
+     */
+    public function getLinkPerformanceForSite(string $siteId, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetLinkPerformanceForSite($siteId, $queryParameters), $fetch);
+    }
+
+    /**
+     * Returns the view counts for the specified link in an array based on a date.
+     *
+     * @param string $siteId          A GUID for a Bitly Site
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var int    $size The quantity of items to be be returned
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\SiteViewMetrics|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetViewsForSiteForbiddenException
+     * @throws Exception\GetViewsForSiteNotFoundException
+     * @throws Exception\GetViewsForSiteInternalServerErrorException
+     * @throws Exception\GetViewsForSiteServiceUnavailableException
+     */
+    public function getViewsForSite(string $siteId, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetViewsForSite($siteId, $queryParameters), $fetch);
+    }
+
+    /**
+     * Returns the view counts for the specified site rolled up into a single field.
+     *
+     * @param string $siteId          A GUID for a Bitly Site
+     * @param array  $queryParameters {
+     *
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var int    $size The quantity of items to be be returned
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\SiteViewsSummary|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetViewsSummaryForSiteForbiddenException
+     * @throws Exception\GetViewsSummaryForSiteNotFoundException
+     * @throws Exception\GetViewsSummaryForSiteInternalServerErrorException
+     * @throws Exception\GetViewsSummaryForSiteServiceUnavailableException
+     */
+    public function getViewsSummaryForSite(string $siteId, array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetViewsSummaryForSite($siteId, $queryParameters), $fetch);
+    }
+
+    /**
+     * Takes a previously uploaded image and attaches it to a site.
+     *
+     * @param string $siteId A GUID for a Bitly Site
+     * @param string $fetch  Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\ImageUploadResponse|\Psr\Http\Message\ResponseInterface|null
+     */
+    public function createSiteImage(string $siteId, Model\SiteImageUpload $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CreateSiteImage($siteId, $requestBody), $fetch);
+    }
+
+    /**
+     * Deletes a redirect for a site.
+     *
+     * @param string $siteId A GUID for a Bitly Site
+     * @param string $fetch  Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     */
+    public function deleteSiteRedirect(string $siteId, string $domain, string $keyword, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\DeleteSiteRedirect($siteId, $domain, $keyword), $fetch);
+    }
+
+    /**
+     * Updates the appearance of a Bitly Site.
+     *
+     * @param string $siteId A GUID for a Bitly Site
+     * @param string $fetch  Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\UpdateSiteAppearanceBadRequestException
+     * @throws Exception\UpdateSiteAppearanceForbiddenException
+     * @throws Exception\UpdateSiteAppearanceNotFoundException
+     * @throws Exception\UpdateSiteAppearanceInternalServerErrorException
+     * @throws Exception\UpdateSiteAppearanceServiceUnavailableException
+     */
+    public function updateSiteAppearance(string $siteId, Model\BitlySiteAppearance $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\UpdateSiteAppearance($siteId, $requestBody), $fetch);
+    }
+
+    /**
+     * Creates a content of given type on the provided Site ID.
+     *
+     * @param string $siteId      A GUID for a Bitly Site
+     * @param string $contentType Type of microsite content
+     * @param string $fetch       Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\SiteBlock|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\CreateSiteContentBadRequestException
+     * @throws Exception\CreateSiteContentForbiddenException
+     * @throws Exception\CreateSiteContentNotFoundException
+     * @throws Exception\CreateSiteContentInternalServerErrorException
+     * @throws Exception\CreateSiteContentServiceUnavailableException
+     */
+    public function createSiteContent(string $siteId, string $contentType, Model\SiteContentRequest $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\CreateSiteContent($siteId, $contentType, $requestBody), $fetch);
+    }
+
+    /**
+     * get sites overview (total button clicks and page views) for requested bitly page.
+     *
+     * @param array $queryParameters {
+     *
+     * @var array  $site Filter by given Bitly Site guids
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var string $report_guid
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AggregateSitesOverviewGetResponse200|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetAggregateSitesOverviewBadRequestException
+     * @throws Exception\GetAggregateSitesOverviewForbiddenException
+     * @throws Exception\GetAggregateSitesOverviewInternalServerErrorException
+     * @throws Exception\GetAggregateSitesOverviewServiceUnavailableException
+     */
+    public function getAggregateSitesOverview(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetAggregateSitesOverview($queryParameters), $fetch);
+    }
+
+    /**
+     * get site views over time for requested sites.
+     *
+     * @param array $queryParameters {
+     *
+     * @var array  $site Filter by given Bitly Site guids
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var string $report_guid
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AggregateClicksForBitlinks|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetAggregateSiteViewsOverTimeBadRequestException
+     * @throws Exception\GetAggregateSiteViewsOverTimeForbiddenException
+     * @throws Exception\GetAggregateSiteViewsOverTimeInternalServerErrorException
+     * @throws Exception\GetAggregateSiteViewsOverTimeServiceUnavailableException
+     */
+    public function getAggregateSiteViewsOverTime(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetAggregateSiteViewsOverTime($queryParameters), $fetch);
+    }
+
+    /**
+     * get site views by device for requested sites.
+     *
+     * @param array $queryParameters {
+     *
+     * @var array  $site Filter by given Bitly Site guids
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var string $report_guid
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AggregateClicksForBitlinksByFacet|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetAggregateSiteViewsByDeviceBadRequestException
+     * @throws Exception\GetAggregateSiteViewsByDeviceForbiddenException
+     * @throws Exception\GetAggregateSiteViewsByDeviceInternalServerErrorException
+     * @throws Exception\GetAggregateSiteViewsByDeviceServiceUnavailableException
+     */
+    public function getAggregateSiteViewsByDevice(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetAggregateSiteViewsByDevice($queryParameters), $fetch);
+    }
+
+    /**
+     * get site views by referrer for requested sites.
+     *
+     * @param array $queryParameters {
+     *
+     * @var array  $site Filter by given Bitly Site guids
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var string $report_guid
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AggregateClicksForBitlinksByFacet|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetAggregateSiteViewsByReferrerBadRequestException
+     * @throws Exception\GetAggregateSiteViewsByReferrerForbiddenException
+     * @throws Exception\GetAggregateSiteViewsByReferrerInternalServerErrorException
+     * @throws Exception\GetAggregateSiteViewsByReferrerServiceUnavailableException
+     */
+    public function getAggregateSiteViewsByReferrer(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetAggregateSiteViewsByReferrer($queryParameters), $fetch);
+    }
+
+    /**
+     * get site views by country for requested sites.
+     *
+     * @param array $queryParameters {
+     *
+     * @var array  $site Filter by given Bitly Site guids
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var string $report_guid
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AggregateClicksForBitlinksByFacet|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetAggregateSiteViewsByCountryBadRequestException
+     * @throws Exception\GetAggregateSiteViewsByCountryForbiddenException
+     * @throws Exception\GetAggregateSiteViewsByCountryInternalServerErrorException
+     * @throws Exception\GetAggregateSiteViewsByCountryServiceUnavailableException
+     */
+    public function getAggregateSiteViewsByCountry(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetAggregateSiteViewsByCountry($queryParameters), $fetch);
+    }
+
+    /**
+     * get site views by city for requested sites.
+     *
+     * @param array $queryParameters {
+     *
+     * @var array  $site Filter by given Bitly Site guids
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var string $report_guid
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AggregateClicksForBitlinksByCitiesFacet|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetAggregateSiteViewsByCityBadRequestException
+     * @throws Exception\GetAggregateSiteViewsByCityForbiddenException
+     * @throws Exception\GetAggregateSiteViewsByCityInternalServerErrorException
+     * @throws Exception\GetAggregateSiteViewsByCityServiceUnavailableException
+     */
+    public function getAggregateSiteViewsByCity(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetAggregateSiteViewsByCity($queryParameters), $fetch);
+    }
+
+    /**
+     * get page views over time for requested pages.
+     *
+     * @param array $queryParameters {
+     *
+     * @var array  $launchpad Filter by given launchpad (Bitly Page) guids
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var string $report_guid
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AggregateClicksForBitlinks|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetAggregatePageViewsOverTimeBadRequestException
+     * @throws Exception\GetAggregatePageViewsOverTimeForbiddenException
+     * @throws Exception\GetAggregatePageViewsOverTimeInternalServerErrorException
+     * @throws Exception\GetAggregatePageViewsOverTimeServiceUnavailableException
+     */
+    public function getAggregatePageViewsOverTime(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetAggregatePageViewsOverTime($queryParameters), $fetch);
+    }
+
+    /**
+     * get page views by device for requested pages.
+     *
+     * @param array $queryParameters {
+     *
+     * @var array  $launchpad Filter by given launchpad (Bitly Page) guids
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var string $report_guid
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AggregateClicksForBitlinksByFacet|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetAggregatePageViewsByDeviceBadRequestException
+     * @throws Exception\GetAggregatePageViewsByDeviceForbiddenException
+     * @throws Exception\GetAggregatePageViewsByDeviceInternalServerErrorException
+     * @throws Exception\GetAggregatePageViewsByDeviceServiceUnavailableException
+     */
+    public function getAggregatePageViewsByDevice(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetAggregatePageViewsByDevice($queryParameters), $fetch);
+    }
+
+    /**
+     * get page views by referrer for requested pages.
+     *
+     * @param array $queryParameters {
+     *
+     * @var array  $launchpad Filter by given launchpad (Bitly Page) guids
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var string $report_guid
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AggregateClicksForBitlinksByFacet|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetAggregatePageViewsByReferrerBadRequestException
+     * @throws Exception\GetAggregatePageViewsByReferrerForbiddenException
+     * @throws Exception\GetAggregatePageViewsByReferrerInternalServerErrorException
+     * @throws Exception\GetAggregatePageViewsByReferrerServiceUnavailableException
+     */
+    public function getAggregatePageViewsByReferrer(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetAggregatePageViewsByReferrer($queryParameters), $fetch);
+    }
+
+    /**
+     * get page views by country for requested pages.
+     *
+     * @param array $queryParameters {
+     *
+     * @var array  $launchpad Filter by given launchpad (Bitly Page) guids
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var string $report_guid
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AggregateClicksForBitlinksByFacet|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetAggregatePageViewsByCountryBadRequestException
+     * @throws Exception\GetAggregatePageViewsByCountryForbiddenException
+     * @throws Exception\GetAggregatePageViewsByCountryInternalServerErrorException
+     * @throws Exception\GetAggregatePageViewsByCountryServiceUnavailableException
+     */
+    public function getAggregatePageViewsByCountry(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetAggregatePageViewsByCountry($queryParameters), $fetch);
+    }
+
+    /**
+     * get page views by city for requested pages.
+     *
+     * @param array $queryParameters {
+     *
+     * @var array  $launchpad Filter by given launchpad (Bitly Page) guids
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var string $report_guid
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AggregateClicksForBitlinksByCitiesFacet|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetAggregatePageViewsByCityBadRequestException
+     * @throws Exception\GetAggregatePageViewsByCityForbiddenException
+     * @throws Exception\GetAggregatePageViewsByCityInternalServerErrorException
+     * @throws Exception\GetAggregatePageViewsByCityServiceUnavailableException
+     */
+    public function getAggregatePageViewsByCity(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetAggregatePageViewsByCity($queryParameters), $fetch);
+    }
+
+    /**
+     * get button clicks over time for requested pages.
+     *
+     * @param array $queryParameters {
+     *
+     * @var array  $launchpad Filter by given launchpad (Bitly Page) guids
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var string $report_guid
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AggregateClicksForBitlinks|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetAggregateButtonClicksOverTimeBadRequestException
+     * @throws Exception\GetAggregateButtonClicksOverTimeForbiddenException
+     * @throws Exception\GetAggregateButtonClicksOverTimeInternalServerErrorException
+     * @throws Exception\GetAggregateButtonClicksOverTimeServiceUnavailableException
+     */
+    public function getAggregateButtonClicksOverTime(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetAggregateButtonClicksOverTime($queryParameters), $fetch);
+    }
+
+    /**
+     * get button clicks by device for requested pages.
+     *
+     * @param array $queryParameters {
+     *
+     * @var array  $launchpad Filter by given launchpad (Bitly Page) guids
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var string $report_guid
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AggregateClicksForBitlinksByFacet|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetAggregateButtonClicksByDeviceBadRequestException
+     * @throws Exception\GetAggregateButtonClicksByDeviceForbiddenException
+     * @throws Exception\GetAggregateButtonClicksByDeviceInternalServerErrorException
+     * @throws Exception\GetAggregateButtonClicksByDeviceServiceUnavailableException
+     */
+    public function getAggregateButtonClicksByDevice(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetAggregateButtonClicksByDevice($queryParameters), $fetch);
+    }
+
+    /**
+     * get button clicks by country for requested pages.
+     *
+     * @param array $queryParameters {
+     *
+     * @var array  $launchpad Filter by given launchpad (Bitly Page) guids
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var string $report_guid
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AggregateClicksForBitlinksByFacet|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetAggregateButtonClicksByCountryBadRequestException
+     * @throws Exception\GetAggregateButtonClicksByCountryForbiddenException
+     * @throws Exception\GetAggregateButtonClicksByCountryInternalServerErrorException
+     * @throws Exception\GetAggregateButtonClicksByCountryServiceUnavailableException
+     */
+    public function getAggregateButtonClicksByCountry(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetAggregateButtonClicksByCountry($queryParameters), $fetch);
+    }
+
+    /**
+     * get button clicks by city for requested pages.
+     *
+     * @param array $queryParameters {
+     *
+     * @var array  $launchpad Filter by given launchpad (Bitly Page) guids
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var string $report_guid
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AggregateClicksForBitlinksByCitiesFacet|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetAggregateButtonClicksByCityBadRequestException
+     * @throws Exception\GetAggregateButtonClicksByCityForbiddenException
+     * @throws Exception\GetAggregateButtonClicksByCityInternalServerErrorException
+     * @throws Exception\GetAggregateButtonClicksByCityServiceUnavailableException
+     */
+    public function getAggregateButtonClicksByCity(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetAggregateButtonClicksByCity($queryParameters), $fetch);
+    }
+
+    /**
+     * get top performing buttons by click for requested pages.
+     *
+     * @param array $queryParameters {
+     *
+     * @var array  $launchpad Filter by given launchpad (Bitly Page) guids
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var string $brand_guid
+     * @var string $report_guid
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\SortedButtons|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetAggregateTopButtonClicksBadRequestException
+     * @throws Exception\GetAggregateTopButtonClicksForbiddenException
+     * @throws Exception\GetAggregateTopButtonClicksInternalServerErrorException
+     * @throws Exception\GetAggregateTopButtonClicksServiceUnavailableException
+     */
+    public function getAggregateTopButtonClicks(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetAggregateTopButtonClicks($queryParameters), $fetch);
+    }
+
+    /**
+     * get digital business card downloads over time for requested pages.
+     *
+     * @param array $queryParameters {
+     *
+     * @var array  $launchpad Filter by given launchpad (Bitly Page) guids
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var string $report_guid
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AggregateClicksForBitlinks|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetAggregateDigitalBusinessCardDownloadsOverTimeBadRequestException
+     * @throws Exception\GetAggregateDigitalBusinessCardDownloadsOverTimeForbiddenException
+     * @throws Exception\GetAggregateDigitalBusinessCardDownloadsOverTimeInternalServerErrorException
+     * @throws Exception\GetAggregateDigitalBusinessCardDownloadsOverTimeServiceUnavailableException
+     */
+    public function getAggregateDigitalBusinessCardDownloadsOverTime(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetAggregateDigitalBusinessCardDownloadsOverTime($queryParameters), $fetch);
+    }
+
+    /**
+     * get button clicks over time for requested pages.
+     *
+     * @param array $queryParameters {
+     *
+     * @var array  $site Filter by given Bitly Site guids
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var string $report_guid
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AggregateClicksForBitlinks|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetSiteClicksOverTimeBadRequestException
+     * @throws Exception\GetSiteClicksOverTimeForbiddenException
+     * @throws Exception\GetSiteClicksOverTimeInternalServerErrorException
+     * @throws Exception\GetSiteClicksOverTimeServiceUnavailableException
+     */
+    public function getSiteClicksOverTime(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetSiteClicksOverTime($queryParameters), $fetch);
+    }
+
+    /**
+     * get button clicks by device for requested pages.
+     *
+     * @param array $queryParameters {
+     *
+     * @var array  $site Filter by given Bitly Site guids
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var string $report_guid
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AggregateClicksForBitlinksByFacet|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetSiteClicksByCitiesBadRequestException
+     * @throws Exception\GetSiteClicksByCitiesForbiddenException
+     * @throws Exception\GetSiteClicksByCitiesInternalServerErrorException
+     * @throws Exception\GetSiteClicksByCitiesServiceUnavailableException
+     */
+    public function getSiteClicksByCities(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetSiteClicksByCities($queryParameters), $fetch);
+    }
+
+    /**
+     * get top performing buttons by click for requested pages.
+     *
+     * @param array $queryParameters {
+     *
+     * @var array  $site Filter by given Bitly Site guids
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var string $brand_guid
+     * @var string $report_guid
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\SortedButtons|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetSiteFilteredTopPageButtonsBadRequestException
+     * @throws Exception\GetSiteFilteredTopPageButtonsForbiddenException
+     * @throws Exception\GetSiteFilteredTopPageButtonsInternalServerErrorException
+     * @throws Exception\GetSiteFilteredTopPageButtonsServiceUnavailableException
+     */
+    public function getSiteFilteredTopPageButtons(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetSiteFilteredTopPageButtons($queryParameters), $fetch);
+    }
+
+    /**
+     * get button clicks by country for requested pages.
+     *
+     * @param array $queryParameters {
+     *
+     * @var array  $site Filter by given Bitly Site guids
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var string $report_guid
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AggregateClicksForBitlinksByFacet|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetSiteClicksByCountriesBadRequestException
+     * @throws Exception\GetSiteClicksByCountriesForbiddenException
+     * @throws Exception\GetSiteClicksByCountriesInternalServerErrorException
+     * @throws Exception\GetSiteClicksByCountriesServiceUnavailableException
+     */
+    public function getSiteClicksByCountries(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetSiteClicksByCountries($queryParameters), $fetch);
+    }
+
+    /**
+     * get button clicks by city for requested pages.
+     *
+     * @param array $queryParameters {
+     *
+     * @var array  $site Filter by given Bitly Site guids
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var string $report_guid
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AggregateClicksForBitlinksByCitiesFacet|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetSiteClicksByDevicesBadRequestException
+     * @throws Exception\GetSiteClicksByDevicesForbiddenException
+     * @throws Exception\GetSiteClicksByDevicesInternalServerErrorException
+     * @throws Exception\GetSiteClicksByDevicesServiceUnavailableException
+     */
+    public function getSiteClicksByDevices(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetSiteClicksByDevices($queryParameters), $fetch);
+    }
+
+    /**
+     * get button clicks over time for requested pages.
+     *
+     * @param array $queryParameters {
+     *
+     * @var array  $site Filter by given Bitly Site guids
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var string $report_guid
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AggregateClicksForBitlinks|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetLaunchpadDigitalBusinessCardDownloadsOverTimeBadRequestException
+     * @throws Exception\GetLaunchpadDigitalBusinessCardDownloadsOverTimeForbiddenException
+     * @throws Exception\GetLaunchpadDigitalBusinessCardDownloadsOverTimeInternalServerErrorException
+     * @throws Exception\GetLaunchpadDigitalBusinessCardDownloadsOverTimeServiceUnavailableException
+     */
+    public function getLaunchpadDigitalBusinessCardDownloadsOverTime(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetLaunchpadDigitalBusinessCardDownloadsOverTime($queryParameters), $fetch);
+    }
+
+    /**
+     * get pages overview (total button clicks and page views) for requested pages.
+     *
+     * @param array $queryParameters {
+     *
+     * @var array  $launchpad Filter by given launchpad (Bitly Page) guids
+     * @var string $unit A unit of time
+     * @var int    $units An integer representing the time units to query data for. pass -1 to return all units of time
+     * @var string $unit_reference An ISO-8601 timestamp, indicating the most recent time for which to pull metrics. Will default to current time. Timestamp values should be url encoded (i.e. replace '+' with '%2B' and ':' with '%3A'; 2022-02-02T15:53:02+0000 becomes 2022-02-02T15%3A53%3A02%2B0000)
+     * @var string $report_guid
+     *             }
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return Model\AggregateLaunchpadsOverviewGetResponse200|\Psr\Http\Message\ResponseInterface|null
+     *
+     * @throws Exception\GetAggregatePagesOverviewBadRequestException
+     * @throws Exception\GetAggregatePagesOverviewForbiddenException
+     * @throws Exception\GetAggregatePagesOverviewInternalServerErrorException
+     * @throws Exception\GetAggregatePagesOverviewServiceUnavailableException
+     */
+    public function getAggregatePagesOverview(array $queryParameters = [], string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetAggregatePagesOverview($queryParameters), $fetch);
+    }
+
+    /**
+     * Provides a way to do dynamic translation at runtime.
+     *
+     * @param string $fetch Fetch mode to use (can be OBJECT or RESPONSE)
+     *
+     * @return \Psr\Http\Message\ResponseInterface|null
+     */
+    public function getDynamicTranslation(Model\TranslationRequest $requestBody, string $fetch = self::FETCH_OBJECT)
+    {
+        return $this->executeEndpoint(new Endpoint\GetDynamicTranslation($requestBody), $fetch);
     }
 
     public static function create($httpClient = null, array $additionalPlugins = [], array $additionalNormalizers = [])
