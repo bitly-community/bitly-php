@@ -1160,20 +1160,6 @@ class JaneObjectNormalizer implements DenormalizerInterface, NormalizerInterface
 
         \Bitly\Model\Gone::class => GoneNormalizer::class,
 
-        \Bitly\Model\LinksBitlinkDestinationsPutBody::class => LinksBitlinkDestinationsPutBodyNormalizer::class,
-
-        \Bitly\Model\CampaignsCampaignGuidAddURLsPostBody::class => CampaignsCampaignGuidAddURLsPostBodyNormalizer::class,
-
-        \Bitly\Model\GroupsGroupGuidLinksClicksDevicesGetResponse200::class => GroupsGroupGuidLinksClicksDevicesGetResponse200Normalizer::class,
-
-        \Bitly\Model\GroupsGroupGuidLinksClicksDevicesGetResponse200MetricsItem::class => GroupsGroupGuidLinksClicksDevicesGetResponse200MetricsItemNormalizer::class,
-
-        \Bitly\Model\GroupsGroupGuidPagesOverviewGetResponse200::class => GroupsGroupGuidPagesOverviewGetResponse200Normalizer::class,
-
-        \Bitly\Model\AggregateSitesOverviewGetResponse200::class => AggregateSitesOverviewGetResponse200Normalizer::class,
-
-        \Bitly\Model\AggregateLaunchpadsOverviewGetResponse200::class => AggregateLaunchpadsOverviewGetResponse200Normalizer::class,
-
         \Jane\Component\JsonSchemaRuntime\Reference::class => \Bitly\Runtime\Normalizer\ReferenceNormalizer::class,
     ];
     protected $normalizersCache = [];
@@ -1789,13 +1775,6 @@ class JaneObjectNormalizer implements DenormalizerInterface, NormalizerInterface
             \Bitly\Model\Timeout::class => false,
             \Bitly\Model\Unauthorized::class => false,
             \Bitly\Model\Gone::class => false,
-            \Bitly\Model\LinksBitlinkDestinationsPutBody::class => false,
-            \Bitly\Model\CampaignsCampaignGuidAddURLsPostBody::class => false,
-            \Bitly\Model\GroupsGroupGuidLinksClicksDevicesGetResponse200::class => false,
-            \Bitly\Model\GroupsGroupGuidLinksClicksDevicesGetResponse200MetricsItem::class => false,
-            \Bitly\Model\GroupsGroupGuidPagesOverviewGetResponse200::class => false,
-            \Bitly\Model\AggregateSitesOverviewGetResponse200::class => false,
-            \Bitly\Model\AggregateLaunchpadsOverviewGetResponse200::class => false,
             \Jane\Component\JsonSchemaRuntime\Reference::class => false,
         ];
     }
