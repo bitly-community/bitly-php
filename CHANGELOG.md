@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.0](https://github.com/bitly-community/bitly-php/compare/v1.6.0...v1.7.0) (2025-09-17)
+
+
+### Features
+
+* **lib:** generate library from Bitly OpenAPI ([1865290](https://github.com/bitly-community/bitly-php/commit/1865290aa4eb24673e05f71cf14837b06e4d57a7))
+
 ## [1.6.0](https://github.com/bitly-community/bitly-php/compare/v1.5.0...v1.6.0) (2025-09-14)
 
 
