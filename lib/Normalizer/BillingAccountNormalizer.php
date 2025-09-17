@@ -112,6 +112,10 @@ class BillingAccountNormalizer implements DenormalizerInterface, NormalizerInter
             $object->setMigrationStatus($data['migration_status']);
             unset($data['migration_status']);
         }
+        if (\array_key_exists('stripe_account', $data)) {
+            $object->setStripeAccount($data['stripe_account']);
+            unset($data['stripe_account']);
+        }
         if (\array_key_exists('upcoming_subscriptions', $data)) {
             $values = [];
             foreach ($data['upcoming_subscriptions'] as $value) {
@@ -196,6 +200,9 @@ class BillingAccountNormalizer implements DenormalizerInterface, NormalizerInter
         }
         if ($data->isInitialized('migrationStatus') && null !== $data->getMigrationStatus()) {
             $dataArray['migration_status'] = $data->getMigrationStatus();
+        }
+        if ($data->isInitialized('stripeAccount') && null !== $data->getStripeAccount()) {
+            $dataArray['stripe_account'] = $data->getStripeAccount();
         }
         if ($data->isInitialized('upcomingSubscriptions') && null !== $data->getUpcomingSubscriptions()) {
             $values = [];

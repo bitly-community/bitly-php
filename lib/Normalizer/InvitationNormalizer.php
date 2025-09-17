@@ -73,6 +73,10 @@ class InvitationNormalizer implements DenormalizerInterface, NormalizerInterface
             $object->setCreated($data['created']);
             unset($data['created']);
         }
+        if (\array_key_exists('invited_by', $data)) {
+            $object->setInvitedBy($data['invited_by']);
+            unset($data['invited_by']);
+        }
         foreach ($data as $key_1 => $value_2) {
             if (preg_match('/.*/', (string) $key_1)) {
                 $object[$key_1] = $value_2;
@@ -100,6 +104,9 @@ class InvitationNormalizer implements DenormalizerInterface, NormalizerInterface
         }
         if ($data->isInitialized('created') && null !== $data->getCreated()) {
             $dataArray['created'] = $data->getCreated();
+        }
+        if ($data->isInitialized('invitedBy') && null !== $data->getInvitedBy()) {
+            $dataArray['invited_by'] = $data->getInvitedBy();
         }
         foreach ($data as $key_1 => $value_2) {
             if (preg_match('/.*/', (string) $key_1)) {

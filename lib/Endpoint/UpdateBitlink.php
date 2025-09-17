@@ -16,7 +16,7 @@ class UpdateBitlink extends \Bitly\Runtime\Client\BaseEndpoint implements \Bitly
     protected $bitlink;
 
     /**
-     * Updates fields in the specified link. To redirect the link (i.e. to update the Long URL), use PATCH /v4/custom_bitlinks/{custom_bitlink} (https://dev.bitly.com/api-reference/#updateCustomBitlink).
+     * Updates fields in the specified link. To redirect the link (i.e. to update the Long URL), use the long_url parameter. This will always charge an encode limit.
      *
      * @param string $bitlink A Bitlink made of the domain and hash
      */
@@ -57,6 +57,7 @@ class UpdateBitlink extends \Bitly\Runtime\Client\BaseEndpoint implements \Bitly
      * @throws \Bitly\Exception\UpdateBitlinkPaymentRequiredException
      * @throws \Bitly\Exception\UpdateBitlinkForbiddenException
      * @throws \Bitly\Exception\UpdateBitlinkNotFoundException
+     * @throws \Bitly\Exception\UpdateBitlinkConflictException
      * @throws \Bitly\Exception\UpdateBitlinkGoneException
      * @throws \Bitly\Exception\UpdateBitlinkUnprocessableEntityException
      * @throws \Bitly\Exception\UpdateBitlinkTooManyRequestsException
@@ -81,6 +82,9 @@ class UpdateBitlink extends \Bitly\Runtime\Client\BaseEndpoint implements \Bitly
         }
         if (is_null($contentType) === false && (404 === $status && mb_strpos($contentType, 'application/json') !== false)) {
             throw new \Bitly\Exception\UpdateBitlinkNotFoundException($serializer->deserialize($body, 'Bitly\Model\NotFound', 'json'), $response);
+        }
+        if (is_null($contentType) === false && (409 === $status && mb_strpos($contentType, 'application/json') !== false)) {
+            throw new \Bitly\Exception\UpdateBitlinkConflictException($serializer->deserialize($body, 'Bitly\Model\Conflict', 'json'), $response);
         }
         if (is_null($contentType) === false && (410 === $status && mb_strpos($contentType, 'application/json') !== false)) {
             throw new \Bitly\Exception\UpdateBitlinkGoneException($serializer->deserialize($body, 'Bitly\Model\Gone', 'json'), $response);

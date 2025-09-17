@@ -28,7 +28,7 @@ class CreateCustomerResponse extends \ArrayObject
     /**
      * @var string
      */
-    protected $object;
+    protected $customer;
     /**
      * @var string
      */
@@ -47,15 +47,15 @@ class CreateCustomerResponse extends \ArrayObject
         return $this;
     }
 
-    public function getObject(): string
+    public function getCustomer(): string
     {
-        return $this->object;
+        return $this->customer;
     }
 
-    public function setObject(string $object): self
+    public function setCustomer(string $customer): self
     {
-        $this->initialized['object'] = true;
-        $this->object = $object;
+        $this->initialized['customer'] = true;
+        $this->customer = $customer;
 
         return $this;
     }

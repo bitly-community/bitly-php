@@ -28,11 +28,11 @@ class LaunchpadContentBitlinkRequestContent extends \ArrayObject
     /**
      * @var string
      */
-    protected $bitlink;
+    protected $bitlinkId;
     /**
      * @var string
      */
-    protected $title;
+    protected $linkTitle;
 
     public function getDescription(): string
     {
@@ -47,28 +47,28 @@ class LaunchpadContentBitlinkRequestContent extends \ArrayObject
         return $this;
     }
 
-    public function getBitlink(): string
+    public function getBitlinkId(): string
     {
-        return $this->bitlink;
+        return $this->bitlinkId;
     }
 
-    public function setBitlink(string $bitlink): self
+    public function setBitlinkId(string $bitlinkId): self
     {
-        $this->initialized['bitlink'] = true;
-        $this->bitlink = $bitlink;
+        $this->initialized['bitlinkId'] = true;
+        $this->bitlinkId = $bitlinkId;
 
         return $this;
     }
 
-    public function getTitle(): string
+    public function getLinkTitle(): string
     {
-        return $this->title;
+        return $this->linkTitle;
     }
 
-    public function setTitle(string $title): self
+    public function setLinkTitle(string $linkTitle): self
     {
-        $this->initialized['title'] = true;
-        $this->title = $title;
+        $this->initialized['linkTitle'] = true;
+        $this->linkTitle = $linkTitle;
 
         return $this;
     }

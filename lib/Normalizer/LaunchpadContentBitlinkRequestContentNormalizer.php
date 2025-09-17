@@ -53,13 +53,13 @@ class LaunchpadContentBitlinkRequestContentNormalizer implements DenormalizerInt
             $object->setDescription($data['description']);
             unset($data['description']);
         }
-        if (\array_key_exists('bitlink', $data)) {
-            $object->setBitlink($data['bitlink']);
-            unset($data['bitlink']);
+        if (\array_key_exists('bitlink_id', $data)) {
+            $object->setBitlinkId($data['bitlink_id']);
+            unset($data['bitlink_id']);
         }
-        if (\array_key_exists('title', $data)) {
-            $object->setTitle($data['title']);
-            unset($data['title']);
+        if (\array_key_exists('link_title', $data)) {
+            $object->setLinkTitle($data['link_title']);
+            unset($data['link_title']);
         }
         foreach ($data as $key => $value) {
             if (preg_match('/.*/', (string) $key)) {
@@ -76,11 +76,11 @@ class LaunchpadContentBitlinkRequestContentNormalizer implements DenormalizerInt
         if ($data->isInitialized('description') && null !== $data->getDescription()) {
             $dataArray['description'] = $data->getDescription();
         }
-        if ($data->isInitialized('bitlink') && null !== $data->getBitlink()) {
-            $dataArray['bitlink'] = $data->getBitlink();
+        if ($data->isInitialized('bitlinkId') && null !== $data->getBitlinkId()) {
+            $dataArray['bitlink_id'] = $data->getBitlinkId();
         }
-        if ($data->isInitialized('title') && null !== $data->getTitle()) {
-            $dataArray['title'] = $data->getTitle();
+        if ($data->isInitialized('linkTitle') && null !== $data->getLinkTitle()) {
+            $dataArray['link_title'] = $data->getLinkTitle();
         }
         foreach ($data as $key => $value) {
             if (preg_match('/.*/', (string) $key)) {

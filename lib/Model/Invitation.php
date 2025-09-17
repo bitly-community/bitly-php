@@ -37,6 +37,12 @@ class Invitation extends \ArrayObject
      * @var string
      */
     protected $created;
+    /**
+     * login of the user who sent the invitation.
+     *
+     * @var string
+     */
+    protected $invitedBy;
 
     public function getEmail(): string
     {
@@ -92,6 +98,25 @@ class Invitation extends \ArrayObject
     {
         $this->initialized['created'] = true;
         $this->created = $created;
+
+        return $this;
+    }
+
+    /**
+     * login of the user who sent the invitation.
+     */
+    public function getInvitedBy(): string
+    {
+        return $this->invitedBy;
+    }
+
+    /**
+     * login of the user who sent the invitation.
+     */
+    public function setInvitedBy(string $invitedBy): self
+    {
+        $this->initialized['invitedBy'] = true;
+        $this->invitedBy = $invitedBy;
 
         return $this;
     }

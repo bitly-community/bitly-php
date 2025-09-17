@@ -24,6 +24,7 @@ class GetBitlinksByGroup extends \Bitly\Runtime\Client\BaseEndpoint implements \
      * @var int    $size The quantity of items to be be returned
      * @var string $search_after token used to search next batch, only use response from API as input value
      * @var string $query The value that you would like to search
+     * @var string $hostname_path_query The hostname and/or path you would like to search (case-insensitive). Subdomains included; query params and fragment ignored.
      * @var int    $created_before Timestamp as an integer unix epoch (seconds only)
      * @var int    $created_after Timestamp as an integer unix epoch (seconds only)
      * @var string $archived Whether or not to include archived resources
@@ -67,12 +68,13 @@ class GetBitlinksByGroup extends \Bitly\Runtime\Client\BaseEndpoint implements \
     protected function getQueryOptionsResolver(): \Symfony\Component\OptionsResolver\OptionsResolver
     {
         $optionsResolver = parent::getQueryOptionsResolver();
-        $optionsResolver->setDefined(['size', 'search_after', 'query', 'created_before', 'created_after', 'archived', 'deeplinks', 'domain_deeplinks', 'campaign_guid', 'channel_guid', 'custom_bitlink', 'has_qr_codes', 'tags', 'launchpad_ids', 'encoding_login']);
+        $optionsResolver->setDefined(['size', 'search_after', 'query', 'hostname_path_query', 'created_before', 'created_after', 'archived', 'deeplinks', 'domain_deeplinks', 'campaign_guid', 'channel_guid', 'custom_bitlink', 'has_qr_codes', 'tags', 'launchpad_ids', 'encoding_login']);
         $optionsResolver->setRequired([]);
         $optionsResolver->setDefaults(['size' => 50, 'archived' => 'off', 'deeplinks' => 'both', 'domain_deeplinks' => 'both', 'custom_bitlink' => 'both', 'has_qr_codes' => 'both']);
         $optionsResolver->addAllowedTypes('size', ['int']);
         $optionsResolver->addAllowedTypes('search_after', ['string']);
         $optionsResolver->addAllowedTypes('query', ['string']);
+        $optionsResolver->addAllowedTypes('hostname_path_query', ['string']);
         $optionsResolver->addAllowedTypes('created_before', ['int']);
         $optionsResolver->addAllowedTypes('created_after', ['int']);
         $optionsResolver->addAllowedTypes('archived', ['string']);
