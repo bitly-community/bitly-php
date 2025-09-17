@@ -53,9 +53,9 @@ class CreateCustomerResponseNormalizer implements DenormalizerInterface, Normali
             $object->setId($data['id']);
             unset($data['id']);
         }
-        if (\array_key_exists('object', $data)) {
-            $object->setObject($data['object']);
-            unset($data['object']);
+        if (\array_key_exists('customer', $data)) {
+            $object->setCustomer($data['customer']);
+            unset($data['customer']);
         }
         if (\array_key_exists('client_secret', $data)) {
             $object->setClientSecret($data['client_secret']);
@@ -76,8 +76,8 @@ class CreateCustomerResponseNormalizer implements DenormalizerInterface, Normali
         if ($data->isInitialized('id') && null !== $data->getId()) {
             $dataArray['id'] = $data->getId();
         }
-        if ($data->isInitialized('object') && null !== $data->getObject()) {
-            $dataArray['object'] = $data->getObject();
+        if ($data->isInitialized('customer') && null !== $data->getCustomer()) {
+            $dataArray['customer'] = $data->getCustomer();
         }
         if ($data->isInitialized('clientSecret') && null !== $data->getClientSecret()) {
             $dataArray['client_secret'] = $data->getClientSecret();

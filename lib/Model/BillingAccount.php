@@ -86,6 +86,10 @@ class BillingAccount extends \ArrayObject
      */
     protected $migrationStatus;
     /**
+     * @var string
+     */
+    protected $stripeAccount;
+    /**
      * @var list<UpcomingSubscription>
      */
     protected $upcomingSubscriptions;
@@ -315,6 +319,19 @@ class BillingAccount extends \ArrayObject
     {
         $this->initialized['migrationStatus'] = true;
         $this->migrationStatus = $migrationStatus;
+
+        return $this;
+    }
+
+    public function getStripeAccount(): string
+    {
+        return $this->stripeAccount;
+    }
+
+    public function setStripeAccount(string $stripeAccount): self
+    {
+        $this->initialized['stripeAccount'] = true;
+        $this->stripeAccount = $stripeAccount;
 
         return $this;
     }

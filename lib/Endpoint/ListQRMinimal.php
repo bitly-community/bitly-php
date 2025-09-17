@@ -26,6 +26,7 @@ class ListQRMinimal extends \Bitly\Runtime\Client\BaseEndpoint implements \Bitly
      * @var int    $size The quantity of items to be be returned
      * @var string $search_after token used to search next batch of qr codes, only use response from API as input value
      * @var string $query The value that you would like to search
+     * @var string $hostname_path_query The hostname and/or path you would like to search (case-insensitive). Subdomains included; query params and fragment ignored.
      * @var int    $created_before Timestamp as an integer unix epoch (seconds only)
      * @var int    $created_after Timestamp as an integer unix epoch (seconds only)
      * @var string $archived Whether or not to include archived resources
@@ -63,13 +64,14 @@ class ListQRMinimal extends \Bitly\Runtime\Client\BaseEndpoint implements \Bitly
     protected function getQueryOptionsResolver(): \Symfony\Component\OptionsResolver\OptionsResolver
     {
         $optionsResolver = parent::getQueryOptionsResolver();
-        $optionsResolver->setDefined(['has_render_customizations', 'size', 'search_after', 'query', 'created_before', 'created_after', 'archived', 'creating_login', 'qrc_type', 'is_gs1']);
+        $optionsResolver->setDefined(['has_render_customizations', 'size', 'search_after', 'query', 'hostname_path_query', 'created_before', 'created_after', 'archived', 'creating_login', 'qrc_type', 'is_gs1']);
         $optionsResolver->setRequired([]);
         $optionsResolver->setDefaults(['has_render_customizations' => 'both', 'size' => 50, 'archived' => 'off', 'qrc_type' => [0 => 'bitlink', 1 => 'long_url'], 'is_gs1' => 'both']);
         $optionsResolver->addAllowedTypes('has_render_customizations', ['string']);
         $optionsResolver->addAllowedTypes('size', ['int']);
         $optionsResolver->addAllowedTypes('search_after', ['string']);
         $optionsResolver->addAllowedTypes('query', ['string']);
+        $optionsResolver->addAllowedTypes('hostname_path_query', ['string']);
         $optionsResolver->addAllowedTypes('created_before', ['int']);
         $optionsResolver->addAllowedTypes('created_after', ['int']);
         $optionsResolver->addAllowedTypes('archived', ['string']);
