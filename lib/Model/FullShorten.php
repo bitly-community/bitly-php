@@ -54,13 +54,13 @@ class FullShorten extends \ArrayObject
      */
     protected $forceNewLink;
     /**
-     * Custom keyword for creating keyword overrides. If provided, creates an override at domain/keyword. Cannot use bit.ly domain.
+     * Custom keyword for creating keyword overrides. If provided, creates an override at domain/keyword.
      *
      * @var string
      */
     protected $keyword;
     /**
-     * Existing bitlink ID to add a keyword override to. Format: domain/hash. Cannot be used with long_url. Cannot use bit.ly domain.
+     * Existing bitlink ID to add a keyword override to. Format: domain/hash. Cannot be used with long_url.
      *
      * @var string
      */
@@ -182,7 +182,7 @@ class FullShorten extends \ArrayObject
     }
 
     /**
-     * Custom keyword for creating keyword overrides. If provided, creates an override at domain/keyword. Cannot use bit.ly domain.
+     * Custom keyword for creating keyword overrides. If provided, creates an override at domain/keyword.
      */
     public function getKeyword(): string
     {
@@ -190,7 +190,7 @@ class FullShorten extends \ArrayObject
     }
 
     /**
-     * Custom keyword for creating keyword overrides. If provided, creates an override at domain/keyword. Cannot use bit.ly domain.
+     * Custom keyword for creating keyword overrides. If provided, creates an override at domain/keyword.
      */
     public function setKeyword(string $keyword): self
     {
@@ -201,7 +201,7 @@ class FullShorten extends \ArrayObject
     }
 
     /**
-     * Existing bitlink ID to add a keyword override to. Format: domain/hash. Cannot be used with long_url. Cannot use bit.ly domain.
+     * Existing bitlink ID to add a keyword override to. Format: domain/hash. Cannot be used with long_url.
      */
     public function getBitlinkId(): string
     {
@@ -209,7 +209,7 @@ class FullShorten extends \ArrayObject
     }
 
     /**
-     * Existing bitlink ID to add a keyword override to. Format: domain/hash. Cannot be used with long_url. Cannot use bit.ly domain.
+     * Existing bitlink ID to add a keyword override to. Format: domain/hash. Cannot be used with long_url.
      */
     public function setBitlinkId(string $bitlinkId): self
     {
